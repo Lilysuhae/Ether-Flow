@@ -1,7 +1,8 @@
 {
   "name": "ether-flow",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "description": "Alchemy Productivity App",
+  "author": "Lilysuhae",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -9,7 +10,7 @@
     "build": "npm run rebuild && electron-builder --win --x64"
   },
   "build": {
-    "appId": "com.yourname.etherflow",
+    "appId": "com.lilysuhae.etherflow",
     "productName": "Ether Flow",
     "directories": {
       "output": "demo"
@@ -19,7 +20,12 @@
       "**/node_modules/active-win/**/*"
     ],
     "files": [
-      "**/*"
+      "main.js",
+      "index.html",
+      "renderer.js",
+      "src/**/*",
+      "assets/**/*",
+      "node_modules/active-win/**/*"
     ],
     "win": {
       "target": "nsis",
