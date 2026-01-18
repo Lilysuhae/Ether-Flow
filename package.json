@@ -1,0 +1,42 @@
+{
+  "name": "ether-flow",
+  "version": "0.1.0",
+  "description": "Alchemy Productivity App",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "rebuild": "electron-rebuild -v 40.0.0",
+    "build": "npm run rebuild && electron-builder --win --x64"
+  },
+  "build": {
+    "appId": "com.yourname.etherflow",
+    "productName": "Ether Flow",
+    "directories": {
+      "output": "demo"
+    },
+    "asar": true,
+    "asarUnpack": [
+      "**/node_modules/active-win/**/*"
+    ],
+    "files": [
+      "**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icons/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Ether Flow"
+    }
+  },
+  "dependencies": {
+    "active-win": "^9.0.0"
+  },
+  "devDependencies": {
+    "electron": "^40.0.0",
+    "electron-builder": "^24.13.3",
+    "electron-rebuild": "^3.2.9"
+  }
+}

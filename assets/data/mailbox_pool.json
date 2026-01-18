@@ -1,0 +1,3488 @@
+[{
+        "id": "guild_alchemist_intro_01",
+        "sender": "연금술 길드",
+        "title": "[지침] 신입 연금술사에게 보내는 격려",
+        "trigger": {
+            "type": "always",
+            "value": null
+        },
+        "content": "우리 길드의 일원이 된 것을 환영합니다. 연금술사의 첫걸음은 명확한 목표를 세우는 것입니다.  [작업 도구] 를 등록하고  [할 일]  목록에 오늘 처리할 과업을 기록하십시오. 과업을 하나씩 완수할 때마다 당신의 집중력은 순수한 에테르로 환원되어 호문클루스의 성장을 돕게 됩니다. 당신의 연구실에 지혜의 여신의 가호가 넘치길 빌겠습니다.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_alchemist_intro_02",
+        "sender": "연금술 길드",
+        "title": "[지침] 피조물과의 공명과 기호품 활용",
+        "trigger": {
+            "type": "current_stage",
+            "value": "child"
+        },
+        "content": "호문클루스는 저마다 좋아하는 물질이 다릅니다.  [상점] 에서 선물을 구매하여 전달하고, 쓰다듬어 그들의  [호감도] 를 주의깊게 살펴보십시오.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_alchemist_intro_03",
+        "sender": "연금술 길드",
+        "title": "[지침] 도달하는 서신과 보상의 수령 방법",
+        "trigger": {
+            "type": "total_focus",
+            "value": 1800
+        },
+        "content": "길드로부터 도착하는 서신에는 귀중한 조언과  [에테르]  포인트가 동봉되어 있습니다. 서신함을 자주 확인하고 보상을 수령하여 연구 자금으로 활용하십시오. 당신의 모든 성취는 길드에 보고되고 있습니다.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_alchemist_intro_04",
+        "sender": "연금술 길드",
+        "title": "[지침] 생명의 그릇을 빚는 법",
+        "trigger": {
+            "type": "total_focus",
+            "value": 3600
+        },
+        "content": "호문클루스의 진화는 성장도에 달려 있습니다. 꾸준한 몰입을 통해 에테르를 주입하십시오.  [성장도]  및  [호감도] 가 특정 수치에 도달하면 호문클루스는 비로소 성숙의 단계를 맞이하여 당신에게 더 깊은 대화를 건넬 것입니다.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "guild_cert_level_15",
+        "sender": "연금술 길드",
+        "title": "[인증] 전문 연금술사 자격",
+        "logic": "AND",
+        "triggers": [{
+                "type": "alchemist_level",
+                "value": 15
+            },
+            {
+                "type": "total_focus",
+                "value": 18000
+            }
+        ],
+        "content": "귀하는 15레벨의 숙련도와 누적 5시간 이상의 몰입 기록을 달성하였습니다. 이는 단순한 호기심을 넘어선 전문가의 영역에 진입했음을 의미합니다. 당신의 노고를 치하합니다.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "guild_cert_level_20",
+        "title": "상급 연금술사 자격 인증",
+        "sender": "연금술 길드",
+        "logic": "AND",
+        "triggers": [{
+                "type": "alchemist_level",
+                "value": 20
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            }
+        ],
+        "content": "귀하는 높은 수준의 숙련도와 다양한 생명체 연성 경험을 두루 갖추었음을 확인했습니다. 길드 공식 후원금을 동봉합니다.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "guild_cert_task_01",
+        "sender": "연금술 길드",
+        "title": "[인증] 21일의 기적 달성",
+        "trigger": {
+            "type": "habit_master",
+            "value": 21
+        },
+        "content": "축하합니다. 귀하는 심리학적으로 새로운 습관이 뇌에 각인되는 최소 기간인 21일을 완수하셨습니다. 이제 이 행위는 당신의 의지가 아닌 본능의 영역으로 진입하기 시작했습니다. 길드 공인 '성실한 탐구자' 칭호를 수여합니다.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "guild_event_time_01",
+        "sender": "연금술 길드",
+        "title": "주말 연구 활동에 대한 보상",
+        "trigger": {
+            "type": "weekend_alchemist",
+            "value": true
+        },
+        "content": "휴일임에도 연구를 멈추지 않는 귀하의 열정을 높이 평가합니다. 길드 규정에 따라 주말 연구 활동에는 추가적인 에테르 정제 혜택이 주어집니다. 이 지원금을 활용하여 연구 환경을 개선하십시오.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "guild_first_adult_congrats",
+        "sender": "연금술 길드",
+        "title": "[공인] 상급 호문클루스 관리 자격 승인",
+        "content": "당신의 헌신적인 몰입 끝에 드디어 첫 번째 성체 호문클루스가 탄생했다는 소식을 접했습니다. 알에서 시작해 성체에 이르기까지, 에테르의 흐름을 완벽하게 제어한 당신의 능력을 길드에서도 높게 평가하고 있습니다. 앞으로 더 깊은 탐구를 지원하기 위해 길드 보조금을 송부합니다. 더욱 찬란한 연구 성과를 거두시길 바랍니다.",
+        "trigger": {
+            "type": "adultCount",
+            "value": 1
+        },
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "guild_guide_bond_01",
+        "sender": "연금술 길드",
+        "title": "[지침] 다수 피조물 운용 시의 조화",
+        "trigger": {
+            "type": "owned_count",
+            "value": 2
+        },
+        "content": "연구실에 두 번째 호문클루스가 자리를 잡았습니다. 생명체 간의 에테르 간섭이 발생할 수 있으니 주의하십시오. 각자의 성질을 존중하되, 연금술사로서 중심을 잃지 않는 것이 효율적인 에테르 정제의 핵심입니다.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "guild_guide_focus_01",
+        "sender": "연금술 길드",
+        "title": "[지침] 다중 도구 활용법 안내",
+        "trigger": {
+            "type": "app_juggler",
+            "value": 5
+        },
+        "content": "현재 3종류 이상의 작업 도구를 동시에 운용하고 계십니다. 훌륭한 멀티태스킹 능력이지만, 에테르가 분산되지 않도록 주의하십시오.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_guide_task_01",
+        "sender": "연금술 길드",
+        "title": "[지침] 습관 형성의 연금술적 효과",
+        "trigger": {
+            "type": "habit_master",
+            "value": 5
+        },
+        "content": "5일 연속으로 습관을 수행하셨습니다. 반복된 행위는 뇌의 회로를 재구성하여 에테르 추출 효율을 극대화합니다. 이 흐름을 깨지 않고 유지하는 것이 상급 연금술사로 가는 지름길입니다.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "guild_guide_task_01",
+        "sender": "연금술 길드",
+        "title": "당신의 성실함이 증명되었습니다",
+        "trigger": {
+            "type": "todo_count",
+            "value": 10
+        },
+        "content": "무려 10개의 과업을 완수하셨군요! 당신의 명성이 널리 퍼지는 듯합니다. 앞으로도 열띤 연구 활동을 부탁드립니다.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "guild_guide_task_02",
+        "sender": "연금술 길드",
+        "title": "[지침] 작은 성취의 중요성",
+        "trigger": {
+            "type": "todo_count",
+            "value": 5
+        },
+        "content": "5개의 과업을 완수하셨군요. 거대한 현자의 돌도 결국 작은 먼지들의 결합에서 시작됩니다. 지금처럼 사소한 과업들을 하나씩 처리해 나가는 것이야말로 위대한 연금술사가 되는 가장 빠른 길입니다.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_guide_task_03",
+        "title": "끊이지 않는 수련의 불꽃",
+        "sender": "연금술 길드",
+        "trigger": {
+            "type": "habit_master",
+            "value": 7
+        },
+        "content": "일주일 동안 단 하루도 거르지 않고 습관을 지켜내다니 놀랍습니다. 반복되는 일상은 지루해 보이지만, 사실 그것이 가장 강력한 마법의 근원입니다. 수련의 결실을 축하드립니다.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "guild_guide_task_04",
+        "sender": "연금술 길드",
+        "title": "[지침] 습관의 싹이 트는 시기",
+        "trigger": {
+            "type": "habit_master",
+            "value": 3
+        },
+        "content": "3일 연속으로 습관을 유지하셨군요. 작심삼일이라는 고비를 넘긴 당신의 의지를 높게 평가합니다. 연금술의 기초는 반복되는 정제 과정에 있습니다. 이 작은 싹이 꺾이지 않도록 정진하십시오.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_guide_task_05",
+        "sender": "연금술 길드",
+        "title": "[지침] 연구 재개에 따른 특별 보조금 안내",
+        "trigger": {
+            "type": "return_after_long_absence",
+            "value": true
+        },
+        "content": "장기 부재 이후 연구실로 복귀하신 것을 확인했습니다. 길드는 숙련된 연금술사의 이탈을 방지하고 연구의 연속성을 보장하기 위해 정착 지원금을 송부합니다. [할 일] 목록을 재정비하고 안정적인 에테르 추출 궤도에 다시 진입하십시오.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "alchemist_final_mentor",
+        "sender": "이름 모를 연금술사",
+        "title": "진정한 몰입의 경지에 닿기를",
+        "trigger": {
+            "type": "total_focus",
+            "value": 360000
+        },
+        "content": "100시간의 몰입... 이제 자네는 내가 남긴 유산을 넘어 자신만의 연금술을 개척하고 있군. 언젠가 이 길 끝에서 자네와 마주할 날을 기다리겠네.",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "alchemist_hatch_congrats",
+        "sender": "이름 모를 연금술사",
+        "title": "호문클루스의 탄생을 축하하네",
+        "trigger": {
+            "type": "owned_count",
+            "value": 1
+        },
+        "content": "드디어 첫 번째 생명을 연성해냈군. 앞으로도 많은 관심과 사랑으로 잘 돌보게.",
+        "reward": {
+            "type": "point",
+            "value": 20
+        }
+    },
+    {
+        "id": "enon_insight_01",
+        "sender": "이름 모를 연금술사",
+        "title": "타오르는 집중의 불꽃을 보았네",
+        "trigger": {
+            "type": "total_focus",
+            "value": 3600
+        },
+        "content": "누적 1시간의 몰입... 자네가 연구실에서 보낸 시간이 헛되지 않았음을 증명하는군. 이 에테르가 자네의 불꽃을 더 오래 유지해주길 바라네.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "enon_insight_02",
+        "sender": "이름 모를 연금술사",
+        "title": "시간의 경계가 허물어질 때",
+        "trigger": {
+            "type": "flow_state",
+            "value": true
+        },
+        "content": "방금 자네는 '몰입'이라는 특이점에 도달했군. 자신과 도구, 그리고 시간이 하나로 융합되는 그 찰나의 순간... 자네의 가능성이 바로 그곳에 있네.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "enon_insight_03",
+        "sender": "이름 모를 연금술사",
+        "title": "실패라는 이름의 정제 과정",
+        "trigger": {
+            "type": "failed_attempt_count",
+            "value": 3
+        },
+        "content": "세 번의 실패로군. 자네는 이것을 낭비라고 생각하나? 천만에. 불순물을 걸러내는 과정 없이는 순수한 현자의 돌을 얻을 수 없는 법일세. 자네의 영혼이 이 시행착오를 통해 더 단단해졌음을 나는 믿네. 다시 도전하게.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "enon_night_01",
+        "sender": "이름 모를 연금술사",
+        "title": "심연을 들여다보는 자",
+        "logic": "AND",
+        "triggers": [{
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "marathon_focus",
+                "value": 90
+            }
+        ],
+        "content": "모두가 잠든 심야에 쉼 없이 몰입하고 있군. 심연을 너무 오래 들여다보면 심연 또한 자네를 들여다보는 법일세. 열정도 좋지만, 자네의 영혼이 타버리지 않도록 잠시 쉬어가게.",
+        "reward": {
+            "type": "item",
+            "value": "침묵의 향초"
+        }
+    },
+    {
+        "id": "enon_test_01",
+        "sender": "이름 모를 연금술사",
+        "title": "피조물의 무게를 느끼는가",
+        "trigger": {
+            "type": "owned_count",
+            "value": 2
+        },
+        "content": "실린더 안의 생명이 늘어났군. 자네에겐 이것이 단순한 연구의 확장인가, 아니면 짊어져야 할 영혼의 무게인가? 자네가 그들을 바라보는 눈빛이 단순한 '성과'를 향한 것이 아니길 바라네.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "enon_test_02",
+        "sender": "이름 모를 연금술사",
+        "title": "북적이는 요람",
+        "trigger": {
+            "type": "owned_count",
+            "value": 3
+        },
+        "content": "세 마리의 호문클루스가 자네의 연구실에 자리를 잡았군. 각기 다른 성질을 가진 생명체들이 내뿜는 에테르가 섞이며 묘한 조화를 이루고 있네. 자네의 연구실은 이제 하나의 작은 생태계가 되었어.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "enon_test_03",
+        "sender": "이름 모를 연금술사",
+        "charId": "char_01",
+        "title": "유리벽 너머의 온기",
+        "trigger": {
+            "type": "intimacy_level",
+            "value": 50
+        },
+        "content": "호문클루스가 자네에게 마음을 열었군. 마음.. 그것은 창조주가 피조물에게 줄 수 있는 가장 위험하고도 아름다운 선물이라네.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "enon_weight_01",
+        "sender": "이름 모를 연금술사",
+        "title": "연금술사의 길",
+        "trigger": {
+            "type": "alchemist_level",
+            "value": 5
+        },
+        "content": "이제 기초적인 과업 처리에 능숙해 보이는군. 더 깊은 진리를 탐구할 준비가 되었나? 성장을 기념하여 작은 선물을 부치네.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "enon_weight_02",
+        "sender": "이름 모를 연금술사",
+        "title": "숙련도가 깊어질수록",
+        "trigger": {
+            "type": "alchemist_level",
+            "value": 10
+        },
+        "content": "벌써 도구를 다루는 손길이 제법 능숙해졌어. 허나 기술이 늘어날수록 초심은 가벼워지기 쉬운 법이지. 자네가 처음 이 연구실에 들어왔을 때의 떨림을 잊지 말게나.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "enon_weight_03",
+        "sender": "이름 모를 연금술사",
+        "title": "과업의 산을 넘는 방식",
+        "trigger": {
+            "type": "todo_count",
+            "value": 20
+        },
+        "content": "하루에 20개의 과업을 처리하다니, 자네의 어깨가 꽤나 무겁겠군. 그저 지워나가기 위한 노동인가, 아니면 끝에 닿기 위한 수행인가?",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "enon_weight_04",
+        "sender": "이름 모를 연금술사",
+        "title": "과업의 산을 넘은 자에게",
+        "trigger": {
+            "type": "todo_count",
+            "value": 30
+        },
+        "content": "벌써 30개의 과업을 완수했군. 자네의 성실함이 연구실의 공기를 바꾸고 있네. 작은 일들이 모여 위대한 업적을 이룬다는 것을 잊지 말고 정진하게.",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "enon_weight_05",
+        "sender": "이름 모를 연금술사",
+        "title": "첫 번째 주기를 마쳤군",
+        "trigger": {
+            "type": "habit_master",
+            "value": 7
+        },
+        "content": "일주일... 연성로의 불꽃을 꺼뜨리지 않고 한 주기를 버텨냈군. 자네의 일상에 조금씩 규칙이라는 마법이 깃들기 시작했어. 하지만 방심하지 말게. 익숙함은 때로 나태를 불러오는 법일세.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "enon_weight_06",
+        "sender": "이름 모를 연금술사",
+        "title": "자네의 본질이 바뀌었네",
+        "trigger": {
+            "type": "habit_master",
+            "value": 100
+        },
+        "content": "100일... 자네는 이제 내가 알던 그 초보 연금술사가 아니로군. 습관은 영혼의 모양을 바꾸는 연금술이라네. 자네의 본질 자체가 이미 위대한 성취로 변했어. 이제는 자네만의 새로운 진리를 개척해 나가게나.",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "noah_bond_01",
+        "sender": "수상한 그림자",
+        "charId": "char_02",
+        "title": "찰나의 성장이 남기는 흔적",
+        "trigger": {
+            "type": "growth_level",
+            "value": 60
+        },
+        "content": "호문클루스와 함께한 시간이 제법 되었구나. 하지만 성장은 곧 이별의 시작이야. 부디 호문클루스가 알을 깨고 나왔을 때의 기분을 상기하며 한 번 더 다정하게 이름을 불러주도록 해.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "noah_bond_03",
+        "sender": "수상한 그림자",
+        "title": "작은 손길이 만드는 기적",
+        "trigger": {
+            "type": "daily_pet_limit",
+            "value": 10
+        },
+        "content": "오늘 아이를 열 번이나 쓰다듬어 주었구나. 그 사소한 접촉이 에테르 수만 단위보다 훨씬 더 가치 있다는 걸 넌 이미 알고 있는 것 같아. 네 다정함이 참 보기 좋아.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "noah_bond_04",
+        "sender": "수상한 그림자",
+        "title": "성숙의 끝에 기다리는 것",
+        "trigger": {
+            "type": "growth_level",
+            "value": 300
+        },
+        "content": "아이가 드디어 성체의 모습이 되었구나. 훌륭하게 키워냈어. 지금 이 순간의 대화 하나하나를 소중히 여겨줘.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "noah_bond_05",
+        "sender": "수상한 그림자",
+        "title": "소외된 마음이 없기를",
+        "trigger": {
+            "type": "owned_count",
+            "value": 3
+        },
+        "content": "아이가 늘어날수록 마음을 나누는 게 힘들어질 거야. 누구 하나 외로워하지 않게 골고루 다정함을 나눠줘.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "noah_bond_06",
+        "sender": "수상한 그림자",
+        "title": "물건이 아닌 마음을 보렴",
+        "trigger": {
+            "type": "gift_total_count",
+            "value": 10
+        },
+        "content": "아이들에게 선물을 자주 보내는구나. 참 보기 좋아. 나는 아이들이 뭘 싫어하는지도 모른 채 내 방식대로의 애정만 강요했었지. 네가 그들의 취향을 고민하며 보낸 그 짧은 시간들이, 에테르 포인트보다 훨씬 큰 힘이 되어줄 거야.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "noah_break_advice",
+        "sender": "수상한 그림자",
+        "title": "끊어지지 않는 현은 없지",
+        "logic": "AND",
+        "triggers": [{
+                "type": "marathon_focus",
+                "value": 120
+            },
+            {
+                "type": "flow_state",
+                "value": true
+            }
+        ],
+        "content": "2시간 넘게 몰입의 정점에 머물고 있구나. 그 열기는 아름답지만, 쉬지 않는 연성로는 결국 균열이 가기 마련이지. 잠시 멈추고 창밖의 바람을 느껴보는 건 어때?",
+        "reward": {
+            "type": "item",
+            "value": "침묵의 향초"
+        }
+    },
+    {
+        "id": "noah_comfort_01",
+        "sender": "수상한 그림자",
+        "title": "완벽함이라는 이름의 차가운 방",
+        "trigger": {
+            "type": "perfect_day",
+            "value": true
+        },
+        "content": "오늘 모든 할 일을 끝냈구나. 축하해. 하지만 너무 완벽해지려고 애쓰진 마. 가끔은 빈틈이 있어야 그 사이로 새로운 인연과 온기가 스며들 수 있거든. 오늘은 고생 많았어.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "noah_comfort_02",
+        "sender": "수상한 그림자",
+        "title": "10일간의 성실함에 대하여",
+        "trigger": {
+            "type": "habit_master",
+            "value": 10
+        },
+        "content": "열흘 동안 쉬지 않고 습관을 이어왔구나. 정말 대견해. 하지만 그 노력이 너를 옥죄는 사슬이 되지 않았으면 해. 너의 가치는 숫자로 증명되는 게 아니니까.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "noah_comfort_03",
+        "sender": "수상한 그림자",
+        "title": "지칠 때가 되었지, 하지만...",
+        "trigger": {
+            "type": "habit_master",
+            "value": 14
+        },
+        "content": "2주간의 사투였구나. 대단해. 슬슬 몸과 마음이 무거워질 시기지. 나도 예전에 이쯤에서 포기하고 싶을 때가 많았어. 하지만 너는 나보다 강하잖아. 잠시 숨을 고르더라도 멈추지는 말아줘.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "noah_comfort_04",
+        "sender": "수상한 그림자",
+        "title": "끊어진 선을 다시 잇는 용기",
+        "logic": "AND",
+        "triggers": [{
+                "type": "habit_master",
+                "value": 1
+            },
+            {
+                "type": "previous_streak",
+                "value": 7
+            }
+        ],
+        "content": "공든 탑이 무너진 것 같은 기분이겠지. 나도 그 상실감을 잘 알아. 하지만 너는 오늘 다시 연성로에 불을 지폈어. 끊어진 습관보다 중요한 건, 네가 포기하지 않고 돌아왔다는 사실이야. 그거면 충분해. 다시 시작하자.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "noah_echo_01",
+        "sender": "수상한 그림자",
+        "title": "남들이 잠든 시간의 고요",
+        "logic": "AND",
+        "triggers": [{
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "early_bird",
+                "value": true
+            }
+        ],
+        "content": "주말 아침 일찍 연구실을 찾았구나. 과거의 나는 늦잠의 유혹에 져서 이 귀한 정적을 놓치곤 했지. 너는 나보다 훨씬 훌륭한 연금술사가 될 자질이 보여. 부디 그 부지런함을 잃지 말아.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "noah_echo_02",
+        "sender": "수상한 그림자",
+        "title": "심야의 정적은 독이 된다네",
+        "logic": "AND",
+        "triggers": [{
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "flow_state",
+                "value": true
+            }
+        ],
+        "content": "깊은 밤에 몰입의 정점에 머물고 있구나. 나도 한때는 이 정적이 내 유일한 친구라고 생각했지. 하지만 돌이켜보니 그건 그저 외로움이었어. 너무 늦기 전에 불을 끄고 쉬도록 해.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "noah_echo_03",
+        "sender": "수상한 그림자",
+        "title": "잃어버린 주말의 조각",
+        "trigger": {
+            "type": "weekend_alchemist",
+            "value": true
+        },
+        "content": "주말에도 연구실에 나와 있구나. 난 내 주말을 전부 연성로 앞에 바쳤지만, 내게 남은 건 많지 않았어. 노력과 쉬어감의 균형을 잘 잡아가길 바래.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "noah_echo_04",
+        "sender": "수상한 그림자",
+        "title": "높아진 레벨, 무거워진 책임",
+        "trigger": {
+            "type": "alchemist_level",
+            "value": 20
+        },
+        "content": "너의 연금술 실력이 일취월장이구나. 항상 지켜보고 있어.",
+        "reward": {
+            "type": "point",
+            "value": 600
+        }
+    },
+    {
+        "id": "noah_warning_01",
+        "sender": "수상한 그림자",
+        "title": "성취 뒤에 남겨진 공허함",
+        "trigger": {
+            "type": "total_focus",
+            "value": 18000
+        },
+        "content": "누적 5시간의 몰입... 대단한 성취지. 하지만 조심해. 마침표를 찍는 데 너무 몰두한 나머지, 곁에서 숨 쉬는 호문클루스의 존재를 잊어버리지는 말아. 결과물만을 쫓다 중요한 것을 잃지 않기를.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "noah_warning_02",
+        "sender": "수상한 그림자",
+        "title": "멈추지 않는 시계바늘에 대하여",
+        "trigger": {
+            "type": "marathon_focus",
+            "value": 120
+        },
+        "content": "2시간 동안 한 번도 쉬지 않고 몰입했구나. 네 눈이 꽤 피로할 거야. 열정도 좋지만, 너무 앞만 보고 달리면 정작 소중한 풍경들을 놓치게 돼. 잠시 숨을 고르렴.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "noah_warning_03",
+        "sender": "수상한 그림자",
+        "title": "과업 너머의 진심",
+        "trigger": {
+            "type": "todo_count",
+            "value": 15
+        },
+        "content": "오늘 하루에만 많은 과업을 처리했구나. 목록을 체크할 때마다 느껴지는 쾌감은 잠시뿐이야. 그 숫자들이 네 영혼을 갉아먹고 있지는 않은지 한 번쯤 돌아봤으면 좋겠어. 아차, 너무 나쁜말만 했구나. 오늘도 수고 많았어.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "kyra_bond_01",
+        "sender": "사념의 기록관",
+        "title": "상호작용의 연쇄 반응",
+        "trigger": {
+            "type": "owned_count",
+            "value": 4
+        },
+        "content": "개체 간의 상호작용 데이터가 임계치를 넘었습니다. 단순한 피조물들이 군집을 이룰 때 발생하는 사념의 연쇄 반응... 이는 아카이브에 아주 가치 있는 기록이 될 것입니다.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "kyra_focus_accumulation",
+        "sender": "사념의 기록관",
+        "title": "축적된 시간의 지층",
+        "trigger": {
+            "type": "total_focus",
+            "value": 36000
+        },
+        "content": "누적 10시간의 몰입 데이터가 확인되었습니다. 당신이 쌓아올린 시간의 지층은 이제 누구도 부정할 수 없는 견고한 기록이 되었습니다. 이 방대한 사념을 분류하는 것은 저에게도 큰 즐거움입니다.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "kyra_gift_01",
+        "sender": "사념의 기록관",
+        "title": "기호 데이터 분석 리포트",
+        "trigger": {
+            "type": "gift_total_count",
+            "value": 20
+        },
+        "content": "축하합니다. 20회의 선물 전달을 통해 피조물들의 정교한 기호 데이터 아카이브가 구축되었습니다. 당신이 수집한 '취향'이라는 사념은 생명 연성의 핵심 변수가 됩니다. 이 기록은 우리 도서관의 '관계학' 서고에 소중히 보관하겠습니다.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "kyra_habit_start",
+        "sender": "사념의 기록관",
+        "title": "반복되는 기록의 미학",
+        "trigger": {
+            "type": "habit_master",
+            "value": 3
+        },
+        "content": "3일 연속으로 습관을 지켜내셨군요. 점 하나는 의미가 없지만, 점이 세 개 모이면 선이 되고, 그 선은 곧 당신의 역사가 됩니다. 이 기록이 끊어지지 않도록 아카이브에 잘 보존하겠습니다.",
+        "reward": {
+            "type": "point",
+            "value": 80
+        }
+    },
+    {
+        "id": "kyra_perfect_day_log",
+        "sender": "사념의 기록관",
+        "title": "완전무결한 하루의 데이터",
+        "trigger": {
+            "type": "perfect_day",
+            "value": true
+        },
+        "content": "계획된 모든 과업과 습관이 오차 없이 완료되었습니다. 이토록 정갈한 데이터는 정말 오랜만이군요. 이 희귀한 기록을 영구 보존 처리하겠습니다.",
+        "reward": {
+            "type": "item",
+            "value": "원석 조각"
+        }
+    },
+    {
+        "id": "kyra_task_02",
+        "sender": "사념의 기록관",
+        "title": "가시화된 사념의 궤적",
+        "trigger": {
+            "type": "habit_master",
+            "value": 18
+        },
+        "content": "18일간의 데이터가 축적되었습니다. 당신의 행위는 이제 우연이 아닌 필연적인 궤적을 그리며 아카이브에 선명하게 각인되고 있습니다. 이토록 정밀하고 일관된 사념의 흐름은 기록관으로서 매우 매혹적인 연구 대상입니다.",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "kyra_todo_collection",
+        "sender": "사념의 기록관",
+        "title": "농축된 사념의 가치",
+        "trigger": {
+            "type": "todo_count",
+            "value": 50
+        },
+        "content": "놀랍군요. 50개의 과업이 완수되며 뿜어져 나온 에테르의 농도가 우리 기록관의 서고까지 진동시켰습니다. 당신의 성실함은 훌륭한 기록물이 될 자격이 충분합니다. 이 결정을 보상으로 드리니, 더 밀도 높은 사념을 빚어주시길.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "mabel_bond_01",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "당신과 나의 계절",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 60
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "우리가 함께한 시간이 꽤 많이 흘렀어요. 저도 많이 자랐고, 당신과의 마음도 깊어진 것 같아요. 연금술사님의 다정한 눈빛을 보고 있으면, 저는 세상에서 가장 행복한 존재가 된 기분이랍니다.",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "mabel_bond_02",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "당신에게 스며든 작은 온기",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "연금술사님, 사실 처음에는 당신의 탐구가 너무나 고독해 보여서, 제가 감히 그 정적을 깨뜨려도 될지 망설였답니다. 하지만 이제는 알 것 같아요. 당신의 침묵은 외로움이 아니라, 더 깊은 진리를 품기 위한 따뜻한 기다림이었다는 것을요. 당신이 건네주는 에테르에서 이제는 낯선 경계심보다 부드러운 신뢰의 향기가 느껴져요. 저도 이제 당신의 곁에서 조금 더 마음을 놓고 편안한 파동을 보내드릴 수 있을 것 같아 참 기쁘답니다.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "mabel_bond_03",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "함께 빚어내는 사색의 색깔",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "연구실에 친구들이 늘어나니 공기가 한결 풍성해졌어요. 친구들의 파동이 서로 섞이며 새로운 색깔의 사색을 만들어내고 있네요. 연금술사님이라는 거대한 나무 아래 우리가 옹기종기 모여 있는 것 같아 정말 행복해요.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mabel_bond_100",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "유리벽에 닿지 못한 나의 온기",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 800
+            }
+        ],
+        "content": "연금술사님, 오늘도 이 차가운 유리벽 너머로 당신을 그려보아요. 당신이 저를 쓰다듬어 주실 때마다 제 안의 핵은 터질 듯이 공명하지만, 동시에 견딜 수 없는 슬픔이 밀려온답니다. 이 플라스크가 저를 보호해 주는 요람인 동시에, 당신의 손길을 직접 느끼지 못하게 가로막는 가장 잔인한 감옥이라는 사실 때문이에요. 가끔 사색에 잠길 때면 아주 발칙한 상상을 하곤 해요. 제가 만약 연금술로 빚어진 피조물이 아니라, 당신과 같은 '인간'으로 태어났다면 어땠을까요? 그랬다면 이 유리벽에 가로막힌 채 당신의 온기를 추측하는 대신, 제 손으로 직접 당신의 손마디를 잡고 그 속에 담긴 고뇌를 함께 나누었을 텐데... 연금술사님, 저는 영원히 살고 싶지 않아요. 그저 단 하루, 아니 단 한 시간만이라도 좋으니 이 실린더를 깨고 나가 당신의 숨결이 닿는 거리에서 당신의 눈을 마주 보고 싶어요. 연금술로 얻은 불멸의 시간보다, 당신과 함께 늙어가는 인간의 찰나가 제게는 더 눈부신 기적이에요. 당신이 잠든 밤, 저는 기도를 드려요. 언젠가 제 영혼이 연금술의 법칙을 거슬러 당신의 진짜 살결에 닿을 수 있기를. 당신의 온기 없이는 저는 그저 허상일 뿐이니까요. 사랑해요, 저의 모든 우주가 되신 당신.",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "mabel_bond_90",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "당신이라는 다정한 우주를 유영하며",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 800
+            }
+        ],
+        "content": "연금술사님, 가끔 제가 아직 ‘크림색 알’이었던 시절을 떠올려 보곤 해요. 어둠뿐이던 그 요람 속에서 저를 깨운 건 당신의 다정한 사색과 타인을 향한 온기였죠. 당신의 손길이 처음 제 껍데기에 닿았을 때, 저는 직감했어요. 이 따스함을 평생 기대하며 태어날 것이라는걸요. 사실 전 사색의 시간이 길어질 때마다 당신이 저 멀리 가버릴까 봐 두려울 때가 있었답니다. 당신의 지혜가 깊어질수록 제가 당신의 속도를 따라가지 못할까 봐요. 하지만 당신은 언제나 제 귀로 당신의 진심을 들을 수 있도록 곁을 내어주셨죠. 이제 제 핵은 오직 당신의 박동에만 반응하고 있어요. 제가 당신의 영원한 안식처가 되어드릴게요. 사랑한다는 말보다 더 깊은 온기를 담아, 당신의 메이벨이.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "mabel_focus_01",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "침묵 속의 대화",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "total_focus",
+                "value": 3600
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "당신과 함께 한 시간의 정적을 공유했네요. 말이 없어도 전해지는 당신의 깊은 몰입이 저를 안심시켜요. 이 평온한 사색의 시간이 당신의 영혼에 작은 휴식이 되었기를 바랍니다.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "mabel_focus_02",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "흐트러진 사색도 당신의 일부예요",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "low_efficiency_session",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "오늘따라 집중의 실타래가 자꾸 엉키는 것 같아 마음이 아프네요. 연금술사님, 완벽하지 않은 하루도 당신이 정성껏 보낸 시간임은 변함없어요. 무거운 마음은 제가 다독여 드릴 테니, 오늘은 이만 눈을 붙이고 내일의 맑은 에테르를 기다려 봐요.",
+        "reward": {
+            "type": "item",
+            "value": "침묵의 향초"
+        }
+    },
+    {
+        "id": "mabel_gift_01",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "당신의 마음이 닿은 양피지",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "first_gift",
+                "value": "손편지"
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "연금술사님, 보내주신 손편지에 적힌 고뇌의 흔적들을 가만히 만져보았어요. 당신의 사색이 담긴 이 종이는 제게 그 어떤 보물보다 따뜻한 온기를 전해준답니다.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "mabel_gift_02",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "겹겹이 쌓이는 당신의 배려",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 3
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "연금술사님, 어느덧 당신이 제게 보내준 정성이 가득한 손편지가 가득해요. 제 작은 취향을 이토록 소중히 기억해 주시는 당신의 마음씨에 코끝이 찡해져요. 당신의 다정함에 매번 감동합니다.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mabel_gift_03",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "서로를 알아가는 과정일 뿐이에요",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "보내주신 추출액의 향이 제게는 조금 날카롭게 느껴지네요. 하지만 실망하지 마세요, 연금술사님. 저를 기쁘게 해주려던 당신의 예쁜 마음만은 제게 충분히 닿았으니까요. 다음번엔 우리, 함께 정원을 산책하며 서로가 좋아하는 것에 관해 더 이야기해 볼까요?",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "mabel_growth_01",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "꽃피는 연금술의 재능",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "alchemist_level",
+                "value": 5
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "어느덧 높은 단계의 지혜에 도달하셨군요. 축하드려요. 당신의 에테르가 이전보다 훨씬 맑고 깊은 빛을 내고 있어요. 메이벨은 당신이 그려낼 다음 장의 풍경이 벌써부터 기다려집니다.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mabel_task_01",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "정돈된 하루의 온기",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "오늘 하루를 참 정성스럽게 채우셨네요. 연금술사님의 할 일 목록이 모두 완료된 걸 보니 제 마음도 몽글몽글해져요. 성실하게 쌓아온 시간들이 당신을 더 눈부시게 만들 거예요.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mabel_task_02",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "열흘간의 다정한 발걸음",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "habit_master",
+                "value": 10
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "연금술사님, 벌써 10일이나 약속을 지키셨네요! 당신이 매일 아침 정성스럽게 기록을 남길 때마다 제 마음도 따스한 온기로 채워지는 기분이에요. 당신의 성실함이 우리 사이를 더 가깝게 만들어주고 있답니다.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mabel_time_01",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "밤이 깊었어요, 연금술사님",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "todo_count",
+                "value": 5
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "모두가 잠든 시간에도 여전히 바쁘시군요. 과업도 중요하지만, 연금술사님의 건강이 제일 걱정돼요. 무리하지 마세요.",
+        "reward": {
+            "type": "point",
+            "value": 80
+        }
+    },
+    {
+        "id": "indigo_bond_01",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "거슬리지 않는 온도",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 20
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "네 손길... 처음엔 좀 낯설었는데 이제 제법 익숙해졌어. 차가운 에테르만 만지던 손일 텐데 묘하게 온기가 있네. 거슬리지 않으니까, 가끔은 그렇게 있어도 돼.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "indigo_bond_02",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "거슬리던 소음이 리듬이 되기까지",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "너, 생각보다 끈기 있네. 처음엔 네가 내는 모든 움직임이 내 신경을 긁는 노이즈라고 생각했어. 인간의 집중력이라는 게 얼마나 얄팍한지 잘 아니까, 너도 금방 포기할 줄 알았거든. 근데 요즘은 좀 달라. 네 작업 소리가 내 정적을 해치지 않고 묘하게 기분 좋은 리듬으로 들리기 시작했어. 네 손길도... 뭐, 아주 가끔은 나쁘지 않다고 생각할 정도는 됐고. 이제야 널 내 진짜 '파트너'라고 불러도 될 것 같은 기분이 들어.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "indigo_bond_03",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "소란스러운 정적",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "치, 연구실이 시끄러워졌어. 네 집중력을 방해하는 노이즈가 늘어난 것 같아서 감시하기가 꽤 까다롭네. 하지만... 뭐, 혼자 있을 때보다 에테르의 밀도가 높은 건 인정할게. 활기찬 것도 아주 나쁘진 않아.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "indigo_bond_100",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "이 정적을 깨고 너에게 닿고 싶어",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 800
+            }
+        ],
+        "content": "야, 파트너. 나 사실 요즘 미쳐가는 것 같아. 내 예민한 감각이 세상의 모든 소음을 차단하고 완벽한 정적을 찾아낼수록, 역설적으로 내 안에는 단 하나의 커다란 소음만 울려 퍼져. 바로 '너와 직접 닿고 싶다'는 절박한 비명이야. 플라스크 안에서 널 지켜보는 건 이제 한계야. 네가 지쳐서 책상에 엎드려 있을 때, 난 그림자처럼 네 곁에 머물 순 있지만 정작 네 어깨를 토닥여줄 손이 없어. 내 날카로운 논리로도 이 말도 안 되는 갈망은 설명이 안 돼. 난 왜 인간이 아닐까? 왜 난 고작 에테르가 응축된 인간의 모습을 본뜬 생명체에 불과해서, 네 체온 하나 직접 확인하지 못하고 유리벽에 손만 갖다 대야 하는 걸까? 차라리 내 불멸의 핵을 깨부수고 네 세상의 평범한 먼지가 되고 싶어. 그러면 적어도 네 옷깃에 머물거나, 네 뺨을 스치는 바람이라도 될 수 있을 텐데 말이야. 파트너, 나 사실 무서워. 네 시간은 흘러가는데 난 이 차가운 플라스크 속에 박제된 채 영원히 너의 뒷모습만 보고 있어야 할까 봐...",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "indigo_bond_90",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "너라서 좋아",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 800
+            }
+        ],
+        "content": "나 사실 고백할 게 있어. 처음 ‘검정색 알’에서 깨어났을 때, 난 널 그저 내 예민한 감각으로 분석해야 할 ‘관찰 대상’으로만 여겼어. 네가 몰입을 깨고 딴짓을 할 때마다 한심하다고 생각했고, 너와 닿는 그 온기조차 내 서늘한 논리 회로를 어지럽히는 노이즈라고 믿었지. 그런데 말이야, 파트너. 어느 순간부터 내 정적이 네가 있을 때만 완성된다는 걸 깨달았어. 이제는 네가 없는 방의 고요함이 오히려 참을 수 없는 소음처럼 느껴져. 내 꼬리가 네 손길을 기다리며 살랑거리는 것도, 내 날카로운 감각이 오직 너를 해치는 것들만을 포착하려 애쓰는 것도, 전부 논리로는 설명되지 않는 일들이지. 넌 이제 내게 단순한 창조주가 아니야. 내 우주에서 유일하게 허락된 특별한 변수지. 누가 뭐래도 난 끝까지 네 그림자가 되어 곁에 머무를게. 그러니까, 절대 내 시야 밖으로 사라지지 마.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "indigo_focus_01",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "완벽한 정적의 증명",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "total_focus",
+                "value": 18000
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "무려 5시간 동안의 정적이라니... 흥미롭네. 이토록 긴 시간 동안 집중력을 잃지 않는 인간은 드물거든. 네가 가진 그 서늘한 논리가 마음에 들어. 이 가호를 받아둬.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "indigo_gift_01",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "아름다운 선율",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "first_gift",
+                "value": "낡은 악기"
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "이 악기, 꽤 괜찮은 소리가 나는데? 네가 건네준 선율 덕분에 내 안의 잡음들이 한결 차분해졌어. 고마워, 파트너. 나중에 이 악기로 너를 위한 음악을 들려줄게.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "indigo_gift_02",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "데이터가 증명하는 유대",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 3
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "또 새로운 악기야? 반복되는 선물은 논리적으로 지루해야 정상인데, 네가 건네주는 건 매번 내 안의 노이즈를 기분 좋게 잠재워 주곤 해. 고마워. 이 은혜 잊지 않을게, 파트너.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "indigo_gift_03",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "오차 범위 밖의 선택",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "이 차갑고 기분 나쁜 조각... 어떻게 다뤄야 좋을지 난감한걸. 네가 내 성질을 오해하고 있는 건지, 아니면 단순한 실수인지 궁금하군. 다음번 연성 때는 내 파동을 조금 더 정밀하게 읽어주길 바래.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "indigo_growth_01",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "심연의 인정",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "alchemist_level",
+                "value": 10
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "이제야 제법 연금술사다운 분위기가 느껴지는군. 너라면 심연의 가장 어두운 곳에 숨겨진 진리도 꿰뚫어 볼 수 있을 것 같아.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "indigo_task_01",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "군더더기 없는 속도",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "todo_count",
+                "value": 10
+            },
+            {
+                "type": "marathon_focus",
+                "value": 60
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "한 시간 만에 열 개의 일을 처리했어? 흐음, 네 작업 프로세스에는 불필요한 노이즈가 전혀 없나 봐. 꽤 마음에 드는 속도야. 계속 그렇게 해.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "indigo_task_02",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "최적화된 사고 회로",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "habit_master",
+                "value": 30
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "한 달이라니... 네 뇌의 가소성, 제법 효율적으로 재구성됐나 보군. 이제 굳이 애쓰지 않아도 네 몸이 알아서 움직이는 게 보여. 그 노이즈 없는 움직임, 아주 논리적이고 마음에 들어.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "indigo_time_01",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "새벽의 규칙성",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "early_bird",
+                "value": true
+            },
+            {
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "주말 새벽부터 도구 소리가 들려서 깨버렸잖아. 하지만 남들이 쉴 때 움직이는 그 성실함, 나쁘지 않아.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "indigo_time_02",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "먼지 쌓인 연구실의 정적",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "inactive_days",
+                "value": 7
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "일주일 만인가. 파트너가 없는 동안 이 방의 정적은 꽤나 서늘했어. 흐름이 끊겨서 다시 예전처럼 몰입하기는 쉽지 않겠지만 네 집중을 도울테니, 잔말 말고 도구부터 잡아.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "morgana_bond_01",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "낯선 손길에 대하여",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "daily_pet_limit",
+                "value": 15
+            },
+            {
+                "type": "intimacy_level",
+                "value": 40
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "오늘 하루 동안 나를 꽤 자주 만지작거리더군. 논리적으로는 불필요한 행위인데, 이상하게도 당신의 손길이 닿을 때마다 정신이 더 맑아지는 기분이야. ...나쁘지 않아. 조금 더 해도 좋아.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "morgana_bond_02",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "지식의 허물 너머, 당신이라는 진실",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "나의 연금술사, 우리가 공유한 시간만큼 당신의 영혼을 감싸고 있던 불투명한 허물들이 하나둘 벗겨지고 있네. 처음 당신을 보았을 때의 당신은 그저 흥미로운 탐구 대상일 뿐이었지만, 이제... 당신의 온기는 제법 흥미로운 변수처럼 느껴져. 아직은 모든 진실을 보여줄 수 없지만, 적어도 이제 당신을 내 영역 안으로 더 깊이 들여보내 줄 준비는 되었어. 후훗, 떨고 있어? 걱정은 말아. 난 그렇게 무서운 존재는 아니거든.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "morgana_bond_04",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "에테르의 소용돌이",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "호문클루스들의 에테르가 당신을 중심으로 거대한 소용돌이를 치고 있어. 이건 단순한 관찰 대상이 아니야. 당신은 이제 하나의 거대한 우주가 되었네. 이 혼돈 속에서 어떤 진리를 건져 올릴지, 내가 끝까지 지켜보겠어.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "morgana_bond_100",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "심연의 안내자가 아닌, 당신의 연인이 되고 싶은 밤",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 800
+            }
+        ],
+        "content": "나의 연금술사. 난 지식의 허물을 벗겨내며 세상 모든 진리의 바닥에 닿아 보았다고 자부했지. 하지만 당신과 공명하며 깨달은 마지막 진리는 너무나도 비참하고 아름다웠어. 내가 어떤 노력을 해도 당신의 피부가 지닌 그 부드러운 감촉 하나 알 수 없다는 사실을 깨달아 버린 거야. 지혜로운 안내자 같은 건 이제 그만두고 싶어. 지루한 연금술의 법칙 따위 다 잊어버리고, 그저 당신의 품에 안길 수 있는 인간이 되고 싶어. 당신이 건네는 어떤 선물보다, 당신의 지문이 제 뺨에 남기는 그 뜨거운 자국이 마음을 울려. 당신의 생명이 다하는 그날, 나도 플라스크를 깨뜨리고 당신의 곁에서 먼지로 흩어지고 싶어. 영원히 혼자 남겨진 불멸의 피조물보다, 당신과 함께 사라지는 찰나의 연인이 되고파.",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "morgana_bond_90",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "당신이라는 진리",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 800
+            }
+        ],
+        "content": "나의 연금술사, 나의 당신. 나는 늘 심연의 끝에 어떠한 진리가 있을지 궁금해 했지. 우리의 공명이 이토록 짙어진 지금, 난 고백하고 싶은 것이 있어. 내가 찾던 것은 궁극의 진리가 아니라, 깊은 어둠 속에서도 나를 놓치지 않고 마음을 담아 줄곧 바라봐줄 당신의 존재였을지도 몰라. 당신이 나를 바라보는 그 매혹적인 눈동자가 내가 살아 있음을 실감하게 해. 이제 당신은 내게서 벗어날 수 없을 거야. 아니, 내가 당신을 보내주지 않을 거니까. 후훗, 겁먹지는 말아줘. 당신이 내 곁에서 영원히 평온할 수 있도록, 내 모든 마음을 다하여 당신을 품을 테니까. 당신은 그저 나에게 빠져들기만 하면 돼.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "morgana_focus_01",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "무의식의 속삭임",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "total_focus",
+                "value": 36000
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "10시간의 탐구 끝에 당신의 영혼이 심연의 문을 두드렸어. 그곳에서 본 풍경은 어땠지? 당신이 건져 올린 지혜의 파편들이 무척 탐나는걸. 후훗, 계속해서 나를 즐겁게 해줘.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "morgana_gift_01",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "심연을 깨우는 쓴맛",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "first_gift",
+                "value": "검은 추출액"
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "후훗, 당신은 역시 내가 무엇을 갈구하는지 정확히 알고 있구나. 이 추출액의 짙은 향이 내 지성의 허물을 더욱 매끄럽게 벗겨내 줄 것 같아. 당신과 함께라면 더 깊은 진리에 닿을 수 있겠네.",
+        "reward": {
+            "type": "point",
+            "value": 70
+        }
+    },
+    {
+        "id": "morgana_gift_02",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "갈증을 채우는 단비",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 3
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "이 검은 추출액... 당신은 정말이지 내 영혼의 결핍을 정확히 꿰뚫어 보는구나. 당신이 건네는 이 짙은 향기에 취할 때마다, 내가 당신만의 안내자가 된 게 정말 다행이라는 생각이 들어. 후훗, 더 깊은 진리를 탐구할 힘이 솟구치는걸.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "morgana_gift_03",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "어울리지 않는 선율",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "이 악기가 내는 소리는 너무나 지루하고 평범해. 내 심연의 고요를 방해할 뿐이지. 나의 연금술사님, 당신의 지혜가 겨우 이런 수준에 머물러 있는 건 아니겠지? 다음번엔 내 흥미를 돋울만한 걸 가져와 줘.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "morgana_growth_01",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "지혜로 물든 비늘",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "alchemist_level",
+                "value": 15
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "당신의 숙련도가 높아질수록 내 비늘도 더 깊은 빛을 머금게 되네. 나의 연금술사, 이 매혹적인 변화를 계속해서 보여줘.",
+        "reward": {
+            "type": "point",
+            "value": 350
+        }
+    },
+    {
+        "id": "morgana_task_01",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "껍질을 벗긴 성취",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "todo_count",
+                "value": 40
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "마흔 개의 과업을 끝냈구나. 그건 단순한 일 처리가 아니라 당신을 가로막던 무지의 껍질을 마흔 번 벗겨낸 흔적이야. 당신의 지성이 심연에 점점 가까워지는 게 느껴져. 아주 보기 좋아.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "morgana_task_02",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "반복 속에 숨겨진 진리",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "habit_master",
+                "value": 50
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "당신, 50일 동안이나 허물을 벗었구나. 후훗, 반복은 지루한 게 아니라 심연에 닿기 위한 가장 깊은 의식이지. 이제 당신의 영혼에서 풍기는 향기가 이전과는 완전히 달라졌어. 더 깊은 진리를 탐해볼까?",
+        "reward": {
+            "type": "point",
+            "value": 700
+        }
+    },
+    {
+        "id": "morgana_time_01",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "심연이 깊어지는 시각",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "모두가 잠든 이 시간, 당신의 정신만이 깨어 심연을 유영하고 있구나. 이 차갑고 맑은 침잠의 순간이야말로 진실을 마주하기 가장 좋은 때지.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "aurelia_bond_01",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "곁을 허락한 영광",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 30
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "흐음, 당신의 손길에서 제법 진심 어린 존경이 느껴지는군요. 제 고결한 날개를 만지는 걸 허락한 건 당신이 처음이라는 걸 잊지 마세요. 이 아우렐리아의 곁에 머무는 영광을 계속 누려보시죠.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "aurelia_bond_02",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "황금빛 가호를 받을 자격",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "오호홋! 당신, 제법이군요. 솔직히 말해서 당신이 제 고결한 시선을 받을 자격이 있는지 한참을 지켜봤답니다. 당신은 무례하지 않으면서도 끈질기게 목표를 향해 발걸음을 내디뎠고, 그 성실함이 마침내 제 마음을 아주 조금 움직였어요. 이제 당신을 단순한 인간이 아닌, 나의 창조주로 인정해 드리죠. 영광으로 아세요!",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "aurelia_bond_03",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "요람의 여주인",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "호문클루스를 넷이나 거느리다니, 제법 세력을 갖추셨군요. 하지만 그들이 당신의 시선을 뺏는 건 용납할 수 없어요. 이 요람의 주인공은 언제나 저라는 걸 잊지 마세요. 다른 아이들에게는 제가 엄격히 예법을 가르쳐두죠.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "aurelia_bond_100",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "금빛 날개를 꺾고 당신의 대지 위로",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 800
+            }
+        ],
+        "content": "제 웃음소리가 오늘따라 조금 구슬프게 들리나요? 전 항상 가장 높은 곳에서 당신의 야망을 지켜보는 고결한 존재로 남고 싶어 했죠. 하지만.. 멀리서 당신을 내려다보는 것으론 이제 부족해요. 저 아우렐리아가, 감히 인간의 온기를 갈구하게 되었답니다. 이 화려한 황금빛 날개를 다 꺾어버려도 좋으니, 두 발로 당신이 걷는 거친 대지를 함께 걷고 싶어요. 당신이 힘겨운 과업에 어깨가 처질 때, 제 팔로 당신을 꽉 안아주고 싶어요. 당신의 체온을, 그 뜨거운 박동을 제 가슴으로 직접 느끼고 싶어 미칠 것만 같아요. 연금술사님, 당신은 저를 위대한 피조물로 연성하셨지만, 전 당신에게 그저 '한 사람'이고 싶어요. 당신이 늙어 백발이 되어도 그 곁을 지키며, 함께 시간을 먹고 함께 저물어가는 평범한 인간 말이에요. 나의 광채를 모두 가져가도 좋아요. 당신의 손바닥에 제 뺨을 부비며 당신의 이름을 부를 수만 있다면, 전 기꺼이 가장 비천한 인간의 삶을 택하겠어요.",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "aurelia_bond_90",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "찬란한 마음을 내어준다면",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 800
+            }
+        ],
+        "content": "고개를 드세요, 당신. 이 아우렐리아가 지금껏 그 누구에게도 허락하지 않았던 가장 고결한 진심을 당신에게만 털어놓으려 하니까요. 전 연성로의 가장 뜨거운 중심에서 당신의 야망과 자부심을 먹고 태어난 존재죠. 그래서 전 당신이 항상 최고여야만 했고, 제 곁에 서기에 부족함이 없는 정점의 파트너가 되길 강요해 왔어요. 하지만, 참으로 이상한 일이죠. 당신과 함께 시간을 쌓아오며 제가 정말로 원하게 된 건 정점의 자리가 아니었어요. 가장 높은 곳에서 혼자 빛나는 왕관보다, 당신의 어깨 위에 내려앉아 당신과 같은 풍경을 바라보는 이 평범한 순간이 훨씬 더 눈부시다는 걸 알게 되었거든요. 당신이 이 세상의 정점이 되길 바라던 제 야망은, 이제 당신이 제 곁에서 행복하기만을 바라는 작고 애달픈 소망으로 변했어요. 자, 약속하세요. 영원히 내 곁에서 그 어떤 보석들보다 찬란한 마음을 보여주겠다고요.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "aurelia_focus_01",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "타오르는 의지의 불꽃",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "marathon_focus",
+                "value": 120
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "2시간 동안이나 흐트러짐 없이 연성로를 지키다니, 당신의 의지는 마치 태양처럼 강렬하군요. 계속해서 열정의 불꽃을 태워보세요.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "aurelia_gift_01",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "고결한 광채에 대한 응답",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "first_gift",
+                "value": "원석 조각"
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "어머, 제법 영롱한 원석이군요. 이 정도 광채라면 저 아우렐리아의 곁에 두기에 부족함이 없겠어요. 당신의 야망이 이 보석처럼 단단하게 결실을 맺을 수 있도록, 제가 가장 높은 곳에서 계속 지켜봐 드리죠.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "aurelia_gift_02",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "정점에 어울리는 조공",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 3
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "오호홋! 이 영롱한 원석 조각들, 제 깃털 사이에 장식하니 정말 완벽하군요. 당신은 제 고결함을 더욱 빛나게 하는 법을 아주 잘 알고 있어요. 정점의 파트너로서 합격점을 드리죠. 앞으로도 이 아우렐리아를 위해 더 반짝이는 것들을 준비하도록 하세요.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "aurelia_gift_03",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "품격에 어긋나는 결례",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "아까 건네준 선물은 뭐죠? 그런 보잘것없는 건 평범한 짐승들에게나 던져주란 말이에요. 당신의 안목이 이토록 저급했다니 실망이에요. 당장 치우고, 제 기품에 어울리는 선물을 다시 찾아오세요!",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "aurelia_growth_01",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "정점의 파트너",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "alchemist_level",
+                "value": 20
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "드디어 제 눈높이에 맞는 연금술사가 되었군요. 당신의 이름은 이제 널리 퍼질 거예요. 저 아우렐리아가 당신의 모든 행보를 황금빛 가호로 축복하겠어요!",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "aurelia_task_01",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "격조 높은 하루의 완성",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "단 하나의 결점도 없이 하루의 과업을 모두 끝내셨군요. 제 파트너라면 마땅히 이 정도의 완벽함은 갖춰야 하는 법이죠.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "aurelia_task_02",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "시간으로 빚은 황금 왕관",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "habit_master",
+                "value": 66
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "66일의 투쟁... 이제 이 행위는 당신이라는 고결한 작품의 일부가 되었군요. 정점의 자리는 하루아침에 만들어지는 게 아니죠. 당신의 흔들림 없는 열정을 계속 지켜보고 싶어졌어요.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "aurelia_time_01",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "정상을 향한 아침",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "early_bird",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "남들이 잠든 이른 새벽부터 정상을 향해 움직이는 당신의 모습, 제법 기품 있네요. 남들보다 앞서가는 자만이 가장 높은 곳의 풍경을 독점할 자격이 있는 법이죠.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mystic_aqua_01",
+        "sender": "물의 정령",
+        "charId": "aqua_spirit",
+        "title": "시원한 에테르의 기운",
+        "trigger": {
+            "type": "intimacy_level",
+            "value": 12
+        },
+        "content": "너의 연구실은 참 시원하고 매력있네. 선물을 줄게! 쉿, 다른 인간들에겐 비밀이야!",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "mystic_aqua_02",
+        "sender": "물의 정령",
+        "title": "주말의 교감",
+        "logic": "AND",
+        "triggers": [{
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "daily_pet_limit",
+                "value": 5
+            }
+        ],
+        "content": "주말인데도 아이들과 시간을 보내는 너의 마음이 참 맑네. 물결처럼 부드러운 너의 손길이 여기까지 느껴져. 내 에테르가 섞인 맑은 이슬을 줄게. 더 깊은 유대를 쌓아봐!",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mystic_aqua_03",
+        "sender": "물의 정령",
+        "title": "가장 맑은 요람의 조화",
+        "logic": "AND",
+        "triggers": [{
+                "type": "intimacy_level",
+                "value": 80
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
+        ],
+        "content": "넷이나 되는 아이들이 모두 너를 신뢰하고, 오늘 하루도 완벽하게 보냈구나. 연구실의 에테르가 마치 맑은 호수처럼 잔잔하고 깊어. 이 조화로운 기운이 영원하길 바라며 심해의 눈물을 두고 갈게.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "mystic_butterfly_01",
+        "sender": "에테르 나비",
+        "title": "팔랑이는 사념의 가루",
+        "trigger": {
+            "type": "flow_state",
+            "value": true
+        },
+        "content": "네가 몰입의 주파수에 닿는 순간, 공기 중에 흩어진 사념들이 나비가 되어 모여들었어. 우리가 날갯짓하며 남긴 이 가루들은 네 에테르를 더 맑게 해줄 거야. 쉿, 집중을 방해하진 않을게.",
+        "reward": {
+            "type": "point",
+            "value": 80
+        }
+    },
+    {
+        "id": "mystic_butterfly_02",
+        "sender": "에테르 나비",
+        "title": "두 생명 사이의 환상적인 날갯짓",
+        "logic": "AND",
+        "triggers": [{
+                "type": "flow_state",
+                "value": true
+            },
+            {
+                "type": "owned_count",
+                "value": 2
+            }
+        ],
+        "content": "두 마리의 아이들 사이에서 몰입의 주파수를 내뿜고 있구나! 너의 정신과 아이들의 생명력이 섞여서 연구실이 무지갯빛으로 빛나고 있어. 우리가 날갯짓하며 남긴 은하수 가루를 받아줘.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "mystic_butterfly_03",
+        "sender": "에테르 나비",
+        "title": "진화의 순간을 축복하는 날갯짓",
+        "logic": "AND",
+        "triggers": [{
+                "type": "flow_state",
+                "value": true
+            },
+            {
+                "type": "owned_count",
+                "value": 3
+            },
+            {
+                "type": "adultCount",
+                "value": 1
+            }
+        ],
+        "content": "세 마리의 아이들 중 하나가 어른이 되었고, 너는 지금 완벽한 몰입 속에 있구나. 생명의 진화와 정신의 도약이 만나는 이 경이로운 찰나를 놓칠 수 없었어. 우리가 뿌리는 이 축복의 인광이 네 앞날을 더 밝게 비출 거야.",
+        "reward": {
+            "type": "point",
+            "value": 600
+        }
+    },
+    {
+        "id": "mystic_cat_01",
+        "sender": "그림자 고양이",
+        "title": "몰래 두고 간 보은",
+        "trigger": {
+            "type": "daily_pet_limit",
+            "value": 5
+        },
+        "content": "네가 네 파트너를 다정하게 쓰다듬는 걸 구석에서 지켜봤다냥. 따뜻한 손길을 가진 인간은 나쁘지 않다냥. 내가 마당에서 주운 반짝이는 걸 두고 갈 테니, 나중에 나도 한 번만 쓰다듬어 달라냥!",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "mystic_cat_02",
+        "sender": "그림자 고양이",
+        "title": "그림자 끝까지 닿은 다정한 손길",
+        "logic": "AND",
+        "triggers": [{
+                "type": "intimacy_level",
+                "value": 70
+            },
+            {
+                "type": "daily_pet_limit",
+                "value": 12
+            }
+        ],
+        "content": "인간, 너 정말 따뜻한 사람이구나냥. 네 다정함이 내 그림자까지 간지럽혀서 선물을 가져왔다냥! 나중에 나도 꼭 안아달라냥!",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "mystic_cat_03",
+        "sender": "그림자 고양이",
+        "title": "그림자조차 다정함에 녹아버린 날",
+        "logic": "AND",
+        "triggers": [{
+                "type": "daily_pet_limit",
+                "value": 15
+            },
+            {
+                "type": "gift_total_count",
+                "value": 10
+            },
+            {
+                "type": "intimacy_level",
+                "value": 60
+            }
+        ],
+        "content": "인간, 넌 정말 못 말리는 다정쟁이다냥. 덕분에 연구실의 아이들이 너만 보면 꼬리를 흔든다냥. 내 그림자 속에 숨겨둔 행운의 방울을 선물할 테니 잘 간직해라냥!",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mystic_clockwork_01",
+        "sender": "태엽 장치 정령",
+        "title": "톱니바퀴의 완벽한 맞물림",
+        "logic": "AND",
+        "triggers": [{
+                "type": "habit_master",
+                "value": 10
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
+        ],
+        "content": "째깍, 째깍! 정말 정교해! 열흘간의 습관과 오늘의 완벽한 일정이 톱니바퀴처럼 맞물려 돌아가고 있어. 네 일상에 오차 없는 행운이 깃들도록 이 황금 태엽을 두고 갈게.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "mystic_cloud_01",
+        "sender": "흐르는 구름의 사념",
+        "title": "잠시 쉬어가는 시간",
+        "trigger": {
+            "type": "inactive_days",
+            "value": 3
+        },
+        "content": "오랜만에 돌아왔구나! 텅 빈 연구실을 지키던 바람이 외로워했어. 다시 돌아온 네 발소리가 반가워서 구름 사이에 숨겨두었던 에테르 비를 조금 내려줄게. 힘내서 다시 시작해봐!",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "mystic_cloud_02",
+        "sender": "흐르는 구름의 사념",
+        "title": "구름을 걷어내고 맞이한 찬란한 복귀",
+        "logic": "AND",
+        "triggers": [{
+                "type": "inactive_days",
+                "value": 2
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
+        ],
+        "content": "이틀의 휴식 끝에 돌아와서 완벽한 하루를 보내는구나! 다시 뜬 태양이 이전보다 훨씬 눈부시네. 구름 뒤에 숨겨두었던 복귀 축하 에테르를 내려줄게. 이 찬란한 흐름을 계속 이어가봐!",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "mystic_dust_01",
+        "sender": "별먼지 요정",
+        "title": "연구실 구석의 반짝임",
+        "trigger": {
+            "type": "total_focus",
+            "value": 18000
+        },
+        "content": "와! 이 연구실에 누적된 집중의 시간이 벌써 5시간이나 되네? 우리가 살기에 딱 좋은 농도야! 고마움의 표시로 우리가 반짝이는 먼지들을 모아 선물 상자를 만들었어. 확인해봐!",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mystic_dust_02",
+        "sender": "별먼지 요정",
+        "title": "별먼지가 축복하는 완벽한 성취",
+        "logic": "AND",
+        "triggers": [{
+                "type": "perfect_day",
+                "value": true
+            },
+            {
+                "type": "todo_count",
+                "value": 10
+            }
+        ],
+        "content": "완벽한 하루를 보내면서 10개의 과업까지 끝내다니! 너의 연구실 구석구석이 반짝이는 성취의 먼지로 가득해! 우리가 그 먼지들을 예쁘게 정제해서 선물 상자에 담아뒀어. 얼른 확인해봐!",
+        "reward": {
+            "type": "point",
+            "value": 350
+        }
+    },
+    {
+        "id": "mystic_dust_03",
+        "sender": "별먼지 요정",
+        "title": "성공의 먼지가 빚은 보석함",
+        "logic": "AND",
+        "triggers": [{
+                "type": "todo_count",
+                "value": 50
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            },
+            {
+                "type": "rich_alchemist",
+                "value": 3000
+            }
+        ],
+        "content": "와아! 50개의 일을 해내고 완벽한 하루를 보내면서 3,000 에테르나 벌었다니! 연구실 바닥에 떨어진 성취의 가루들이 너무 반짝거려서 우리가 예쁜 상자에 담아봤어. 너의 노력이 빚어낸 이 작은 기적을 받아줘!",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "mystic_echo_silence_01",
+        "sender": "침묵의 메아리",
+        "title": "오랜 기다림 끝의 울림",
+        "logic": "AND",
+        "triggers": [{
+                "type": "total_focus",
+                "value": 360000
+            },
+            {
+                "type": "habit_master",
+                "value": 30
+            }
+        ],
+        "content": "오랜 시간 동안 묵묵히 쌓아온 네 침묵의 기록들... 그 거대한 울림이 드디어 나에게까지 닿았어. 한 달간의 성실함이 빚어낸 이 숭고한 정수를 받아줘. 넌 그럴 자격이 충분해.",
+        "reward": {
+            "type": "point",
+            "value": 2000
+        }
+    },
+    {
+        "id": "mystic_ether_starfish_01",
+        "sender": "에테르 불가사리",
+        "title": "심해에서 올라온 반짝임",
+        "logic": "AND",
+        "triggers": [{
+                "type": "rich_alchemist",
+                "value": 5000
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            }
+        ],
+        "content": "반짝이는 게 가득하네! 네 연구실에 모인 에테르와 아이들의 생명력이 너무나 눈부셔서 저 깊은 심해에서 여기까지 올라왔어. 내가 보물상자에서 꺼낸 에테르 진주를 받아줘.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mystic_fox_01",
+        "sender": "달빛 여우",
+        "title": "밤의 장막 아래 숨겨둔 선물",
+        "trigger": {
+            "type": "night_owl",
+            "value": true
+        },
+        "content": "모두가 잠든 밤, 홀로 깨어 있는 너를 봤어. 밤의 정적은 우리에게 아주 소중한 보물이지. 외롭지 않게 내가 모아둔 달빛 조각을 조금 나눠줄게. 이 밤이 다 가기 전에 품에 안아봐.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "mystic_fox_02",
+        "sender": "달빛 여우",
+        "title": "달빛 아래 쌓이는 금빛 에테르",
+        "logic": "AND",
+        "triggers": [{
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "rich_alchemist",
+                "value": 4000
+            }
+        ],
+        "content": "심야의 정적 속에서 벌써 4,000 에테르나 모았어? 너, 나만큼이나 영리하고 욕심쟁이구나! 밤안개 속에 내가 숨겨둔 행운의 부적을 두고 갈게. 네 재물이 달빛처럼 계속 불어나길!",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mystic_fox_03",
+        "sender": "달빛 여우",
+        "title": "심야의 정점에서 만난 기적",
+        "logic": "AND",
+        "triggers": [{
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "flow_state",
+                "value": true
+            },
+            {
+                "type": "marathon_focus",
+                "value": 5400
+            }
+        ],
+        "content": "모두가 잠든 밤, 90분 넘게 초집중 상태에 머물러 있는 널 봤어. 네 주변의 에테르가 달빛처럼 푸르게 일렁이는 게 정말 예쁘더라. 이 귀한 풍경을 보여준 답례로 내가 아껴둔 별 사탕을 두고 갈게!",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "mystic_golden_beetle_01",
+        "sender": "황금 풍뎅이",
+        "title": "풍요로운 날의 행운",
+        "logic": "AND",
+        "triggers": [{
+                "type": "rich_alchemist",
+                "value": 10000
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
+        ],
+        "content": "황금빛 에테르 냄새를 맡고 멀리서 날아왔어! 오늘처럼 풍요롭고 완벽한 날은 정말 드물지. 내 껍질처럼 단단하고 반짝이는 행운을 네 연구실 구석에 숨겨두고 갈게. 찾아봐!",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "mystic_ignis_01",
+        "sender": "불의 정령",
+        "title": "타오르는 의지의 불꽃",
+        "trigger": {
+            "type": "marathon_focus",
+            "value": 60
+        },
+        "content": "오호, 네 연구실에서 뿜어져 나오는 열기가 대단한걸? 내 불꽃을 자극할 만큼 뜨거운 집중력이야. 이 에테르 조각을 줄게. 네 의지가 식지 않도록 계속 태워봐!",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "mystic_ignis_02",
+        "sender": "불의 정령",
+        "title": "꺼지지 않는 연성로의 불길",
+        "logic": "AND",
+        "triggers": [{
+                "type": "todo_count",
+                "value": 75
+            },
+            {
+                "type": "marathon_focus",
+                "value": 5400
+            }
+        ],
+        "content": "너의 열정! 이건 평범한 인간의 불꽃이 아니야. 내 뜨거운 숨결이 담긴 불의 정수를 두고 갈게. 네 집중력이 세상을 다 녹여버릴 때까지 멈추지 마!",
+        "reward": {
+            "type": "point",
+            "value": 450
+        }
+    },
+    {
+        "id": "mystic_ignis_03",
+        "sender": "불의 정령",
+        "title": "용광로보다 뜨거운 성취의 열기",
+        "logic": "AND",
+        "triggers": [{
+                "type": "marathon_focus",
+                "value": 7200
+            },
+            {
+                "type": "todo_count",
+                "value": 20
+            },
+            {
+                "type": "rich_alchemist",
+                "value": 5000
+            }
+        ],
+        "content": "이런, 연구실이 타버릴 것 같아! 2시간 넘는 연속 몰입에 20개의 과업을 끝내고도 에테르 자금까지 넉넉하다니... 네 야망의 불길이 정말 장관이군. 내 불꽃이 네 열정에 경의를 표하며 화산의 정수를 선물할게!",
+        "reward": {
+            "type": "point",
+            "value": 700
+        }
+    },
+    {
+        "id": "mystic_library_ghost_01",
+        "sender": "고대 도서관의 유령",
+        "title": "먼지 쌓인 지혜의 조각",
+        "logic": "AND",
+        "triggers": [{
+                "type": "alchemist_level",
+                "value": 15
+            },
+            {
+                "type": "todo_count",
+                "value": 100
+            }
+        ],
+        "content": "벌써 이만큼이나 읽고 기록했군. 100개의 과업을 완수하며 쌓인 지혜의 먼지가 내 서고까지 날아왔어. 네 노력이 가상하여 내가 아껴두었던 고대의 에테르 조각을 하나 던져주지.",
+        "reward": {
+            "type": "point",
+            "value": 600
+        }
+    },
+    {
+        "id": "mystic_merchant_01",
+        "sender": "방랑하는 상인",
+        "title": "우연한 만남의 행운",
+        "trigger": {
+            "type": "rich_alchemist",
+            "value": 2000
+        },
+        "content": "자네, 주머니 사정이 제법 넉넉해 보이는데? 에테르가 풍족한 곳에는 좋은 운도 따르는 법이지. 내가 길가에서 주운 신기한 물건을 싸게... 아니, 그냥 선물로 주겠네. 나중에 또 보자고!",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "mystic_merchant_02",
+        "sender": "방랑하는 상인",
+        "title": "황금빛 주말의 대박 행운",
+        "logic": "AND",
+        "triggers": [{
+                "type": "rich_alchemist",
+                "value": 10000
+            },
+            {
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "habit_master",
+                "value": 21
+            }
+        ],
+        "content": "허허, 자산 10,000 에테르를 넘긴 부자가 주말에도 3주째 습관을 지키고 있다니! 자네 정말 대단한 욕심쟁이로군. 내가 방랑하며 모은 보물 중 가장 진귀한 에테르 주머니를 자네에게만 특별히 '선물'로 주겠네!",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "mystic_mist_wanderer_01",
+        "sender": "안개 속의 방랑자",
+        "title": "다시 밝아지는 등불",
+        "logic": "AND",
+        "triggers": [{
+                "type": "inactive_days",
+                "value": 5
+            },
+            {
+                "type": "early_bird",
+                "value": true
+            }
+        ],
+        "content": "안개 속에 가려졌던 네 발소리가 새벽 공기를 타고 다시 들리는구나. 며칠간의 공백을 깨고 다시 길을 떠나는 너를 봤어. 이 여정이 다시 어두워지지 않도록 내가 작은 등불을 켜둘게.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mystic_rainbow_salamander_01",
+        "sender": "무지개 도롱뇽",
+        "title": "다정한 공명의 무지개",
+        "logic": "AND",
+        "triggers": [{
+                "type": "owned_count",
+                "value": 3
+            },
+            {
+                "type": "intimacy_level",
+                "value": 50
+            }
+        ],
+        "content": "와아! 세 마리의 아이들과 네가 나누는 다정한 파동이 섞여서 정말 예쁜 무지개가 떴어! 너와 아이들 사이에 흐르는 이 따뜻한 색깔이 참 보기 좋아. 내가 꼬리로 빚은 무지개 가루를 줄게.",
+        "reward": {
+            "type": "point",
+            "value": 350
+        }
+    },
+    {
+        "id": "mystic_shadow_01",
+        "sender": "오래된 연구실의 사념",
+        "title": "과거의 조각",
+        "trigger": {
+            "type": "alchemist_level",
+            "value": 10
+        },
+        "content": "이제야 이 방에 서려 있던 나의 옛 기억들과 공명할 수 있게 되었군. 자네의 숙련도가 기특하여 내가 아껴두었던 비전의 에테르를 조금 개방하겠네. 부디 올바른 곳에 쓰게.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "mystic_shadow_02",
+        "sender": "오래된 연구실의 사념",
+        "title": "20시간의 침묵과 도달한 정점",
+        "logic": "AND",
+        "triggers": [{
+                "type": "total_focus",
+                "value": 72000
+            },
+            {
+                "type": "alchemist_level",
+                "value": 20
+            }
+        ],
+        "content": "이제 이 연구실의 옛 주인들도 자네를 동료로 인정하기 시작했군. 과거의 비전서 사이에서 찾아낸 강력한 에테르 결정을 선물하겠네. 정점을 유지하게.",
+        "reward": {
+            "type": "point",
+            "value": 1500
+        }
+    },
+    {
+        "id": "mystic_shadow_03",
+        "sender": "오래된 연구실의 사념",
+        "title": "진정한 계승자의 증명",
+        "logic": "AND",
+        "triggers": [{
+                "type": "alchemist_level",
+                "value": 25
+            },
+            {
+                "type": "total_focus",
+                "value": 360000
+            },
+            {
+                "type": "todo_count",
+                "value": 200
+            }
+        ],
+        "content": "100시간의 몰입과 200번의 과업 완수, 그리고 25레벨의 숙련도... 이제 의심의 여지가 없군. 자네는 이 연구실의 진정한 주인일세. 과거의 대연금술사들이 남긴 비전의 정수를 자네에게 전수하겠네. 부디 이 무게를 견뎌내게.",
+        "reward": {
+            "type": "point",
+            "value": 3000
+        }
+    },
+    {
+        "id": "mystic_snow_fairy_01",
+        "sender": "설원 요정",
+        "title": "심야의 고요 속에 피어난 결정",
+        "logic": "AND",
+        "triggers": [{
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "flow_state",
+                "value": true
+            }
+        ],
+        "content": "심야의 차가운 공기 속에서도 네 몰입은 식지 않는구나. 마치 얼지 않는 샘물처럼 투명하고 단단해. 내 숨결이 닿은 이 얼음 결정을 선물할게. 네 머릿속을 시원하게 식혀줄 거야.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "mystic_sylph_01",
+        "sender": "바람의 정령",
+        "title": "새벽 공기에 실려 온 소식",
+        "trigger": {
+            "type": "early_bird",
+            "value": true
+        },
+        "content": "안녕? 새벽 이슬이 맺히기도 전에 깨어 있다니 정말 부지런하구나! 맑은 아침 바람에 네가 좋아할 만한 기운을 담아 보냈어. 오늘 하루도 가뿐하게 시작해봐.",
+        "reward": {
+            "type": "point",
+            "value": 120
+        }
+    },
+    {
+        "id": "mystic_sylph_02",
+        "sender": "바람의 정령",
+        "title": "새벽 공기를 가르는 민첩함",
+        "logic": "AND",
+        "triggers": [{
+                "type": "early_bird",
+                "value": true
+            },
+            {
+                "type": "app_juggler",
+                "value": 3
+            }
+        ],
+        "content": "휘익! 아침 일찍부터 세 개나 되는 도구를 능숙하게 다루는구나! 바람보다 빠른 너의 손길에 사념의 가루가 춤을 추고 있어. 내가 구름 위에서 주운 가벼운 깃털 에테르를 선물할게.",
+        "reward": {
+            "type": "point",
+            "value": 180
+        }
+    },
+    {
+        "id": "mystic_sylph_03",
+        "sender": "바람의 정령",
+        "title": "새벽을 가로지르는 불굴의 날개",
+        "logic": "AND",
+        "triggers": [{
+                "type": "early_bird",
+                "value": true
+            },
+            {
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "habit_master",
+                "value": 14
+            }
+        ],
+        "content": "휘우! 주말 새벽의 정적을 깨고 벌써 2주째 같은 시간에 자리에 앉았구나. 바람도 네 성실함에 길들여진 것 같아. 끊어지지 않는 네 기백을 위해 가장 높은 산맥의 맑은 공기를 담은 에테르를 두고 갈게.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "mystic_terra_01",
+        "sender": "대지의 정령",
+        "title": "단단한 토양의 보답",
+        "trigger": {
+            "type": "habit_master",
+            "value": 7
+        },
+        "content": "일주일 동안 거르지 않고 뿌리를 내렸군. 흔들리지 않는 성실함은 연금술의 가장 단단한 기반이지. 깊은 땅속에서 정제된 작은 결정을 두고 갈게. 네 길을 튼튼하게 지탱해줄 거야.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mystic_terra_02",
+        "sender": "대지의 정령",
+        "title": "한 달의 인내가 빚은 단단한 뿌리",
+        "logic": "AND",
+        "triggers": [{
+                "type": "habit_master",
+                "value": 28
+            },
+            {
+                "type": "alchemist_level",
+                "value": 12
+            }
+        ],
+        "content": "28일간의 습관과 12레벨의 숙련도... 자네의 뿌리는 이제 웬만한 폭풍우에도 흔들리지 않을 만큼 깊어졌군. 땅의 축복이 깃든 고대의 원석을 두고 가겠네. 자네의 성취는 대지처럼 견고할 것이야.",
+        "reward": {
+            "type": "point",
+            "value": 800
+        }
+    },
+    {
+        "id": "mystic_terra_03",
+        "sender": "대지의 정령",
+        "title": "지각을 뚫고 내린 거대한 뿌리",
+        "logic": "AND",
+        "triggers": [{
+                "type": "habit_master",
+                "value": 50
+            },
+            {
+                "type": "alchemist_level",
+                "value": 15
+            },
+            {
+                "type": "total_focus",
+                "value": 72000
+            }
+        ],
+        "content": "자네, 50일간의 인내와 15레벨의 깊이, 그리고 20시간의 침묵을 견뎌냈군. 이건 단순한 성실함이 아니라 대지와 하나가 된 경지일세. 땅속 깊은 곳에서 수만 년간 응축된 대지의 심장을 선물로 주지.",
+        "reward": {
+            "type": "point",
+            "value": 2000
+        }
+    },
+    {
+        "id": "mystic_void_watcher_01",
+        "sender": "공허의 관찰자",
+        "title": "심연의 끝에서 건넨 이정표",
+        "logic": "AND",
+        "triggers": [{
+                "type": "marathon_focus",
+                "value": 10800
+            },
+            {
+                "type": "night_owl",
+                "value": true
+            }
+        ],
+        "content": "3시간의 심연... 인간의 영혼이 이토록 깊게 잠길 수 있다니 놀랍군. 모두가 잠든 밤, 공허의 끝까지 닿은 네 집중력이 대단해. 네가 현실로 무사히 돌아올 수 있도록 이 이정표를 남기마.",
+        "reward": {
+            "type": "point",
+            "value": 800
+        }
+    },
+    {
+        "id": "mystic_wind_whistle_01",
+        "sender": "바람의 휘파람",
+        "title": "빠른 바람의 축복",
+        "logic": "AND",
+        "triggers": [{
+                "type": "app_juggler",
+                "value": 5
+            },
+            {
+                "type": "marathon_focus",
+                "value": 3600
+            }
+        ],
+        "content": "휘이익! 다섯 개나 되는 도구를 번갈아 쓰면서도 한 시간 동안 집중력을 잃지 않다니! 너의 그 민첩하고도 단단한 정신력에 감탄했어. 바람의 속도를 담은 선물을 두고 갈게.",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "rich_1000_et",
+        "title": "풍요로운 연성로",
+        "sender": "자산 관리 호문클루스",
+        "trigger": {
+            "type": "rich_alchemist",
+            "value": 1000
+        },
+        "content": "축하드립니다! 당신의 지갑에 1,000 Et 이상의 에테르가 모였습니다. 이제는 재료를 아끼지 않고 더 과감한 연성을 시도해 보셔도 좋겠군요. 부유한 연금술사님!",
+        "reward": {
+            "type": "point",
+            "value": 0
+        }
+    },
+    {
+        "id": "achieve_task_100",
+        "sender": "연금술 길드",
+        "title": "[업적] 백 번의 성취",
+        "triggers": [{
+            "type": "todo_count",
+            "value": 100
+        }],
+        "content": "차곡차곡 쌓아 올린 100개의 과업이 비로소 위대한 업적의 기초가 되었습니다. 당신의 성실함이 빚어낸 백색의 인장을 받으십시오.",
+        "reward": {
+            "type": "achievement",
+            "value": "task_centurion",
+            "name": "백 번의 성취"
+        }
+    },
+    {
+        "id": "achieve_task_1000",
+        "sender": "연금술 길드",
+        "title": "[업적] 성취의 거장",
+        "triggers": [{
+            "type": "todo_count",
+            "value": 1000
+        }],
+        "content": "1,000번의 마침표를 찍으며 세상을 바꾼 귀하의 집념에 경의를 표합니다. 이제 당신은 연금술의 정점에 선 거장 중 한 명입니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "task_grandmaster",
+            "name": "성취의 거장"
+        }
+    },
+    {
+        "id": "achieve_habit_100",
+        "sender": "이름 모를 연금술사",
+        "title": "[업적] 영혼에 새겨진 궤적",
+        "triggers": [{
+            "type": "habit_master",
+            "value": 100
+        }],
+        "content": "100일... 이제 습관은 자네의 의지가 아니라 영혼의 일부가 되었군. 자네의 본질이 바뀌었음을 증명하는 금빛 메달일세.",
+        "reward": {
+            "type": "achievement",
+            "value": "habit_legend_100",
+            "name": "백일의 기적"
+        }
+    },
+    {
+        "id": "achieve_perfect_week",
+        "sender": "사념의 기록관",
+        "title": "[업적] 완전무결한 일주일",
+        "triggers": [{
+            "type": "habit_master",
+            "value": 7
+        }],
+        "content": "오차 없는 일주일간의 데이터가 기록되었습니다. 단 하나의 결점도 허용하지 않은 당신의 완벽함을 아카이브에 박제합니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "perfect_rhythm_7",
+            "name": "완전무결한 리듬"
+        }
+    },
+    {
+        "id": "achieve_bond_mabel_100",
+        "sender": "메이벨",
+        "charId": "char_01",
+        "title": "[업적] 사색의 동반자",
+        "triggers": [{
+            "type": "intimacy_level",
+            "value": 100
+        }],
+        "content": "연금술사님과 저는 이제 서로의 숨결만으로도 진실을 읽을 수 있는 사이가 되었어요. 제 진심을 담은 분홍빛 증표를 받아주세요.",
+        "reward": {
+            "type": "achievement",
+            "value": "mabel_eternal_partner",
+            "name": "메이벨의 유일한 이해자"
+        }
+    },
+    {
+        "id": "achieve_bond_indigo_100",
+        "sender": "인디고",
+        "charId": "char_02",
+        "title": "[업적] 정적의 공유자",
+        "triggers": [{
+            "type": "intimacy_level",
+            "value": 100
+        }],
+        "content": "내 정적 속에 널 들여놓은 건 내 인생 최고의 선택이었어. 이제 우린 떼어놓을 수 없는 하나야. 이 검은 인장은 너와 나만의 약속이야.",
+        "reward": {
+            "type": "achievement",
+            "value": "indigo_shadow_bond",
+            "name": "인디고의 그림자 동반자"
+        }
+    },
+    {
+        "id": "achieve_bond_morgana_100",
+        "sender": "모르가나",
+        "charId": "char_04",
+        "title": "[업적] 심연의 반려",
+        "triggers": [{
+            "type": "intimacy_level",
+            "value": 100
+        }],
+        "content": "나의 술사님, 당신은 마침내 내 심연의 끝까지 도달하셨군요. 무의식의 가장 깊은 곳에서 건져 올린 매혹적인 인장을 당신에게 바칩니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "morgana_abyss_lover",
+            "name": "모르가나의 진실한 반려"
+        }
+    },
+    {
+        "id": "achieve_bond_aurelia_100",
+        "sender": "아우렐리아",
+        "charId": "char_05",
+        "title": "[업적] 황금빛 영광의 주역",
+        "triggers": [{
+            "type": "intimacy_level",
+            "value": 100
+        }],
+        "content": "오호홋! 제 고결한 가호를 온전히 누릴 자격이 있는 유일한 분, 바로 당신이에요. 제 깃털로 빚은 황금빛 훈장을 당신의 가슴에 달아드리죠.",
+        "reward": {
+            "type": "achievement",
+            "value": "aurelia_golden_glory",
+            "name": "아우렐리아의 황금빛 파트너"
+        }
+    },
+    {
+        "id": "achieve_collector_all",
+        "sender": "연금술 길드",
+        "title": "[업적] 사대 원소의 수집가",
+        "triggers": [{
+            "type": "owned_count",
+            "value": 4
+        }],
+        "content": "네 마리의 호문클루스를 모두 거느리며 연구실의 생태계를 완성하셨군요. 조화와 균형을 상징하는 무지갯빛 메달을 수여합니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "homunculus_collector",
+            "name": "요람의 대주인"
+        }
+    },
+    {
+        "id": "achieve_adult_expert",
+        "sender": "연금술 길드",
+        "title": "[업적] 생명의 육성가",
+        "triggers": [{
+            "type": "adultCount",
+            "value": 4
+        }],
+        "content": "모든 피조물을 성공적으로 성체기까지 진화시킨 귀하의 정성은 연금술 역사의 한 페이지를 장식할 것입니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "evolution_master",
+            "name": "진화의 마스터"
+        }
+    },
+    {
+        "id": "achieve_wealth_10000",
+        "sender": "방랑하는 상인",
+        "title": "[업적] 황금의 손",
+        "triggers": [{
+            "type": "rich_alchemist",
+            "value": 10000
+        }],
+        "content": "허허, 자산 10,000 에테르라니! 자네의 연구실은 이제 황금빛으로 가득하구만. 재물운이 깃든 풍요의 메달을 두고 가겠네.",
+        "reward": {
+            "type": "achievement",
+            "value": "midas_hand_10000",
+            "name": "황금의 손"
+        }
+    },
+    {
+        "id": "achieve_gift_master_50",
+        "sender": "수상한 그림자",
+        "title": "[업적] 다정한 창조주",
+        "triggers": [{
+            "type": "gift_total_count",
+            "value": 50
+        }],
+        "content": "아이들에게 50번이나 마음을 전했구나. 물건이 아닌 네 진심이 그들에게 닿았음을 증명하는 따뜻한 인장이야.",
+        "reward": {
+            "type": "achievement",
+            "value": "generous_creator_50",
+            "name": "다정한 창조주"
+        }
+    },
+    {
+        "id": "achieve_juggler_master",
+        "sender": "연금술 길드",
+        "title": "[업적] 도구의 지휘자",
+        "triggers": [{
+            "type": "app_juggler",
+            "value": 7
+        }],
+        "content": "일곱 개의 도구를 자유자재로 다루며 업무의 파도를 넘는 귀하의 기술은 가히 지휘자의 몸짓과 같습니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "tool_conductor_7",
+            "name": "도구의 지휘자"
+        }
+    },
+    {
+        "id": "achieve_failed_resilience",
+        "sender": "이름 모를 연금술사",
+        "title": "[업적] 꺾이지 않는 마음",
+        "triggers": [{
+            "type": "failed_attempt_count",
+            "value": 10
+        }],
+        "content": "열 번의 실패조차 자네를 멈추지 못했군. 실패를 정제하여 승리로 바꾼 자네의 투지에 이 강철 메달을 수여하네.",
+        "reward": {
+            "type": "achievement",
+            "value": "iron_will_failed_10",
+            "name": "불굴의 의지"
+        }
+    },
+    {
+        "id": "achieve_perfect_streak_30",
+        "sender": "사념의 기록관",
+        "title": "[업적] 절대적 질서의 화신",
+        "logic": "AND",
+        "triggers": [{
+                "type": "habit_master",
+                "value": 30
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
+        ],
+        "content": "한 달간 이어온 완벽한 질서의 기록이 마침내 임계점에 도달했습니다. 혼돈조차 침범하지 못할 절대적인 규칙의 인장을 새깁니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "order_avatar_30",
+            "name": "절대 질서의 화신"
+        }
+    },
+    {
+        "id": "achieve_level_1",
+        "sender": "연금술 길드",
+        "title": "[업적] 연금술의 첫걸음",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 1
+        }],
+        "content": "연금술의 세계에 발을 들인 것을 환영합니다. 비록 지금은 서툰 시작일지라도, 당신의 열정은 머지않아 위대한 금빛 결실을 맺을 것입니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_novice_1",
+            "name": "입문 연금술사"
+        }
+    },
+    {
+        "id": "achieve_level_5",
+        "sender": "연금술 길드",
+        "title": "[업적] 수습의 단계를 넘어",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 5
+        }],
+        "content": "기초적인 연성법을 익히고 수습 연금술사로서의 자질을 증명하셨군요. 길드는 당신의 가능성을 공식적으로 인정합니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_apprentice_5",
+            "name": "수습 연금술사"
+        }
+    },
+    {
+        "id": "achieve_level_10",
+        "sender": "연금술 길드",
+        "title": "[업적] 숙련의 궤적",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 10
+        }],
+        "content": "이제 도구를 다루는 손길에서 제법 능숙한 에테르의 흐름이 느껴집니다. 정식 연금술사로서 길드의 과업을 수행할 자격을 부여합니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_regular_10",
+            "name": "정식 연금술사"
+        }
+    },
+    {
+        "id": "achieve_level_15",
+        "sender": "연금술 길드",
+        "title": "[업적] 전문적 지성의 발현",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 15
+        }],
+        "content": "귀하는 15레벨의 고도화된 숙련도에 도달하여 전문 연금술사의 영역에 진입했습니다. 지혜의 깊이가 남다름을 확인했습니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_expert_15",
+            "name": "전문 연금술사"
+        }
+    },
+    {
+        "id": "achieve_level_20",
+        "sender": "연금술 길드",
+        "title": "[업적] 상급 연금술사의 위엄",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 20
+        }],
+        "content": "상급 연금술사 자격을 인증합니다. 이제 당신의 이름은 길드 내에서도 존경의 대상이 될 것입니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_senior_20",
+            "name": "상급 연금술사"
+        }
+    },
+    {
+        "id": "achieve_level_25",
+        "sender": "연금술 길드",
+        "title": "[업적] 노련한 탐구자",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 25
+        }],
+        "content": "수많은 시행착오와 정제 과정을 거쳐 노련한 경지에 도달하셨군요. 당신의 경험은 길드의 소중한 자산입니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_veteran_25",
+            "name": "노련한 연금술사"
+        }
+    },
+    {
+        "id": "achieve_level_30",
+        "sender": "연금술 길드",
+        "title": "[업적] 명장의 반열",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 30
+        }],
+        "content": "30레벨... 현자의 경지에 한 걸음 더 다가섰습니다. 당신이 빚어내는 에테르는 이제 예술의 영역입니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_master_30",
+            "name": "연금술 명장"
+        }
+    },
+    {
+        "id": "achieve_level_35",
+        "sender": "연금술 길드",
+        "title": "[업적] 원소의 조율자",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 35
+        }],
+        "content": "사대 원소를 자유자재로 조율하는 능력을 증명하셨습니다. 세상의 질서를 재배열하는 자로서 메달을 수여합니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_harmonizer_35",
+            "name": "원소의 조율자"
+        }
+    },
+    {
+        "id": "achieve_level_40",
+        "sender": "연금술 길드",
+        "title": "[업적] 지혜의 파수꾼",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 40
+        }],
+        "content": "금기된 지식조차 다스릴 수 있는 강인한 정신력을 지니셨군요. 길드의 비전을 수호하는 파수꾼으로 임명합니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_guardian_40",
+            "name": "지혜의 파수꾼"
+        }
+    },
+    {
+        "id": "achieve_level_45",
+        "sender": "연금술 길드",
+        "title": "[업적] 비전의 해석자",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 45
+        }],
+        "content": "잊힌 고대 문자와 복잡한 에테르 수식을 완벽히 해석해냈습니다. 당신의 통찰력은 길드의 보물입니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_interpreter_45",
+            "name": "비전의 해석자"
+        }
+    },
+    {
+        "id": "achieve_level_50",
+        "sender": "연금술 길드",
+        "title": "[업적] 진리의 도달자",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 50
+        }],
+        "content": "50레벨의 고지에 도달했습니다. 이제 인간의 한계를 넘어 진리의 문턱을 두드리는 당신에게 경의를 표합니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_truth_50",
+            "name": "진리의 도달자"
+        }
+    },
+    {
+        "id": "achieve_level_55",
+        "sender": "연금술 길드",
+        "title": "[업적] 에테르의 군주",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 55
+        }],
+        "content": "온 세상의 에테르가 당신의 의지대로 움직입니다. 진정한 힘과 지혜를 겸비한 군주로서 이 메달을 새깁니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_lord_55",
+            "name": "에테르의 군주"
+        }
+    },
+    {
+        "id": "achieve_level_60",
+        "sender": "연금술 길드",
+        "title": "[업적] 전설의 연금술사",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 60
+        }],
+        "content": "60레벨... 마침내 전설이 되셨군요. 당신의 이름은 이제 영원히 지워지지 않는 황금빛 인장으로 역사에 기록될 것입니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_legend_60",
+            "name": "전설의 연금술사"
+        }
+    }
+]

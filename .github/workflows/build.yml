@@ -1,0 +1,19 @@
+name: Build Electron App
+on:
+  push:
+    branches: [ main ] # main 브랜치에 코드가 올라오면 작동합니다.
+jobs:
+  build:
+    runs-on: windows-latest # 2022 빌드 도구가 이미 깔린 서버를 사용합니다.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npx electron-rebuild -v 40.0.0 # 여기서 로컬에서 실패했던 리빌드가 성공합니다!
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Ether-Flow-Installer
+          path: demo/*.exe # 빌드 결과물이 담기는 폴더
