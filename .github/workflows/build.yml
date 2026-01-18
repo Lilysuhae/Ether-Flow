@@ -5,6 +5,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write # 빌드된 파일을 다룰 수 있는 권한을 추가합니다.
     steps:
       - uses: actions/checkout@v4
       
@@ -13,7 +15,6 @@ jobs:
         with:
           node-version: 20
 
-      # [추가] 파이썬 3.11 설치 (distutils 에러 해결용)
       - name: Setup Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -21,12 +22,17 @@ jobs:
 
       - run: npm install
       
-      # 여기서 발생하는 distutils 에러가 해결됩니다.
-      - run: npx electron-rebuild -v 40.0.0 
+      - name: Rebuild native modules
+        run: npx electron-rebuild -v 40.0.0 
       
-      - run: npm run build
+      - name: Build Electron app
+        # '-c.publish=never'를 추가하여 권한 에러를 방지합니다.
+        run: npm run build -- -c.publish=never
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - uses: actions/upload-artifact@v4
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: Ether-Flow-Installer
           path: demo/*.exe
