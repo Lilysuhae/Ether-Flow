@@ -1,11 +1,15 @@
-// [renderer.js] 상단 (1~15행 부근)
 const { ipcRenderer } = require('electron');
-const CharacterRenderer = require('./src/characterRenderer.js'); 
-const ProgressManager = require('./src/progress.js');
-const CollectionManager = require('./src/collection.js');
-const charData = require('./assets/data/characters.json');
-const MailboxManager = require('./src/mailboxManager.js');
-const mailPoolData = require('./assets/data/mailbox_pool.json');
+const path = require('path'); // [추가] path 모듈을 먼저 가져와야 합니다.
+
+// [수정] path.join과 __dirname을 사용하여 경로를 절대화합니다.
+const CharacterRenderer = require(path.join(__dirname, 'src', 'CharacterRenderer.js')); 
+const ProgressManager = require(path.join(__dirname, 'src', 'progress.js'));
+const CollectionManager = require(path.join(__dirname, 'src', 'collection.js'));
+const MailboxManager = require(path.join(__dirname, 'src', 'mailboxManager.js'));
+
+// 데이터 파일들도 동일하게 수정하는 것이 좋습니다.
+const charData = require(path.join(__dirname, 'assets', 'data', 'characters.json'));
+const mailPoolData = require(path.join(__dirname, 'assets', 'data', 'mailbox_pool.json'));
 
 // 전역 공유 (introManager.js 등이 에러 없이 쓰기 위함)
 window.charData = charData;
