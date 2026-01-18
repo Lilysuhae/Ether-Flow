@@ -45,20 +45,22 @@ function createWindow() {
     });
 
     // 3. 집중 감지 엔진: 1초마다 활성 창 정보 수집 및 전송
-    setInterval(async () => {
-        if (!mainWindow) return;
-        try {
-            const active = await activeWin();
-            if (active) {
-                mainWindow.webContents.send('active-window-update', {
-                    title: active.title,
-                    owner: active.owner.name 
-                });
+        setInterval(async () => {
+            if (!mainWindow) return;
+            try {
+                // active-win v9.x 방식 (객체 내부의 activeWindow 함수 호출)
+                const active = await activeWin.activeWindow(); 
+                if (active) {
+                    mainWindow.webContents.send('active-window-update', {
+                        title: active.title,
+                        owner: active.owner.name 
+                    });
+                }
+            } catch (err) {
+                // 에러가 나면 터미널에 찍어서 범인을 찾습니다.
+                console.error("감지 오류:", err);
             }
-        } catch (err) {
-            // 활성 창 획득 실패 시 무시
-        }
-    }, 1000); 
+        }, 1000);
 
     // [선택] 개발자 도구 (필요 시 주석 해제)
     // mainWindow.webContents.openDevTools({ mode: 'detach' });

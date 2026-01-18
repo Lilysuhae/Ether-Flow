@@ -32,8 +32,8 @@
     }
   },
   "dependencies": {
-    "@mapbox/node-pre-gyp": "^2.0.3",
     "active-win": "^9.0.0",
+    "@mapbox/node-pre-gyp": "^2.0.3",
     "nopt": "^9.0.0"
   },
   "devDependencies": {
