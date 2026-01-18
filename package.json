@@ -18,14 +18,13 @@
     "asar": true,
     "asarUnpack": [
       "**/node_modules/active-win/**/*",
-      "**/node_modules/@mapbox/node-pre-gyp/**/*" 
+      "**/node_modules/@mapbox/node-pre-gyp/**/*"
     ],
     "files": [
-    "**/*",
-    "!node_modules",
-    "node_modules/active-win/**/*",
-    "node_modules/@mapbox/node-pre-gyp/**/*",
-    "!demo"
+      "**/*",
+      "!demo",
+      "!node_modules/*/{test,tests,example,examples,docs}",
+      "!.github"
     ],
     "win": {
       "target": "nsis",
@@ -34,7 +33,8 @@
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^2.0.3",
-    "active-win": "^9.0.0"
+    "active-win": "^9.0.0",
+    "nopt": "^9.0.0"
   },
   "devDependencies": {
     "electron": "^40.0.0",
