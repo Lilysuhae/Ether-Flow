@@ -21,12 +21,11 @@
       "**/node_modules/@mapbox/node-pre-gyp/**/*" 
     ],
     "files": [
-      "main.js",
-      "index.html",
-      "renderer.js",
-      "style.css",
-      "src/**/*",
-      "assets/**/*"
+    "**/*",
+    "!node_modules",
+    "node_modules/active-win/**/*",
+    "node_modules/@mapbox/node-pre-gyp/**/*",
+    "!demo"
     ],
     "win": {
       "target": "nsis",
