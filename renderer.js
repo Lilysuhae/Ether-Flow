@@ -1,10 +1,10 @@
 // [renderer.js] 상단 (1~15행 부근)
 const { ipcRenderer } = require('electron');
-const CharacterRenderer = require('./src/characterRenderer'); 
-const ProgressManager = require('./src/progress');
-const CollectionManager = require('./src/collection');
+const CharacterRenderer = require('./src/characterRenderer.js'); 
+const ProgressManager = require('./src/progress.js');
+const CollectionManager = require('./src/collection.js');
 const charData = require('./assets/data/characters.json');
-const MailboxManager = require('./src/mailboxManager');
+const MailboxManager = require('./src/mailboxManager.js');
 const mailPoolData = require('./assets/data/mailbox_pool.json');
 
 // 전역 공유 (introManager.js 등이 에러 없이 쓰기 위함)
@@ -12,7 +12,7 @@ window.charData = charData;
 window.CharacterRenderer = CharacterRenderer; 
 
 // 파일 로드 (변수에 담지 않고 실행만 하여 중복 선언 방지)
-require('./src/introManager');
+require('./src/introManager.js');
 
 // --- [필수 상태 변수 선언] ---
 let masterData = null;          // 통합 데이터 객체 (JSON 파일 기반)
