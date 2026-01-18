@@ -26,8 +26,8 @@ jobs:
         run: npx electron-rebuild -v 40.0.0 
       
       - name: Build Electron app
-        # '-c.publish=never'를 추가하여 권한 에러를 방지합니다.
-        run: npm run build -- -c.publish=never
+        # -p never 플래그를 사용하여 '절대 배포(Publish)하지 않음'을 명시합니다.
+        run: npx electron-builder --win --x64 -p never
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
