@@ -10,28 +10,31 @@
     "build": "npm run rebuild && electron-builder --win --x64"
   },
   "build": {
-  "appId": "com.lilysuhae.etherflow",
-  "productName": "Ether Flow",
-  "directories": {
-    "output": "demo"
-  },
-  "asar": true,
-  "asarUnpack": [
-    "**/node_modules/active-win/**/*"
-  ],
-  "files": [
-    "**/*",
-    "!node_modules",
-    "node_modules/active-win/**/*",
-    "!demo", 
-    "!.github"
-  ],
-  "win": {
-    "target": "nsis",
-    "icon": "assets/icons/icon.ico"
-  }
+    "appId": "com.lilysuhae.etherflow",
+    "productName": "Ether Flow",
+    "directories": {
+      "output": "demo"
+    },
+    "asar": true,
+    "asarUnpack": [
+      "**/node_modules/active-win/**/*",
+      "**/node_modules/@mapbox/node-pre-gyp/**/*" 
+    ],
+    "files": [
+      "main.js",
+      "index.html",
+      "renderer.js",
+      "style.css",
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icons/icon.ico"
+    }
   },
   "dependencies": {
+    "@mapbox/node-pre-gyp": "^2.0.3",
     "active-win": "^9.0.0"
   },
   "devDependencies": {
