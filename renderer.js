@@ -611,34 +611,47 @@ window.showCharDetail = (id) => {
         growthText.innerText = `${Math.floor(growthMin)} / ${targetMin} min`;
     }
 
-    // 6. [핵심] 선호 선물 그리드 렌더링 (원래의 목록형 유지)
-    const prefList = document.getElementById('detail-pref-list');
-    const giftsGiven = givenGiftsMap[char.id] || []; // 이 캐릭터에게 준 아이템 목록
+    // 6. [수정] 선호/불호 선물 분리 렌더링
+    const favListContainer = document.getElementById('list-favorite');
+    const disListContainer = document.getElementById('list-dislike');
+    const giftsGiven = givenGiftsMap[char.id] || [];
 
-    // 캐릭터의 선호도 데이터(favorite + dislike)를 결합하여 목록 구성
-    const allPrefs = [
-        ...char.preferences.favorite.map(name => ({ name, type: 'fav' })),
-        ...char.preferences.dislike.map(name => ({ name, type: 'dis' }))
-    ];
+    const renderPrefItems = (container, items) => {
+        if (!container) return;
+        if (items.length === 0) {
+            container.innerHTML = '<span style="font-size:12px; color:#666; padding-left:5px;">(정보 없음)</span>';
+            return;
+        }
 
-    prefList.innerHTML = allPrefs.map(pref => {
-        // 해금 여부 확인 (한 번이라도 준 적이 있는가)
-        const isUnlocked = giftsGiven.includes(pref.name);
-        const displayName = isUnlocked ? pref.name : "???";
-        const iconClass = pref.type === 'fav' ? 'fa-heart' : 'fa-skull';
-        const statusClass = isUnlocked ? 'unlocked' : 'locked';
+        container.innerHTML = items.map(itemName => {
+            const isUnlocked = givenGiftsMap[char.id]?.includes(itemName);
+            const itemInfo = shopItems.find(i => i.name === itemName);
+            
+            let iconContent = isUnlocked 
+                ? (itemInfo ? itemInfo.icon : '<i class="fas fa-box"></i>') 
+                : '<i class="fas fa-question"></i>';
+                
+            const displayName = isUnlocked ? itemName : "???";
+            const statusClass = isUnlocked ? '' : 'locked';
 
-        return `
-            <div class="pref-item ${statusClass}" data-tooltip="${isUnlocked ? '' : '선물을 주어 정보를 해금하세요'}">
-                <i class="fas ${iconClass}"></i>
-                <span>${displayName}</span>
-            </div>
-        `;
-    }).join('');
+            // [핵심 교정] title 속성을 제거하고 data-tooltip을 사용합니다.
+            const tooltipMsg = isUnlocked ? `` : "다양한 선물을 주어 정보를 해금하세요";
+
+            return `
+                <div class="pref-item ${statusClass}" data-tooltip="${tooltipMsg}">
+                    <div class="pref-item-icon-wrapper">${iconContent}</div>
+                    <span class="pref-item-name">${displayName}</span>
+                </div>
+            `;
+        }).join('');
+    };
+
+    renderPrefItems(favListContainer, char.preferences.favorite);
+    renderPrefItems(disListContainer, char.preferences.dislike);
 
     // 7. 설명 및 버튼 제어
     document.getElementById('detail-char-desc').innerText = isActiveEgg 
-        ? "당신의 몰입을 기다리고 있는 연금술의 결정체입니다. 다시 품어주시겠습니까?" 
+        ? "당신의 몰입을 기다리고 있는 알입니다. 다시 품어주시겠습니까?" 
         : (char.description || "등록된 설명이 없습니다.");
 
     const selectBtn = document.getElementById('detail-select-btn');
@@ -1786,23 +1799,22 @@ window.toggleHorizontalMode = () => {
     saveAllData();
 };
 
-/**
- * [renderer.js] 가로/세로 모드 레이아웃을 실제 앱에 적용하고 윈도우 크기를 조정합니다.
- */
 window.applyHorizontalMode = () => { 
     const app = document.getElementById('app'); 
     if (app) {
-        // 1. 전체 레이아웃 클래스 토글
-        app.classList.toggle('horizontal-mode', window.isHorizontalMode);
+        // window.isHorizontalMode가 false일 때 'horizontal-mode' 클래스가 확실히 제거되는지 확인
+        if (window.isHorizontalMode) {
+            app.classList.add('horizontal-mode');
+        } else {
+            app.classList.remove('horizontal-mode');
+        }
     }
     
-    // 2. 설정창 내의 가로 모드 토글 스위치 UI 상태 동기화
     const toggleContainer = document.getElementById('horizontal-mode-toggle');
     if (toggleContainer) {
         toggleContainer.classList.toggle('active', window.isHorizontalMode);
     }
     
-    // 3. 메인 프로세스(main.js)에 창 크기 변경 요청 전송
     ipcRenderer.send('set-layout-size', window.isHorizontalMode);
 };
 
@@ -2287,10 +2299,12 @@ window.toggleSettings = (show) => {
         const fontRadio = document.querySelector(`input[name="font-choice"][value="${currentFont}"]`);
         if (fontRadio) fontRadio.checked = true;
 
-        const radioH = document.getElementById('layout-h');
-        const radioV = document.getElementById('layout-v');
-        if (window.isHorizontalMode && radioH) radioH.checked = true;
-        else if (radioV) radioV.checked = true;
+        // 2. [버그 수정] 넓게 보기(가로 모드) 토글 UI 상태 동기화
+        // 기존의 layout-h, layout-v 참조 코드를 제거하고 아래 코드로 대체합니다.
+        const horizontalToggle = document.getElementById('horizontal-mode-toggle');
+        if (horizontalToggle) {
+            horizontalToggle.classList.toggle('active', window.isHorizontalMode);
+        }
 
         // 2. [작업 설정(Apps) UI 동기화] ★ 핵심 추가 ★
         
@@ -3897,3 +3911,39 @@ window.giveGift = (charId, itemInfo) => {
     window.updateUI();
     window.showToast(`${itemInfo.name}을(를) 선물했습니다!`, "success");
 };
+
+// [renderer.js] startEngine 함수 하단 혹은 적절한 위치에 추가
+async function checkForUpdateMail() {
+    const versionInfo = await ipcRenderer.invoke('get-version-update');
+    
+    if (versionInfo.latest && isNewerVersion(versionInfo.current, versionInfo.latest)) {
+        // 이미 해당 버전의 업데이트 서신을 받았는지 확인 (중복 생성 방지)
+        const mailId = `update_notice_${versionInfo.latest}`;
+        const isAlreadyReceived = mailbox.receivedMails.some(m => m.id === mailId);
+
+        if (!isAlreadyReceived) {
+            // 새로운 서신 객체 생성
+            const updateMail = {
+                id: mailId,
+                title: `새로운 연구 소식 (v${versionInfo.latest})`,
+                sender: "연금술 도우미",
+                content: `연금술사님, 연구실의 새로운 기능과 안정성이 개선된 v${versionInfo.latest} 버전이 준비되었습니다. 지금 GitHub에서 새로운 버전을 확인해 보세요!`,
+                receivedDate: new Date().toISOString(),
+                isRead: false,
+                isRewardClaimed: false,
+                reward: { type: 'point', value: 500 } // 업데이트 감사 보상
+            };
+
+            // 서신함에 추가 및 알림
+            mailbox.receivedMails.unshift(updateMail);
+            window.updateMailNotification();
+            window.showToast("학회로부터 중요한 서신이 도착했습니다!", "event");
+            saveAllData(); // 데이터 영구 저장
+        }
+    }
+}
+
+// 간단한 버전 비교 함수
+function isNewerVersion(current, latest) {
+    return latest !== current; // 단순 비교 혹은 세밀한 버전 파싱 로직 적용
+}

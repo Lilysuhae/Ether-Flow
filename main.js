@@ -104,17 +104,44 @@ ipcMain.handle('load-game-data', async () => {
 // --------------------------------------------------------------------------
 
 ipcMain.on('minimize-app', () => mainWindow.minimize());
-ipcMain.on('set-always-on-top', (e, flag) => mainWindow.setAlwaysOnTop(flag));
+ipcMain.on('set-always-on-top', (e, stayOnTop) => {
+    if (!mainWindow) return;
+
+    if (stayOnTop) {
+        // [수정] 단순히 true만 주는 대신 레벨(level)을 명시합니다. 
+        // 'screen-saver'는 윈도우에서 가장 높은 우선순위 레벨 중 하나입니다.
+        mainWindow.setAlwaysOnTop(true, 'screen-saver');
+        
+        // 추가로 모든 작업 공간(가상 데스크톱)에서 보이도록 설정 가능
+        mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+    } else {
+        mainWindow.setAlwaysOnTop(false, 'normal');
+        mainWindow.setVisibleOnAllWorkspaces(false);
+    }
+});
 
 // [수정] 스크린샷의 잘림 현상을 방지하기 위해 사이즈를 키웠습니다.
 ipcMain.on('set-layout-size', (e, isHorizontal) => {
+    if (!mainWindow) return;
+
+    // 1. [핵심] 크기 조절을 방해할 수 있는 모든 제약을 잠시 해제합니다.
+    mainWindow.setResizable(true);
+    mainWindow.setMinimumSize(100, 100); 
+    mainWindow.setMaximumSize(9999, 9999);
+
     if (isHorizontal) {
-        // 가로형: 도트 캐릭터와 프로그램 리스트가 충분히 보이도록 높이 확장
-        mainWindow.setSize(800, 900); 
+        // 가로 모드 (넓게 보기): 너비 800
+        // [수정] 세 번째 인자(animate)를 false로 설정하여 즉각 반응하게 합니다.
+        mainWindow.setSize(800, 900, false); 
     } else {
-        // 세로형: 투두 리스트가 길어져도 잘리지 않도록 확장
-        mainWindow.setSize(360, 900); 
+        // 세로 모드 (기본): 너비 360
+        mainWindow.setSize(360, 900, false);
     }
+    
+    // 2. 창이 작아질 때 화면 밖으로 나가는 것을 방지하기 위해 위치 재조정 (선택 사항)
+    // mainWindow.center(); 
+
+    console.log(`[레이아웃 변경] 가로모드: ${isHorizontal}, 현재 크기: ${mainWindow.getSize()}`);
 });
 
 ipcMain.on('save-log-image', async (event, rect) => {
@@ -176,5 +203,28 @@ ipcMain.on('force-reset-file', (event) => {
         event.reply('force-reset-complete');
     } catch (err) {
         console.error("File reset failed:", err);
+    }
+});
+
+
+// 업데이트 서신
+const axios = require('axios'); // 설치 필요: npm install axios
+
+ipcMain.handle('get-version-update', async () => {
+    try {
+        // Lilysuhae님의 ether-flow 저장소 최신 릴리스 정보 가져오기
+        const response = await axios.get('https://api.github.com/repos/Lilysuhae/ether-flow/releases/latest', {
+            headers: { 'User-Agent': 'EtherFlow-App' } // GitHub API 필수 헤더
+        });
+        
+        const latestVersion = response.data.tag_name.replace('v', '');
+        return {
+            current: app.getVersion(), // 현재 앱 버전 (0.5.0)
+            latest: latestVersion,
+            downloadUrl: response.data.html_url
+        };
+    } catch (error) {
+        console.error("버전 체크 오류:", error.message);
+        return null;
     }
 });

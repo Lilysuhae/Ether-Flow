@@ -5237,6 +5237,71 @@ header .header-right {
     border-radius: 10px;
 }
 
+/* --- 도감 상세정보: 선호/불호 선물 (최종 클린 버전) --- */
+
+.pref-section {
+    margin-bottom: 15px;
+}
+
+/* 섹션 제목: 아이콘 크기 및 정렬 최적화 */
+.pref-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.02em;
+}
+
+.pref-title.fav { color: #ff8c8c; } /* 부드러운 분홍 */
+.pref-title.dis { color: #b088f5; } /* 부드러운 보라 */
+
+.pref-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* 개별 아이템 캡슐: 장식을 최소화하고 가독성 강조 */
+.pref-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+/* 아이콘 영역 고정 크기 */
+.pref-item-icon-wrapper {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.pref-item-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #eee;
+}
+
+/* 잠긴 상태: 정보를 가리면서도 존재감 유지 */
+.pref-item.locked {
+    opacity: 0.4;
+    background: rgba(255, 255, 255, 0.02);
+    border-style: dashed;
+}
+
+.pref-item.locked .pref-item-icon-wrapper {
+    color: #666;
+}
+
 
 /* 모달 콘텐츠 세로모드 최적화*/
 @media screen and (max-width: 360px) {
