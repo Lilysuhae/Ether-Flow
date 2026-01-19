@@ -819,29 +819,30 @@ window.renderWorkAppList = () => {
         </li>`).join('');
 };
 
+// [renderer.js] 약 590행 부근 수정
 window.renderDistractionAppList = () => {
-    // 1. 메인 UI 리스트 (아직 비어있을 수 있음)
-    const mainList = document.getElementById('distract-app-list');
-    // 2. 설정창 내 리스트
+    // 설정창 내부에 존재하는 리스트 ID
     const settingsList = document.getElementById('distract-app-list-settings');
-    if (!settingsList) return;
+    if (!settingsList) return; 
 
-    // 데이터가 없을 경우 메시지 표시
-    if (distractionApps.length === 0) {
-        settingsList.innerHTML = '<li class="empty-list-msg">등록된 딴짓이 없습니다.</li>';
-        return;
-    }
-    
+    // 데이터가 비었을 때와 있을 때의 HTML 생성
     const content = distractionApps.length === 0 
-        ? '<li style="text-align:center; padding:15px; color:rgba(255,255,255,0.2); font-size:0.7rem;">등록된 딴짓 없음</li>'
+        ? '<li class="empty-list-msg">등록된 딴짓이 없습니다.</li>'
         : distractionApps.map(app => `
             <li class="work-app-item">
-                <i class="fas fa-ghost"></i> <span class="app-name">${app}</span>
-                <button class="btn-trash" onclick="window.removeDistractionApp('${app}')"><i class="fas fa-trash-can"></i></button>
+                <i class="fas fa-ghost"></i> 
+                <span class="app-name">${app}</span>
+                <button class="btn-trash" onclick="window.removeDistractionApp('${app}')">
+                    <i class="fas fa-trash-can"></i>
+                </button>
             </li>`).join('');
 
+    // 설정창 리스트에 주입
+    settingsList.innerHTML = content;
+
+    // 만약 나중에 메인 화면에 같은 ID를 추가할 경우를 대비한 안전 코드
+    const mainList = document.getElementById('distract-app-list');
     if (mainList) mainList.innerHTML = content;
-    if (settingsList) settingsList.innerHTML = content;
 };
 
 // [renderer.js] 작업 도구 등록 함수 수정
@@ -1941,6 +1942,7 @@ async function startEngine() {
 
     // 7. UI 초기 렌더링
     window.renderWorkAppList(); 
+    window.renderDistractionAppList();
     window.renderTodos(); 
     window.renderHabits();
     window.updateUI();
