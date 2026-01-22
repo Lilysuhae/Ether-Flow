@@ -36,25 +36,39 @@ class MailboxManager {
 
             const logic = mail.logic || "AND"; // 기본값은 모든 조건 충족(AND)
 
+            // [mailboxManager.js] 시간 관련 비교 로직을 모두 분(Min) 단위로 통일
             const checkCondition = (condition) => {
-                const currentVal = stats[condition.type];
-                if (currentVal === undefined && condition.type !== 'always') return false;
+                // 1. '항상 수신' 조건 처리
+                if (condition.type === 'always') return true;
 
-                // 1. 숫자형 데이터 공통 판정: '이상(>=)'으로 비교 (부동 소수점 및 초과 달성 대응)
-                if (typeof condition.value === 'number' && typeof currentVal === 'number') {
-                    // 시간대 체크(early_bird 등)가 아닌 일반 수치형 데이터일 때만 적용
-                    if (!['early_bird', 'night_owl', 'weekend_alchemist', 'currentHour'].includes(condition.type)) {
-                        return currentVal >= condition.value;
-                    }
-                }
-
-                // 2. 개별 트리거 타입별 상세 판정 로직
                 let isMet = false;
                 switch (condition.type) {
-                    // --- [성취 및 통계] ---
+                    // --- [시간 관련: 모두 분(Min) 단위로 변환하여 비교] ---
+                    
                     case 'total_focus':
-                        isMet = (stats.totalTime >= condition.value);
+                        // 누적 몰입 시간: (초 / 60) >= JSON에 적힌 분
+                        isMet = (stats.totalTime / 60) >= condition.value;
                         break;
+
+                    case 'marathon_focus':
+                        // 연속 몰입 시간: (초 / 60) >= JSON에 적힌 분
+                        // stats.marathonTime은 renderer.js에서 넘겨줘야 합니다.
+                        isMet = (stats.marathonTime / 60) >= condition.value;
+                        break;
+
+                    case 'specific_growth':
+                        // 특정 캐릭터 성장도: (초 / 60) >= JSON에 적힌 분
+                        const growthSec = stats.all_growth ? (stats.all_growth[condition.charId] || 0) : 0;
+                        isMet = (growthSec / 60) >= condition.value;
+                        break;
+
+                    case 'growth_level':
+                        // 현재 파트너 성장도: (초 / 60) >= JSON에 적힌 분
+                        const currentGrowthSec = stats.all_growth ? (stats.all_growth[stats.partnerId] || 0) : 0;
+                        isMet = (currentGrowthSec / 60) >= condition.value;
+                        break;
+
+                    // --- [수치 및 상태 관련: 기존 유지] ---
                     case 'owned_count':
                         isMet = (stats.ownedCount >= condition.value);
                         break;
@@ -62,48 +76,20 @@ class MailboxManager {
                         isMet = (stats.todoCount >= condition.value);
                         break;
                     case 'alchemist_level':
-                        isMet = (stats.level >= condition.value);
+                        isMet = (stats.alchemist_level >= condition.value);
                         break;
                     case 'rich_alchemist':
                         isMet = (stats.points >= condition.value);
                         break;
-
-                    // --- [관계 및 캐릭터 상태] ---
-                    case 'partnerId': // 특정 캐릭터가 파트너인지 체크
+                    case 'partnerId':
                         isMet = (stats.partnerId === condition.value);
                         break;
-                    case 'intimacy_level': // 현재 파트너의 호감도 체크
+                    case 'intimacy_level':
                         isMet = (stats.intimacy_level >= condition.value);
                         break;
-                    case 'current_stage': // 현재 파트너의 성장 단계 체크 ('egg', 'child', 'adult')
+                    case 'current_stage':
                         isMet = (stats.current_stage === condition.value);
                         break;
-                    case 'specific_growth': // 특정 캐릭터의 개별 성장도(분) 체크
-                        const growthSec = stats.all_growth ? (stats.all_growth[condition.charId] || 0) : 0;
-                        isMet = (growthSec / 60) >= condition.value;
-                        break;
-                    case 'intimacy_milestone':
-                        isMet = (stats.maxIntimacy >= condition.value);
-                        break;
-
-                    // --- [상호작용 및 습관] ---
-                    case 'daily_pet_limit':
-                        isMet = (stats.dailyPetCount >= condition.value);
-                        break;
-                    case 'gift_connoisseur':
-                        isMet = (stats.giftVariety >= condition.value);
-                        break;
-                    case 'marathon_focus':
-                        isMet = (stats.continuousMinutes >= condition.value);
-                        break;
-                    case 'app_juggler':
-                        isMet = (stats.toolUsageCount >= condition.value);
-                        break;
-                    case 'habit_master':
-                        isMet = (stats.maxHabitStreak >= condition.value);
-                        break;
-
-                    // --- [환경 및 기타] ---
                     case 'flow_state':
                         isMet = (stats.isFlowActive === condition.value);
                         break;
@@ -119,12 +105,8 @@ class MailboxManager {
                     case 'weekend_alchemist':
                         isMet = (stats.currentDay === 0 || stats.currentDay === 6);
                         break;
-                    case 'always':
-                        isMet = true;
-                        break;
                     default:
-                        // 정의되지 않은 타입은 일반 일치 비교
-                        isMet = (currentVal === condition.value);
+                        isMet = (stats[condition.type] === condition.value);
                 }
                 return isMet;
             };

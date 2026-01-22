@@ -6,7 +6,7 @@
             "catchphrase": "당신의 사색이 머무는 곳에, 언제나 다정한 온기를.",
             "origin": "인류가 깊이를 잃어갈 때, 술사가 홀로 품었던 '고결한 사색'과 '타인을 향한 근원적인 온기'가 응축되어 크림색 알의 형상으로 현현했습니다.",
             "description": "술사의 다정한 사색에서 피어난 존재로, 지혜로운 온기를 공유하며 고독한 탐구가 길을 잃지 않게 돕습니다.",
-            "evolution_level": 3600,
+            "evolution_level": 300,
             "background": "assets/bg/mabel_room.png",
             "preferences": {
                 "favorite": ["손편지"],
@@ -175,7 +175,7 @@
             "origin": "가장 치밀한 계산과 외부의 소음이 차단된 '날카로운 진공'의 에테르가 응축되어, 숨소리조차 들리지 않는 정적 속에서 검정색 알로 현현했습니다.",
             "egg_name": "검정색 알",
             "description": "날카로운 논리로 빚어진 충직한 감시자로, 예민한 고양이의 감각을 이용해 몰입을 방해하는 소음을 포착합니다.",
-            "evolution_level": 3600,
+            "evolution_level": 300,
             "background": "assets/bg/indigo_room.png",
             "preferences": {
                 "favorite": ["낡은 악기"],
@@ -352,7 +352,7 @@
             "origin": "깊은 심연의 진리를 탐구하는 술사의 사고력을 바탕으로 연성되었습니다. 술사의 정신이 현실의 경계를 넘어 무의식의 심연으로 잠길 때, 그 그림자 속에서 라임색 알로 현현했습니다.",
             "egg_name": "라임색 알",
             "description": "심연의 진리를 탐구하는 지혜로운 안내자로, 지식의 허물을 벗으며 술사를 더 깊은 몰입의 영역으로 인도합니다.",
-            "evolution_level": 3600,
+            "evolution_level": 300,
             "background": "assets/bg/morgana_room.png",
             "preferences": {
                 "favorite": ["검은 추출액"],
@@ -528,7 +528,7 @@
             "origin": "인류를 진보시켰던 위대한 집중의 불꽃, 술사의 정상을 향한 야망과 자부심이 빚어낸 결과물입니다. 연성로의 가장 뜨거운 중심에서 복숭아색 알의 형상으로 현현했습니다.",
             "egg_name": "복숭아색 알",
             "description": "연금술사의 야망과 자부심이 형상화된 고결한 새로, 성취가 황금처럼 빛나도록 높은 곳에서 가호의 빛을 내립니다.",
-            "evolution_level": 3600,
+            "evolution_level": 300,
             "background": "assets/bg/aurelia_room.png",
             "preferences": {
                 "favorite": ["원석 조각"],

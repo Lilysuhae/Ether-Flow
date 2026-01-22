@@ -19,32 +19,32 @@ window.CharacterRenderer = CharacterRenderer;
 require('./src/introManager.js');
 
 // --- [필수 상태 변수 선언] ---
-let masterData = null;          // 통합 데이터 객체 (JSON 파일 기반)
+let masterData = null;
+window.masterData = masterData;          // 통합 데이터 객체 (JSON 파일 기반)
 let lastActiveWin = null;       // 메인 프로세스에서 받은 활성 창 정보
 let isActuallyWorking = false;  // 작업 도구 매칭 여부
 let isDistraction = false;      // 딴짓 도구 매칭 여부 (전역 변수로 선언)
-let badge = null;               // 상태 배지 엘리먼트
 let isIdle = false;             // 부재 중 상태
 let logViewDate = new Date();   // 로그 뷰어용 날짜
 let dialogueTimeout = null; // [추가] 대사 사라짐 제어용 변수
-let isHatching = false; // [추가] 현재 부화 연출이 진행 중인지 체크하는 플래그
+window.isHatching = false; // [추가] 현재 부화 연출이 진행 중인지 체크하는 플래그
 let lastLoadedId = null; // 마지막으로 로드된 캐릭터의 ID를 기억합니다.
 let givenGiftsMap = {};
 let dailyGiftCountMap = {}
-let awayStartTime = null;
-let continuousFocusStart = null;
-let flowStateEndTime = null;
 let displayedPoints = 0; 
 let isPointAnimating = false; // 애니메이션 중복 실행 방지용
 let mailDisplayLimit = 10; // 초기 노출 개수
 let currentStatus = "good"; // [추가] 현재 상태를 저장하여 클릭 시 사용
-let lastStatus = null;      // [추가] 상태 변경 감지용
-let currentLogTab = 'list'; // [추가] 작업 기록의 현재 탭 상태 ('list' 또는 'chart')
+let awayStartTime = null;       // [추가] 부재 시작 시간 기록용
+let lastIdleState = false;      // [추가] 직전 유휴 상태 기억용
 
 // --- [매니저 선언] ---
-const renderer = new CharacterRenderer('main-canvas'); //
+const renderer = new CharacterRenderer('main-canvas'); 
+window.renderer = renderer; // [추가] 전역 인스턴스 연결
+window.charRenderer = renderer; // [추가] 호환성을 위해 하나 더 연결
 let progress = null;
 let collection = null;
+let mailbox = null;
 
 // --- [데이터 관리 변수들] ---
 let workApps = [];
@@ -56,6 +56,10 @@ let charGrowthMap = {};
 let dailyAppTimeMap = {};
 let currentPartner = null;
 let currentStage = '';
+let draggedTodoIndex = null;
+
+window.molipTodos = molipTodos;
+window.molipHabits = molipHabits;
 
 // --- [시스템 설정 변수] ---
 window.isHorizontalMode = true;
@@ -69,18 +73,14 @@ window.autoDeleteOldTasks = false;
 // --- [상호작용 설정 상수] ---
 let lastPetTime = 0;            
 const PET_COOLDOWN = 300;      
-const IDLE_THRESHOLD = 180;
-let dailyPetCountMap = {}; // [추가] 날짜별 클릭 횟수 기록용
-let lastFocusState = false;      // 이전 집중 상태 (isFocusing)
-let lastDistractState = false;   // 이전 딴짓 상태 (isDistraction)
-let autoDialogueTimer = 0;       // 자동 발화용 카운터    
+let dailyPetCountMap = {}; // [추가] 날짜별 클릭 횟수 기록용  
 let currentPriority = 0;      // 현재 출력 중인 대사의 우선순위 (0: 일반, 1: 클릭, 2: 시스템)
 let dialogueLockUntil = 0;    // 이 시간(ms)까지는 낮은 우선순위 대사 무시
-let lastDialogue = "";        // [추가] 직전에 출력된 대사를 기억하여 중복을 방지합니다.
+let lastDialogue = "";          // [추가] 중복 대사 방지용 기록
 
 const shopItems = [
     // category: 'material' (재료 및 도구 탭용)
-    { id: "old_parchment", category: "gift", name: "손편지", icon: '<i class="fa-solid fa-envelope"></i>', price: 5, desc: "종이 위에 꾹꾹 눌러 담은 마음이 느껴지는 편지입니다." },
+    { id: "handwritten_letter", category: "gift", name: "손편지", icon: '<i class="fa-solid fa-envelope"></i>', price: 5, desc: "종이 위에 꾹꾹 눌러 담은 마음이 느껴지는 편지입니다." },
     { id: "red_berry", category: "gift", name: "붉은 열매", icon: '<i class="fa-solid fa-apple-whole"></i>', price: 20, desc: "잘 익은 열매에서 은은한 생명력이 느껴집니다." },
     { id: "black_extract", category: "gift", name: "검은 추출액", icon: '<i class="fa-solid fa-mug-hot"></i>', price: 30, desc: "쓴맛 뒤에 정신이 맑아지는 기운이 감도는 액체입니다." },
     { id: "old_record", category: "gift", name: "낡은 기록서", icon: '<i class="fa-solid fa-book"></i>', price: 60, desc: "누군가의 탐구 흔적이 가득한 오래된 책입니다." },
@@ -112,23 +112,29 @@ window.startMainGameEngine = () => {
     window.gameEngineInterval = setInterval(updateLoop, 1000);
 };
 
+// [renderer.js] 프로그램 이름에서 불필요한 노이즈를 제거하는 유틸리티
+window.cleanAppName = function(name) {
+    if (!name) return "";
+    return name.replace(/\s*\(.*?\)/g, '')  // (64-bit), (32-bit) 등 제거
+               .replace(/\.exe/gi, '')       // .exe 제거
+               .trim();
+};
+
 // --------------------------------------------------------------------------
 // [SECTION 1] 통합 데이터 저장 시스템 (Atomic Save)
 // --------------------------------------------------------------------------
 /**
  * 모든 현재 상태를 메모리에서 수집하여 main.js를 통해 save_data.json에 안전하게 기록합니다.
  */
+// renderer.js 약 75행 부근의 saveAllData 함수 전체를 교체하세요.
 function saveAllData() {
-    // 1. [철벽 방어] 데이터가 없거나 초기화 중(Reset)이라면 저장을 즉시 중단
-    if (!masterData || window.isResetting) return;
+    if (!masterData || window.isResetting) return Promise.resolve({ success: false });
 
     try {
-        // 2. [매니저 데이터 취득]
         if (progress) masterData.progress = progress.getSaveData();
         if (collection) masterData.collection = collection.getSaveData();
         if (mailbox) masterData.mailbox = mailbox.getSaveData();
 
-        // 3. [캐릭터 상태 동기화] intimacyMap, growthMap 등 모든 맵 데이터 포함
         masterData.character = {
             intimacyMap: charIntimacyMap || {},
             growthMap: charGrowthMap || {},
@@ -138,7 +144,12 @@ function saveAllData() {
             selectedPartnerId: currentPartner ? currentPartner.id : null
         };
 
-        // 4. [시스템 설정값 동기화] 창 모드, 레이아웃, 폰트 등
+        // [핵심 수정] dailyAppTimeMap이 비어있어도 구조는 유지하며 저장합니다.
+        masterData.dailyAppTimeMap = dailyAppTimeMap || {};
+
+        masterData.todo = [...molipTodos];
+        masterData.habit = [...molipHabits];
+
         masterData.settings = {
             workApps: workApps || [],
             distractionApps: distractionApps || [],
@@ -149,38 +160,26 @@ function saveAllData() {
             showPastCompleted: window.showPastCompleted,
             resetHour: window.resetHour,
             autoDeleteOldTasks: window.autoDeleteOldTasks,
-            font: masterData.settings?.font || 'paperlogy',
-            accordionStates: {} // 현재 아코디언 상태 수집
+            font: window.masterData?.settings?.font,
+            accordionStates: {} 
         };
 
-        // 아코디언 상태 실시간 수집
         document.querySelectorAll('.accordion').forEach(acc => {
             if (acc.id) masterData.settings.accordionStates[acc.id] = acc.classList.contains('active');
         });
 
-        // 5. [투두/습관/업적/통계] 배열 및 객체 데이터
-        masterData.todo = (molipTodos || []).filter(t => t !== null);
-        masterData.habit = (molipHabits || []).filter(h => h !== null);
-        masterData.achievements = masterData.achievements || [];
-        masterData.stats = {
-            dailyAppTimeMap: dailyAppTimeMap || {}
-        };
-
-        // 6. [무한 리셋 방지] 저장 시점의 게임 내 날짜를 확실히 각인
         if (masterData.progress) {
             masterData.progress.lastSaveDate = window.getMolipDate();
         }
 
-        // 7. [전송] 메인 프로세스의 'save-game-data' 핸들러 호출
-        // main.js의 ipcMain.handle('save-game-data', ...)와 연결됩니다.
-        ipcRenderer.invoke('save-game-data', masterData).then(result => {
-            if (!result.success) console.error("저장 실패:", result.error);
-        });
-
+        // masterData.logs는 recordWorkLogEntry에서 직접 수정되므로 그대로 포함되어 저장됩니다.
+        return ipcRenderer.invoke('save-game-data', masterData);
     } catch (err) {
-        console.error("데이터 통합 저장 프로세스 중 치명적 오류:", err);
+        console.error("데이터 저장 실패:", err);
+        return Promise.resolve({ success: false });
     }
 }
+window.saveAllData = saveAllData;
 
 // --------------------------------------------------------------------------
 // [SECTION 2] 캐릭터 성장 및 스프라이트 관리
@@ -189,45 +188,39 @@ function saveAllData() {
 /**
  * 캐릭터의 성장 상태(알/어린이/성체)를 판별하여 캔버스 이미지를 교체하고 애니메이션을 제어합니다.
  */
-// [renderer.js] 약 105행 부근: 함수 내용 교체
 async function refreshCharacterSprite() {
     if (!currentPartner) return;
-    const canvas = document.getElementById('main-canvas'); // 캔버스 엘리먼트 참조
+    const canvas = document.getElementById('main-canvas'); 
 
     const gameView = document.getElementById('game-view');
     if (gameView && currentPartner.background) {
         gameView.style.backgroundImage = `url('${currentPartner.background}')`;
     }
     
-    const totalSec = charGrowthMap[currentPartner.id] || 0;
-    const growthMin = totalSec / 60;
-    const targetMin = currentPartner.evolution_level || 1440;
-    
-    // 1. 알 상태일 때
+    // 1. 알 상태일 때 (흔들림 애니메이션 및 크기 보정)
     if (collection.activeEgg && collection.activeEgg.type === currentPartner.id) {
         currentStage = 'egg';
         lastLoadedId = currentPartner.id;
         
-        // 알 흔들림 애니메이션 추가
+        // [강제 적용] 흔들림 클래스 추가
         if (canvas) canvas.classList.add('egg-hatching-anim'); 
         
         await renderer.loadCharacter(currentPartner.stages.egg);
         return;
     }
 
-    // ★ 알 상태가 아니라면 흔들림 애니메이션 즉시 제거
+    // 2. 부화 후 상태 (애니메이션 제거)
     if (canvas) canvas.classList.remove('egg-hatching-anim'); 
 
-    // 2. 성장 단계 판별
+    const totalSec = charGrowthMap[currentPartner.id] || 0;
+    const growthMin = totalSec / 60;
+    const targetMin = currentPartner.evolution_level || 1440;
     const newStage = growthMin >= targetMin ? 'adult' : 'child';
 
     if (currentStage !== newStage || lastLoadedId !== currentPartner.id) {
         currentStage = newStage;
         lastLoadedId = currentPartner.id;
-        
         const stageData = currentPartner.stages[currentStage];
-        
-        // 유아기/성체기용 표정 로직 로드 (이때 자동으로 2배 배율이 적용됨)
         if (stageData.expressions) {
             await renderer.loadExpressions(stageData.expressions);
         } else {
@@ -243,28 +236,39 @@ window.petCharacter = (event) => {
     if (now - lastPetTime < PET_COOLDOWN) return;
     lastPetTime = now;
 
-    const dateKey = new Date().toDateString();
-    if (!dailyPetCountMap[dateKey]) dailyPetCountMap[dateKey] = 0;
+    // [핵심 수정] 캐릭터 ID와 날짜를 조합하여 개별 카운트용 키를 생성합니다.
+    const dateKey = window.getMolipDate(); 
+    const petKey = `${currentPartner.id}_${dateKey}`; 
+    
+    // 해당 캐릭터의 오늘 카운트가 없으면 0으로 초기화
+    if (!dailyPetCountMap[petKey]) dailyPetCountMap[petKey] = 0;
 
-    if (!collection.activeEgg && dailyPetCountMap[dateKey] < 10) {
+    // 알 상태가 아니고, 해당 캐릭터의 오늘 한도(10회)를 넘지 않았을 때만 실행
+    if (!collection.activeEgg && dailyPetCountMap[petKey] < 10) {
+        // 호감도 상승 및 카운트 증가
         charIntimacyMap[currentPartner.id] = Math.min(100, (charIntimacyMap[currentPartner.id] || 0) + 0.5);
-        dailyPetCountMap[dateKey]++;
+        dailyPetCountMap[petKey]++;
+        
+        // 하트 파티클 생성
         createHeartEffect(event.clientX, event.clientY);
 
         // ★ 기쁨 표정('good')으로 3초간 변경
         renderer.setExpression('good');
         setTimeout(() => {
-            // 현재 앱 상태에 맞는 표정으로 복구
+            // 3초 후 현재 작업 상태에 맞는 표정으로 복구
             const backTo = isDistraction ? 'distracting' : (isIdle ? 'away' : 'working');
             renderer.setExpression(backTo);
         }, 3000);
 
-        if (dailyPetCountMap[dateKey] === 10) window.showToast("오늘의 교감 한도 도달!", "info");
+        // 한도 도달 시 알림
+        if (dailyPetCountMap[petKey] === 10) {
+            window.showToast(`${currentPartner.name}은(는) 오늘은 충분히 애정을 느낀 것 같습니다.`, "info");
+        }
     } 
     
-    window.showDialogue(); 
-    saveAllData(); 
-    window.updateUI();
+    window.showDialogue(); // 대사 출력 시스템 호출
+    saveAllData();         // 변경 사항 즉시 저장
+    window.updateUI();     // UI 수치 갱신
 };
 
 // [추가] 클릭 시 하트 파티클 생성 함수
@@ -280,13 +284,34 @@ function createHeartEffect(x, y) {
     setTimeout(() => heart.remove(), 800);
 }
 
+/**
+ * [renderer.js] 유아기에서 성체로의 진화 조건을 실시간으로 감시합니다.
+ */
+function checkEvolution() {
+    // 1. 파트너가 없거나, 이미 성체이거나, 부화/진화 연출 중이면 중단
+    if (!currentPartner || currentStage !== 'child' || window.isHatching) return;
+
+    // 2. 현재 캐릭터의 누적 성장 시간(초) 계산
+    const totalSec = charGrowthMap[currentPartner.id] || 0;
+    const growthMin = totalSec / 60;
+    const targetMin = currentPartner.evolution_level || 300;
+
+    // 3. 진화 조건 달성 시 performEvolution 실행
+    if (growthMin >= targetMin) {
+        console.log(`✨ ${currentPartner.name} 진화 조건 달성!`);
+        if (window.performEvolution) {
+            window.performEvolution(currentPartner);
+        }
+    }
+}
+
 // 성체 진화
 window.performEvolution = async (character) => {
     const container = document.getElementById('character-container');
     const flash = document.getElementById('hatch-flash');
-    if (!container || isHatching) return; // 이미 연출 중이면 중복 방지
+    if (!container || window.isHatching) return; // 이미 연출 중이면 중복 방지
 
-    isHatching = true; // 연출 중 잠금
+    window.isHatching = true; // 연출 중 잠금
 
     // 1. 진화 연출 시작 (진동 및 로직)
     container.classList.add('evolving-act');
@@ -318,7 +343,7 @@ window.performEvolution = async (character) => {
 
     setTimeout(() => { 
         container.classList.remove('evolved-new');
-        isHatching = false; 
+        window.isHatching = false; 
     }, 2000);
 
     saveAllData(); // 진화 결과 즉시 저장
@@ -326,8 +351,8 @@ window.performEvolution = async (character) => {
 
 // [추가] 알 부화 연출 엔진 (Egg -> Child)
 window.performHatchSequence = async function(type) {
-    if (isHatching) return; // 실행 시점에 잠금
-    isHatching = true;
+    if (window.isHatching) return; // 실행 시점에 잠금
+    window.isHatching = true;
 
     console.log("🥚 부화 연출 시작: ", type);
 
@@ -376,7 +401,7 @@ window.performHatchSequence = async function(type) {
 
         // ★ [보강] 부화 성공 후 첫 인사 대사 출력
         setTimeout(() => {
-            isHatching = false; // 연출이 모두 끝난 후 잠금 해제
+            window.isHatching = false; // 연출이 모두 끝난 후 잠금 해제
             saveAllData(); // 최종 상태 저장
         }, 1000);
 
@@ -452,13 +477,14 @@ window.resetAllData = async () => {
 /**
  * [renderer.js] 앱 내부 커스텀 컨펌 모달 표시 함수
  */
+/* [renderer.js] 커스텀 컨펌 시스템 및 습관 삭제 적용 */
+
+/**
+ * 1. 공용 컨펌 모달 표시 함수 (중복 호출 방지 및 이벤트 바인딩)
+ */
 window.showConfirm = (title, message, onConfirm) => {
     const modal = document.getElementById('confirm-modal');
-    if (!modal) {
-        // 만약 커스텀 모달 엘리먼트가 없다면 브라우저 기본 confirm으로 대체 (안전장치)
-        if (confirm(message)) onConfirm();
-        return;
-    }
+    if (!modal) return;
 
     document.getElementById('confirm-title').innerText = title;
     document.getElementById('confirm-message').innerText = message;
@@ -466,7 +492,7 @@ window.showConfirm = (title, message, onConfirm) => {
     const yesBtn = document.getElementById('confirm-yes');
     const noBtn = document.getElementById('confirm-no');
 
-    // 이전 이벤트 리스너 제거 후 새로 등록
+    // [중요] 기존에 걸려있던 클릭 이벤트를 깨끗이 지우고 새로 등록합니다.
     const newYesBtn = yesBtn.cloneNode(true);
     const newNoBtn = noBtn.cloneNode(true);
     yesBtn.parentNode.replaceChild(newYesBtn, yesBtn);
@@ -474,7 +500,7 @@ window.showConfirm = (title, message, onConfirm) => {
 
     newYesBtn.onclick = () => {
         modal.style.display = 'none';
-        onConfirm();
+        onConfirm(); // 실제 실행할 로직 호출
     };
 
     newNoBtn.onclick = () => {
@@ -529,7 +555,7 @@ window.renderCollection = () => {
 
         // 3. 클릭 액션 설정
         const clickAction = (isOwned || isActiveEgg) 
-            ? `onclick="if(!isHatching) window.showCharDetail('${char.id}'); else window.showToast('탄생의 순간에는 눈을 뗄 수 없습니다.', 'warning');"`
+            ? `onclick="if(!window.isHatching) window.showCharDetail('${char.id}'); else window.showToast('탄생의 순간에는 눈을 뗄 수 없습니다.', 'warning');"`
             : "";
 
         return `
@@ -545,7 +571,7 @@ window.renderCollection = () => {
 
 window.toggleCollection = (show) => { 
     // ★ 추가: 부화 중에는 도감을 열 수 없도록 차단
-    if (show && isHatching) {
+    if (show && window.isHatching) {
         window.showToast("지금은 탄생의 순간입니다. 집중하십시오!", "warning");
         return;
     }
@@ -558,11 +584,9 @@ window.toggleCollection = (show) => {
 };
 
 /**
- * [renderer.js] 도감 상세 페이지를 출력합니다. 
- * 캐릭터별 선호도 목록(favorite, dislike)을 기반으로 그리드 형태를 유지하며, 준 적 없는 선물은 "???"로 가립니다.
+ * [renderer.js] 도감 상세 페이지 출력 (단위: 분/초 및 퍼센트 고정)
  */
 window.showCharDetail = (id) => {
-    // 1. 데이터 소스 확보
     const char = charData.characters.find(c => c.id === id);
     if (!char) return;
     
@@ -570,90 +594,78 @@ window.showCharDetail = (id) => {
     const modal = document.getElementById('char-detail-modal');
     if (!modal) return;
 
-    // 2. 성장 데이터 및 단계 계산
+    // 1. 성장 데이터 계산 (초 단위를 시간/분/초로 정밀 분리)
     const totalSec = charGrowthMap[char.id] || 0; 
     const growthMin = totalSec / 60; 
-    const targetMin = char.evolution_level || 1440; 
+    const targetMin = char.evolution_level || 3600; // 기준값 (분)
     
+    // 2. 시간 환산 로직
+    const compHours = Math.floor(totalSec / 3600);
+    const compMins = Math.floor((totalSec % 3600) / 60);
+    const compSecs = totalSec % 60;
+
+    // 3. 성장 단계 및 퍼센트 판별 (100% 캡 고정)
     const stage = growthMin >= targetMin ? 'adult' : 'child';
     const percent = Math.min(100, (growthMin / targetMin) * 100);
 
-    // 3. UI 반영: 상단 텍스트 정보
+    // 4. UI 반영: 상단 정보 및 이미지
     document.getElementById('detail-char-name').innerText = isActiveEgg ? "부화 중인 알" : char.name;
     document.getElementById('detail-char-stage').innerText = isActiveEgg ? "알 (부화 대기)" : (stage === 'child' ? "유아기" : "성체기");
 
-    // 4. 이미지 경로 처리 (알/성장단계별 good 표정 반영)
     let spriteSrc = "";
     if (isActiveEgg) {
         spriteSrc = char.stages.egg.sprite;
     } else {
         const stageData = char.stages[stage] || char.stages['adult'];
-        if (stageData.expressions && stageData.expressions.good) {
-            spriteSrc = stageData.expressions.good.sprite;
-        } else {
-            spriteSrc = stageData.sprite || ""; 
-        }
+        spriteSrc = (stageData.expressions && stageData.expressions.good) 
+                    ? stageData.expressions.good.sprite 
+                    : (stageData.sprite || "");
     }
-    
     const detailImg = document.getElementById('detail-char-img');
     if (detailImg) detailImg.src = spriteSrc;
 
-    // 5. 수치 업데이트 (함께한 시간 및 성장 게이지)
+    // 5. [핵심 수정] 함께한 시간 표시: ㅁㅁ시간 ㅁㅁ분 ㅁㅁ초
     const companionshipEl = document.getElementById('detail-total-companionship');
     if (companionshipEl) {
-        companionshipEl.innerText = formatReceiptTime(totalSec);
+        companionshipEl.innerText = `${compHours}시간 ${compMins}분 ${compSecs}초`;
     }
 
+    // 6. 성장 진행도 표시: %
     const growthBar = document.getElementById('detail-growth-bar');
     const growthText = document.getElementById('detail-growth-text');
     if (growthBar) growthBar.style.width = `${percent}%`;
     if (growthText) {
-        growthText.innerText = `${Math.floor(growthMin)} / ${targetMin} min`;
+        growthText.innerText = `${percent.toFixed(1)}%`;
     }
 
-    // 6. [수정] 선호/불호 선물 분리 렌더링
+    // ... (이하 선물 리스트 렌더링 및 버튼 로직 기존 유지) ...
     const favListContainer = document.getElementById('list-favorite');
     const disListContainer = document.getElementById('list-dislike');
-    const giftsGiven = givenGiftsMap[char.id] || [];
-
+    
     const renderPrefItems = (container, items) => {
         if (!container) return;
         if (items.length === 0) {
             container.innerHTML = '<span style="font-size:12px; color:#666; padding-left:5px;">(정보 없음)</span>';
             return;
         }
-
         container.innerHTML = items.map(itemName => {
             const isUnlocked = givenGiftsMap[char.id]?.includes(itemName);
             const itemInfo = shopItems.find(i => i.name === itemName);
-            
-            let iconContent = isUnlocked 
-                ? (itemInfo ? itemInfo.icon : '<i class="fas fa-box"></i>') 
-                : '<i class="fas fa-question"></i>';
-                
+            const iconContent = isUnlocked ? (itemInfo ? itemInfo.icon : '<i class="fas fa-box"></i>') : '<i class="fas fa-question"></i>';
             const displayName = isUnlocked ? itemName : "???";
-            const statusClass = isUnlocked ? '' : 'locked';
-
-            // [핵심 교정] title 속성을 제거하고 data-tooltip을 사용합니다.
-            const tooltipMsg = isUnlocked ? `` : "다양한 선물을 주어 정보를 해금하세요";
-
             return `
-                <div class="pref-item ${statusClass}" data-tooltip="${tooltipMsg}">
+                <div class="pref-item ${isUnlocked ? '' : 'locked'}" data-tooltip="${isUnlocked ? '' : '선물을 주어 정보를 해금하세요'}">
                     <div class="pref-item-icon-wrapper">${iconContent}</div>
                     <span class="pref-item-name">${displayName}</span>
-                </div>
-            `;
+                </div>`;
         }).join('');
     };
 
     renderPrefItems(favListContainer, char.preferences.favorite);
     renderPrefItems(disListContainer, char.preferences.dislike);
 
-    // 7. 설명 및 버튼 제어
-    document.getElementById('detail-char-desc').innerText = isActiveEgg 
-        ? "당신의 몰입을 기다리고 있는 알입니다. 다시 품어주시겠습니까?" 
-        : (char.description || "등록된 설명이 없습니다.");
-
+    document.getElementById('detail-char-desc').innerText = isActiveEgg ? "당신의 몰입을 기다리고 있는 알입니다." : (char.description || "");
+    
     const selectBtn = document.getElementById('detail-select-btn');
     if (currentPartner && currentPartner.id === char.id) {
         selectBtn.style.display = 'none'; 
@@ -847,10 +859,12 @@ window.renderDistractionAppList = () => {
 
 // [renderer.js] 작업 도구 등록 함수 수정
 window.addCurrentApp = () => {
-    const name = lastActiveWin?.owner;
-    if (!name) return;
+    const rawName = lastActiveWin?.owner;
+    if (!rawName) return;
 
-    // [아티스트 요청] 자신(시스템) 등록 차단
+    // [핵심] 이름을 깨끗하게 정제하여 등록합니다.
+    const name = window.cleanAppName(rawName);
+
     const forbidden = ["내 연구실", "일렉트론", "에테르플로우", "Electron", "Ether Flow"];
     if (forbidden.some(k => name.includes(k))) {
         return window.showToast("시스템 앱은 작업 도구로 등록할 수 없습니다.", "warning");
@@ -867,22 +881,34 @@ window.addCurrentApp = () => {
 
 // [renderer.js] 딴짓 도구 등록 함수 수정
 window.addDistractionApp = () => {
-    const name = lastActiveWin?.owner;
-    if (!name) return;
+    const rawName = lastActiveWin?.owner;
+    if (!rawName) return;
 
-    // [아티스트 요청] 자신(시스템) 등록 차단
+    // [핵심] 이름을 깨끗하게 정제하여 등록합니다. (64-bit 등 제거)
+    const name = window.cleanAppName(rawName);
+
+    // 시스템 앱 등록 방지
     const forbidden = ["내 연구실", "일렉트론", "에테르플로우", "Electron", "Ether Flow"];
     if (forbidden.some(k => name.includes(k))) {
         return window.showToast("시스템 앱은 딴짓 도구로 등록할 수 없습니다.", "warning");
     }
 
-    if (distractionApps.includes(name)) return window.showToast("이미 등록된 딴짓 도구입니다.", "info");
-    if (workApps.includes(name)) return window.showToast("작업 도구에 이미 등록되어 있습니다.", "warning");
+    // 중복 및 교차 등록 체크
+    if (distractionApps.includes(name)) {
+        return window.showToast("이미 등록된 딴짓 도구입니다.", "info");
+    }
+    if (workApps.includes(name)) {
+        return window.showToast("작업 도구에 이미 등록되어 있습니다. 먼저 작업 도구에서 삭제하세요.", "warning");
+    }
 
+    // 목록 추가 및 UI 갱신
     distractionApps.push(name);
-    window.renderDistractionAppList();
+    if (typeof window.renderDistractionAppList === 'function') {
+        window.renderDistractionAppList();
+    }
+    
     window.showToast("딴짓 도구 등록됨", "success");
-    saveAllData();
+    saveAllData(); // 파일에 즉시 저장
 };
 
 window.removeWorkApp = (name) => { workApps = workApps.filter(a => a !== name); window.renderWorkAppList(); saveAllData(); };
@@ -932,53 +958,63 @@ window.saveInlineEdit = (id, newText) => {
     }
 };
 
+/**
+ * [renderer.js] 할 일 목록 렌더링 (날짜별/상태별 필터링 보강)
+ */
 window.renderTodos = () => {
     const list = document.getElementById('todo-list');
     const badge = document.getElementById('todo-count-badge');
     if (!list) return;
 
-    const molipToday = window.getMolipDate(); 
+    const molipToday = window.getMolipDate(); // 시스템 기준 오늘 날짜
 
-    // 1. [핵심] 오늘 날짜에 해당하는 투두만 필터링하여 뱃지 계산
-    const todayTodos = molipTodos.filter(t => t && t.date === molipToday);
-    const total = todayTodos.length;
-    const completed = todayTodos.filter(t => t.completed).length;
+    // 1. [기존 로직] 화면에 표시할 후보군 선정 (Rule A, B, C 반영)
+    let displayTodos = molipTodos.filter(t => {
+        if (!t) return false;
+
+        const isToday = t.date === molipToday;
+        const isUnfinishedPast = !t.completed && t.date !== molipToday; // 끝내지 못한 과거의 일
+        const isFinishedPast = t.completed && t.date !== molipToday;    // 이미 끝낸 과거의 일
+
+        // [A] 오늘 생성된 일은 무조건 표시
+        if (isToday) return true;
+        // [B] 과거의 일인데 아직 완료 안 했다면 무조건 표시 (날아감 방지 핵심)
+        if (isUnfinishedPast) return true;
+        // [C] 과거에 완료된 일은 '이전 항목 표시' 옵션이 켜졌을 때만 표시
+        if (isFinishedPast && window.showPastCompleted) return true;
+
+        return false;
+    });
+
+    // 2. [기존 로직] 뱃지 계산 (오늘 할 일 기준)
+    const todayPool = molipTodos.filter(t => t && t.date === molipToday);
+    const total = todayPool.length;
+    const completed = todayPool.filter(t => t.completed).length;
 
     if (badge) {
         badge.innerText = `${completed}/${total}`;
-        // 모두 완료 시 강조 효과
-        if (total > 0 && completed === total) {
-            badge.classList.add('all-completed');
-        } else {
-            badge.classList.remove('all-completed');
-        }
+        badge.classList.toggle('all-completed', total > 0 && completed === total);
     }
 
-    // 2. 화면에 표시할 리스트 필터링 (완료 숨기기 등 적용)
-    let displayTodos = todayTodos; // 기본적으로 오늘 것만 표시
-    
-    // 만약 '지난 완료 항목 표시'가 켜져 있다면 완료된 다른 날짜 항목도 추가
-    if (window.showPastCompleted) {
-        const pastCompleted = molipTodos.filter(t => t && t.date !== molipToday && t.completed);
-        displayTodos = [...displayTodos, ...pastCompleted];
-    }
-    
-    // 완료 숨기기 옵션 체크
+    // 3. [기존 로직] '완료된 항목 숨기기' 필터 적용
     if (window.hideCompleted) {
         displayTodos = displayTodos.filter(t => !t.completed);
     }
 
-    // 정렬 로직 (완료 항목 하단으로)
+    // 4. [기존 로직] 정렬 (미완료 상단 -> 완료 하단 / 그 안에서는 order순)
     displayTodos.sort((a, b) => {
         if (a.completed !== b.completed) return a.completed ? 1 : -1;
         return (a.order || 0) - (b.order || 0);
     });
 
+    // 5. [기존 로직] 목록이 비었을 때 처리
     if (displayTodos.length === 0) {
         list.innerHTML = '<li class="empty-list-msg">표시할 할 일이 없습니다.</li>';
         return;
     }
 
+    // 6. [기존 기능 + 드래그 속성] HTML 출력
+    // draggable="true"와 window.handle... 핸들러들을 각 항목에 연결합니다.
     list.innerHTML = displayTodos.map((todo, index) => `
         <li class="todo-item ${todo.completed ? 'completed' : ''}" 
             data-id="${todo.id}"
@@ -987,15 +1023,19 @@ window.renderTodos = () => {
             ondragover="window.handleDragOver(event)"
             ondragenter="window.handleDragEnter(event)"
             ondragleave="window.handleDragLeave(event)"
-            ondragend="window.handleDragEnd(event)"
-            ondrop="window.handleDrop(event, ${index})">
+            ondrop="window.handleDrop(event, ${index})"
+            ondragend="window.handleDragEnd(event)">
             <div class="todo-checkbox" onclick="window.toggleTodo('${todo.id}')">
                 ${todo.completed ? '<i class="fas fa-check"></i>' : ''}
             </div>
             <span class="todo-text">${todo.text}</span>
             <div class="todo-actions">
-                <button class="btn-todo-action btn-edit" onclick="window.editTodo('${todo.id}')"><i class="fas fa-pen"></i></button>
-                <button class="btn-todo-action btn-trash" onclick="window.deleteTodo('${todo.id}')"><i class="fas fa-trash-can"></i></button>
+                <button class="btn-todo-action btn-edit" onclick="window.editTodo('${todo.id}')">
+                    <i class="fas fa-pen"></i>
+                </button>
+                <button class="btn-todo-action btn-trash" onclick="window.deleteTodo('${todo.id}')">
+                    <i class="fas fa-trash-can"></i>
+                </button>
             </div>
         </li>`).join('');
 };
@@ -1021,56 +1061,56 @@ window.addMolipTodo = () => {
     saveAllData();
 };
 
-// [수정] renderer.js - window.toggleTodo 함수
-// [통합] 투두 체크 관리 및 럭키 박스 토스트 이벤트
+/**
+ * [renderer.js] 투두 상태 토글 및 사라짐 방지 로직
+ */
 window.toggleTodo = (id) => {
     // 1. 대상 찾기
     const index = molipTodos.findIndex(t => String(t.id) === String(id));
     if (index === -1) return;
 
-    // 2. 상태 반전 (체크/해제)
+    const molipToday = window.getMolipDate(); // 시스템 기준 오늘 날짜
+    const wasCompleted = molipTodos[index].completed;
+
+    // 2. 상태 반전
     molipTodos[index].completed = !molipTodos[index].completed;
 
-    // 3. 항목이 '완료(체크)' 상태가 된 경우에만 보상 및 대사 로직 실행
-    if (molipTodos[index].completed) {
+    // [핵심 수정] 체크를 해제했을 때, 만약 과거 날짜의 항목이라면 날짜를 오늘로 바꿉니다.
+    // 이렇게 하면 renderTodos의 '오늘 항목' 필터에 걸려 사라지지 않고 목록 상단으로 올라옵니다.
+    if (!molipTodos[index].completed && molipTodos[index].date !== molipToday) {
+        molipTodos[index].date = molipToday;
+        window.showToast("미완료된 과거의 과업을 오늘로 가져왔습니다.", "info");
+    }
 
-        // [A] 캐릭터 대사 출력 (알 상태가 아닐 때만)
+    // 3. 항목이 '완료'가 되었을 때의 보상 및 대사 로직
+    if (molipTodos[index].completed && !wasCompleted) {
+        // 캐릭터 대사 출력
         if (currentPartner && !collection.activeEgg) {
             const stageData = currentPartner.stages[currentStage] || currentPartner.stages['adult'];
-            const responses = stageData.todo_responses; // characters.json 내 데이터
-
+            const responses = stageData.todo_responses;
             if (responses) {
                 const text = Array.isArray(responses) 
                     ? responses[Math.floor(Math.random() * responses.length)] 
                     : responses;
-                window.showDialogue(text); // 한 글자씩 출력 엔진
+                window.showDialogue(text);
             }
         }
 
-        // [B] 보상 지급 (최초 1회 완료 시에만 작동)
+        // 보상 지급 (최초 1회)
         if (!molipTodos[index].rewarded) {
-            
-            // --- [럭키 박스 확률 체크: 5%] ---
-            if (Math.random() < 0.05) {
+            if (Math.random() < 0.05) { // 럭키 박스
                 const bonusPoints = 50;
-                collection.addPoints(bonusPoints); // 50P 추가
-
-                // [변경] 알림창 대신 상단 토스트로 알림
-                window.showToast(`연성로가 가열되어 ${bonusPoints} Et를 추가 획득했습니다.`, "event");
+                collection.addPoints(bonusPoints);
+                window.showToast(`연성로 가열! ${bonusPoints} Et 추가 획득`, "event");
             }
-            // ------------------------------
-
-            // 기본 보상(5P) 지급 및 플래그 설정
             collection.addPoints(5);
             molipTodos[index].rewarded = true;
             window.showToast("5 Et 획득!", "success");
-
-            // 에테르 UI 갱신
             window.updateUI();
         }
     }
 
-    // 4. 리스트 새로고침 및 데이터 저장
+    // 4. UI 새로고침 및 데이터 저장
     window.renderTodos();
     saveAllData();
 };
@@ -1083,8 +1123,30 @@ window.deleteTodo = (id) => { molipTodos = molipTodos.filter(t => String(t.id) !
 
 window.openDailyLog = () => {
     logViewDate = new Date(); // 열 때 항상 오늘로 초기화
-    document.getElementById('daily-log-modal').style.display = 'flex';
-    window.renderDailyLogContent();
+    window.currentLogTab = 'list'; // 탭 상태를 '목록'으로 초기화
+    
+    const modal = document.getElementById('daily-log-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        
+        // 1. [핵심] 탭 버튼 UI 초기화 ('목록' 버튼 활성화)
+        const tabs = modal.querySelectorAll('.shop-tab-re');
+        tabs.forEach((btn, idx) => {
+            if (idx === 0) {
+                btn.classList.add('active'); // 첫 번째 '목록' 버튼에 액티브 추가
+            } else {
+                btn.classList.remove('active'); // 나머지 '통계' 버튼에서 제거
+            }
+        });
+
+        // 2. 컨텐츠 영역 표시 초기화 (목록은 보이고 통계는 숨김)
+        const listArea = document.getElementById('daily-log-list');
+        const chartArea = document.getElementById('daily-log-chart-area');
+        if (listArea) listArea.style.display = 'block';
+        if (chartArea) chartArea.style.display = 'none';
+    }
+
+    window.renderDailyLogContent(); // 데이터 렌더링 실행
 };
 
 window.closeDailyLog = () => { document.getElementById('daily-log-modal').style.display = 'none'; };
@@ -1274,54 +1336,84 @@ window.updateLogChart = (logs) => {
     detailList.innerHTML = createStatListHTML(workAppStats, totalWork, '#a0c4ff');
     distractDetailList.innerHTML = createStatListHTML(distractAppStats, totalDistract, '#ff6b6b');
 };
-
-// [수정] renderer.js - window.saveLogAsReceipt 함수
-// [최종 수정] 영수증 정밀 캡처 로직 (에러 방지 및 타이트한 크기 고정)
+/**
+ * 영수증 출력 함수 (스마트 탐색 버전)
+ * 지정된 날짜에 데이터가 없으면 오늘 날짜나 최신 데이터를 자동으로 찾아 출력합니다.
+ */
 window.saveLogAsReceipt = async () => {
-    const viewDateKey = logViewDate.toDateString();
-    const appData = dailyAppTimeMap[viewDateKey] || {};
-    if (Object.keys(appData).length === 0) return window.showToast("기록이 없습니다.", "warning");
+    await saveAllData(); 
 
-    // 데이터 입력 (기존 로직 유지)
-    document.getElementById('receipt-no').innerText = `#${Math.floor(Math.random()*9000)+1000}`;
-    document.getElementById('receipt-date').innerText = logViewDate.toLocaleDateString();
-    document.getElementById('receipt-char-name').innerText = currentPartner?.name || "Focus Dot";
+    // [수정] 모든 날짜 조회를 YYYY-MM-DD(en-CA) 형식으로 통일합니다.
+    let targetDate = logViewDate || new Date();
+    let viewDateKey = targetDate.toLocaleDateString('en-CA');
+    let rawAppData = dailyAppTimeMap[viewDateKey];
+
+    console.log(`[영수증] 1차 조회: "${viewDateKey}" -> ${rawAppData ? '성공' : '실패'}`);
+
+    // 2차 시도: 오늘 날짜로 재시도
+    if (!rawAppData) {
+        const todayKey = window.getMolipDate();
+        if (dailyAppTimeMap[todayKey]) {
+            viewDateKey = todayKey;
+            rawAppData = dailyAppTimeMap[todayKey];
+            targetDate = new Date(); 
+        }
+    }
+
+    // 3차 시도: 가장 최근 날짜 찾기
+    if (!rawAppData) {
+        const allKeys = Object.keys(dailyAppTimeMap);
+        if (allKeys.length > 0) {
+            allKeys.sort();
+            const lastKey = allKeys[allKeys.length - 1];
+            viewDateKey = lastKey;
+            rawAppData = dailyAppTimeMap[lastKey];
+            targetDate = new Date(lastKey);
+        }
+    }
+
+    if (!rawAppData || Object.keys(rawAppData).length === 0) {
+        return window.showToast("저장된 몰입 기록이 없습니다. 도구를 사용해 보세요!", "warning");
+    }
+
+    const focusApps = Object.keys(rawAppData);
+    focusApps.sort((a, b) => a.localeCompare(b));
+
+    const receiptNo = document.getElementById('receipt-no');
+    const receiptDate = document.getElementById('receipt-date');
+    const receiptChar = document.getElementById('receipt-char-name');
     
-    let total = 0;
-    document.getElementById('receipt-items').innerHTML = Object.keys(appData).map(name => { 
-        total += appData[name]; 
-        return `<div class="receipt-item"><span class="name">${name}</span><span class="dots"></span><span class="time">${formatReceiptTime(appData[name])}</span></div>`; 
+    if (receiptNo) receiptNo.innerText = `#${Math.floor(Math.random() * 9000) + 1000}`;
+    if (receiptDate) receiptDate.innerText = targetDate.toLocaleDateString();
+    if (receiptChar) receiptChar.innerText = currentPartner?.name || "Focus Dot";
+    
+    let totalSeconds = 0;
+    const itemsHtml = focusApps.map(name => { 
+        const time = rawAppData[name];
+        totalSeconds += time; 
+        return `
+            <div class="receipt-item">
+                <span class="name">${name}</span>
+                <span class="dots"></span>
+                <span class="time">${formatReceiptTime(time)}</span>
+            </div>`; 
     }).join('');
     
-    document.getElementById('receipt-total-time').innerText = formatReceiptTime(total);
+    document.getElementById('receipt-items').innerHTML = itemsHtml;
+    document.getElementById('receipt-total-time').innerText = formatReceiptTime(totalSeconds);
 
-    // --- [중요: 변수 선언 및 위치 고정] ---
     const wrapper = document.getElementById('receipt-wrapper');
-    const receipt = document.getElementById('focus-receipt');
+    const receiptArea = document.getElementById('focus-receipt');
     
-    if (!wrapper || !receipt) return console.error("영수증 엘리먼트를 찾을 수 없습니다.");
+    if (!wrapper || !receiptArea) return;
 
-    // 1. 촬영을 위해 흰색 배경을 띄우고 영수증을 (0,0) 위치로 강제 밀착
     wrapper.style.display = "flex";
-
     setTimeout(() => {
-        // 2. [핵심] 영수증 본체의 실제 크기(높이, 너비)를 측정
-        const rect = receipt.getBoundingClientRect(); 
-
-        const captureRect = {
-            x: 0, // 좌상단 밀착 상태이므로 0
-            y: 0, // 좌상단 밀착 상태이므로 0
-            width: Math.ceil(rect.width),  // 영수증 너비만큼만 (약 320px)
-            height: Math.ceil(rect.height) // 영수증의 실제 길이에 딱 맞게 캡처
-        };
-
-        // 3. 메인 프로세스에 정밀 캡처 요청
-        ipcRenderer.send('save-log-image', captureRect);
-
-        // 4. 촬영 후 다시 숨김 (ReferenceError 방지를 위해 wrapper 변수 활용)
-        setTimeout(() => {
-            wrapper.style.display = "none";
-        }, 1000);
+        const rect = receiptArea.getBoundingClientRect(); 
+        ipcRenderer.send('save-log-image', { 
+            x: 0, y: 0, width: Math.ceil(rect.width), height: Math.ceil(rect.height) 
+        });
+        setTimeout(() => { wrapper.style.display = "none"; }, 1000);
     }, 500);
 };
 
@@ -1510,222 +1602,233 @@ window.updateUI = function() {
 };
 
 /**
- * [renderer.js] 핵심 로직 루프
- * 활성 창 감지, "내 연구실" 처리, 버튼 비활성화, 캐릭터 상태 및 서신 체크를 수행합니다.
+ * 메인 루프: 감지, 기록, 저장, 캐릭터 피드백을 총괄합니다.
  */
 async function updateLoop() {
+    // 1. 데이터 로드 전이거나 리셋 중이면 중단
+    if (!masterData || window.isResetting) return;
+
+    // 데이터 안전장치 (기록 멈춤 방지)
+    if (!dailyAppTimeMap) dailyAppTimeMap = masterData.dailyAppTimeMap || {};
+    const safeWorkApps = workApps || [];
+    const safeDistractionApps = distractionApps || [];
+
     try {
-        if (!masterData || window.isResetting) return;
-
-        // 1. [핵심] 인트로 모달이 화면에 '물리적으로' 존재하는지 확인
-        const introModal = document.getElementById('intro-modal');
-        // offsetParent가 null이면 화면에서 완전히 사라진 상태입니다.
-        const isIntroPlaying = introModal && introModal.offsetParent !== null;
-
-        // 2. 인트로가 진행 중일 때는 편지와 업적 로직에 '접근'조차 못하게 막습니다.
-        if (!isIntroPlaying) {
-            
-            // [A] 편지 체크: 인트로가 끝나야만 작동
-            if (window.mailbox) {
-                const stats = {
-                    level: progress.level,
-                    points: collection.points,
-                    currentHour: new Date().getHours(),
-                    currentDay: new Date().getDay()
-                };
-                const newMails = window.mailbox.checkTriggers(stats);
-                
-                if (newMails && newMails.length > 0) {
-                    if (window.renderMailList) window.renderMailList();
-                }
-            }
-
-            // [B] 업적 체크: 인트로가 끝나야만 작동
-            if (window.checkAchievementTriggers) {
-                window.checkAchievementTriggers();
-            }
-        }
-
-        // 1. 날짜 변경 및 일과 초기화 체크
-        const nowMolipDate = window.getMolipDate();
+        const nowMolipDate = window.getMolipDate(); // 'YYYY-MM-DD' 형식
+        
         if (masterData.progress && masterData.progress.lastSaveDate !== nowMolipDate) {
-            progress.todayFocusTime = 0;
-            masterData.progress.lastSaveDate = nowMolipDate;
-            
-            // [추가] 날짜가 바뀌었으니 리스트와 뱃지를 0으로 초기화하기 위해 재렌더링
-            window.renderTodos();
-            window.renderHabits();
-            
-            saveAllData();
-            window.updateUI();
+            masterData.progress.lastSaveDate = nowMolipDate; 
+            if (progress) progress.todayFocusTime = 0;
+            checkHabitReset(); 
+            saveAllData().then(r => { if (r?.success) location.reload(); });
+            return; 
         }
 
-        // 2. 부재 중(Idle) 체크 및 돌아온 대사 출력
-        const idleTime = await ipcRenderer.invoke('get-idle-time');
-        const nowIsIdle = idleTime > IDLE_THRESHOLD; 
-
-        if (!isIdle && nowIsIdle) awayStartTime = Date.now();
-        if (isIdle && !nowIsIdle) {
-            if (awayStartTime && (Date.now() - awayStartTime) / 1000 >= 900) {
-                const responses = currentPartner?.stages[currentStage]?.return_responses || ["돌아오셨군요!"];
-                window.showDialogue(Array.isArray(responses) ? responses[Math.floor(Math.random() * responses.length)] : responses, 2);
-            }
-            awayStartTime = null;
-        }
-        isIdle = nowIsIdle;
-
-        // 3. 캐릭터 성장도 누적 및 진화 체크
-        if (currentPartner && !collection.activeEgg) {
-            charGrowthMap[currentPartner.id] = (charGrowthMap[currentPartner.id] || 0) + 1;
-            if (currentStage === 'child' && (charGrowthMap[currentPartner.id] / 60) >= (currentPartner.evolution_level || 1440)) {
-                window.performEvolution(currentPartner);
-            }
-        }
-
-        // 4. ★ 활성 창 분석 및 인식 로직 ★
-        // updateLoop 함수 내부의 활성 창 분석 로직 구간
+        // --- 3. 활성 창 분석 및 UI 업데이트 ---
         const rawOwner = lastActiveWin?.owner || "Ether Flow";
-        const cleanedName = window.cleanAppName(rawOwner); // 이름 정제
-        const isSelf = (cleanedName === "Ether Flow" || cleanedName === "Electron" || cleanedName === "내 연구실");
+        const cleanedName = window.cleanAppName(rawOwner);
+        
+        // 내 연구실(본인 앱) 판정 로직
+        const isSelf = (
+            cleanedName === "Ether Flow" || 
+            cleanedName === "Electron" || 
+            cleanedName === "내 연구실" ||
+            rawOwner.includes("Ether Flow")
+        );
 
+        // 상단 등록칸 이름 표기
         const appNameEl = document.getElementById('current-app-name');
         const distractNameEl = document.getElementById('current-distract-name');
-
         if (appNameEl) appNameEl.innerText = isSelf ? "내 연구실" : cleanedName;
         if (distractNameEl) distractNameEl.innerText = isSelf ? "내 연구실" : cleanedName;
 
-        // 작업 도구 매칭 (대소문자 무시 및 포함 여부 체크)
-        const checkTarget = rawOwner.toLowerCase();
-        isActuallyWorking = !isSelf && workApps.some(app => {
-            const appName = typeof app === 'string' ? app : (app.name || "");
-            return checkTarget.includes(appName.toLowerCase());
-        });
-
-        isDistraction = !isSelf && distractionApps.some(app => {
-            const appName = typeof app === 'string' ? app : (app.name || "");
-            return checkTarget.includes(appName.toLowerCase());
-        });
+        // [핵심 수정] HTML ID 없이도 부모 요소를 통해 버튼을 정확히 찾아 비활성화합니다.
+        const workAddBtn = document.querySelector('#current-app-box .btn-add-current');
+        const distractAddBtn = document.querySelector('#tab-content-distract .btn-add-current');
         
-        const addWorkBtn = document.querySelector('.btn-add-current'); 
-        const addDistBtn = document.querySelector('.btn-add-current'); 
-
-        // [핵심] 자신을 보고 있을 때 버튼 비활성화 처리
-        if (isSelf) {
-            if (addWorkBtn) {
-                addWorkBtn.disabled = true;
-                addWorkBtn.style.opacity = "0.4";
-                addWorkBtn.style.cursor = "not-allowed";
-            }
-            if (addDistBtn) {
-                addDistBtn.disabled = true;
-                addDistBtn.style.opacity = "0.4";
-                addDistBtn.style.cursor = "not-allowed";
-            }
-        } else {
-            if (addWorkBtn) {
-                addWorkBtn.disabled = false;
-                addWorkBtn.style.opacity = "1";
-                addWorkBtn.style.cursor = "pointer";
-            }
-            if (addDistBtn) {
-                addDistBtn.disabled = false;
-                addDistBtn.style.opacity = "1";
-                addDistBtn.style.cursor = "pointer";
-            }
+        if (workAddBtn) {
+            workAddBtn.disabled = isSelf;
+            workAddBtn.style.opacity = isSelf ? "0.5" : "1";
+            workAddBtn.style.pointerEvents = isSelf ? "none" : "auto";
+            workAddBtn.style.cursor = isSelf ? "default" : "pointer";
+        }
+        if (distractAddBtn) {
+            distractAddBtn.disabled = isSelf;
+            distractAddBtn.style.opacity = isSelf ? "0.5" : "1";
+            distractAddBtn.style.pointerEvents = isSelf ? "none" : "auto";
+            distractAddBtn.style.cursor = isSelf ? "default" : "pointer";
         }
 
-        // 상태 확정
+        // --- 4. 상태 판정 및 복귀(Return) 감지 ---
+        isActuallyWorking = !isSelf && safeWorkApps.some(app => rawOwner.toLowerCase().includes(app.toLowerCase()));
+        isDistraction = !isSelf && safeDistractionApps.some(app => rawOwner.toLowerCase().includes(app.toLowerCase()));
+        
         const isFocusing = isActuallyWorking && !isIdle && !isDistraction;
-
-        // [추가] 알 부화 감시 호출
-        if (collection.activeEgg) {
-            checkHatching();
-        }
         
-        // 6. 캐릭터 상태 및 배지 업데이트
-        let nextState = 'good';
-        if (isIdle) nextState = 'away';
-        else if (isDistraction) nextState = 'distracting';
-        else if (isFocusing) nextState = 'working';
-
-        // ★ [핵심 추가] 상태가 변경되었을 때 캐릭터 대사 트리거
-        if (nextState !== lastStatus) {
-            // 알 상태가 아닐 때만 대사 출력 (알 상태 대사는 클릭 로직에서 처리)
-            if (!collection.activeEgg) {
-                window.showDialogue(null, 2); 
+        // 복귀 감지 로직
+        if (isIdle && !lastIdleState) {
+            awayStartTime = Date.now(); 
+        }
+        if (!isIdle && lastIdleState && awayStartTime) {
+            const awayDuration = (Date.now() - awayStartTime) / 1000;
+            // 3분 이상 자리를 비웠던 성체라면 복귀 대사 출력
+            if (awayDuration >= 180 && currentStage === 'adult') {
+                window.showRandomDialogue('return'); 
             }
-            lastStatus = nextState;
+            awayStartTime = null;
+        }
+        lastIdleState = isIdle; 
+
+        // --- 5. 캐릭터 표정 및 상태별 대사 매핑 ---
+        let exprKey = 'good';      // CharacterRenderer용 키
+        let dialogueKey = 'idle';  // characters.json용 키
+
+        if (isFocusing) {
+            exprKey = 'working';
+            dialogueKey = 'work';
+        } else if (isDistraction) {
+            exprKey = 'distracting';
+            dialogueKey = 'distract';
+        } else if (isIdle) {
+            exprKey = 'away';
+            dialogueKey = 'idle';
         }
 
-        if (currentStage !== 'egg' && renderer.currentState !== nextState) {
-            await renderer.setExpression(nextState);
-        }
-        
-        // 배지 업데이트 호출
-        updateStatusBadge();
-
-        // 7. 서신(Mailbox) 트리거 체크
-        const statsForMail = {
-            partnerId: currentPartner ? currentPartner.id : null,
-            intimacy_level: currentPartner ? (charIntimacyMap[currentPartner.id] || 0) : 0,
-            current_stage: currentStage,
-            all_growth: charGrowthMap || {},
-            ownedCount: collection.ownedIds.length,
-            totalTime: progress.totalFocusTime,
-            todoCount: molipTodos.filter(t => t && t.completed).length,
-            alchemist_level: progress.level,
-            points: collection.points,
-            isFlowActive: (flowStateEndTime && Date.now() < flowStateEndTime),
-            isPerfectDay: (molipTodos.length > 0 && molipTodos.every(t => t && t.completed)),
-            currentHour: new Date().getHours(),
-            currentDay: new Date().getDay()
-        };
-
-        if (mailbox) {
-            const checkResult = mailbox.checkTriggers(statsForMail);
-            if (checkResult && checkResult.length > 0) {
-                window.updateMailNotification();
-                window.showToast(`${checkResult.length}통의 새로운 서신 도착!`, "success");
+        // [중요] 알 상태(egg)가 아닐 때만 표정 변화를 시도하여 에러를 방지합니다.
+        if (currentStage !== 'egg' && window.renderer && typeof window.renderer.setExpression === 'function') {
+            if (window.lastCharacterState !== exprKey) {
+                window.renderer.setExpression(exprKey);
+                if (!awayStartTime) window.showRandomDialogue(dialogueKey);
+                window.lastCharacterState = exprKey;
             }
         }
 
-        // 8. 집중 포인트 정산 및 실시간 기록 저장
+        // 상태 변화 시 시각적/언어적 피드백 실행
+        if (window.renderer && typeof window.renderer.setExpression === 'function') {
+            if (window.lastCharacterState !== exprKey) {
+                // 표정 교체
+                window.renderer.setExpression(exprKey);
+                
+                // 복귀 상황이 아닐 때만 상태 대사 출력
+                if (!awayStartTime) window.showRandomDialogue(dialogueKey);
+                
+                window.lastCharacterState = exprKey;
+                console.log(`[캐릭터] 상태 전환: ${exprKey}`);
+            }
+        }
+
+        // --- 6. 실시간 데이터 기록 ---
         if (isFocusing || isDistraction) {
-            const type = isFocusing ? 'work' : 'distract';
-            
-            // 1. 작업 기록(로그) 세부 데이터 저장
-            recordWorkLogEntry(rawOwner, type);
-
-            // 2. 영수증용 앱별 누적 시간 기록
-            const dateKey = new Date().toDateString();
-            if (!dailyAppTimeMap[dateKey]) dailyAppTimeMap[dateKey] = {};
-            dailyAppTimeMap[dateKey][rawOwner] = (dailyAppTimeMap[dateKey][rawOwner] || 0) + 1;
-
-            // 3. 기존 포인트/레벨 정산 로직
+            recordWorkLogEntry(rawOwner, isFocusing ? 'work' : 'distract');
             if (isFocusing) {
+                // [핵심 추가] 현재 파트너의 성장 시간(초)을 실시간으로 누적합니다.
+                if (currentPartner && !collection.activeEgg) {
+                    charGrowthMap[currentPartner.id] = (charGrowthMap[currentPartner.id] || 0) + 1;
+                }
+
+                // [수정] nowMolipDate('YYYY-MM-DD')를 키로 사용합니다.
+                if (!dailyAppTimeMap[nowMolipDate]) dailyAppTimeMap[nowMolipDate] = {};
+                dailyAppTimeMap[nowMolipDate][cleanedName] = (dailyAppTimeMap[nowMolipDate][cleanedName] || 0) + 1;
+                
                 progress.recordFocus(); 
-                if (progress.totalFocusTime % 60 === 0) collection.addPoints(1);
+                if (progress.totalFocusTime % 60 === 0) { 
+                    collection.addPoints(1); 
+                    saveAllData(); 
+                }
             }
         }
 
-        // [추가] 실린더 부산물 시스템 업데이트 (매 초 농도 계산 및 가챠 체크)
+        // --- 서신(Mailbox) 트리거 체크 ---
+        if (mailbox) {
+            // 성체 수 계산 로직
+            const adultCount = charData.characters.filter(char => {
+                const growthSec = charGrowthMap[char.id] || 0;
+                return (growthSec / 60) >= (char.evolution_level || 300);
+            }).length;
+
+            // 완벽한 하루(Todo/Habit 모두 완료) 체크
+            const allTodosDone = molipTodos.length > 0 && molipTodos.every(t => t.completed);
+            const allHabitsDone = molipHabits.length > 0 && molipHabits.every(h => h.completed);
+            const isPerfectDay = allTodosDone && allHabitsDone;
+
+            // [중요] 서신 매니저에 보낼 현재 파트너의 개별 쓰다듬기 카운트 계산
+            const petKey = `${currentPartner?.id}_${nowMolipDate}`;
+
+            // 장기 부재 복귀 체크 (7일 이상)
+            const lastSaveDate = new Date(masterData.progress.lastSaveDate);
+            const daysSinceLastSave = Math.floor((new Date() - lastSaveDate) / (1000 * 60 * 60 * 24));
+            const stats = {
+                // 기본 수치
+                level: progress.level,
+                alchemist_level: progress.level,
+                points: collection.points,
+                rich_alchemist: collection.points,
+                
+                // 시간 데이터 (mailboxManager.js에서 분 단위 변환하므로 초 단위 전송)
+                totalTime: progress.totalFocusTime,
+                total_focus: progress.totalFocusTime,
+                marathonTime: window.marathonTime || 0,
+                marathon_focus: window.marathonTime || 0,
+                
+                // 캐릭터 상태
+                partnerId: currentPartner?.id,
+                current_stage: currentStage,
+                intimacy_level: charIntimacyMap[currentPartner?.id] || 0,
+                growth_level: charGrowthMap[currentPartner?.id] || 0,
+                adultCount: adultCount,
+                all_growth: charGrowthMap,
+                
+                // 과업 및 습관 (누적 통계)
+                todoCount: molipTodos.filter(t => t.completed).length,
+                todo_count: molipTodos.filter(t => t.completed).length,
+                habit_master: Math.max(...molipHabits.map(h => h.streak || 0), 0),
+                ownedCount: collection.ownedIds.length,
+                owned_count: collection.ownedIds.length,
+                
+                // 행위 기반 및 특수 조건
+                app_juggler: safeWorkApps.length,
+                daily_pet_limit: dailyPetCountMap[nowMolipDate] || 0,
+                gift_total_count: Object.values(givenGiftsMap).reduce((sum, list) => sum + list.length, 0),
+                isPerfectDay: isPerfectDay,
+                perfect_day: isPerfectDay,
+                isFlowActive: isFocusing,
+                flow_state: isFocusing,
+                failed_attempt_count: masterData.failedCount || 0,
+                inactive_days: daysSinceLastSave,
+                return_after_long_absence: daysSinceLastSave >= 7,
+
+                // [핵심 수정] 캐릭터별 카운트가 적용된 petKey를 사용하여 값을 전달합니다.
+                daily_pet_limit: dailyPetCountMap[petKey] || 0,
+                
+                // 환경 데이터
+                currentHour: new Date().getHours(),
+                currentDay: new Date().getDay(),
+                early_bird: new Date().getHours() >= 6 && new Date().getHours() <= 9,
+                night_owl: new Date().getHours() >= 0 && new Date().getHours() < 5,
+                weekend_alchemist: [0, 6].includes(new Date().getDay())
+            };
+            
+            const newMails = mailbox.checkTriggers(stats);
+            if (newMails && newMails.length > 0) {
+                window.showToast("새로운 서신이 "+ newMails.length +"통 도착했습니다.", "info");
+                if (window.renderMailList) window.renderMailList();
+                window.updateMailNotification();
+                saveAllData(); // 서신 수신 시 상태 보존을 위해 저장
+            }
+        }
+
+        // --- 7. 시스템 및 UI 갱신 ---
+        checkHatching();
+        checkEvolution();
+        updateStatusBadge(); 
         window.updateCylinderSystem();
-
-        // [추가] 업적 달성 조건 실시간 감시
-        window.checkAchievementTriggers();
-
-        // 9. 데이터 저장 및 UI 갱신
-        saveAllData();
         window.updateUI();
 
     } catch (err) {
-        console.error("UpdateLoop Error:", err);
+        console.error("UpdateLoop 치명적 에러:", err);
     }
 }
 
-/**
- * [renderer.js] 상태 배지의 텍스트와 색상을 업데이트합니다.
- */
 /**
  * [renderer.js] 상태 배지의 클래스와 아이콘을 CSS 정의에 맞춰 업데이트합니다.
  */
@@ -1772,24 +1875,73 @@ function updateStatusBadge() {
  * [renderer.js] 알의 부화 조건을 감시합니다.
  */
 function checkHatching() {
-    // 알이 없거나 이미 부화 연출 중이면 중단
-    if (!collection || !collection.activeEgg || isHatching) return;
+    if (!collection || !collection.activeEgg || window.isHatching) return;
 
-    // 부화 목표 (15초)
-    const requiredTime = 15; 
-    const currentTime = progress.totalFocusTime;
+    // 1. [핵심 수정] 알이 생성된 시각을 가져옵니다.
+    const hatchStartTime = new Date(collection.activeEgg.date).getTime();
+    const now = Date.now();
+    
+    // 2. 경과 시간 계산 (초 단위)
+    const elapsedSeconds = (now - hatchStartTime) / 1000;
+    const requiredTime = collection.activeEgg.target || 15; // 15초
 
-    if (currentTime >= requiredTime) {
-        console.log("✨ 에테르(15초) 달성! 부화 시퀀스를 호출합니다.");
+    // 3. 부화 조건 판별
+    if (elapsedSeconds >= requiredTime) {
+        console.log(`✨ 부화 조건 충족 (${Math.floor(elapsedSeconds)}초 경과)`);
         
-        // ★ [교정] 여기서 isHatching을 true로 만들지 않고, 실행 함수에 위임합니다.
-        if (window.startHatchingProcess) {
-            window.startHatchingProcess();
-        } else if (window.performHatchSequence) {
+        if (window.performHatchSequence) {
             window.performHatchSequence(collection.activeEgg.type);
         }
     }
 }
+
+/**
+ * 캐릭터 대사를 랜덤으로 출력하되, 연속 중복을 차단합니다.
+ * @param {string} category - 'work', 'distract', 'idle', 'return', 'welcome'
+ */
+window.showRandomDialogue = function(category) {
+    if (!currentPartner || window.isHatching) return;
+
+    const charInfo = charData.characters.find(c => c.id === currentPartner.id);
+    if (!charInfo) return;
+
+    const stageData = charInfo.stages[currentStage];
+    if (!stageData) return;
+
+    let targetList = [];
+
+    // 1. 성체기 전용 특수 대사 로드
+    if (currentStage === 'adult') {
+        if (category === 'return') targetList = stageData.return_responses || [];
+        else if (category === 'welcome') targetList = stageData.welcome_responses || [];
+    }
+
+    // 2. 일반 상태 대사 로드 (특수 대사가 없거나 조건 미충족 시)
+    if (targetList.length === 0 && stageData.dialogues) {
+        const dialogueCategory = stageData.dialogues[category === 'work' ? 'work' : (category === 'distract' ? 'distract' : 'idle')];
+        
+        if (Array.isArray(dialogueCategory)) {
+            targetList = dialogueCategory;
+        } else if (dialogueCategory) {
+            // 성체기 호감도 분기
+            const intimacy = charIntimacyMap[currentPartner.id] || 0;
+            const subKey = intimacy >= 90 ? 'max' : (intimacy >= 55 ? 'high' : 'low');
+            targetList = dialogueCategory[subKey] || dialogueCategory['high'] || [];
+        }
+    }
+
+    // 3. [중복 방지] 필터링 후 랜덤 선택
+    if (targetList.length > 0) {
+        // 목록이 2개 이상이면 직전 대사(lastDialogue)를 제외
+        const available = targetList.length > 1 
+            ? targetList.filter(t => t !== lastDialogue) 
+            : targetList;
+
+        const selected = available[Math.floor(Math.random() * available.length)];
+        lastDialogue = selected; // 현재 대사 기록
+        window.showDialogue(selected, 1);
+    }
+};
 
 // --------------------------------------------------------------------------
 // [누락 복구 2] 창 모드 및 레이아웃 토글 함수
@@ -1841,6 +1993,9 @@ window.toggleHideCompleted = () => {
 async function startEngine() {
     // 1. 데이터 로드 및 기본값 확인
     masterData = await ipcRenderer.invoke('load-game-data');
+    window.masterData = masterData;
+
+    console.log(masterData);
 
     if (!masterData || !masterData.settings) {
         masterData = {
@@ -1872,13 +2027,21 @@ async function startEngine() {
                      ? masterData.mailbox.mailHistory 
                      : (Array.isArray(masterData.mailbox) ? masterData.mailbox : []);
     mailbox = new MailboxManager(mailData, mailPoolData);
+    window.mailbox = mailbox;
 
     // 3. 오늘 날짜 기준 시간 복구 (형식 통일: YYYY-MM-DD)
     const todayStr = window.getMolipDate();
     if (masterData.progress && masterData.progress.lastSaveDate === todayStr) {
         progress.todayFocusTime = masterData.progress.todayFocusTime || 0; 
     } else {
+        // [수정] 새로운 날에 앱을 켰다면 시간뿐만 아니라 습관도 리셋합니다.
         progress.todayFocusTime = 0; 
+        
+        // 이 시점에서 마스터 데이터의 날짜를 갱신하기 전에 리셋을 먼저 호출합니다.
+        checkHabitReset(); 
+        
+        if(masterData.progress) masterData.progress.lastSaveDate = todayStr;
+        saveAllData();
     }
 
     // 4. 캐릭터 및 유대 데이터 로드
@@ -1887,6 +2050,10 @@ async function startEngine() {
     charGrowthMap = charSave.growthMap || {}; 
     givenGiftsMap = charSave.givenGiftsMap || {};
     dailyPetCountMap = charSave.dailyPetCountMap || {};
+
+    // [핵심 추가] 영수증용 시간 데이터 복구
+    dailyAppTimeMap = masterData.dailyAppTimeMap || {}; 
+    window.dailyAppTimeMap = dailyAppTimeMap; // 콘솔 확인용 연결
 
     molipTodos = (masterData.todo || []).filter(t => t !== null);
     molipHabits = (masterData.habit || []).filter(h => h !== null);
@@ -1922,30 +2089,92 @@ async function startEngine() {
         }
     });
 
-    // 6. 파트너 로드 및 엔진 가동
+    // 6. 파트너 로드 및 인트로 판정 (강화된 조건)
     const savedId = charSave.selectedPartnerId;
+    
+    // [핵심] 알 상태거나, 이미 보유한 캐릭터가 한 마리라도 있다면 인트로 대상이 아님
+    const hasOwnedChars = masterData.collection?.ownedIds && masterData.collection.ownedIds.length > 0;
+    const hasActiveEgg = !!masterData.collection?.activeEgg;
+    
     const introLayer = document.getElementById('intro-sequence');
 
-    if (!savedId) {
+    // [조건 변경] 파트너ID도 없고, 알도 없고, 보유 캐릭터도 '셋 다 없을 때만' 인트로 실행
+    if (!savedId && !hasActiveEgg && !hasOwnedChars) {
         if (introLayer) introLayer.style.display = 'flex';
+        console.log("[시스템] 신규 유저로 감지되어 인트로를 실행합니다.");
     } else {
         if (introLayer) introLayer.style.display = 'none';
-        currentPartner = charData.characters.find(c => c.id === savedId); 
+        
+        // 유아기/성체 캐릭터가 있다면 해당 ID로 파트너 설정
+        // 만약 savedId가 날아갔더라도 ownedIds의 첫 번째 캐릭터를 자동으로 불러와 복구합니다.
+        const targetId = savedId || (hasOwnedChars ? masterData.collection.ownedIds[0] : (hasActiveEgg ? masterData.collection.activeEgg.type : null));
+        
+        currentPartner = charData.characters.find(c => c.id === targetId); 
+        
         if (currentPartner) {
             await refreshCharacterSprite(); 
+            console.log(`[시스템] 파트너(${currentPartner.name}) 데이터를 성공적으로 복구했습니다.`);
+
+            // --- [핵심 추가] 성체기 환영 인사(welcome_responses) 출력 로직 ---
+            // 1. 현재 단계가 성체(adult)인지 확인합니다.
+            if (currentStage === 'adult') {
+                const stageData = currentPartner.stages.adult;
+                
+                // 2. JSON에 welcome_responses가 정의되어 있는지 확인합니다.
+                if (stageData && stageData.welcome_responses && stageData.welcome_responses.length > 0) {
+                    // 3. 랜덤하게 대사를 하나 선택합니다.
+                    const welcomeText = stageData.welcome_responses[Math.floor(Math.random() * stageData.welcome_responses.length)];
+                    
+                    // 4. 앱이 켜진 직후 바로 대사창이 뜨면 어색하므로 1.5초의 지연 시간을 둡니다.
+                    setTimeout(() => {
+                        // 우선순위 2(시스템 대사)로 출력하여 다른 대사에 씹히지 않게 합니다.
+                        window.showDialogue(welcomeText, 2);
+                    }, 1500);
+                }
+            }
         }
 
         if (typeof window.startMainGameEngine === 'function') {
             window.startMainGameEngine();
+
+            // --- [핵심 추가] 시작 후 2초간 자동 상태 대사 차단 로직 ---
+            // 1. 현재 시간으로부터 2초(2000ms) 동안 대사 시스템을 잠급니다.
+            dialogueLockUntil = Date.now() + 2000; 
+            
+            // 2. 현재 우선순위를 3으로 높여, 우선순위 2 이하인 '상태 변경 대사'를 무시하게 합니다.
+            currentPriority = 3; 
+
+            // 3. 2초 후에 우선순위를 다시 일반 상태(0)로 복구합니다.
+            setTimeout(() => {
+                if (currentPriority === 3) currentPriority = 0;
+            }, 2000);
+
+            // --- [선택 사항] 성체기 환영 인사는 허용하고 싶을 경우 ---
+            if (currentStage === 'adult') {
+                const stageData = currentPartner.stages.adult;
+                if (stageData && stageData.welcome_responses?.length > 0) {
+                    const welcomeText = stageData.welcome_responses[Math.floor(Math.random() * stageData.welcome_responses.length)];
+                    setTimeout(() => {
+                        // 환영 인사는 잠금을 뚫고 출력되도록 우선순위 3을 부여합니다.
+                        window.showDialogue(welcomeText, 3);
+                    }, 1500); 
+                }
+            }
         }
     }
 
     // 7. UI 초기 렌더링
+    window.applySavedFont();
     window.renderWorkAppList(); 
     window.renderDistractionAppList();
     window.renderTodos(); 
     window.renderHabits();
     window.updateUI();
+    window.updateMailNotification();
+
+    // [추가] 학회로부터 온 업데이트 소식을 체크합니다.
+    checkForUpdateMail();
+    
 
     document.body.classList.add('ready');
     if (typeof renderer !== 'undefined' && renderer.startLoop) renderer.startLoop();
@@ -1957,6 +2186,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (todoInput) {
         todoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); window.addMolipTodo(); } });
     }
+    const habitInput = document.getElementById('habit-input');
+    if (habitInput) {
+        habitInput.addEventListener('keydown', (e) => { 
+            if (e.key === 'Enter') { 
+                e.preventDefault(); // 줄바꿈 방지
+                window.addHabit();  // 기존에 정의된 습관 추가 함수 호출
+            } 
+        });
+    }
+
     const canvas = document.getElementById('main-canvas');
     if (canvas) canvas.addEventListener('click', (e) => window.petCharacter(e));
 
@@ -2007,6 +2246,24 @@ window.confirmEditTodo = () => {
         window.showToast("과업이 수정되었습니다.", "success");
     }
     editingTodoId = null;
+
+    // 테마 라디오 버튼 이벤트 연결 로직
+    const themeRadios = document.querySelectorAll('input[name="theme"]');
+    themeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const selectedThemeId = e.target.value; // 선택된 라디오의 value값 (예: ALCHEMY_LAB)
+            console.log(`[테마 변경 요청] ID: ${selectedThemeId}`);
+            
+            // 1. 테마 적용 함수 호출
+            window.applyTheme(selectedThemeId);
+            
+            // 2. 마스터 데이터에 저장 (나중에 켰을 때 유지되도록)
+            if (window.masterData && window.masterData.settings) {
+                window.masterData.settings.currentTheme = selectedThemeId;
+                saveAllData();
+            }
+        });
+    });
 };
 
 document.addEventListener('mousemove', (e) => {
@@ -2077,51 +2334,89 @@ window.hideTooltip = () => {
     if (tooltip) tooltip.style.display = 'none';
 };
 
-// [renderer.js] 초기 데이터 로드 및 인트로 체크
+// [renderer.js] 약 1283행 부근: 세이브 데이터 로드 및 변수 동기화 리스너
+// [renderer.js] 세이브 데이터 로드 및 변수 동기화 리스너
 ipcRenderer.on('init-data', async (event, data) => {
     if (!data) return;
+    
+    // 1. 전역 마스터 데이터 업데이트
     masterData = data;
+    window.masterData = data;
 
-    // 기존 매니저가 없을 때만 새로 생성하거나, 기존 객체에 데이터 주입
-    if (!progress) {
-        progress = new ProgressManager(masterData.progress);
-        window.progress = progress;
+    // 2. [참조 유지 핵심 수정] 배열 자체를 교체(=)하지 않고 내용물만 비우고 채웁니다.
+    // 이렇게 해야 window.molipHabits가 처음 잡은 '그 배열'을 끝까지 추적할 수 있습니다.
+    if (Array.isArray(masterData.todo)) {
+        molipTodos.length = 0; 
+        molipTodos.push(...masterData.todo.filter(t => t !== null));
     }
-    if (!collection) {
-        collection = new CollectionManager(masterData.collection);
-        window.collection = collection;
+    if (Array.isArray(masterData.habit)) {
+        molipHabits.length = 0;
+        molipHabits.push(...masterData.habit.filter(h => h !== null));
     }
     
-    // 데이터 복구 및 매니저 초기화
-    progress = new ProgressManager(masterData.progress);
-    collection = new CollectionManager(masterData.collection);
-    charGrowthMap = masterData.charGrowthMap || {};
-    charIntimacyMap = masterData.charIntimacyMap || {};
-    givenGiftsMap = masterData.givenGiftsMap || {};
-    
-    // 설정값 복구
-    workApps = masterData.workApps || [];
-    distractionApps = masterData.distractionApps || [];
-    molipTodos = masterData.molipTodos || [];
-    molipHabits = masterData.molipHabits || [];
+    // 3. 시스템 설정 및 앱 리스트 복구
+    if (masterData.settings) {
+        const s = masterData.settings;
+        workApps = s.workApps || [];
+        distractionApps = s.distractionApps || [];
+        window.resetHour = s.resetHour || 0;
+        window.isHorizontalMode = s.isHorizontalMode || false;
+        window.hideCompleted = s.hideCompleted || false;
+        window.showPastCompleted = s.showPastCompleted || false;
+        window.autoDeleteOldTasks = s.autoDeleteOldTasks || false;
 
-    // 메일박스 초기화
-    mailbox = new MailboxManager(masterData.mailbox, mailPoolData);
-
-    // ★ [핵심 보강] 보유 캐릭터가 없다면 인트로(첫 선택) 모달 표시
-    if (!collection.ownedIds || collection.ownedIds.length === 0) {
-        if (window.showFirstChoiceModal) {
-            // 약간의 지연 후 실행하여 UI가 완전히 로드된 뒤 뜨게 함
-            setTimeout(() => window.showFirstChoiceModal(), 500);
+        // [기존 로직] 저장된 아코디언 접힘 상태를 UI에 다시 적용
+        if (s.accordionStates) {
+            Object.keys(s.accordionStates).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.toggle('active', s.accordionStates[id]);
+                }
+            });
         }
-    } else {
-        // 캐릭터가 있다면 정상적으로 파트너 설정 및 렌더링 시작
-        currentPartner = charData.characters.find(c => c.id === masterData.collection.ownedIds[0]);
-        await refreshCharacterSprite();
-        renderer.startLoop();
+        
+        // 저장된 폰트 및 테마 즉시 적용
+        window.applySavedFont(); 
+        if (s.currentTheme) window.applyTheme(s.currentTheme);
     }
 
+    // 4. 캐릭터 및 유대 데이터 복구
+    const charSave = masterData.character || {};
+    charIntimacyMap = charSave.intimacyMap || {}; 
+    charGrowthMap = charSave.growthMap || {}; 
+
+    // [핵심 추가] 콘솔에서 접근할 수 있도록 window 객체에 실시간 할당
+    window.charIntimacyMap = charIntimacyMap;
+    window.charGrowthMap = charGrowthMap;
+
+    givenGiftsMap = charSave.givenGiftsMap || {};
+    dailyPetCountMap = charSave.dailyPetCountMap || {};
+    dailyGiftCountMap = charSave.dailyGiftCountMap || {};
+
+    // 5. 매니저 객체 재생성 및 데이터 주입
+    progress = new ProgressManager(masterData.progress);
+    window.progress = progress;
+    collection = new CollectionManager(masterData.collection);
+    window.collection = collection;
+    
+    // 서신함 데이터 구조 확인 및 복구
+    const mailHistory = masterData.mailbox?.mailHistory || (Array.isArray(masterData.mailbox) ? masterData.mailbox : []);
+    mailbox = new MailboxManager(mailHistory, mailPoolData);
+    window.mailbox = mailbox;
+
+    // 영수증용 시간 데이터 복구
+    dailyAppTimeMap = masterData.dailyAppTimeMap || {};
+
+    // 6. UI 즉시 갱신 및 뱃지 동기화
+    window.renderTodos(); 
+    window.renderHabits();
     window.updateUI();
+
+    // 약간의 지연 후 뱃지 숫자 계산
+    setTimeout(() => {
+        window.updateMailNotification();
+        console.log("🚩 [초기화] 데이터 동기화 및 전역 참조 고정 완료");
+    }, 150);
 });
 
 // 나머지 유틸리티
@@ -2296,35 +2591,46 @@ window.toggleSettings = (show) => {
     if (show) {
         const s = masterData.settings || {};
 
-        // 1. 일반 설정 동기화
+        // 1. 일반 설정 동기화 (폰트)
         const currentFont = s.font || 'paperlogy';
         const fontRadio = document.querySelector(`input[name="font-choice"][value="${currentFont}"]`);
         if (fontRadio) fontRadio.checked = true;
 
-        // 2. [버그 수정] 넓게 보기(가로 모드) 토글 UI 상태 동기화
-        // 기존의 layout-h, layout-v 참조 코드를 제거하고 아래 코드로 대체합니다.
+        // [핵심 추가] 테마 설정 동기화
+        // 저장된 테마 ID를 가져와 해당 라디오 버튼을 체크합니다.
+        const currentTheme = s.currentTheme || 'DEFAULT_DARK'; 
+        const themeRadio = document.querySelector(`input[name="theme-choice"][value="${currentTheme}"]`);
+        if (themeRadio) {
+            themeRadio.checked = true;
+        }
+
+        // 2. 가로 모드 토글 UI 상태 동기화
         const horizontalToggle = document.getElementById('horizontal-mode-toggle');
         if (horizontalToggle) {
             horizontalToggle.classList.toggle('active', window.isHorizontalMode);
         }
 
-        // 2. [작업 설정(Apps) UI 동기화] ★ 핵심 추가 ★
-        
-        // 초기화 시간 셀렉트 박스
+        // 3. 작업 설정(Apps) UI 동기화
         const resetSelect = document.getElementById('reset-hour-select');
         if (resetSelect) resetSelect.value = window.resetHour;
 
-        // 완료 항목 숨기기 토글
         const hideToggle = document.getElementById('hide-completed-toggle');
         if (hideToggle) hideToggle.classList.toggle('active', window.hideCompleted);
 
-        // 지난 항목 표시 토글
         const showPastToggle = document.getElementById('show-past-toggle');
         if (showPastToggle) showPastToggle.classList.toggle('active', window.showPastCompleted);
 
-        // 자동 삭제 토글
         const autoDeleteToggle = document.getElementById('auto-delete-toggle');
         if (autoDeleteToggle) autoDeleteToggle.classList.toggle('active', window.autoDeleteOldTasks);
+
+        if (show) {
+            const s = masterData.settings || {};
+            const currentTheme = s.currentTheme || localStorage.getItem('ether-flow-theme') || 'DEFAULT_DARK';
+            
+            // 현재 테마에 맞는 라디오 버튼을 찾아 체크 표시
+            const themeRadio = document.querySelector(`input[name="theme-choice"][value="${currentTheme}"]`);
+            if (themeRadio) themeRadio.checked = true;
+        }
 
         window.switchSettingsTab('general'); 
     }
@@ -2355,52 +2661,67 @@ window.toggleAccordion = (id) => {
     }
 };
 
-window.changeFont = (fontName) => {
-    // 1. Body 클래스 초기화 (기존 폰트 클래스 제거)
-    document.body.classList.remove('font-paperlogy', 'font-Galmuri11', 'font-Stardust', 'font-Pretendard');
+/**
+ * 폰트 변경 함수
+ * @param {string} fontName - 변경할 폰트 이름
+ * @param {boolean} needSave - 파일 저장 여부 (초기화 시 false, 사용자 변경 시 true)
+ */
+window.changeFont = function(fontName, needSave = true) {
+    const root = document.documentElement;
     
-    // 2. 새로운 클래스 추가
-    const targetClass = `font-${fontName}`;
-    document.body.classList.add(targetClass);
-    
-    // 3. 세이브 데이터에 기록
-    if (window.masterData) {
-        masterData.settings = masterData.settings || {};
-        masterData.settings.fontFamily = fontName;
-        saveAllData(); //
+    // 폰트 적용
+    if (fontName === 'Pretendard') {
+        root.style.setProperty('--main-font', "'Pretendard', sans-serif");
+    } else if (fontName === 'Galmuri11') {
+        root.style.setProperty('--main-font', "'Galmuri11', sans-serif");
+    } else {
+        root.style.setProperty('--main-font', "'Paperlogy', sans-serif");
     }
 
-    console.log(`폰트가 변경되었습니다: ${fontName}`);
+    // 설정 객체 업데이트
+    if (window.masterData && window.masterData.settings) {
+        window.masterData.settings.font = fontName;
+        
+        // [수정] needSave가 true일 때만 파일에 저장합니다. (부팅 시 과부하 방지)
+        if (needSave) {
+            saveAllData(); 
+            console.log(`[설정] 폰트 변경 및 저장 완료: ${fontName}`);
+        }
+    }
 };
 
-// [교정] 앱 시작 시 저장된 폰트 불러오기 함수 수정
-function applySavedFont() {
-    if (!masterData || !masterData.settings) return;
-
-    const savedFont = masterData.settings.font || 'paperlogy';
-    window.changeFont(savedFont);
-    
-    // 라디오 버튼 체크 상태 동기화
-    const radio = document.querySelector(`input[name="font-choice"][value="${savedFont}"]`);
-    if (radio) radio.checked = true;
-}
+/**
+ * 저장된 폰트 불러오기 (앱 시작 시 호출)
+ */
+window.applySavedFont = function() {
+    if (window.masterData && window.masterData.settings && window.masterData.settings.font) {
+        const savedFont = window.masterData.settings.font;
+        // [핵심] 초기화 단계이므로 저장을 하지 않도록 false를 전달합니다.
+        window.changeFont(savedFont, false); 
+        console.log(`[시스템] 저장된 폰트 적용: ${savedFont}`);
+    }
+};
 
 // [renderer.js] 누락된 편지함 UI 제어 함수들 추가
-
 // 1. 뱃지 카운트 업데이트 로직으로 교체
-
 window.updateMailNotification = () => {
     const badge = document.getElementById('mail-badge');
-    if (!badge || !mailbox) return;
+    // 뱃지가 들어있는 실제 버튼 클래스인 .btn-game으로 수정
+    const mailBtn = badge?.closest('.btn-game'); 
+    
+    if (!badge || !window.mailbox) return;
 
-    // 매니저를 통해 읽지 않은 메일 갯수를 가져옵니다.
-    const unreadCount = mailbox.getUnreadCount();
-
+    const unreadCount = window.mailbox.getUnreadCount();
+    
     if (unreadCount > 0) {
-        badge.innerText = unreadCount; // 숫자 반영
-        badge.style.display = 'flex';  // 뱃지 노출
+        badge.innerText = unreadCount > 99 ? "99+" : unreadCount;
+        badge.style.display = 'flex'; // 0보다 크면 무조건 표시
+        
+        // 버튼 툴팁 업데이트
+        if (mailBtn) mailBtn.setAttribute('data-tooltip', `서신함 (안 읽은 서신 ${unreadCount})`);
     } else {
-        badge.style.display = 'none';  // 0개일 때는 숨김
+        badge.style.display = 'none'; // 0이면 무조건 숨김
+        if (mailBtn) mailBtn.setAttribute('data-tooltip', '서신함');
     }
 };
 
@@ -2530,11 +2851,12 @@ window.addHabit = () => {
     if (!input || !input.value.trim()) return;
     
     molipHabits.push({
-        id: 'habit_' + Date.now().toString(36),
+        id: 'habit_' + Date.now().toString(36), // 이미 개별 아이디가 부여됨
         text: input.value.trim(),
         completed: false,
+        rewarded: false, // [추가] 오늘 보상 지급 여부 플래그
         streak: 0,
-        lastCompletedDate: null // 마지막으로 완료한 날짜 (YYYY-MM-DD)
+        lastCompletedDate: null
     });
     
     input.value = '';
@@ -2587,36 +2909,54 @@ window.renderHabits = () => {
 };
 
 // [renderer.js] 습관 상태 토글 및 스트릭 계산
+/**
+ * @param {string} id - 토글할 습관의 고유 ID
+ */
 window.toggleHabit = (id) => {
+    // 1. 대상 습관 데이터 확보
     const habit = molipHabits.find(h => h.id === id);
     if (!habit) return;
 
-    const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+    const molipToday = window.getMolipDate(); // 시스템 기준 오늘 날짜
     const wasCompleted = habit.completed;
 
+    // 2. 상태 반전
     habit.completed = !habit.completed;
 
+    // 3. 완료(체크) 상태가 되었을 때의 로직
     if (habit.completed && !wasCompleted) {
-        // 새로 완료한 경우 스트릭 계산
         const lastDate = habit.lastCompletedDate;
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toLocaleDateString('en-CA');
 
+        // [스트릭 계산 보정] 처음이거나 기록이 깨졌던 경우를 명확히 1일로 설정
         if (lastDate === yesterdayStr) {
-            habit.streak += 1; // 어제에 이어 오늘도 성공
-        } else if (lastDate !== today) {
-            habit.streak = 1; // 새로 시작
+            // 어제에 이어 오늘도 성공한 경우
+            habit.streak += 1;
+        } else if (!lastDate || lastDate !== molipToday) {
+            // ★ 처음 완수(null)하거나, 어제 건너뛰었다면 오늘부터 1일째
+            habit.streak = 1; 
         }
         
-        habit.lastCompletedDate = today;
-        collection.addPoints(10); // 습관은 과업(5P)보다 보상을 크게 설정
-        window.showToast(`습관 완수! ${habit.streak}일째입니다. +10 Et`, "success");
-    } else if (!habit.completed && wasCompleted) {
-        // 완료 취소 시 스트릭 원복 (간단하게 1 차감 혹은 유지 로직 선택)
-        habit.streak = Math.max(0, habit.streak - 1);
+        habit.lastCompletedDate = molipToday; // 마지막 완료일 갱신
+
+        // [중복 보상 방지 및 토스트 알림]
+        if (!habit.rewarded) {
+            window.collection.addPoints(10); // 10 Et 지급
+            habit.rewarded = true;    // 오늘 보상 완료 플래그
+            window.showToast(`습관 완수! ${habit.streak}일째입니다. +10 Et`, "success");
+        } else {
+            // 보상을 이미 받았다면 일수 정보만 노출
+            window.showToast(`오늘의 수련은 이미 마쳤습니다. (${habit.streak}일째)`, "info");
+        }
+    } 
+    // 4. 완료 취소 시
+    else if (!habit.completed && wasCompleted) {
+        // 취소해도 이미 올라간 스트릭이나 보상은 유지하여 실수를 방지합니다.
     }
 
+    // 5. UI 및 데이터 저장
     window.renderHabits();
     window.updateUI();
     saveAllData();
@@ -2624,32 +2964,41 @@ window.toggleHabit = (id) => {
 
 // [renderer.js] 자정 초기화 체크 함수
 function checkHabitReset() {
-    const today = new Date().toLocaleDateString('en-CA');
+    const molipToday = window.getMolipDate(); // 설정된 기준 시간이 반영된 오늘 날짜
     let isChanged = false;
 
+    // 어제 날짜 구하기 (스트릭 유지 여부 판별용)
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toLocaleDateString('en-CA');
+
+    // 데이터 오염 방지를 위한 배열 체크
+    if (!molipHabits) return;
+
     molipHabits.forEach(habit => {
-        // 마지막 완료일이 오늘이 아니고 이미 완료 상태라면 초기화
-        if (habit.completed && habit.lastCompletedDate !== today) {
-            habit.completed = false;
+        if (!habit) return;
+
+        // 1. [상태 및 보상 리셋] 마지막 완료일이 '기준 시간상의 오늘'이 아니라면 초기화
+        if (habit.completed && habit.lastCompletedDate !== molipToday) {
+            habit.completed = false; // 체크 해제
+            habit.rewarded = false;  // 보상 획득 권한 복구 (중복 보상 방지 리셋)
             isChanged = true;
+            console.log(`[시스템] 습관 초기화 완료: ${habit.text}`);
         }
         
-        // 하루를 건너뛰었다면 스트릭 초기화
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toLocaleDateString('en-CA');
-        
-        if (habit.lastCompletedDate !== today && habit.lastCompletedDate !== yesterdayStr) {
+        // 2. [스트릭 초기화] 어제도 완료하지 않았고 오늘도 아직 완료하지 않았다면 스트릭 리셋
+        if (habit.lastCompletedDate !== molipToday && habit.lastCompletedDate !== yesterdayStr) {
             if (habit.streak > 0) {
-                habit.streak = 0;
+                habit.streak = 0; // 연속 기록 파기
                 isChanged = true;
             }
         }
     });
 
+    // 3. 변경 사항이 있을 때만 UI 갱신 및 데이터 저장
     if (isChanged) {
-        window.renderHabits();
-        saveAllData();
+        window.renderHabits(); // 습관 리스트 새로고침
+        saveAllData();         // 상태 영구 저장
     }
 }
 
@@ -2693,13 +3042,23 @@ window.saveHabitInlineEdit = (id, newText) => {
 };
 
 // [renderer.js] 습관 삭제
+/**
+ * @param {string} id - 삭제할 습관의 고유 ID
+ */
 window.deleteHabit = (id) => {
-    if (!confirm("이 습관 수련을 중단하시겠습니까? (연속 기록이 사라집니다)")) return;
-    
-    molipHabits = molipHabits.filter(h => String(h.id) !== String(id));
-    window.renderHabits();
-    saveAllData();
-    window.showToast("습관 기록을 파기했습니다.", "info");
+    // 인앱 커스텀 모달 호출
+    window.showConfirm(
+        "습관 파기", 
+        "이 습관 수련을 중단하시겠습니까?\n삭제 시 연속 달성 기록이 모두 사라집니다.", 
+        () => {
+            // [예]를 눌렀을 때만 실행되는 실제 삭제 로직
+            molipHabits = molipHabits.filter(h => String(h.id) !== String(id));
+            
+            window.renderHabits();
+            saveAllData();
+            window.showToast("습관 기록을 파기했습니다.", "info");
+        }
+    );
 };
 
 // [renderer.js] 데이터 복구 및 청소 함수
@@ -2918,7 +3277,7 @@ window.mailTypeTimer = null;
 const sessionUnlockedAchievements = new Set();
 
 /**
- * 1. 서신 상세보기 (발신자 표시 + 타이핑 연출)
+ * 1. 서신 상세보기 (발신자 표시 + 타이핑 연출 + [스킵 기능 추가])
  */
 window.openLetter = (mailId) => {
     if (!window.mailbox) return;
@@ -2926,7 +3285,6 @@ window.openLetter = (mailId) => {
     const mail = window.mailbox.receivedMails.find(m => String(m.id) === String(mailId));
     if (!mail) return;
 
-    // index.html의 실제 ID 참조
     const modal = document.getElementById('letter-view-modal');
     const titleEl = document.getElementById('letter-detail-title');
     const senderEl = document.getElementById('letter-detail-sender');
@@ -2939,19 +3297,45 @@ window.openLetter = (mailId) => {
     modal.style.display = 'flex';
     if (titleEl) titleEl.innerText = mail.title;
     if (senderEl) senderEl.innerText = `${mail.sender || '연금술 길드'}`;
-    if (rewardZone) rewardZone.innerHTML = ""; // 타이핑 시작 전 보상 칸 비우기
+    if (rewardZone) rewardZone.innerHTML = ""; 
+
+    // [핵심 추가] 타이핑 도중 모달 클릭 시 즉시 내용을 다 띄우는 함수
+    const handleLetterSkip = () => {
+        // 타이핑이 아직 진행 중(타이머 존재)일 때만 작동
+        if (window.mailTypeTimer) {
+            clearInterval(window.mailTypeTimer);
+            window.mailTypeTimer = null; // 타이머 정지
+            
+            // 즉시 전체 본문 출력 (줄바꿈 처리 포함)
+            if (contentEl) {
+                contentEl.innerHTML = mail.content.replace(/\n/g, '<br>');
+            }
+            // 보상 버튼 즉시 생성
+            window.renderLetterReward(mail);
+            
+            // 스킵 완료 후 클릭 이벤트 제거
+            modal.removeEventListener('click', handleLetterSkip);
+        }
+    };
+
+    // 이전 리스너 중복 방지를 위해 제거 후 새로 등록 (모달 자체에 클릭 이벤트 부여)
+    modal.removeEventListener('click', modal._currentSkipHandler);
+    modal._currentSkipHandler = handleLetterSkip;
+    modal.addEventListener('click', handleLetterSkip);
 
     // 본문 타이핑 효과 시작
     if (contentEl) {
         if (window.mailTypeTimer) clearInterval(window.mailTypeTimer);
         
         window.startTypewriter(mail.content, contentEl, () => {
-            // [콜백] 타이핑 완료 시점에 보상 영역 렌더링
+            // 자연스럽게 타이핑이 끝났을 때의 처리
             window.renderLetterReward(mail);
+            window.mailTypeTimer = null;
+            modal.removeEventListener('click', handleLetterSkip);
         });
     }
 
-    // 데이터 상태 업데이트 (읽음 처리)
+    // 데이터 상태 업데이트 (읽음 처리 및 저장)
     mail.isRead = true;
     saveAllData();
     if (window.renderMailList) window.renderMailList();
@@ -2959,7 +3343,7 @@ window.openLetter = (mailId) => {
 };
 
 /**
- * 2. 타이핑 엔진
+ * 2. 타이핑 엔진 (상태 관리 보강)
  */
 window.startTypewriter = (text, element, onComplete) => {
     let index = 0;
@@ -2971,7 +3355,9 @@ window.startTypewriter = (text, element, onComplete) => {
             index++;
             element.scrollTop = element.scrollHeight;
         } else {
+            // 타이핑이 정상 종료됨
             clearInterval(window.mailTypeTimer);
+            window.mailTypeTimer = null; 
             if (onComplete) onComplete(); 
         }
     }, 30);
@@ -2989,7 +3375,7 @@ window.renderLetterReward = (mail) => {
         rewardZone.innerHTML = `
             <div class="mail-reward-box claimed" style="text-align: center; margin-top: 20px;">
                 <button class="btn-claim-reward" disabled style="opacity: 0.6; cursor: default;">
-                    <i class="fa-solid fa-check-double"></i> 보상 수령 완료
+                    <i class="fa-solid fa-check"></i> 보상 수령 완료
                 </button>
             </div>`;
         return;
@@ -3002,25 +3388,25 @@ window.renderLetterReward = (mail) => {
     let faIcon = "fa-gift";
     let displayName = "보상";
     let displayVal = "";
+    let buttonText = "";
 
     // 유형별 데이터 및 아이콘 매칭
     if (type === 'point' || type === 'ether') {
         faIcon = "fa-coins";
         displayName = "에테르";
         displayVal = `${val.toLocaleString()} Et`;
+        buttonText = `${displayVal} 수령하기`;
     } else if (type === 'item') {
         faIcon = "fa-box-open";
         displayName = (window.inventory && window.inventory.getItemName) ? window.inventory.getItemName(rewardId) : "연구 재료";
         displayVal = `${val}개`;
+        buttonText = `${displayVal} 수령하기`;
     } else if (type === 'achievement') {
         faIcon = "fa-trophy";
         const ach = (window.achievementList || []).find(a => a.id === rewardId);
         displayName = ach ? ach.name : "특별 업적";
-        displayVal = "해금";
-    }
-
-    // 아티스트님이 요청하신 "아이콘 + 금액 + 수령하기" 형식
-    const buttonText = `${displayVal} 수령하기`;
+        buttonText = `${displayVal} 업적 해금하기`;
+    };
 
     // style.css의 .mail-reward-box와 .reward-reveal(애니메이션) 클래스 사용
     rewardZone.innerHTML = `
@@ -3061,7 +3447,7 @@ window.claimMailReward = (mailId) => {
             if (masterData.progress) masterData.progress.points = window.collection.points;
             if (masterData.collection) masterData.collection.points = window.collection.points;
 
-            toastMsg = `✨ ${amount.toLocaleString()} 에테르를 수령했습니다!`;
+            toastMsg = `${amount.toLocaleString()} 에테르를 수령했습니다!`;
             console.log(`[보상 성공] 획득: ${amount}, 현재잔액: ${window.collection.points}`);
         } 
         
@@ -3071,7 +3457,7 @@ window.claimMailReward = (mailId) => {
             const amount = Number(reward.value || reward.amount || 1);
             masterData.inventory.byproducts[reward.id] = (masterData.inventory.byproducts[reward.id] || 0) + amount;
             const itemName = (window.inventory && window.inventory.getItemName) ? window.inventory.getItemName(reward.id) : "연구 재료";
-            toastMsg = `📦 ${itemName} ${amount}개를 획득했습니다.`;
+            toastMsg = `${itemName} ${amount}개를 획득했습니다.`;
         }
         
         // 3. 업적 보상 처리
@@ -3477,7 +3863,7 @@ window.startAbyssCrafting = () => {
         collection.activeEgg = {
             type: nextCharacter.id,
             progress: 0,
-            target: 15,
+            target: 3,
             date: new Date().toISOString()
         };
 
@@ -3596,39 +3982,47 @@ window.closeInventory = () => {
 /**
  * 2. 인벤토리 아이템 렌더링
  */
+/**
+ * [renderer.js] 인벤토리 아이템 렌더링 (실제 수량 체크 보강)
+ */
 window.renderInventory = () => {
     const grid = document.getElementById('inventory-grid');
     const detailArea = document.getElementById('inventory-detail');
     if (!grid) return;
 
     grid.innerHTML = "";
-    // 초기화 시 상세창 비우기
+    // 상세창 초기화
     if (detailArea) detailArea.innerHTML = `<div class="empty-bag-msg">아이템을 선택해 주세요.</div>`;
 
-    // A. 상점 구매 아이템 (items) + B. 연성 부산물 (byproducts) 통합
     const invItems = masterData.inventory?.items || {};
     const invByproducts = masterData.inventory?.byproducts || {};
     
-    // 모든 아이템 ID 수집
+    // 1. [핵심 수정] 단순히 ID만 가져오는 게 아니라, 수량이 1개 이상인 아이템만 필터링합니다.
     const allItemIds = [...Object.keys(invItems), ...Object.keys(invByproducts)];
-    const uniqueIds = [...new Set(allItemIds)];
+    const activeItems = [...new Set(allItemIds)].filter(id => {
+        const count = (invItems[id] || 0) + (invByproducts[id] || 0);
+        return count > 0;
+    });
 
-    if (uniqueIds.length === 0) {
-        grid.innerHTML = `<div class="empty-bag-msg">가방이 비어 있습니다.</div>`;
+    // 2. 필터링된 실제 아이템이 하나도 없다면 "가방이 비어 있음" 문구 출력
+    if (activeItems.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; color: rgba(255, 255, 255, 0.2); text-align: center;">
+                <i class="fa-solid fa-border-none" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <div style="font-size: 0.85rem; margin-top: 8px; opacity: 0.7;">가방이 비어있습니다.</div>
+            </div>
+        `;
         return;
     }
 
-    uniqueIds.forEach(id => {
-        // 1. 개수 파악
+    // 3. 아이템이 있을 경우 슬롯 생성
+    activeItems.forEach(id => {
         const count = (invItems[id] || 0) + (invByproducts[id] || 0);
-        if (count <= 0) return;
-
-        // 2. 정보 매칭 (shopItems 또는 byproductTable에서 찾기)
+        
         let info = shopItems.find(i => i.id === id);
         if (!info) info = byproductTable.find(i => i.id === id);
         if (!info) return;
 
-        // 3. 슬롯 생성
         const slot = document.createElement('div');
         slot.className = 'inventory-slot-glass';
         slot.innerHTML = `
@@ -3651,14 +4045,17 @@ window.selectInventoryItem = (id, info) => {
     const detailArea = document.getElementById('inventory-detail');
     const isGift = info.category === 'gift';
     
-    // 남은 선물 횟수 계산
     let remainingText = '';
     if (isGift) {
         const charId = currentPartner.id;
-        const today = new Date().toLocaleDateString('en-CA');
-        const giftData = masterData.giftCounts?.[charId];
-        const usedToday = (giftData?.date === today) ? giftData.count : 0;
-        remainingText = `<div style="font-size:0.75rem; color:var(--primary-gold); margin-bottom:10px;">오늘 남은 횟수: ${3 - usedToday}/3</div>`;
+        // [수정] 일반 날짜가 아닌 '새벽 4시' 기준 날짜를 가져옵니다.
+        const molipToday = window.getMolipDate(); 
+        
+        // [수정] giftCounts 대신 saveAllData와 연동되는 dailyGiftCountMap을 사용합니다.
+        const giftData = dailyGiftCountMap[charId];
+        const usedToday = (giftData?.date === molipToday) ? giftData.count : 0;
+        
+        remainingText = `<div style="font-size:0.75rem; color:var(--primary-gold); margin-bottom:10px;">오늘 남은 선물 횟수: ${3 - usedToday} / 3</div>`;
     }
 
     detailArea.innerHTML = `
@@ -3672,15 +4069,13 @@ window.selectInventoryItem = (id, info) => {
                     호문클루스에게 선물하기
                 </button>
             ` : `
-                <div style="color:rgba(255,255,255,0.2); font-size:0.8rem;">연성로에서 사용 가능한 연성 재료입니다.</div>
+                <div class="label" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 15px;">연성로에서 사용 가능한 재료입니다.</div>
             `}
         </div>
     `;
 };
 
-/**
- * 4. [핵심] 아이템 사용 및 선물 처리 (에러 발생했던 함수)
- */
+// [renderer.js] 아이템 사용 후 가방 모달 자동 닫기 추가
 window.useInventoryItem = (id) => {
     if (!currentPartner) return;
 
@@ -3688,19 +4083,18 @@ window.useInventoryItem = (id) => {
     if (!itemInfo) return;
 
     const charId = currentPartner.id;
-    const today = new Date().toLocaleDateString('en-CA'); 
+    const molipToday = window.getMolipDate(); 
 
-    // 1. 선물일 경우 일일 한도 체크
+    // 1. 선물일 경우 일일 한도 및 데이터 구조 체크
     if (itemInfo.category === 'gift') {
-        if (!masterData.giftCounts) masterData.giftCounts = {};
-        if (!masterData.giftCounts[charId]) {
-            masterData.giftCounts[charId] = { date: today, count: 0 };
+        if (!dailyGiftCountMap[charId]) {
+            dailyGiftCountMap[charId] = { date: molipToday, count: 0 };
         }
-        if (masterData.giftCounts[charId].date !== today) {
-            masterData.giftCounts[charId].date = today;
-            masterData.giftCounts[charId].count = 0;
+        if (dailyGiftCountMap[charId].date !== molipToday) {
+            dailyGiftCountMap[charId].date = molipToday;
+            dailyGiftCountMap[charId].count = 0;
         }
-        if (masterData.giftCounts[charId].count >= 3) {
+        if (dailyGiftCountMap[charId].count >= 3) {
             window.showToast("오늘은 선물을 충분히 주었습니다.", "error");
             return;
         }
@@ -3718,47 +4112,33 @@ window.useInventoryItem = (id) => {
 
     if (itemUsed) {
         if (itemInfo.category === 'gift') {
-            masterData.giftCounts[charId].count++;
+            dailyGiftCountMap[charId].count++; 
 
-            // ★ [해금 로직 추가] 준 적 있는 선물 목록에 기록
             if (!givenGiftsMap[charId]) givenGiftsMap[charId] = [];
             if (!givenGiftsMap[charId].includes(itemInfo.name)) {
                 givenGiftsMap[charId].push(itemInfo.name);
             }
 
-            window.closeInventory();
-
-            const prefs = currentPartner.preferences;
-            const stageKey = isHatching ? 'egg' : currentStage; 
+            // 호감도 및 대사 로직
+            const stageKey = window.isHatching ? 'egg' : currentStage; 
             const stageData = currentPartner.stages[stageKey] || currentPartner.stages['adult'];
 
-            let prefType = 'normal';
             let points = 2;
-
-            if (prefs.favorite.includes(itemInfo.name)) {
-                prefType = 'favorite';
-                points = 5;
-            } else if (prefs.dislike.includes(itemInfo.name)) {
-                prefType = 'dislike';
-                points = 0.5;
-            }
+            if (currentPartner.preferences.favorite.includes(itemInfo.name)) points = 5;
+            else if (currentPartner.preferences.dislike.includes(itemInfo.name)) points = 0.5;
 
             charIntimacyMap[charId] = Math.min(100, (charIntimacyMap[charId] || 0) + points);
             
-            setTimeout(() => {
-                const responseText = stageData.gift_responses[prefType];
-                window.showDialogue(responseText, 2);
-                window.updateUI();
-                window.showToast(`${itemInfo.name} 선물 완료! (오늘 ${masterData.giftCounts[charId].count}/3)`, "success");
-                saveAllData();
-            }, 100);
-        } 
-        else {
-            window.showToast(`${itemInfo.name}을(를) 사용했습니다.`, "info");
-            window.renderInventory();
-            saveAllData();
+            window.showDialogue(stageData.gift_responses.normal, 2);
+            window.showToast(`${itemInfo.name} 선물 완료!`, "success");
+            
+            // UI 갱신 및 저장
             window.updateUI();
-        }
+            saveAllData(); 
+
+            // --- [핵심 추가] 선물 후 가방 모달을 닫습니다. ---
+            window.closeInventory(); 
+        } 
     }
 };
 
@@ -3862,12 +4242,6 @@ window.handleCharacterClick = function () {
     triggerStatusDialogue(currentStatus);
 };
 
-window.cleanAppName = (name) => {
-    if (!name) return "알 수 없음";
-    // (32-bit), (64-bit) 및 앞의 공백을 찾아 삭제하는 정규식
-    return name.replace(/\s*\(\d+-bit\)/gi, "").trim();
-};
-
 /**
  * [renderer.js] 호문클루스에게 선물을 전달하고 호감도 및 해금 정보를 업데이트합니다.
  */
@@ -3914,38 +4288,124 @@ window.giveGift = (charId, itemInfo) => {
     window.showToast(`${itemInfo.name}을(를) 선물했습니다!`, "success");
 };
 
-// [renderer.js] startEngine 함수 하단 혹은 적절한 위치에 추가
+/**
+ * [renderer.js] 학회로부터 온 업데이트 소식을 체크합니다.
+ * versionInfo가 null일 경우를 대비한 방어 로직이 추가되었습니다.
+ */
 async function checkForUpdateMail() {
-    const versionInfo = await ipcRenderer.invoke('get-version-update');
-    
-    if (versionInfo.latest && isNewerVersion(versionInfo.current, versionInfo.latest)) {
-        // 이미 해당 버전의 업데이트 서신을 받았는지 확인 (중복 생성 방지)
-        const mailId = `update_notice_${versionInfo.latest}`;
-        const isAlreadyReceived = mailbox.receivedMails.some(m => m.id === mailId);
-
-        if (!isAlreadyReceived) {
-            // 새로운 서신 객체 생성
-            const updateMail = {
-                id: mailId,
-                title: `새로운 연구 소식 (v${versionInfo.latest})`,
-                sender: "연금술 도우미",
-                content: `연금술사님, 연구실의 새로운 기능과 안정성이 개선된 v${versionInfo.latest} 버전이 준비되었습니다. 지금 GitHub에서 새로운 버전을 확인해 보세요!`,
-                receivedDate: new Date().toISOString(),
-                isRead: false,
-                isRewardClaimed: false,
-                reward: { type: 'point', value: 500 } // 업데이트 감사 보상
-            };
-
-            // 서신함에 추가 및 알림
-            mailbox.receivedMails.unshift(updateMail);
-            window.updateMailNotification();
-            window.showToast("학회로부터 중요한 서신이 도착했습니다!", "event");
-            saveAllData(); // 데이터 영구 저장
+    try {
+        // 메인 프로세스로부터 버전 정보를 요청합니다.
+        const versionInfo = await ipcRenderer.invoke('get-version-update');
+        
+        // [핵심 수정] versionInfo가 null이거나 latest 속성이 없는 경우 즉시 중단하여 에러를 방지합니다.
+        if (!versionInfo || !versionInfo.latest) {
+            console.log("[시스템] 버전 정보를 가져올 수 없거나 이미 최신 버전입니다.");
+            return;
         }
+
+        // 새 버전이 존재할 경우에만 서신 생성 로직을 실행합니다.
+        if (isNewerVersion(versionInfo.current, versionInfo.latest)) {
+            const mailId = `update_notice_${versionInfo.latest}`;
+            const isAlreadyReceived = mailbox.receivedMails.some(m => m.id === mailId);
+
+            if (!isAlreadyReceived) {
+                const updateMail = {
+                    id: mailId,
+                    title: `새로운 연구 소식 (v${versionInfo.latest})`,
+                    sender: "연금술 도우미",
+                    content: `연금술사님, 연구실의 새로운 기능과 안정성이 개선된 v${versionInfo.latest} 버전이 준비되었습니다. 지금 새로운 버전을 확인해 보세요!\n\n` +
+                        `<a href="#" onclick="event.preventDefault(); require('electron').shell.openExternal('${versionInfo.downloadUrl}')" style="color: #a0c4ff; text-decoration: underline; cursor: pointer;">` +
+                        `[확인하기]</a>`,
+                    receivedDate: new Date().toISOString(),
+                    isRead: false,
+                    isRewardClaimed: false,
+                    reward: { type: 'point', value: 1000 }
+                };
+
+                mailbox.receivedMails.unshift(updateMail);
+                window.updateMailNotification(); 
+                window.showToast("학회로부터 중요한 서신이 도착했습니다!", "event");
+                saveAllData(); 
+            }
+        }
+    } catch (err) {
+        // 네트워크 오류 등으로 인한 예외 상황을 처리합니다.
+        console.error("[시스템] 업데이트 체크 중 예외 발생:", err);
     }
 }
 
 // 간단한 버전 비교 함수
 function isNewerVersion(current, latest) {
-    return latest !== current; // 단순 비교 혹은 세밀한 버전 파싱 로직 적용
+    if (!current || !latest) return false;
+    return current !== latest;
 }
+
+// [renderer.js] 맨 하단 테마 시스템 통합 코드
+
+// 1. 테마 데이터 로드 (중복 선언 방지)
+const { THEMES } = require('./themes.js'); 
+
+/**
+ * 2. 테마 실시간 적용 함수 (핵심 로직)
+ */
+// [renderer.js 하단]
+window.applyTheme = function(themeId) {
+    const theme = THEMES[themeId];
+    if (!theme) {
+        console.error(`[테마 에러] ${themeId}를 찾을 수 없어 기본 테마를 적용합니다.`);
+        // 테마를 못 찾으면 기본 다크 모드로 강제 적용하여 멈춤 방지
+        return window.applyTheme('DEFAULT_DARK'); 
+    }
+
+    const root = document.documentElement;
+    const app = document.getElementById('app');
+    
+    // 1. 변수 주입
+    Object.entries(theme.variables).forEach(([key, value]) => {
+        root.style.setProperty(key, value);
+    });
+
+    // 2. 클래스 교체 (기존 theme- 클래스 모두 제거 후 추가)
+    if (app) {
+        const toRemove = Array.from(app.classList).filter(c => c.startsWith('theme-'));
+        app.classList.remove(...toRemove);
+        app.classList.add(`theme-${theme.id}`);
+    }
+    
+    document.body.setAttribute('data-theme', theme.id);
+};
+
+window.changeTheme = function(themeKey) {
+    window.applyTheme(themeKey);
+    
+    // [중요] masterData와 localStorage에 동시 저장
+    if (window.masterData && window.masterData.settings) {
+        window.masterData.settings.currentTheme = themeKey;
+        saveAllData(); // 파일(JSON) 저장
+    }
+    localStorage.setItem('ether-flow-theme', themeKey); // 브라우저 캐시 저장
+};
+
+/**
+ * 3. 라디오 버튼 클릭 시 호출되는 함수
+ */
+window.changeTheme = function(themeKey) {
+    console.log(`[테마] 사용자가 "${themeKey}" 선택`);
+    window.applyTheme(themeKey);
+    
+    // 설정 저장 (앱 재시작 시 유지)
+    if (window.masterData && window.masterData.settings) {
+        window.masterData.settings.currentTheme = themeKey;
+        saveAllData();
+    }
+    
+    // 로컬 스토리지 백업
+    localStorage.setItem('ether-flow-theme', themeKey);
+};
+
+// 4. 초기 테마 로드 (저장된 설정이 없으면 DEFAULT_DARK 적용)
+const savedTheme = localStorage.getItem('ether-flow-theme') || 'DEFAULT_DARK'; // [수정] 대문자화
+window.applyTheme(savedTheme);
+
+const savedFont = localStorage.getItem('ether-flow-font') || 'paperlogy';
+window.changeFont(savedFont);

@@ -1,6 +1,6 @@
 {
   "name": "ether-flow",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Alchemy Productivity App",
   "author": "Lilysuhae",
   "main": "main.js",
@@ -32,9 +32,9 @@
     }
   },
   "dependencies": {
-    "active-win": "^9.0.0",
-    "axios": "^1.6.0",
     "@mapbox/node-pre-gyp": "^2.0.3",
+    "active-win": "^9.0.0",
+    "axios": "^1.13.2",
     "nopt": "^9.0.0"
   },
   "devDependencies": {

@@ -6,38 +6,51 @@
   font-weight: 400;
   font-style: normal;
 }
-
-/* 2. Medium (중간 두께) */
 @font-face {
   font-family: "Paperlogy";
   src: url("assets/fonts/Paperlogy-5Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
 }
-
-/* 3. SemiBold (약간 굵게) */
 @font-face {
   font-family: "Paperlogy";
   src: url("assets/fonts/Paperlogy-6SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
 }
-
-/* 4. Bold (굵게) */
 @font-face {
   font-family: "Paperlogy";
   src: url("assets/fonts/Paperlogy-7Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
+
+/* 갈무리 */
 @font-face {
   font-family: "Galmuri11";
-  src: url("assets/fonts/Galmuri11.woff2") format("woff2");
+  src: url("assets/fonts/Galmuri9.woff2") format("woff2");
+  font-weight: 400;
+}
+
+/* 프리텐다드 */
+@font-face {
+  font-family: "Pretendard";
+  src: url("assets/fonts/Pretendard-Regular.woff2") format("woff2");
   font-weight: 400;
 }
 @font-face {
-  font-family: "Galmuri11";
-  src: url("assets/fonts/Galmuri11-Bold.woff2") format("woff2");
+  font-family: "Pretendard";
+  src: url("assets/fonts/Pretendard-Medium.woff2") format("woff2");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("assets/fonts/Pretendard-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("assets/fonts/Pretendard-bold.woff2") format("woff2");
   font-weight: 700;
 }
 
@@ -61,6 +74,8 @@
 
   --radius-main: 1em;
   --radius-modal: 0.9em;
+  --shadow-blue: 0 0 10px rgba(10, 132, 255, 0.3);
+  --shadow-gold: 0 0 15px rgba(212, 175, 55, 0.2);
   --shadow-deep: 
     0 20px 50px rgba(0, 0, 0, 0.7),   /* 아주 깊고 넓은 그림자 */
     0 0 15px rgba(255, 255, 255, 0.05); /* 미세한 외곽 광택 (림 라이트) */
@@ -88,6 +103,7 @@
 
 body.font-paperlogy { --main-font: "Paperlogy"; }
 body.font-Galmuri11 { --main-font: "Galmuri11"; font-size: 12px !important; }
+body.font-Pretendard { --main-font: "Pretendard"; }
 
 input,
 textarea {
@@ -274,7 +290,7 @@ header {
 
 /* 대기 중: 반투명 글래스 */
 #status-badge.waiting {
-  background: rgba(255, 255, 255, 0.2) !important;
+  background: var(--ios-gray);
   color: #ffffff !important;
 }
 
@@ -330,15 +346,15 @@ canvas {
 /* --- 이름표 및 호감도 UI: 하트 두근거림 애니메이션 --- */
 #intimacy-display {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 0.5em;
+  left: 0.5em;
   z-index: 60;
   display: flex;
   flex-direction: column;
   gap: 6px;
   background: rgba(0, 0, 0, 0.45);
   padding: 10px 14px;
-  border-radius: 18px;
+  border-radius: 0.8em;
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   transition: all 0.5s ease;
@@ -446,7 +462,7 @@ canvas {
   backdrop-filter: blur(12px) !important; /* 뒤 배경 블러 효과 */
   -webkit-backdrop-filter: blur(12px) !important;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 22px;
+  border-radius: 1em;
   display: none;
   align-items: center;
   justify-content: center;
@@ -637,14 +653,14 @@ canvas {
 .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 0.5em;
   overflow-y: auto;
   max-height: 400px;
   padding: 1em;
 }
 .char-slot {
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
+  border-radius: 0.5em;
   padding: 15px 10px;
   display: flex;
   flex-direction: column;
@@ -764,7 +780,6 @@ canvas {
   list-style: none;
 }
 .work-app-item {
-  background: var(--glass-surface-light);
   border-radius: 12px;
   padding: 8px 13px;
   margin-bottom: 6px;
@@ -1235,10 +1250,10 @@ canvas {
 /* 아코디언 컨테이너 설정 */
 .accordion {
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid transparent;
-  transition: all 0.3s ease;
+  background: var(--glass-surface-light);
+  transition: max-height 0.3s ease-in-out, height 0.3s ease,  background-color 0.3s ease, padding 0.3s ease;
   margin-bottom: 0.5em;
+  padding: 0 10px;
 }
 
 /* 아코디언 헤더 (클릭 영역) */
@@ -1266,21 +1281,19 @@ canvas {
 .accordion-content {
   max-height: 0; /* 기본적으로 닫힘 */
   overflow: hidden;
-  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
-  opacity: 0;
+  transition: max-height 0.3s ease-in-out, height 0.3s ease;
 }
 
 /* 활성화 상태 (열렸을 때) */
 .accordion.active {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(10, 132, 255, 0.2);
-  padding: 0 8px 10px 8px; /* 열렸을 때 안쪽 여백 추가 */
+  background: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+  padding: 0 10px 0 10px; /* 열렸을 때 안쪽 여백 추가 */
 }
 
 .accordion.active .accordion-content {
-  max-height: 500px; /* 버튼이 들어갈 충분한 높이 */
-  opacity: 1;
-  margin-top: 5px;
+    max-height: 3000px !important; /* 기존 500px 제한 해제 */
+    overflow-y: visible !important; /* 내부 스크롤바 제거 */
 }
 
 .accordion.active .accordion-icon {
@@ -1576,9 +1589,10 @@ canvas {
 }
 
 .todo-list-container {
-    list-style: none;
-    max-height: 300px;
-    overflow-y: auto;
+    max-height: none !important; /* 기존 320px 제한 해제 */
+    overflow-y: visible !important; /* 내부 스크롤바 제거 */
+    max-height: none !important; /* 기존 320px 제한 해제 */
+    overflow-y: visible !important; /* 내부 스크롤바 제거 */
     overflow-x: hidden !important; /* ★ 가로 스크롤 발생을 원천 차단 */
     width: 100%;
     padding: 2px; /* scale 효과를 위한 미세 여백 */
@@ -1591,10 +1605,8 @@ canvas {
     user-select: none !important;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 12px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    gap: 8px;
+    padding: 0 !important;
     border-radius: 14px !important;
     margin-bottom: 8px;
     
@@ -1640,23 +1652,23 @@ canvas {
 .current-app-box,
 .work-app-item,
 .todo-item {
-  background: rgba(255, 255, 255, 0.05) !important; /* 배경 투명도 통일 */
-  border: 1px solid rgba(255, 255, 255, 0.08) !important; /* 테두리 미세 조정 */
+  border: var(--glass-border);
   border-radius: 14px !important; /* 곡률 통일 */
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 8px;
   transition: all 0.2s ease;
 }
 
 .current-app-box {
-  padding: 20px 16px !important; /* 내부 여백 통일 */
+  padding: 20px 26px !important; /* 내부 여백 통일 */
+  background-color: var(--glass-surface-light);
 }
 
 .work-app-item,
 .todo-item {
-  padding: 10px 12px !important; /* 내부 여백 통일 */
+  padding: 0 12px !important; /* 내부 여백 통일 */
   font-size: 12px !important;
 }
 
@@ -1664,7 +1676,7 @@ canvas {
 .current-app-box span,
 .work-app-item span,
 .todo-text {
-  font-size: 0.75rem !important;
+  font-size: 0.8rem !important;
   font-weight: 500 !important;
   color: var(--text-primary) !important;
   flex: 1;
@@ -1693,22 +1705,21 @@ canvas {
 
 /* 입력창 디자인을 리스트 항목과 일치시킴 */
 .todo-input-group {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border: 1px dashed var(--glass-border);
   border-radius: 14px;
-  padding: 8px 12px 8px 0;
+  padding: 8px 8px 8px 0;
   display: flex;
   gap: 4px;
-  margin-bottom: 12px;
+  margin: 0 6px 8px 6px;
 }
 
 #todo-input,
 #habit-input {
   background: transparent !important;
   border: none !important;
-  padding: 10px 12px !important;
+  padding: 9px 12px !important;
   flex: 1;
-  color: white;
+  color: var(--text-primary);
   outline: none;
 }
 
@@ -1736,7 +1747,6 @@ canvas {
 
 /* 완료 상태일 때 */
 .todo-item.completed {
-  background: rgba(255, 255, 255, 0.02) !important;
   opacity: 0.6; /* 전체적으로 살짝 흐리게 */
 }
 
@@ -1791,14 +1801,9 @@ canvas {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(
-    255,
-    255,
-    255,
-    0.05
-  ) !important; /* 배경색 통일 (파란색 제거) */
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: none;
   border-radius: 10px !important;
+  background: rgba(0, 0, 0, 0);
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0; /* 버튼 찌그러짐 방지 */
@@ -1807,7 +1812,7 @@ canvas {
 /* 아이콘 기본 상태 */
 .btn-trash i {
   font-size: 0.85rem !important;
-  color: rgba(255, 255, 255, 0.3) !important;
+  color: var(--glass-border) !important;
   pointer-events: none;
 }
 
@@ -1861,13 +1866,13 @@ canvas {
 /* 토글 스위치 스타일 */
 .window-mode-toggle {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 12px 14px; background: rgba(255, 255, 255, 0.05);
+    padding: 12px 14px; background: var(--glass-surface-light);
     border-radius: 12px; cursor: pointer;
     font-size: 0.85em;
 }
 
 .switch-base {
-    width: 44px; height: 24px; background: #3a3a3c;
+    width: 44px; height: 24px; background: var(--text-secondary);
     border-radius: 12px; position: relative; transition: 0.3s;
 }
 
@@ -2007,7 +2012,6 @@ canvas {
     flex: 1 !important;
     height: calc(100vh - 120px) !important; /* 헤더 제외 높이 확보 */
     overflow-y: auto !important;
-    padding-right: 8px;
     -webkit-app-region: no-drag !important; /* 리스트는 스크롤 가능하게 */
 }
 
@@ -2048,7 +2052,6 @@ canvas {
 #app.horizontal-mode #controls.right-side {
     height: calc(100vh - 120px) !important; /* 헤더 높이 제외 */
     overflow-y: auto !important;
-    padding-right: 8px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -2094,7 +2097,6 @@ canvas {
     grid-column: 2;
     height: calc(100vh - 100px) !important;
     overflow-y: auto;
-    padding-right: 10px;
 }
 
 /* [추가] 영수증 내 딴짓 항목 스타일 */
@@ -2160,11 +2162,11 @@ canvas {
 .modal-header h3 {
     font-size: 1.1rem !important;
     font-weight: 800 !important;
-    margin: 0 !important;          /* 불필요한 마진 제거 */
+    margin: 0 !important;
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 
 /* 헤더 내 버튼 그룹 (카메라, 닫기 등) */
@@ -2183,7 +2185,7 @@ canvas {
     padding: 1em !important;
     margin: 0 !important;
     height: inherit !important;
-    border-bottom: inherit !important;
+    border-bottom: 1px solid var(--glass-border) !important;
 }
 
 /* [추가] 설정 탭 디자인 */
@@ -2263,7 +2265,7 @@ canvas {
 #pin-btn.active {
     background: var(--ios-blue) !important;
     color: white !important;
-    box-shadow: 0 0 8px rgba(10, 132, 255, 0.5);
+    box-shadow: var(--shadow-blue);
 }
 
 /* 기존 win-btn 스타일 유지 */
@@ -2301,21 +2303,37 @@ canvas {
     }
 }
 
+/* [style.css] 툴팁 배경 이미지 제거 및 시인성 보강 */
 #common-tooltip {
     position: fixed;
     display: none;
     pointer-events: none;
     z-index: 1000000;
-    background: rgba(40, 40, 45, 0.9);
-    backdrop-filter: blur(15px);
-    border: 1px solid var(--glass-border);
-    padding: 6px 12px;
+    
+    /* [수정] var(--glass-bg) 대신 고정된 반투명 배경색 사용 */
+    background: rgba(15, 15, 17, 0.9) !important; 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    /* 테두리 포인트 추가 */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 8px 14px;
     border-radius: 8px;
-    color: white;
+    
+    /* 텍스트 스타일 */
+    color: #ffffff !important;
     font-size: 0.75rem;
     font-weight: 600;
-    white-space: nowrap;
+    white-space: pre-wrap !important; /* \n 줄바꿈 허용 */
+    line-height: 1.5;
+    text-align: center;
+    max-width: 220px;
+    word-break: keep-all;
+    
+    /* 그림자 및 애니메이션 */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     transform: translateX(-50%);
+    animation: tooltip-fade 0.2s ease forwards;
 }
 
 /* [최종] 투두 아이템: 드래그 기능 보장 스타일 */
@@ -2325,10 +2343,9 @@ canvas {
     user-select: none !important;          /* 드래그 시 텍스트 선택 방지 */
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 12px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    gap: 8px;
+    padding: 0 6px !important;
+    border: var(--glass-border);
     border-radius: 14px !important;
     margin-bottom: 8px;
 }
@@ -2372,8 +2389,8 @@ canvas {
 }
 
 .radio-content {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* background: rgba(255, 255, 255, 0.05); */
+    border: 1px solid var(--glass-border) !important;
     border-radius: 12px;
     padding: 15px 10px;
     display: flex;
@@ -2395,16 +2412,16 @@ canvas {
 
 /* 마우스 호버 시 */
 .pretty-radio:hover .radio-content {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--glass-surface-light);
     color: var(--text-primary);
 }
 
 /* ★ 체크되었을 때 (아이콘과 보더 파란색 강조) ★ */
 .pretty-radio input[type="radio"]:checked + .radio-content {
-    background: rgba(10, 132, 255, 0.15);
-    border-color: var(--ios-blue);
-    color: var(--ios-blue);
-    box-shadow: 0 0 15px rgba(10, 132, 255, 0.2);
+    border: 2px solid var(--ios-blue) !important;
+    color: var(--ios-blue) !important;
+    background-color: var(--shadow-blue) !important;
+    box-shadow: 0 0 15px var(--shadow-blue) !important;
 }
 
 /* [추가] style.css 하단부 */
@@ -2766,7 +2783,6 @@ canvas {
    [style.css] 초정밀 에테르 글래스 버튼 리디자인
    ========================================= */
 
-/* 1. 그리드 레이아웃: 이미지처럼 가로로 긴 형태 유지 */
 .control-group.game .action-row {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
@@ -2774,69 +2790,18 @@ canvas {
     margin-bottom: 10px;
 }
 
-/* 2. 버튼 본체: 투명도와 입체감의 핵심 */
-.control-group.game .btn,
-.control-group.focus .btn  {
+.control-group.game .btn {
     width: 100% !important;
-    height: 52px !important; /* 이미지와 유사한 슬림한 비율 */
-    padding: 0 12px !important;
-    display: flex !important;
-    flex-direction: row !important; /* 아이콘을 좌측으로 */
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    
-    border-radius: 14px !important;
-    
-    /* [핵심 1] 중앙 광원 효과: Radial Gradient를 중첩하여 내부에서 빛이 고이는 느낌 구현 */
-    background: 
-        radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0%, transparent 75%),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1)),
-        rgba(30, 32, 40, 0.4) !important;
-
-    /* [핵심 2] 유리 모서리 하이라이트: 윗면은 밝게, 옆면은 미세하게 */
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.25) !important; 
-    
-    /* [핵심 3] 유리 질감과 깊이감 */
-    backdrop-filter: blur(15px) !important;
-    -webkit-backdrop-filter: blur(15px) !important;
-    
-    /* 이중 그림자: 바깥으로 퍼지는 그림자와 안으로 비치는 광택 */
-    box-shadow: 
-        0 6px 20px rgba(0, 0, 0, 0.4),
-        inset 0 0 10px rgba(255, 255, 255, 0.02) !important;
-
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-size: 0.85rem !important;
-    font-weight: 600 !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+    height: 52px !important;
 }
-
-/* 3. 아이콘 자체 발광 (Neon Glow) */
-.control-group.game .btn i {
-    font-size: 1.1rem !important;
-    /* 이미지의 골드/앰버 톤 정밀 재현 */
-    color: #e5b07a !important; 
-    filter: drop-shadow(0 0 5px rgba(229, 176, 122, 0.5));
-}
-.control-group.focus .btn i {
-    font-size: 1.1rem !important;
-    filter: drop-shadow(rgba(122, 147, 229, 0.5)rgba(122, 168, 229, 0.5));
+.control-group.focus .btn {
+    width: 100% !important;
+    height: 52px !important;
 }
 
 /* 5. 호버 인터랙션: 에테르 에너지가 활성화되는 연출 */
 .control-group.game .btn:hover {
     transform: translateY(-2px) !important;
-    border-top-color: rgba(255, 255, 255, 0.5) !important;
-    /* 중앙 빛이 더 밝아짐 */
-    background: 
-        radial-gradient(circle at center, rgba(255, 255, 255, 0.15) 0%, transparent 70%),
-        rgba(50, 55, 70, 0.5) !important;
-    box-shadow: 
-        0 12px 30px rgba(0, 0, 0, 0.6),
-        inset 0 0 15px rgba(255, 255, 255, 0.05) !important;
 }
 
 /* [style.css] 플랫하지만 깊이 있는 에테르 게이지 */
@@ -2941,7 +2906,7 @@ header .header-right {
     display: block;
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--gold-primary); /* 에테르 골드 포인트 컬러 */
+    color: var(--primary-gold); /* 에테르 골드 포인트 컬러 */
     margin-bottom: 8px;
     opacity: 0.8;
 }
@@ -3046,11 +3011,11 @@ header .header-right {
 /* 3단계: 빛의 구체 */
 .sphere {
     width: 120px; height: 120px; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, var(--gold-light), var(--gold-primary));
+    background: radial-gradient(circle at 30% 30%, var(--gold-light), var(--primary-gold));
     filter: blur(2px); box-shadow: 0 0 30px var(--gold-glow);
     cursor: pointer; transition: all 0.5s var(--anim-ease);
 }
-.sphere:hover { transform: scale(1.2); filter: blur(0px); box-shadow: 0 0 50px var(--gold-primary); }
+.sphere:hover { transform: scale(1.2); filter: blur(0px); box-shadow: 0 0 50px var(--primary-gold); }
 
 @keyframes seal-shake { 0% { transform: translate(-52%, -50%); } 100% { transform: translate(-48%, -50%); } }
 @keyframes inkFade { from { opacity: 0; filter: blur(5px); } to { opacity: 1; filter: blur(0px); } }
@@ -3110,7 +3075,7 @@ header .header-right {
 
 .ps-label {
     font-weight: 800;
-    color: var(--gold-primary);
+    color: var(--primary-gold);
     margin-right: 8px;
     font-style: italic;
 }
@@ -3126,7 +3091,7 @@ header .header-right {
 
 /* 호버 시 알의 본래 모습이 드러남 */
 .egg-preview-silhouette.reveal {
-    filter: brightness(1) blur(0px) drop-shadow(0 0 10px var(--gold-primary));
+    filter: brightness(1) blur(0px) drop-shadow(0 0 10px var(--primary-gold));
     transform: scale(1.1);
 }
 
@@ -3173,32 +3138,30 @@ header .header-right {
 
 
 /* [style.css] 편지함 알림 뱃지 스타일 */
-.mail-badge {
+#mail-badge {
     position: absolute;
     top: -5px;           /* 버튼 상단으로 살짝 튀어나오게 설정 */
     right: -5px;         /* 버튼 우측으로 살짝 튀어나오게 설정 */
     background: #FF453A; /* iOS 스타일의 선명한 레드 */
     color: white;
-    font-size: 0.65rem;  /* 작은 숫자 폰트 */
-    min-width: 18px;
-    height: 18px;
-    border-radius: 50%;  /* 원형 유지 */
-    display: flex;
+    font-size: 0.65rem;
+    padding: 0.2em 0.6em;
+    border-radius: 1em;
+    display: none; /* 기본은 숨김 상태로 둡니다. */
     align-items: center;
     justify-content: center;
     font-weight: 800;
     border: 2px solid rgba(30, 30, 32, 1); /* 배경과 구분되도록 테두리 추가 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    z-index: 10;
 }
 
 /* [style.css] 목록 비어있음 메시지 스타일 */
 .empty-list-msg {
     width: 100%;
-    padding: 1em;
+    padding: 1em 0 2em 0;
     text-align: center;
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.25) !important; /* 은은한 회색 */
+    color: var(--text-secondary) !important; /* 은은한 회색 */
     font-style: italic;
     list-style: none;
 }
@@ -3245,7 +3208,6 @@ header .header-right {
     display: flex;
     align-items: center;
     padding: 12px 15px;
-    background: rgba(255, 255, 255, 0.03);
     border-radius: 12px;
     margin-bottom: 8px;
     transition: all 0.2s;
@@ -3254,7 +3216,7 @@ header .header-right {
 /* ★ 버튼 그룹 정렬 */
 .todo-actions {
     display: flex;
-    gap: 6px; /* 버튼 사이 간격 */
+    gap: 4px; /* 버튼 사이 간격 */
     margin-left: auto; /* 오른쪽 끝으로 밀기 */
 }
 
@@ -3265,17 +3227,19 @@ header .header-right {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.08); /* 스크린샷의 은은한 배경색 */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: none;
     border-radius: 8px; /* 둥근 사각형 */
-    color: rgba(255, 255, 255, 0.5) !important; /* 아이콘 색상 */
+    color: var(--glass-border) !important; /* 아이콘 색상 */
+    background-color: rgba(0, 0, 0, 0);
     cursor: pointer;
     transition: all 0.2s;
 }
 
+.btn-todo-action:hover i {
+    color: var(--text-primary);
+}
 .btn-todo-action:hover {
     background: rgba(255, 255, 255, 0.15);
-    color: var(--primary-gold); /* 호버 시 금색 포인트 */
 }
 
 .btn-trash:hover {
@@ -3288,7 +3252,7 @@ header .header-right {
     background: transparent;
     border: none;
     border-bottom: 1px dashed var(--glass-border);
-    color: white;
+    color: var(--text-primary);
     font-size: 0.75rem !important;
     outline: none;
     padding: 0;
@@ -3443,7 +3407,7 @@ header .header-right {
 .count-badge {
     font-size: 0.65rem;
     color: var(--text-secondary) !important; /* 평소에는 은은한 회색 */
-    background: rgba(255, 255, 255, 0.05); /* 미세한 배경 추가로 가독성 확보 */
+    background: var(--glass-surface-light); /* 미세한 배경 추가로 가독성 확보 */
     padding: 2px 8px;
     border-radius: 10px;
     font-weight: 800;
@@ -3455,7 +3419,7 @@ header .header-right {
 .count-badge.all-completed {
     color: #ffffff !important;
     background: var(--ios-blue); /* 푸른색으로 완료 강조 */
-    box-shadow: 0 0 10px rgba(10, 132, 255, 0.3);
+    box-shadow: var(--shadow-blue);
     text-shadow: none;
 }
 
@@ -3482,8 +3446,7 @@ header .header-right {
     align-items: center;
     padding: 14px 20px;
     margin-bottom: 8px;
-    background: rgba(255, 255, 255, 0.03); /* 아주 연한 유리 느낌 */
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -3492,7 +3455,7 @@ header .header-right {
 
 .mail-item:hover {
     background: rgba(189, 143, 98, 0.08); /* 금색 한 방울 섞인 호버 */
-    border-color: rgba(189, 143, 98, 0.3);
+    border-color: var(--primary-gold);
     transform: translateX(4px);
 }
 
@@ -3744,8 +3707,6 @@ header .header-right {
     height: 64px;       /* ★ 모든 항목의 높이를 64px로 고정 */
     padding: 0 18px;    /* 위아래 패딩 대신 높이로 제어 */
     margin-bottom: 6px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -3765,8 +3726,6 @@ header .header-right {
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 2px;
-    
-    /* ★ 핵심: 1줄 말줄임표 설정 */
     display: block;        /* 블록 요소로 변경 */
     white-space: nowrap;   /* 줄바꿈 금지 */
     overflow: hidden;      /* 넘치는 부분 숨김 */
@@ -4132,10 +4091,8 @@ header .header-right {
 
 /* 🔓 해금 상태: 깔끔한 솔리드 테두리 */
 .achieve-slot.unlocked {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(189, 143, 98, 0.3);
+    border: 1px solid var(--primary-gold);
     color: #ffd700;
-    cursor: help;
 }
 
 .achieve-slot.unlocked:hover {
@@ -4167,7 +4124,7 @@ header .header-right {
 
 /* 1. 에테르 농도 게이지 구역 */
 .saturation-area {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--glass-surface-light);
     padding: 15px;
     border-radius: 12px;
     margin-bottom: 20px;
@@ -4181,9 +4138,10 @@ header .header-right {
 }
 
 .area-label #sat-value {
-    color: #edae71;
+    color: var(--primary-gold);
     text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); /* 은은한 빛 번짐 추가 */
     font-weight: 700;
+    margin-left: 0.5em;
 }
 
 #sat-bar-fill {
@@ -4216,12 +4174,12 @@ header .header-right {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 6px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
 }
 
 .sat-guide {
     font-size: 0.75rem;
-    color: #666;
+    color: var(--text-secondary) !important;
     margin-top: 8px;
 }
 
@@ -4232,17 +4190,15 @@ header .header-right {
 
 .inventory-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 이미지처럼 5열 구성 */
+    grid-template-columns: repeat(4, 1fr); /* 이미지처럼 5열 구성 */
     gap: 10px;
-    padding: 5px;
 }
 
 /* 개별 아이템 슬롯 */
 .sediment-slot {
     aspect-ratio: 1/1;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5em;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -4258,7 +4214,7 @@ header .header-right {
 
 .sediment-count {
     font-size: 0.7rem;
-    color: #888;
+    color: var(--ios-gray);
 }
 
 /* 3. 심연의 연성 제단 (하단) */
@@ -4271,7 +4227,7 @@ header .header-right {
 }
 
 .abyss-altar h4 {
-    color: #bf8f62;
+    color: var(--primary-gold) !important;
     margin-bottom: 15px;
     font-size: 1.5rem;
 }
@@ -4306,7 +4262,7 @@ header .header-right {
 }
 
 /* 충족되었을 때의 스타일 */
-.req-item.met { color: #fff; font-weight: 600; }
+.req-item.met {font-weight: 600; }
 .req-item.met .dot { background: #00ff88; box-shadow: 0 0 5px #00ff88; }
 
 /* 4. 거대 연성 버튼 */
@@ -4349,18 +4305,22 @@ header .header-right {
   padding: 0.5em;
 }
 
+.sediment-inventory label {
+    font-size: 0.8em;
+    font-weight: 700;
+    margin-bottom: 0.5em;
+    display: block;
+}
+
 .inventory-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0.5em;
-    margin-bottom: 25px;
 }
 
 .sediment-slot {
-    aspect-ratio: 0.85 / 1; /* 이름 공간을 위해 세로로 약간 더 길게 */
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    aspect-ratio: 1 / 1; /* 이름 공간을 위해 세로로 약간 더 길게 */
+    border-radius: 0.5em;
     display: flex;
     flex-direction: column; /* 아이콘-이름-개수 수직 배치 */
     align-items: center;
@@ -4370,8 +4330,7 @@ header .header-right {
 }
 
 .sediment-slot.has-item {
-    border: 1px solid rgba(189, 143, 98, 0.3);
-    background: rgba(189, 143, 98, 0.05);
+    border: 1px solid var(--glass-border);
     cursor: default;
 }
 
@@ -4385,7 +4344,7 @@ header .header-right {
 /* [추가] 슬롯 내부 아이템 이름 */
 .sediment-name {
     font-size: 0.65rem; /* 아주 작고 깔끔하게 */
-    color: #aaa;
+    color: var(--text-secondary);
     text-align: center;
     line-height: 1.2;
     margin-bottom: 4px;
@@ -4427,7 +4386,6 @@ header .header-right {
 .modal-window {
     width: 100%;
     max-width: 400px; /* 모든 모달의 표준 너비 */
-    background: rgba(28, 28, 30, 0.95); /* 고딕 다크 테마 */
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1em; /* 둥근 모서리 통일 */
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
@@ -4609,13 +4567,12 @@ header .header-right {
 .achieve-slot {
     width: 100%;
     height: 100%;
-    border: 4px solid #8c6d51; /* 테두리 */
-    border-radius: 12px;
+    border: 4px solid var(--glass-border); /* 테두리 */
+    border-radius: 0.5em;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: help;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 2px 2px 5px rgba(0,0,0,0.2);
     transition: transform 0.1s ease;
 }
 
@@ -4703,7 +4660,7 @@ header .header-right {
 .shop-card-glass {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
+    border-radius: 0.5em;
     padding: 15px 10px;
     display: flex;
     flex-direction: column;
@@ -4720,7 +4677,7 @@ header .header-right {
 
 .shop-card-name {
     font-size: 0.8rem;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 5px;
     font-weight: 500;
 }
@@ -4753,7 +4710,7 @@ header .header-right {
 /* 푸터 */
 .shop-footer-glass {
     padding: 15px 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: var(--glass-border);
 }
 
 /* === 🌌 상점: 하이엔드 글래스모피즘 스타일 === */
@@ -4803,9 +4760,8 @@ header .header-right {
 
 /* 개별 아이템 카드 (유리 타일) */
 .shop-card-glass {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5em;
     padding: 18px 12px;
     display: flex;
     flex-direction: column;
@@ -4838,8 +4794,7 @@ header .header-right {
 /* 구매 버튼 */
 .btn-buy-glass {
     width: 100%;
-    background: rgba(212, 175, 55, 0.05);
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    border: none;
     color: var(--primary-gold);
     border-radius: 8px;
     padding: 7px 0;
@@ -4913,8 +4868,8 @@ header .header-right {
 /* 개별 아이템 슬롯 */
 .inventory-slot-glass {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5em;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -4949,7 +4904,7 @@ header .header-right {
 
 /* 3. 하단 상세 정보 서랍 (Drawer) */
 .inventory-detail-drawer {
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--glass-surface-light);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding: 1em;
     text-align: center;
@@ -4968,11 +4923,16 @@ header .header-right {
 .detail-icon-lg { font-size: 3rem; margin-bottom: 15px; }
 .detail-name-lg { font-size: 1.1rem; color: #fff; font-weight: 800; margin-bottom: 8px; }
 .detail-desc-lg { 
-    font-size: 0.85rem; 
-    color: rgba(255, 255, 255, 0.5); 
+    font-size: 0.8rem; 
+    color: var(--text-secondary) !important; 
     line-height: 1.6; 
     margin-bottom: 20px;
     word-break: keep-all;
+}
+
+#inventory-detail .lable {
+    font-size: 0.8em;
+    color: var(--text-secondary);
 }
 
 /* 4. 사용/선물 버튼 */
@@ -5021,14 +4981,13 @@ header .header-right {
     gap: 12px;
     padding: 8px 12px;
     margin-bottom: 6px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    transition: background 0.2s ease;
+    border-radius: 0.25em;
+    border: 1px solid var(--glass-border);
+    transition: background-color 0.2s ease;
 }
 
 .log-item-card:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--glass-surface-light);
 }
 
 .log-time {
@@ -5042,22 +5001,20 @@ header .header-right {
     width: 44px;
     font-size: 0.65rem;
     padding: 3px 0;
-    border-radius: 4px;
+    border-radius: 1em;
     text-align: center;
     font-weight: bold;
     letter-spacing: -0.5px;
 }
 
 .log-badge.work {
-    background: rgba(160, 196, 255, 0.15);
+    background: rgba(160, 196, 255, 0.2);
     color: #a0c4ff;
-    border: 1px solid rgba(160, 196, 255, 0.3);
 }
 
 .log-badge.distract {
-    background: rgba(255, 107, 107, 0.15);
+    background: rgba(255, 107, 107, 0.2);
     color: #ff6b6b;
-    border: 1px solid rgba(255, 107, 107, 0.3);
 }
 
 .log-owner {
@@ -5098,12 +5055,12 @@ header .header-right {
     justify-content: space-between;
     padding: 10px 14px;
     margin-bottom: 8px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 10px;
+    background: var(--glass-surface-light);
+    border-radius: 0 0.5em 0.5em 0;
 }
 
 .stat-detail-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--glass-surface-light);
 }
 
 .stat-app-name {
@@ -5111,7 +5068,7 @@ header .header-right {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 0.75rem;
+    font-size: 0.8em;
     color: #eee;
     padding-right: 15px;
 }
@@ -5160,23 +5117,23 @@ header .header-right {
 
 .log-date-nav .nav-btn:hover {
     background: rgba(255, 255, 255, 0.1);
-    color: white;
+    color: var(--text-primary);
 }
 
 #log-date-display {
     font-size: 0.9rem;
     font-weight: 600;
-    color: white;
+    color: var(--text-primary);
     min-width: 120px;
     text-align: center;
 }
 
 /* 통계 컨테이너 */
 .stat-container {
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 15px;
-    margin: 0 15px 20px 15px;
+    padding: 1em;
+    margin-bottom: 2em;
+    background: var(--glass-surface-light);
+    border-radius: 0.5em;
 }
 
 .stat-label-row {
@@ -5189,7 +5146,7 @@ header .header-right {
 
 .stat-gauge-total {
     height: 12px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--glass-surface-light);
     border-radius: 6px;
     overflow: hidden;
     display: flex;
@@ -5198,12 +5155,11 @@ header .header-right {
 
 /* 상세 리스트 그룹 */
 .stat-detail-group {
-    padding: 0 20px;
     margin-bottom: 25px;
 }
 
 .stat-group-label {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 12px;
@@ -5225,7 +5181,6 @@ header .header-right {
 .stat-scroll-area {
     max-height: 200px;
     overflow-y: auto;
-    padding-right: 5px;
 }
 
 .stat-scroll-area::-webkit-scrollbar {
@@ -5295,7 +5250,7 @@ header .header-right {
 .pref-item.locked {
     opacity: 0.4;
     background: rgba(255, 255, 255, 0.02);
-    border-style: dashed;
+    border-style: 1px dashed var(--glass-border);
 }
 
 .pref-item.locked .pref-item-icon-wrapper {
@@ -5311,4 +5266,273 @@ header .header-right {
   .mail-paper {padding: 45px 1em;}
   .log-item-card .log-progress-container {display: none;}
   #achievement-grid {grid-template-columns: repeat(5, 1fr);}
+}
+
+
+
+/* 기존 style.css 내부 수정 예시 */
+#game-view {
+    background-image: var(--game-view-bg); /* 테마에 따라 배경 자동 교체 */
+    border: 5px solid transparent;
+    border-image: var(--frame-border) 7 stretch; /* 플라스크 프레임 적용 */
+}
+
+.ether-glow-title {
+    color: var(--primary-glow);
+    text-shadow: 0 0 10px var(--primary-glow); /* 에테르 발광 효과 */
+}
+
+.btn-game {
+    background: var(--panel-bg);
+    color: var(--text-dark) !important;
+    border-radius: 0 !important;
+}
+
+.btn-task {
+    background: var(--panel-bg-long);
+    color: var(--text-dark) !important;
+    border-radius: 0 !important;
+}
+
+#exp-bar {
+    background: linear-gradient(90deg, var(--primary-glow), var(--accent-liquid));
+    transition: width 0.3s ease-in-out;
+}
+
+
+.theme-alchemy-lab .current-app-box, 
+.theme-alchemy-lab .accordion {
+    /* 1. 테두리 두께 설정 (이미지의 실제 테두리 두께와 맞추는 것이 좋습니다) */
+    border-style: solid;
+    border-width: 0.5em; 
+
+    /* 2. 이미지 슬라이싱 로직 */
+    /* 이미지를 상하좌우 24px 지점에서 잘라 9등분합니다. */
+    /* 'fill' 키워드를 넣으면 테두리 안쪽(중앙) 배경도 이미지의 중앙부로 채웁니다. */
+    border-image-slice: 24 fill;
+
+    /* 3. 반복 방식 설정 */
+    /* stretch: 늘리기 / repeat: 반복 / round: 빈틈없이 반복 */
+    border-image-repeat: round; 
+
+    /* 등록할 테두리 이미지 경로 */
+    border-image-source: url('assets/images/frame-paper.png');
+    
+    /* 텍스트 가독성을 위해 배경색이 비치게 하려면 (fill을 안 썼을 경우) */
+    background-clip: padding-box; /* 배경색이 테두리 영역까지 침범하지 않게 함 */
+    color: var(--text-dark) !important;
+}
+
+
+.theme-alchemy-lab .current-app-box span, 
+.theme-alchemy-lab .work-app-item span, 
+.theme-alchemy-lab .todo-text {
+    color: var(--text-dark) !important;
+    font-weight: 500 !important;
+}
+
+.theme-alchemy-lab .accordion-title-group,
+.theme-alchemy-lab .accordion-header .group-label,
+.theme-alchemy-lab .btn-todo-action,
+.theme-alchemy-lab .btn-trash i,
+.theme-alchemy-lab .habit-streak-badge {
+    color: var(--text-dark) !important;
+}
+
+.theme-alchemy-lab .btn-trash:hover i {
+    color: var(--danger-red) !important;
+}
+
+.theme-alchemy-lab .todo-input-group {
+    background: var(--glass-surface-light) !important;
+}
+
+.theme-alchemy-lab .header-left h2 {
+    color: var(--text-dark) !important;
+}
+
+.theme-DEFAULT_DARK .control-group.game .btn,
+.theme-DEFAULT_DARK .control-group.focus .btn  {
+    width: 100% !important;
+    height: 52px !important;
+    padding: 0 12px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    
+    border-radius: 14px !important;
+    
+    background: 
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0%, transparent 75%),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1)),
+        rgba(30, 32, 40, 0.4) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.25) !important; 
+    
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.4),
+        inset 0 0 10px rgba(255, 255, 255, 0.02) !important;
+
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+.theme-DEFAULT_DARK .control-group.game .btn i {
+    font-size: 1.1rem !important;
+    filter: drop-shadow(0 0 5px rgba(229, 176, 122, 0.5));
+}
+.theme-DEFAULT_DARK .control-group.focus .btn i {
+    font-size: 1.1rem !important;
+    filter: drop-shadow(rgba(122, 147, 229, 0.5)rgba(122, 168, 229, 0.5));
+}
+
+/* [style.css] 다크 모드: 반투명 다크 글래스 프레임 */
+#app.theme-DEFAULT_DARK #game-view {
+    /* 1. 이미지 테두리 강제 제거 및 굴곡 설정 */
+    border-image: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 24px !important;
+    
+    /* 2. 글래스모피즘의 핵심: 배경 불투명도와 블러 */
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+
+    /* 3. 깊이감을 주는 그림자 */
+    box-shadow: 
+        0 8px 32px 0 rgba(0, 0, 0, 0.5),
+        inset 0 0 10px rgba(255, 255, 255, 0.05) !important; /* 내부 반사광 */
+    overflow: hidden;
+}
+
+.theme-DEFAULT_LIGHT .ether-glow-title {
+    text-shadow: none !important;
+}
+
+.theme-DEFAULT_LIGHT .control-group.game .btn,
+.theme-DEFAULT_LIGHT .control-group.focus .btn  {
+    width: 100% !important;
+    height: 52px !important;
+    padding: 0 12px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    
+    border-radius: 14px !important;
+    
+    background: 
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.04) 0%, transparent 75%), linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.1)), rgb(242 242 247) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.25) !important; 
+    
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.2),
+        inset 0 0 10px rgba(255, 255, 255, 0.01) !important;
+
+    color: var(--text-dark) !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+.theme-DEFAULT_LIGHT .control-group.game .btn i {
+    font-size: 1.1rem !important;
+    filter: drop-shadow(0 0 5px rgba(229, 176, 122, 0.5));
+}
+.theme-DEFAULT_LIGHT .control-group.focus .btn i {
+    font-size: 1.1rem !important;
+    filter: drop-shadow(rgba(122, 147, 229, 0.5)rgba(122, 168, 229, 0.5));
+}
+
+/* [style.css] 라이트 모드: 반투명 화이트 글래스 프레임 */
+#app.theme-DEFAULT_LIGHT #game-view {
+    /* 1. 이미지 테두리 강제 제거 및 굴곡 설정 */
+    border-image: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 24px !important;
+    
+    /* 2. 밝고 투명한 느낌의 배경과 강한 블러 */
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+
+    /* 3. 깨끗한 입체감을 주는 부드러운 그림자 */
+    box-shadow: 
+        0 8px 32px 0 rgba(31, 38, 135, 0.15),
+        inset 0 0 12px rgba(255, 255, 255, 0.5) !important;
+
+    overflow: hidden;
+}
+
+#app.theme-DEFAULT_LIGHT .win-btn,
+#app.theme-DEFAULT_LIGHT .header-btns .win-btn {
+    background: var(--glass-surface-light);
+}
+
+#app.theme-DEFAULT_LIGHT .win-btn:hover,
+#app.theme-DEFAULT_LIGHT .header-btns .win-btn:hover {
+    color: var(--text-dark) !important;
+}
+
+
+
+/* [style.css] 게임 뷰 영역 내 텍스트 시인성 강제 확보 */
+
+#game-view, 
+#game-view span, 
+#game-view b, 
+#game-view div:not(.progress-container):not(#exp-bar) {
+    /* 테마와 상관없이 게임 영역 안의 글자는 항상 밝게 유지 */
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important; /* 가독성을 위한 그림자 추가 */
+}
+
+/* 호감도 수치는 포인트 컬러 유지 */
+#intimacy-stat i {
+    color: #ff416c !important; 
+}
+
+/* 시간 통계 레이블(오늘/누적)의 보조 색상 처리 */
+.time-stats .time-item {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+#today-time, #total-time {
+    color: #ffffff !important;
+}
+
+/* 레벨 텍스트 강조 */
+#level-display, #level-num {
+    color: var(--primary-gold) !important;
+    font-weight: 800 !important;
+}
+
+/* [style.css] 레이아웃 흔들림 방지를 위한 오버레이 스크롤 설정 */
+#controls.right-side, 
+#app.horizontal-mode #controls.right-side,
+.grid-container,
+.stat-scroll-area,
+.mail-list-container,
+#inventory-grid {
+    /* overflow-y: auto 대신 overlay를 사용하여 콘텐츠 영역 침범을 방지합니다. */
+    overflow-y: overlay !important; 
+    /* 최신 브라우저를 위한 레이아웃 고정 속성 */
+    scrollbar-gutter: stable both-edges; 
+}
+
+.btn-game {
+    position: relative !important; /* 뱃지가 버튼을 기준으로 움직이게 함 */
 }
