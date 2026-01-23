@@ -195,6 +195,16 @@
             </div>
             <div class="settings-body">
                 <div id="tab-content-general" class="tab-content active">
+                    <!-- <div class="settings-group">
+                        <div class="pretty-select-container">
+                            <label class="settings-label">언어 설정</label>
+                            <select id="language-select" class="pretty-select" onchange="window.changeLanguage(this.value)">
+                                <option value="en">English</option>
+                                <option value="ko" selected>한국어</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow"></i>
+                        </div>
+                    </div> -->
                     <div class="settings-group">
                         <label class="settings-label">폰트 설정</label>
                         <div class="pretty-radio-group">
@@ -255,33 +265,33 @@
                             <i class="fas fa-chevron-down select-arrow"></i>
                         </div>
                         <p class="setting-hint">설정한 시간 이전의 작업은 '어제' 기록으로 합산됩니다.</p>
-                        </div>
-                        <div class="settings-group">
-                            <label class="settings-label">오늘의 할일 목록 관리</label>
-                            <div id="hide-completed-toggle" class="window-mode-toggle" onclick="window.toggleHideCompleted()">
-                                <span>완료된 항목 숨기기</span>
-                                <div id="hide-completed-switch" class="switch-base">
-                                    <div class="switch-circle"></div>
-                                </div>
-                            </div>
-                            <div id="show-past-toggle" class="window-mode-toggle" style="margin-top: 8px;" onclick="window.toggleShowPast()">
-                                <span>이전에 등록한 항목 표시</span>
-                                <div class="switch-base">
-                                    <div class="switch-circle"></div>
-                                </div>
+                    </div>
+                    <div class="settings-group">
+                        <label class="settings-label">오늘의 할일 목록 관리</label>
+                        <div id="hide-completed-toggle" class="window-mode-toggle" onclick="window.toggleHideCompleted()">
+                            <span>완료된 항목 숨기기</span>
+                            <div id="hide-completed-switch" class="switch-base">
+                                <div class="switch-circle"></div>
                             </div>
                         </div>
-                        <div class="settings-group">
-                            <label class="settings-label">데이터 최적화</label>
-                            <div id="auto-delete-toggle" class="window-mode-toggle" onclick="window.toggleAutoDelete()">
-                                <span>7일 지난 할 일 완료 항목 자동 삭제</span>
-                                <div class="switch-base">
-                                    <div class="switch-circle"></div>
-                                </div>
+                        <div id="show-past-toggle" class="window-mode-toggle" style="margin-top: 8px;" onclick="window.toggleShowPast()">
+                            <span>이전에 등록한 항목 표시</span>
+                            <div class="switch-base">
+                                <div class="switch-circle"></div>
                             </div>
-                            <p class="setting-hint">완료된 지 일주일이 지난 할 일들을 자동으로 정리합니다.</p>
                         </div>
                     </div>
+                    <div class="settings-group">
+                        <label class="settings-label">데이터 최적화</label>
+                        <div id="auto-delete-toggle" class="window-mode-toggle" onclick="window.toggleAutoDelete()">
+                            <span>7일 지난 할 일 완료 항목 자동 삭제</span>
+                            <div class="switch-base">
+                                <div class="switch-circle"></div>
+                            </div>
+                        </div>
+                        <p class="setting-hint">완료된 지 일주일이 지난 할 일들을 자동으로 정리합니다.</p>
+                    </div>
+                </div>
                 <div id="tab-content-distract" class="tab-content" style="display: none;">
                     <div class="settings-group">
                         <label class="settings-label">현재 실행 중인 도구 등록</label>

@@ -8,8 +8,8 @@ const CollectionManager = require(path.join(__dirname, 'src', 'collection.js'));
 const MailboxManager = require(path.join(__dirname, 'src', 'mailboxManager.js'));
 
 // 데이터 파일들도 동일하게 수정하는 것이 좋습니다.
-const charData = require(path.join(__dirname, 'assets', 'data', 'characters.json'));
-const mailPoolData = require(path.join(__dirname, 'assets', 'data', 'mailbox_pool.json'));
+let charData = null;
+let mailPoolData = null;
 
 // 전역 공유 (introManager.js 등이 에러 없이 쓰기 위함)
 window.charData = charData;
@@ -73,6 +73,7 @@ window.autoDeleteOldTasks = false;
 // --- [상호작용 설정 상수] ---
 let lastPetTime = 0;            
 const PET_COOLDOWN = 300;      
+const EVOLUTION_TARGET_MIN = 300;
 let dailyPetCountMap = {}; // [추가] 날짜별 클릭 횟수 기록용  
 let currentPriority = 0;      // 현재 출력 중인 대사의 우선순위 (0: 일반, 1: 클릭, 2: 시스템)
 let dialogueLockUntil = 0;    // 이 시간(ms)까지는 낮은 우선순위 대사 무시
@@ -214,7 +215,7 @@ async function refreshCharacterSprite() {
 
     const totalSec = charGrowthMap[currentPartner.id] || 0;
     const growthMin = totalSec / 60;
-    const targetMin = currentPartner.evolution_level || 1440;
+    const targetMin = currentPartner.evolution_level || EVOLUTION_TARGET_MIN;
     const newStage = growthMin >= targetMin ? 'adult' : 'child';
 
     if (currentStage !== newStage || lastLoadedId !== currentPartner.id) {
@@ -294,7 +295,7 @@ function checkEvolution() {
     // 2. 현재 캐릭터의 누적 성장 시간(초) 계산
     const totalSec = charGrowthMap[currentPartner.id] || 0;
     const growthMin = totalSec / 60;
-    const targetMin = currentPartner.evolution_level || 300;
+    const targetMin = currentPartner.evolution_level || EVOLUTION_TARGET_MIN;
 
     // 3. 진화 조건 달성 시 performEvolution 실행
     if (growthMin >= targetMin) {
@@ -528,7 +529,7 @@ window.renderCollection = () => {
             // ★ [핵심 수정] 각 캐릭터의 개별 성장 시간을 확인하여 현재 단계를 판별합니다.
             const totalSec = charGrowthMap[char.id] || 0;
             const growthMin = totalSec / 60;
-            const targetMin = char.evolution_level || 1440;
+            const targetMin = char.evolution_level || EVOLUTION_TARGET_MIN;
             
             // 성장 시간에 따라 'child' 혹은 'adult' 결정
             const currentStage = growthMin >= targetMin ? 'adult' : 'child';
@@ -597,7 +598,7 @@ window.showCharDetail = (id) => {
     // 1. 성장 데이터 계산 (초 단위를 시간/분/초로 정밀 분리)
     const totalSec = charGrowthMap[char.id] || 0; 
     const growthMin = totalSec / 60; 
-    const targetMin = char.evolution_level || 3600; // 기준값 (분)
+    const targetMin = char.evolution_level || EVOLUTION_TARGET_MIN; // 기준값 (분)
     
     // 2. 시간 환산 로직
     const compHours = Math.floor(totalSec / 3600);
@@ -1085,15 +1086,18 @@ window.toggleTodo = (id) => {
     // 3. 항목이 '완료'가 되었을 때의 보상 및 대사 로직
     if (molipTodos[index].completed && !wasCompleted) {
         // 캐릭터 대사 출력
-        if (currentPartner && !collection.activeEgg) {
+        if (currentPartner && !window.isHatching) { // 알 상태가 아닐 때만 실행
             const stageData = currentPartner.stages[currentStage] || currentPartner.stages['adult'];
-            const responses = stageData.todo_responses;
-            if (responses) {
-                const text = Array.isArray(responses) 
-                    ? responses[Math.floor(Math.random() * responses.length)] 
-                    : responses;
-                window.showDialogue(text);
-            }
+            
+            // [방어] todo_responses가 없으면 기본 격려 대사 세트 사용
+            const responses = stageData.todo_responses || [
+                "정말 멋져요!", "하나씩 해내는 모습이 보기 좋아요.", "수고하셨습니다!"
+            ];
+            
+            const text = Array.isArray(responses) 
+                ? responses[Math.floor(Math.random() * responses.length)] 
+                : responses;
+            window.showDialogue(text);
         }
 
         // 보상 지급 (최초 1회)
@@ -1616,12 +1620,34 @@ async function updateLoop() {
     try {
         const nowMolipDate = window.getMolipDate(); // 'YYYY-MM-DD' 형식
         
+        // --- [3번 원인 해결: 동기화 후 저장 및 안전한 재시작] ---
         if (masterData.progress && masterData.progress.lastSaveDate !== nowMolipDate) {
+            console.log(`[시스템] 날짜 변경 감지: ${masterData.progress.lastSaveDate} -> ${nowMolipDate}`);
+            
+            // 1. 모든 관리자 객체에 새 날짜를 강제로 주입 (덮어쓰기 방지)
             masterData.progress.lastSaveDate = nowMolipDate; 
-            if (progress) progress.todayFocusTime = 0;
+            if (progress) {
+                progress.lastSaveDate = nowMolipDate; // 매니저 내부 날짜 동기화
+                progress.todayFocusTime = 0;          // 오늘 시간 리셋
+            }
+            
+            // 2. 습관 및 기타 일일 데이터 초기화
             checkHabitReset(); 
-            saveAllData().then(r => { if (r?.success) location.reload(); });
-            return; 
+            
+            // 3. 사용자에게 알림 표시 (데이터 저장 중임을 알림)
+            window.showToast("새로운 하루가 시작되었습니다. 연구 기록을 정리 중입니다...", "info");
+
+            // 4. 저장 후 0.5초 대기했다가 새로고침 (파일 쓰기 완료 시간 확보)
+            const saveResult = await saveAllData(); // 저장 결과 확인
+    
+            if (saveResult && saveResult.success) {
+                console.log("[시스템] 자정 데이터 보존 완료. 앱을 재시작합니다.");
+                setTimeout(() => { location.reload(); }, 500);
+            } else {
+                // 저장이 실패했다면 새로고침을 멈추고 경고를 띄워 데이터를 보호합니다.
+                window.showToast("데이터 저장 실패! 저장 공간을 확인해 주세요.", "error");
+            }
+            return;
         }
 
         // --- 3. 활성 창 분석 및 UI 업데이트 ---
@@ -1743,7 +1769,7 @@ async function updateLoop() {
             // 성체 수 계산 로직
             const adultCount = charData.characters.filter(char => {
                 const growthSec = charGrowthMap[char.id] || 0;
-                return (growthSec / 60) >= (char.evolution_level || 300);
+                return (growthSec / 60) >= (char.evolution_level || EVOLUTION_TARGET_MIN);
             }).length;
 
             // 완벽한 하루(Todo/Habit 모두 완료) 체크
@@ -1912,8 +1938,11 @@ window.showRandomDialogue = function(category) {
 
     // 1. 성체기 전용 특수 대사 로드
     if (currentStage === 'adult') {
-        if (category === 'return') targetList = stageData.return_responses || [];
-        else if (category === 'welcome') targetList = stageData.welcome_responses || [];
+        if (category === 'return') {
+            targetList = stageData.return_responses || ["무사히 돌아오셨군요.", "기다리고 있었습니다."];
+        } else if (category === 'welcome') {
+            targetList = stageData.welcome_responses || ["어서 오세요.", "다시 만나서 기뻐요."];
+        }
     }
 
     // 2. 일반 상태 대사 로드 (특수 대사가 없거나 조건 미충족 시)
@@ -1995,22 +2024,53 @@ async function startEngine() {
     masterData = await ipcRenderer.invoke('load-game-data');
     window.masterData = masterData;
 
-    console.log(masterData);
+    // [추가] 설정된 언어 로드 (기본값 ko)
+    const currentLang = masterData.settings?.language || 'ko';
+    
+    // 언어 데이터 로드 시도
+    const isSuccess = await window.loadLanguageData(currentLang);
 
-    if (!masterData || !masterData.settings) {
+    // [핵심 추가] 데이터 로드 실패 시 다음 로직을 진행하지 않도록 차단합니다.
+    if (!isSuccess || !window.charData) {
+        window.showToast("언어 파일을 찾을 수 없어 연구실 가동을 중단합니다. 폴더 구조를 확인하세요.", "error");
+        return; // 여기서 멈춰야 characters를 읽으려다 발생하는 에러를 막을 수 있습니다.
+    }
+
+    // --- [안전한 데이터 복구 로직] ---
+    if (!masterData) {
+        // 1. 아예 데이터 파일이 없는 신규 유저인 경우에만 전체 초기화 실행
         masterData = {
             progress: { level: 1, exp: 0, totalFocusTime: 0, todayFocusTime: 0, lastSaveDate: window.getMolipDate() },
             collection: { ownedIds: [], points: 0, activeEgg: null },
             mailbox: { mailHistory: [] },
             settings: { 
                 workApps: [], distractionApps: [], isHorizontalMode: true, 
-                isWindowMode: true, isAlwaysOnTop: false, font: 'paperlogy' 
+                isWindowMode: true, isAlwaysOnTop: false, font: 'paperlogy', language: 'ko' 
             },
             character: { intimacyMap: {}, growthMap: {} },
             todo: [], habit: [], stats: { dailyAppTimeMap: {} },
             inventory: { items: {}, byproducts: {} }
         };
+    } else {
+        // 2. [핵심] 기존 데이터가 있다면, 누락된 필드만 개별적으로 채워넣어 데이터 보존 (업데이트 시 필수)
+        masterData.progress = masterData.progress || { level: 1, exp: 0, totalFocusTime: 0, todayFocusTime: 0, lastSaveDate: window.getMolipDate() };
+        masterData.collection = masterData.collection || { ownedIds: [], points: 0, activeEgg: null };
+        masterData.mailbox = masterData.mailbox || { mailHistory: [] };
+        masterData.settings = masterData.settings || { 
+            workApps: [], distractionApps: [], isHorizontalMode: true, 
+            isWindowMode: true, isAlwaysOnTop: false, font: 'paperlogy', language: 'ko' 
+        };
+        masterData.character = masterData.character || { intimacyMap: {}, growthMap: {} };
+        masterData.todo = masterData.todo || [];
+        masterData.habit = masterData.habit || [];
+        masterData.stats = masterData.stats || { dailyAppTimeMap: {} };
+        masterData.inventory = masterData.inventory || { items: {}, byproducts: {} };
+
+        // 설정(settings) 내부에 특정 항목(예: 언어)이 빠진 경우도 대비
+        if (!masterData.settings.language) masterData.settings.language = 'ko';
     }
+
+    console.log(masterData);
 
     // 2. 매니저 및 시스템 데이터 복구
     workApps = masterData.settings.workApps || []; 
@@ -2174,7 +2234,7 @@ async function startEngine() {
 
     // [추가] 학회로부터 온 업데이트 소식을 체크합니다.
     checkForUpdateMail();
-    
+    isEngineStarted = true;
 
     document.body.classList.add('ready');
     if (typeof renderer !== 'undefined' && renderer.startLoop) renderer.startLoop();
@@ -2334,88 +2394,75 @@ window.hideTooltip = () => {
     if (tooltip) tooltip.style.display = 'none';
 };
 
-// [renderer.js] 약 1283행 부근: 세이브 데이터 로드 및 변수 동기화 리스너
-// [renderer.js] 세이브 데이터 로드 및 변수 동기화 리스너
+/**
+ * [renderer.js] 메인 프로세스로부터 세이브 데이터를 수신하여 메모리 및 UI를 동기화합니다.
+ */
+// 1. 엔진 가동 여부를 확인하는 플래그를 리스너 외부에 선언합니다.
+let isEngineStarted = false; 
+
 ipcRenderer.on('init-data', async (event, data) => {
-    if (!data) return;
+    // [방어 로직] 데이터가 유효하지 않거나 이미 엔진이 구동(로드)된 상태라면 무시합니다.
+    if (!data || isEngineStarted) {
+        console.log("🚩 [방어] 이미 데이터가 로드되었거나 유효하지 않은 신호입니다. 중복 초기화를 차단합니다.");
+        return;
+    }
     
-    // 1. 전역 마스터 데이터 업데이트
+    console.log("🚩 [동기화] 메인 프로세스로부터 데이터를 수신했습니다.");
+
+    // 2. 전역 마스터 데이터 객체 할당
     masterData = data;
     window.masterData = data;
 
-    // 2. [참조 유지 핵심 수정] 배열 자체를 교체(=)하지 않고 내용물만 비우고 채웁니다.
-    // 이렇게 해야 window.molipHabits가 처음 잡은 '그 배열'을 끝까지 추적할 수 있습니다.
-    if (Array.isArray(masterData.todo)) {
+    // 3. 참조가 걸린 배열(투두/습관) 동기화
+    // 단순히 배열을 교체(=)하지 않고 내용물만 비우고 채워 UI 참조를 유지합니다.
+    if (data.todo && Array.isArray(data.todo)) {
         molipTodos.length = 0; 
-        molipTodos.push(...masterData.todo.filter(t => t !== null));
+        molipTodos.push(...data.todo.filter(t => t !== null));
     }
-    if (Array.isArray(masterData.habit)) {
+    if (data.habit && Array.isArray(data.habit)) {
         molipHabits.length = 0;
-        molipHabits.push(...masterData.habit.filter(h => h !== null));
+        molipHabits.push(...data.habit.filter(h => h !== null));
     }
     
-    // 3. 시스템 설정 및 앱 리스트 복구
-    if (masterData.settings) {
-        const s = masterData.settings;
-        workApps = s.workApps || [];
-        distractionApps = s.distractionApps || [];
-        window.resetHour = s.resetHour || 0;
-        window.isHorizontalMode = s.isHorizontalMode || false;
-        window.hideCompleted = s.hideCompleted || false;
-        window.showPastCompleted = s.showPastCompleted || false;
-        window.autoDeleteOldTasks = s.autoDeleteOldTasks || false;
-
-        // [기존 로직] 저장된 아코디언 접힘 상태를 UI에 다시 적용
-        if (s.accordionStates) {
-            Object.keys(s.accordionStates).forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.classList.toggle('active', s.accordionStates[id]);
-                }
-            });
-        }
-        
-        // 저장된 폰트 및 테마 즉시 적용
-        window.applySavedFont(); 
-        if (s.currentTheme) window.applyTheme(s.currentTheme);
-    }
-
-    // 4. 캐릭터 및 유대 데이터 복구
-    const charSave = masterData.character || {};
+    // 4. 캐릭터 유대 및 성장 기록 복구
+    const charSave = data.character || {};
     charIntimacyMap = charSave.intimacyMap || {}; 
     charGrowthMap = charSave.growthMap || {}; 
-
-    // [핵심 추가] 콘솔에서 접근할 수 있도록 window 객체에 실시간 할당
+    
+    // 콘솔에서 접근 가능하도록 window 객체에 실시간 할당
     window.charIntimacyMap = charIntimacyMap;
     window.charGrowthMap = charGrowthMap;
 
+    // 기타 수집 데이터 복구
     givenGiftsMap = charSave.givenGiftsMap || {};
     dailyPetCountMap = charSave.dailyPetCountMap || {};
     dailyGiftCountMap = charSave.dailyGiftCountMap || {};
+    dailyAppTimeMap = data.dailyAppTimeMap || {};
+    window.dailyAppTimeMap = dailyAppTimeMap;
 
-    // 5. 매니저 객체 재생성 및 데이터 주입
-    progress = new ProgressManager(masterData.progress);
+    // 5. 매니저 객체 인스턴스 생성 및 데이터 주입
+    progress = new ProgressManager(data.progress);
     window.progress = progress;
-    collection = new CollectionManager(masterData.collection);
+    
+    collection = new CollectionManager(data.collection);
     window.collection = collection;
     
-    // 서신함 데이터 구조 확인 및 복구
-    const mailHistory = masterData.mailbox?.mailHistory || (Array.isArray(masterData.mailbox) ? masterData.mailbox : []);
+    const mailHistory = data.mailbox?.mailHistory || (Array.isArray(data.mailbox) ? data.mailbox : []);
     mailbox = new MailboxManager(mailHistory, mailPoolData);
     window.mailbox = mailbox;
 
-    // 영수증용 시간 데이터 복구
-    dailyAppTimeMap = masterData.dailyAppTimeMap || {};
-
-    // 6. UI 즉시 갱신 및 뱃지 동기화
+    // 6. UI 및 알림 즉시 갱신
     window.renderTodos(); 
     window.renderHabits();
     window.updateUI();
 
-    // 약간의 지연 후 뱃지 숫자 계산
+    // 7. 엔진 가동 완료 플래그 설정
+    isEngineStarted = true;
+
+    // 약간의 지연 후 서신 알림 갱신
     setTimeout(() => {
         window.updateMailNotification();
-        console.log("🚩 [초기화] 데이터 동기화 및 전역 참조 고정 완료");
+        console.log("🚩 [성공] 모든 연구 데이터가 안전하게 동기화되었습니다.");
     }, 150);
 });
 
@@ -2590,6 +2637,12 @@ window.toggleSettings = (show) => {
     
     if (show) {
         const s = masterData.settings || {};
+
+        if (show) {
+            // [추가] 언어 드롭다운 값 동기화
+            const langSelect = document.getElementById('language-select');
+            if (langSelect) langSelect.value = masterData.settings?.language || 'ko';
+        }
 
         // 1. 일반 설정 동기화 (폰트)
         const currentFont = s.font || 'paperlogy';
@@ -3093,22 +3146,24 @@ window.cleanAndFixData = async () => {
  * @param {string} category - 'work', 'distract', 'idle' 중 하나
  */
 window.getDialoguesFromJSON = (category) => {
-    if (!currentPartner || collection.activeEgg) return [];
+    if (!currentPartner || window.isHatching) return ["..."];
 
     const stageData = currentPartner.stages[currentStage];
-    if (!stageData || !stageData.dialogues || !stageData.dialogues[category]) return [];
+    if (!stageData || !stageData.dialogues) return ["..."];
 
     const categoryData = stageData.dialogues[category];
+    if (!categoryData) return ["..."];
     
     // 호감도에 따른 키 결정 (JSON 구조: max, high, low)
     const intimacy = charIntimacyMap[currentPartner.id] || 0;
     const intimacyKey = intimacy >= 90 ? 'max' : (intimacy >= 55 ? 'high' : 'low');
 
-    // 해당 카테고리가 호감도별 객체인지, 아니면 단순 배열인지 판별
+    // [방어] 데이터가 배열이면 그대로 반환, 객체면 호감도 키에 따라 반환
     if (Array.isArray(categoryData)) {
-        return categoryData;
+        return categoryData.length > 0 ? categoryData : ["..."];
     } else {
-        return categoryData[intimacyKey] || categoryData['high'] || [];
+        const list = categoryData[intimacyKey] || categoryData['high'] || [];
+        return list.length > 0 ? list : ["..."];
     }
 };
 
@@ -4076,16 +4131,18 @@ window.selectInventoryItem = (id, info) => {
 };
 
 // [renderer.js] 아이템 사용 후 가방 모달 자동 닫기 추가
+// [renderer.js] 아이템 사용 및 선물 로직 (에러 방지 및 데이터 보호 보강)
 window.useInventoryItem = (id) => {
     if (!currentPartner) return;
 
-    const itemInfo = shopItems.find(i => i.id === id) || byproductTable.find(i => i.id === id);
+    // 1. 아이템 정보 찾기 (상점 아이템 혹은 부산물 테이블)
+    let itemInfo = shopItems.find(i => i.id === id) || byproductTable.find(i => i.id === id);
     if (!itemInfo) return;
 
     const charId = currentPartner.id;
-    const molipToday = window.getMolipDate(); 
+    const molipToday = window.getMolipDate();
 
-    // 1. 선물일 경우 일일 한도 및 데이터 구조 체크
+    // 2. 선물 카테고리일 경우 일일 한도 체크
     if (itemInfo.category === 'gift') {
         if (!dailyGiftCountMap[charId]) {
             dailyGiftCountMap[charId] = { date: molipToday, count: 0 };
@@ -4100,7 +4157,7 @@ window.useInventoryItem = (id) => {
         }
     }
 
-    // 2. 아이템 수량 차감
+    // 3. 아이템 수량 차감 로직
     let itemUsed = false;
     if (masterData.inventory.items && (masterData.inventory.items[id] || 0) > 0) {
         masterData.inventory.items[id]--;
@@ -4110,35 +4167,61 @@ window.useInventoryItem = (id) => {
         itemUsed = true;
     }
 
+    // 4. 아이템 사용 성공 시 후속 처리
     if (itemUsed) {
         if (itemInfo.category === 'gift') {
-            dailyGiftCountMap[charId].count++; 
+            dailyGiftCountMap[charId].count++;
 
+            // 해금 정보 업데이트
             if (!givenGiftsMap[charId]) givenGiftsMap[charId] = [];
             if (!givenGiftsMap[charId].includes(itemInfo.name)) {
                 givenGiftsMap[charId].push(itemInfo.name);
             }
 
-            // 호감도 및 대사 로직
+            // --- [데이터 참조 에러 방지 및 대사 선택] ---
             const stageKey = window.isHatching ? 'egg' : currentStage; 
             const stageData = currentPartner.stages[stageKey] || currentPartner.stages['adult'];
 
-            let points = 2;
-            if (currentPartner.preferences.favorite.includes(itemInfo.name)) points = 5;
-            else if (currentPartner.preferences.dislike.includes(itemInfo.name)) points = 0.5;
+            // [핵심 수정] gift_responses가 없을 경우를 대비한 기본 대사 세트 (TypeError 방지)
+            const responses = stageData.gift_responses || { 
+                normal: "선물 고마워요.", 
+                favorite: "정말 기뻐요! 소중히 간직할게요.", 
+                dislike: "으음... 이건 제 취향이 아닌 것 같네요." 
+            };
 
+            // 호감도 수치 계산
+            let points = 2;
+            let responseText = responses.normal;
+
+            if (currentPartner.preferences.favorite.includes(itemInfo.name)) {
+                points = 5;
+                responseText = responses.favorite || responses.normal;
+            } else if (currentPartner.preferences.dislike.includes(itemInfo.name)) {
+                points = 0.5;
+                responseText = responses.dislike || responses.normal;
+            }
+
+            // 호감도 반영
             charIntimacyMap[charId] = Math.min(100, (charIntimacyMap[charId] || 0) + points);
             
-            window.showDialogue(stageData.gift_responses.normal, 2);
+            // 대사 출력 및 토스트 알림
+            window.showDialogue(responseText, 2);
             window.showToast(`${itemInfo.name} 선물 완료!`, "success");
             
-            // UI 갱신 및 저장
+            // UI 및 데이터 저장
             window.updateUI();
             saveAllData(); 
 
-            // --- [핵심 추가] 선물 후 가방 모달을 닫습니다. ---
+            // 가방 닫기
             window.closeInventory(); 
-        } 
+        } else {
+            // 선물 외 아이템(재료 등) 사용 시 처리 (필요 시 확장)
+            window.showToast(`${itemInfo.name}을(를) 사용했습니다.`, "info");
+            window.renderInventory();
+            saveAllData();
+        }
+    } else {
+        window.showToast("아이템 수량이 부족합니다.", "error");
     }
 };
 
@@ -4409,3 +4492,43 @@ window.applyTheme(savedTheme);
 
 const savedFont = localStorage.getItem('ether-flow-font') || 'paperlogy';
 window.changeFont(savedFont);
+
+// 언어설정
+window.loadLanguageData = async (lang = 'ko') => {
+    try {
+        // [수정] __dirname이 index.html 위치인 경우를 대비해 경로를 재조합합니다.
+        const basePath = path.join(__dirname, 'assets', 'data', 'locales', lang);
+        
+        console.log("🔍 시도하는 경로:", path.join(basePath, 'characters.json'));
+
+        // 파일을 로드하고 전역 변수에 할당합니다.
+        charData = require(path.join(basePath, 'characters.json'));
+        mailPoolData = require(path.join(basePath, 'mailbox_pool.json'));
+
+        window.charData = charData;
+        return true;
+    } catch (err) {
+        console.error(`[에러] ${lang} 언어 팩 로드 실패:`, err);
+        return false;
+    }
+};
+
+window.changeLanguage = async (lang) => {
+    if (!masterData) return;
+
+    // 1. 설정 저장
+    masterData.settings.language = lang;
+    await saveAllData();
+
+    // 2. 데이터 재로드 및 즉시 반영을 위한 앱 재시작
+    // 대사나 편지 리스트를 실시간으로 모두 바꾸는 것보다 재로딩이 가장 안전합니다.
+    window.showConfirm("언어 변경", "언어 설정을 적용하기 위해 연구실을 다시 구성합니다.", () => {
+        location.reload();
+    });
+};
+
+// [renderer.js 하단 리스너 구역]
+ipcRenderer.on('user-idle-state', (event, state) => {
+    isIdle = state; // 메인에서 보낸 true/false 반영
+    console.log(`[시스템] 유휴 상태 변경: ${isIdle}`);
+});

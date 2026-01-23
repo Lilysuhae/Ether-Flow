@@ -1,5 +1,3 @@
-const charData = require('../assets/data/characters.json');
-
 class CollectionManager {
     constructor(initialData) {
         const data = initialData || {
@@ -7,6 +5,10 @@ class CollectionManager {
             points: 0,
             activeEgg: null
         };
+
+        // [수정] 이제 상단에서 require하지 않고, 전역에 로드된 데이터를 사용합니다.
+        this.characters = window.charData ? window.charData.characters : [];
+
         // 데이터 누락 방지를 위한 기본값 할당 보강
         this.ownedIds = data.ownedIds || [];
         this.points = data.points || 0;
