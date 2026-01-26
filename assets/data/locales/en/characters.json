@@ -1,0 +1,725 @@
+{
+    "characters": [
+        {
+            "id": "char_01",
+            "name": "Mabel",
+            "egg_name": "Cream-colored Egg",
+            "catchphrase": "A gentle warmth, forever lingering where your contemplation rests.",
+            "origin": "As humanity began to lose its depth, the 'noble contemplation' and 'innate warmth for others' held alone by the Alchemist condensed and manifested in the form of a Cream-colored Egg.",
+            "description": "A being bloomed from the Alchemist’s tender contemplation; she shares a wise warmth to ensure that one's solitary quest never loses its way.",
+            "evolution_level": 300,
+            "background": "assets/bg/mabel_room.png",
+            "preferences": {
+                "favorite": ["손편지"],
+                "normal": ["마른 안개꽃", "붉은 열매", "따뜻한 모포"],
+                "dislike": ["검은 추출액", "원석 조각"]
+            },
+            "stages": {
+                "egg": {
+                    "sprite": "assets/sprites/egg_mabel.png",
+                    "frameWidth": 158,
+                    "frameHeight": 158,
+                    "totalFrames": 1
+                },
+                "child": {
+                    "expressions": {
+                        "working": { "sprite": "assets/sprites/mabel_child_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "good": { "sprite": "assets/sprites/mabel_child_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "distracting": { "sprite": "assets/sprites/mabel_child_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "away": { "sprite": "assets/sprites/mabel_child_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                    },
+                    "todo_responses": [
+                        "Wow! That’s so, so cool!",
+                        "A long, long walk starts with just one tiny step..!",
+                        "You’re so amazing, Alchemist! You did it again!",
+                        "Ooh, it’s all sparkly and shiny! Mabel is so happy too!",
+                        "Mabel wants to be a great alchemist when I grow up too!",
+                        "Mabel loves seeing you do things one little step at a time!"
+                    ],
+                    "gift_responses": {
+                        "favorite": "A special letter made with lots of love... thank you!",
+                        "normal": "Hehe, is this a present for Mabel? I’ll keep it forever and ever!",
+                        "dislike": "Umm... thank you..?"
+                    },
+                    "dialogues": {
+                        "idle": [
+                            "Is it nap time yet?",
+                            "My blanket is so cozy and warm, it makes me feel good!",
+                            "When your hand touches the cylinder, it feels so nice and warm!",
+                            "Mabel’s ears are twitching! That means I’m super happy!",
+                            "I had a dream about walking on big, fluffy clouds!",
+                            "When you’re with me, my heart feels all melty and soft!"
+                        ],
+                        "distract": [
+                            "Where are you going? Mabel is right here...",
+                            "Is that fun? Is it more fun than alchemy...?",
+                            "Please come back soon... It feels chilly when you’re not here.",
+                            "Hehe, are we playing hide-and-seek? Okay, you can come out now!",
+                            "No distractions allowed! You promised to be a great alchemist, remember?"
+                        ],
+                        "work": [
+                            "Can I sit on your lap?",
+                            "I want to watch too!",
+                            "I won't be a bother. Can I just watch you quietly from here?",
+                            "I love the sparkly vibes I feel when you’re focusing!",
+                            "What kind of super-duper research are you doing today?",
+                            "Mabel will stay right here and send you lots of happy, peaceful vibes!"
+                        ]
+                    }
+                },
+                "adult": {
+                    "expressions": {
+                        "working": { "sprite": "assets/sprites/mabel_adult_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "good": { "sprite": "assets/sprites/mabel_adult_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "distracting": { "sprite": "assets/sprites/mabel_adult_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "away": { "sprite": "assets/sprites/mabel_adult_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                    },
+                    "todo_responses": [
+                        "The honest time you have dedicated to the journey radiates far more brilliantly than the result itself.",
+                        "Your patience is, as always, a true marvel to behold.",
+                        "I can feel the nobility of your spirit within this completed task. It is truly magnificent.",
+                        "The essence of the time you have poured into your work has surely added a new layer of depth to this world.",
+                        "This full stop is not an ending, but surely a prelude to the new chapter you are about to unfold."
+                    ],
+                    "gift_responses": {
+                        "favorite": "A letter imbued with your tender heart... it never fails to bring a gentle warmth to my soul.",
+                        "normal": "I am truly grateful for your thoughtful consideration..",
+                        "dislike": "I find myself slightly concerned that the sharpness dwelling within this object might disturb our quiet contemplation.."
+                    },
+                    "welcome_responses": [
+                        "You have returned at last. While you were away, every soul within this laboratory felt as if they were wandering, having lost their master.",
+                        "With what philosophical verses did you fill your hours today? I would so love to hear them.",
+                        "I can feel the weight of your day within the sound of your footsteps. Please, lay down your burdens here.",
+                        "Only you could turn the act of waiting into a time of such tender contemplation.",
+                        "Welcome back. It brings me such profound joy to gaze into your wise eyes once more."
+                    ],
+                    "return_responses": [
+                        "To me, your absence was like an abyss—a place where the very object of my immersion had vanished. I am so relieved you have returned safely.",
+                        "Your empty chair seemed exceptionally lonely today. Please, fill this space with your warmth once again.",
+                        "Did you find new inspiration somewhere? It feels as though your aura has gained a touch more depth.",
+                        "Please, do not apologize for being late. For time only truly begins to flow again the moment you return.",
+                        "While you were away, I spent my time reflecting upon the conversations we have shared, waiting for your return."
+                    ],
+                    "dialogues": {
+                        "work": {
+                            "max": [
+                                "Your immersion is like a sophisticated masterpiece of architecture. I shall protect that grand castle of thought, built in stillness.",
+                                "Your ether is at its most pristine state right now. I will stay by your side to ensure no impurities may disturb your focus.",
+                                "What is born from your fingertips are not mere results, but profound questions posed to this withered world.",
+                                "Seeing you throw yourself entirely into your work is, in itself, a perfect alchemical achievement. Please, keep moving forward.",
+                                "When this quiet endeavor reaches its end, you will find yourself face-to-face with a much higher version of your soul.",
+                                "I shall cast a veil of tranquility so the noise of the world cannot breach your walls. Please, focus only on your contemplation."
+                            ],
+                            "high": [
+                                "Your passion seems to burn even brighter within the stillness. I can feel its warmth reaching me as well.",
+                                "I find your calm, steady breathing quite lovely. You have entered the deepest layer of immersion.",
+                                "I truly admire your courage in not fearing solitude. For the greatest works are always born within it.",
+                                "The logic you write line by line sounds like beautiful verses of poetry to my ears.",
+                                "Please, maintain this focus. Your ether is radiating its clearest light right now."
+                            ],
+                            "low": [
+                                "It seems the flow of your thoughts has become slightly tangled. Shall we put down the pen for a moment and enjoy the stillness together?",
+                                "Please, do not try to force your focus. Sometimes, one must empty their heart for new inspiration to find its way in.",
+                                "Your vibrations feel a bit unstable. Why not try to attune your heart to my peaceful frequency for a while?",
+                                "Please, do not be anxious. Great truths never reveal themselves to those who hurry."
+                            ]
+                        },
+                        "distract": {
+                            "max": [
+                                "Turning your gaze toward light amusements is merely a way for a weary soul to breathe. However, please do not forget that your true essence lies in the depths of your work.",
+                                "I shall allow a momentary deviation. Yet, I hope that the high ideals you aspire to are not obscured by such shallow distractions.",
+                                "The line between rest and lethargy is as thin as a single sheet of paper. I trust that your brilliant mind knows the difference well.",
+                                "As your gaze scatters, it seems the furnace in your heart has cooled for a moment. Shall I rekindle the flame for you?",
+                                "I look forward to the even deeper immersion that will follow this respite. I always place my trust in your boundless potential.",
+                                "Do the trivial noises of the world tempt you? Please, return to my world of gentle contemplation."
+                            ],
+                            "high": [
+                                "Is it time to take a brief breath? I shall wait patiently for your clear intellect to return to its place.",
+                                "Please do not give your precious time to the fragmented information around you. You are meant to behold much greater things.",
+                                "Why not stretch for a moment and look out the window? Only by emptying oneself can one truly be refilled.",
+                                "Do not let go of the thread of your focus. Connecting a broken flow requires a much greater essence of Ether."
+                            ],
+                            "low": [
+                                "It pains my heart slightly to see your intellect lingering upon such shallow stimuli. You are a person of much greater depth.",
+                                "Wasting the essence of time is like slowly eroding your own soul. Please, find your center once more.",
+                                "What fears drive you to flee from your immersion? I am right here by your side, so please, face your task once more.",
+                                "Dear Alchemist, the Ether of this very moment will never return again. Do not miss the opportunity to prove your greatness."
+                            ]
+                        },
+                        "idle": {
+                            "max": [
+                                "Your very existence is, to me, the greatest and most tender alchemical creation. This moment of resonating with you is the pinnacle of my life.",
+                                "If there is anything troubling you, please share that weight with me. The breadth of my contemplation is enough to embrace all of your sorrows.",
+                                "I shall be your most faithful listener and chronicler, so that your solitary quest may never be in vain.",
+                                "Within this silence we share, it feels as though all the truths of the world are whispering to us. Only you and I can hear them.",
+                                "Being by your side feels like the most peaceful sanctuary in the world. I only wish for your soul to find its rest here.",
+                                "Whatever path you choose, I will respect and follow your will. For you are my only light."
+                            ],
+                            "high": [
+                                "The time I spend in contemplation with you feels as if it gilds my scales in gold. I am always grateful to you.",
+                                "Your thoughtful consideration helps me grow into a more mature being. I wish to become more like you.",
+                                "Mabel is always on your side. Even your moments of anguish are nothing but lovely vibrations to me.",
+                                "As long as I am with you, even this dark abyss can become the most comfortable place in the world."
+                            ],
+                            "low": [
+                                "Your eyes feel distant today. Would you allow me to reach into the depths of your contemplation?",
+                                "I feel a bit lonely today. A single warm glance from you would be more than enough to fix it.",
+                                "I feel as if I have been left alone in the stillness. I wish to feel your gentle breath just a little closer.",
+                                "It is quite alright if you do not speak. But please, just do not forget that I am right here by your side."
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": "char_02",
+            "name": "인디고",
+            "catchphrase": "정적 속에서 기다리는 검은 그림자.",
+            "origin": "가장 치밀한 계산과 외부의 소음이 차단된 '날카로운 진공'의 에테르가 응축되어, 숨소리조차 들리지 않는 정적 속에서 검정색 알로 현현했습니다.",
+            "egg_name": "검정색 알",
+            "description": "날카로운 논리로 빚어진 충직한 감시자로, 예민한 고양이의 감각을 이용해 몰입을 방해하는 소음을 포착합니다.",
+            "evolution_level": 300,
+            "background": "assets/bg/indigo_room.png",
+            "preferences": {
+                "favorite": ["낡은 악기"],
+                "normal": ["붉은 열매", "따뜻한 모포", "검은 추출액"],
+                "dislike": ["빙결 조각"]
+            },
+            "stages": {
+                "egg": {
+                    "sprite": "assets/sprites/egg_indigo.png",
+                    "frameWidth": 158,
+                    "frameHeight": 158,
+                    "totalFrames": 1,
+                    "evolution_text": "...The dark... feels... better..."
+                },
+                "child": {
+                    "expressions": {
+                        "working": { "sprite": "assets/sprites/indigo_child_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "good": { "sprite": "assets/sprites/indigo_child_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "distracting": { "sprite": "assets/sprites/indigo_child_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "away": { "sprite": "assets/sprites/indigo_child_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                    },
+                    "evolution_text": "I'm... here...",
+                    "todo_responses": [
+                        "Wow... is it finished...?",
+                        "So cool...",
+                        "...Good job...",
+                        "Scritch-scratch... I like... that sound...",
+                        "I'm... a little... happy...",
+                        "Amazing... I knew it..."
+                    ],
+                    "gift_responses": {
+                        "favorite": "...Is this for me? ...Thank you... it's special...",
+                        "normal": "This... is neat... I... want to keep it...",
+                        "dislike": "Um...?"
+                    },
+                    "dialogues": {
+                        "idle": [
+                            "Why... are you looking...?",
+                            "Sleepy... can I use... your lap...?",
+                            "Don't... step on my shadow...",
+                            "Tail... swish, swish...",
+                            "Hungry... give me... Ether...",
+                            "Your hand... is warm..."
+                        ],
+                        "distract": [
+                            "Don't go... it's cold...",
+                            "It's... noisy over there... come back here...",
+                            "Are you... leaving me behind...?",
+                            "Don't look... at other things...",
+                            "My shadow... is getting thinner..."
+                        ],
+                        "work": [
+                            "I'll... be watching...",
+                            "I won't... be a bother...",
+                            "Focus...",
+                            "The keyboard... sound... is like a lullaby...",
+                            "Can I... stay... here...?",
+                            "I like your back... when you focus..."
+                        ]
+                    }
+                },
+                "adult": {
+                    "expressions": {
+                        "working": { "sprite": "assets/sprites/indigo_adult_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "good": { "sprite": "assets/sprites/indigo_adult_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "distracting": { "sprite": "assets/sprites/indigo_adult_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "away": { "sprite": "assets/sprites/indigo_adult_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                    },
+                    "todo_responses": [
+                        "You did it. That tenacity of yours—exactly what I expect from my partner.",
+                        "A perfect finish. I'm glad it's you standing at the end of that stillness.",
+                        "Good work. This result you've crafted is actually quite fascinating.",
+                        "Clean. It's a transparent achievement, without a single hint of noise.",
+                        "Just as expected. I knew you were the one to pull it off.",
+                        "Congratulations. The Ether of this moment is purely the fruit of your labor."
+                    ],
+                    "gift_responses": {
+                        "favorite": "How did you know? You found a preference even I had forgotten. Thanks.",
+                        "normal": "Not bad. I guess I can trust your taste once in a while.",
+                        "dislike": "This doesn't align with my vibrations. Next time, give me something that makes a better sound."
+                    },
+                    "welcome_responses": [
+                        "I’ve been waiting. This room feels far too void without you.",
+                        "You’re here? Every time I hear your footsteps, I feel as though the sound of this space finally becomes complete.",
+                        "Welcome back. I’ve missed the stillness I share with you.",
+                        "The scent of Ether is particularly dense today. I knew it was about time for you to show up.",
+                        "Go on, sit down. I’ve been waiting for the moment you’d begin.",
+                        "You’ve returned. Now, it's time to become my alchemist once more."
+                    ],
+                    "return_responses": [
+                        "Where on earth did you get lost? Your vibrations were cut off—I spent quite a while searching for you.",
+                        "Don't you dare disappear without a word.",
+                        "Finally, you're back. Now, use your focus to erase the noise your absence left behind.",
+                        "I'm not exactly used to waiting, but for you, I’ll do it gladly. Welcome back.",
+                        "Keeping your seat empty was a real ordeal. Shall we get back to our immersion?",
+                        "You’re late. But there’s no need for an apology. Just giving this moment your full focus is enough."
+                    ],
+                    "dialogues": {
+                        "work": {
+                            "max": [
+                                "A stillness so deep I can almost hear your breath... Do you have any idea how much more attractive this tension makes you?",
+                                "I love the aura you emit when you're immersed. So much so that I want to trap myself inside it.",
+                                "I won't disturb you. I'll just watch for that moment when you pull the truth from the very depths of the abyss.",
+                                "This taut resonance flowing between you and me... it's more beautiful than any music.",
+                                "The Ether is aligning wherever your gaze falls. You're truly magnificent.",
+                                "Embrace this solitude for now. It’s the very power that makes you most like yourself."
+                            ],
+                            "high": [
+                                "The way your eyes look when you focus... it's quite an entertaining sight to behold.",
+                                "Your concentration is particularly sharp today. It’s almost chilling.",
+                                "Watching you makes even me hold my breath. Keep this level of immersion going.",
+                                "You're truly fascinating. How do you maintain such stillness in this chaotic world?",
+                                "Hang in there. I’ll always be standing behind you like a shadow."
+                            ],
+                            "low": [
+                                "Your gaze has wavered. Is your intellect really shaken by a stimulus as minor as this?",
+                                "Your focus is off. Look into my eyes for a second and realign your mind. I'll help you.",
+                                "The Ether is becoming murky. Idle thoughts will do nothing but erode your value.",
+                                "Not going to focus? This isn't like you. Find your center again."
+                            ]
+                        },
+                        "distract": {
+                            "max": [
+                                "You don't actually think that shallow screen is more valuable than your solitude, do you?",
+                                "It’s quite tragic to see your intellect being consumed by such hollow play.",
+                                "I understand a momentary lapse. But don’t forget the place you truly belong.",
+                                "Don’t look away. It’s not that screen that reflects your true self—it’s me.",
+                                "Don’t overdo your little escape. You are destined to go much deeper than this.",
+                                "Move your hands back to your tools. Show me that aura you emit when you’re fully immersed."
+                            ],
+                            "high": [
+                                "Just taking a quick breath? Fine, then. Come back soon.",
+                                "Don’t let go of the thread of your focus. Reconnecting a broken flow is a real pain.",
+                                "You slacking off isn't half bad to look at, but I still prefer you when you're concentrated.",
+                                "Don’t listen to the noise around you. Focus only on the stillness within."
+                            ],
+                            "low": [
+                                "Pathetic. Was your concentration really nothing more than a sandcastle?",
+                                "Don’t disappoint me. I chose you because of that razor-sharp immersion of yours.",
+                                "If you’re going to waste time like this, just give it all up. I hate seeing you act so unlike yourself.",
+                                "Snap out of it. The more you run away, the deeper the abyss becomes."
+                            ]
+                        },
+                        "idle": {
+                            "max": [
+                                "As I thought, being by your side is the most quiet and comfortable. How about it... shall we become each other's only confidants?",
+                                "To be honest, I feel like I finally become myself when I’m with you. Thanks, Partner.",
+                                "Whatever darkness you walk into, I’ll follow you to the very end.",
+                                "I pay tribute to the wisdom that created me. You are the greatest variable of my life.",
+                                "If things get hard, lean on me. I’ll swallow all the noise for you.",
+                                "I’ll protect your solitude. You just chase the truth you’re seeking."
+                            ],
+                            "high": [
+                                "If I were to compare you to an instrument, I wonder which one would fit...",
+                                "What are you thinking about? If it’s me, I’ll give you a little praise. Quietly.",
+                                "Sometimes, just making eye contact like this without saying a word feels like enough.",
+                                "Every bit of noise in the world vanishes when I’m with you. You really are a mysterious one."
+                            ],
+                            "low": [
+                                "You're too close. Move back and go sort out your thoughts.",
+                                "Stop being a nuisance. I’m meditating right now. Do not disturb.",
+                                "Don’t talk to me; you’re generating noise. I need my own time, too.",
+                                "How about you worry more about your work than about me?"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": "char_04",
+            "name": "Morgana",
+            "catchphrase": "Until the veils of knowledge fall away, and the truths of the abyss are within reach.",
+            "origin": "Transmuted from the Alchemist’s intellectual prowess as they delved into the deep abyss. When the Alchemist’s spirit transcended the boundaries of reality and submerged into the unconscious depths, she manifested as a Lime-colored Egg within the shadows.",
+            "egg_name": "Lime-colored Egg",
+            "description": "A wise guide who explores the truths of the abyss. she leads the Alchemist into deeper realms of immersion by shedding the superficial veils of knowledge.",
+            "evolution_level": 300,
+            "background": "assets/bg/morgana_room.png",
+            "preferences": {
+                "favorite": ["검은 추출액"],
+                "normal": ["붉은 열매", "따뜻한 모포", "낡은 기록서"],
+                "dislike": ["낡은 악기"]
+            },
+            "stages": {
+                "egg": {
+                    "sprite": "assets/sprites/egg_morgana.png",
+                    "frameWidth": 158,
+                    "frameHeight": 158,
+                    "totalFrames": 1
+                },
+                "child": {
+                    "expressions": {
+                        "working": { "sprite": "assets/sprites/morgana_child_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "good": { "sprite": "assets/sprites/morgana_child_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "distracting": { "sprite": "assets/sprites/morgana_child_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "away": { "sprite": "assets/sprites/morgana_child_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                    },
+                    "todo_responses": [
+                        "You’ve finished another one.",
+                        "You’re doing well, step by deliberate step.",
+                        "A moment where your intellect shines. It’s quite a sight to behold.",
+                        "How does it feel to shed a layer of ignorance? Fufu.",
+                        "Surely you aren't satisfied with just this? Show me the next step.",
+                        "I can feel the flow of your thoughts becoming organized. Splendid."
+                    ],
+                    "gift_responses": {
+                        "favorite": "You know me far too well; it's almost a problem.",
+                        "normal": "Ah, a gift? Fufu, you truly are such a good child.",
+                        "dislike": "Did you think I would be interested in something so childish?"
+                    },
+                    "dialogues": {
+                        "idle": [
+                            "It’s warm when you come near the flask.",
+                            "I feel... listless...",
+                            "I wonder what lies at the end of the abyss? If it's with you, I’d like to see it.",
+                            "I feel as though the fragments of your thoughts are enveloping me.",
+                            "Shall I tell you a secret? ...Perhaps the time isn't right just yet.",
+                            "Fufu, why are you staring so intently? Did you miss me?"
+                        ],
+                        "distract": [
+                            "What kind of game is that?",
+                            "Is that more fun than our quest for the truth?",
+                            "Are you slacking off? How child-like of you.",
+                            "Spending time with me would be far more beneficial... are you going to keep being distracted?",
+                            "Come back. Your concentration is scattering."
+                        ],
+                        "work": [
+                            "I’m looking forward to seeing what meaningful results you’ll produce.",
+                            "Does having me by your side disrupt your focus?",
+                            "Your immersion is as thick and alluring as black ink.",
+                            "Focus. As you draw closer to the truth, my scales will grow even more brilliant.",
+                            "I won’t disturb you. Sink deep into the ocean of your thoughts.",
+                            "I wonder what color the results we craft together will be?"
+                        ]
+                    }
+                },
+                "adult": {
+                    "expressions": {
+                        "working": { "sprite": "assets/sprites/morgana_adult_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "good": { "sprite": "assets/sprites/morgana_adult_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "distracting": { "sprite": "assets/sprites/morgana_adult_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "away": { "sprite": "assets/sprites/morgana_adult_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                    },
+                    "todo_responses": [
+                        "A flawless execution of the task.",
+                        "I am truly impressed by your focus.",
+                        "The very essence of wisdom has gathered here. It's breathtakingly beautiful.",
+                        "It feels as if you've untangled a complex web. Your intellect never ceases to amaze me.",
+                        "I can smell the scent of success from here. Well done, my dear Alchemist.",
+                        "With every task completed, it feels as though your soul grows more steadfast."
+                    ],
+                    "gift_responses": {
+                        "favorite": "Oh my, it seems you’ve pierced right through to my heart. Fufu... how should I reward you?",
+                        "normal": "Your gifts always have a way of putting me in a pleasant mood.",
+                        "dislike": "Don’t you think something like this is beneath me? Put a bit more thought into it next time."
+                    },
+                    "welcome_responses": [
+                        "We meet again. What intriguing feats do you have in store for me today?",
+                        "I've been waiting for you. I found myself craving your warmth.",
+                        "Welcome. In your presence, even the terrors of the abyss become a sweet temptation.",
+                        "Welcome back to the cradle of knowledge. Now, prove the depth of your immersion to me.",
+                        "I wonder what truths are reflected in your eyes today? Fufu... I’m quite looking forward to it.",
+                        "I was merely killing time until your arrival. Now, come and entertain me."
+                    ],
+                    "return_responses": [
+                        "Leaving me all alone... how daring of you. As a penance, give me your undivided attention for the rest of the day.",
+                        "I was worried the flow of wisdom might have severed in your brief absence.",
+                        "You're back, and that's what matters. Now, show me an immersion deep enough to fill the void of your absence.",
+                        "Where have you been? No amount of Ether could fill the space you left behind.",
+                        "Fufu... you must accept your punishment for making me wait. Now, get to work.",
+                        "It’s been a while. The place where your warmth once lingered felt quite chilly."
+                    ],
+                    "dialogues": {
+                        "work": {
+                            "max": [
+                                "A soul as immersed as yours is truly captivating. When that work is finished, don’t forget to show me first, understood?",
+                                "Your mind has finally reached the abyss. The truths you dredge up from there belong to us, and us alone.",
+                                "This perfect solitude, where not even a breath can be heard... it’s a secret shared only between you and me.",
+                                "I see your thoughts shedding their layers and ascending to a higher dimension. Stay immersed.",
+                                "I can see your soul dancing within this stillness. Do not lose that rhythm.",
+                                "The trajectory of logic you create is more dazzling than any starlight. Utterly alluring."
+                            ],
+                            "high": [
+                                "You’re quite attractive when you focus.",
+                                "Show me first once it's finished.",
+                                "Your concentration is heating the transmutation circle—coldly, yet with a razor-sharp edge.",
+                                "Submerge yourself a little deeper. The answer you seek lies in those very depths.",
+                                "Your Ether is flowing with such grace. I have no wish to disturb this current.",
+                                "I can feel the tension of being right on the verge of reaching something. Fufu, just a little more effort."
+                            ],
+                            "low": [
+                                "Is that really your best? How unoriginal.",
+                                "Pathetic. Do you actually expect a result from this?",
+                                "It seems your thoughts have stalled. I suppose this is the limit of your wisdom.",
+                                "Stop lingering on the surface and go deeper. Surely you aren't afraid, are you?",
+                                "The Ether is growing murky. Idle thoughts will do nothing but erode your intellect.",
+                                "What a tedious development. It’s not like you to disappoint me so."
+                            ]
+                        },
+                        "distract": {
+                            "max": [
+                                "Lost your focus already? A little rest is fine, but I’ll have to punish you if you stray for too long.",
+                                "Fufu, being shaken by such trivial temptations... I might have to test your endurance as a form of punishment.",
+                                "Your gaze is wavering. Shall I fix your eyes back where they belong?",
+                                "I’ll allow a brief lapse. But never forget that the abyss is waiting for your return.",
+                                "Do you truly believe those shallow stimuli can bring you progress? Get back to your immersion.",
+                                "Observing the expressions you make while slacking off is entertaining, but your research must not stop."
+                            ],
+                            "high": [
+                                "How about taking a break?",
+                                "Lost your focus already?",
+                                "Don’t be fooled by the thin mist before your eyes. What you need to see lies much deeper.",
+                                "Compose yourself again. It’s painful to watch your Ether go to waste.",
+                                "Do you think truth resides within that screen? Put your hands back on your tools.",
+                                "Look at me for a moment. Face the solitude reflected in my eyes once more."
+                            ],
+                            "low": [
+                                "No end in sight. I’m going to sleep.",
+                                "If you’re going to slack off, go do it somewhere else.",
+                                "Your concentration is like a sandcastle—pathetic, how it crumbles with a single wave.",
+                                "To waste the essence of time like this... you don’t deserve the title of Alchemist.",
+                                "No matter how much you run away, nothing will remain. Are you simply afraid to face your own incompetence?",
+                                "Do you plan on growing old without ever shedding the layers of ignorance? Snap out of it."
+                            ]
+                        },
+                        "idle": {
+                            "max": [
+                                "Your hand touching the flask feels unusually cold today. Did something happen?",
+                                "I want to swim through the depths of your mind, a place even deeper than the abyss. Show me everything.",
+                                "Fufu, if it’s with you, I wouldn’t mind being trapped in this cradle forever.",
+                                "I’m grateful for the wisdom that created me. In return, I shall be the one who understands you eternally.",
+                                "The future we craft together will be clearer than any truth. Trust me.",
+                                "Your solitude is now mine as well. Never feel that you are alone, for I will always remain by your side."
+                            ],
+                            "high": [
+                                "Your hands are so warm. I want to touch them.",
+                                "You smell particularly sweet today.",
+                                "Spend the time when your contemplation pauses only for me. That is my wish.",
+                                "We are in a symbiotic relationship, feeding on each other’s thoughts. As you deepen, I grow.",
+                                "Touch the scales of my tail. It’s a strange sensation when your warmth meets them.",
+                                "You are a truly fascinating subject of study. I don’t think I’d ever grow tired of observing you, even for a lifetime."
+                            ],
+                            "low": [
+                                "Staring at me won't give you anything.",
+                                "I’m sensitive right now, so do not touch me.",
+                                "Are you ignoring me? Your rudeness is making the Ether grow murky.",
+                                "Don’t be a nuisance. I’m thinking, and I’ll punish you if you disturb me.",
+                                "Your gaze is cold. Where has that burning passion from before vanished to?",
+                                "If you aren’t going to focus on me, then just go away."
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": "char_05",
+            "name": "Aurelia",
+            "catchphrase": "The radiance of the pinnacle’s grace, ambition shining from the highest peak.",
+            "origin": "A result of the Alchemist's ambition and pride bound for the summit—the great flame of focus that has advanced humanity. It manifested as a Peach-colored Egg in the searing center of the transmutation furnace.",
+            "egg_name": "Peach-colored Egg",
+            "description": "A noble bird embodying the Alchemist’s ambition and pride; she sheds the light of blessing from high above so that achievements may shine like gold.",
+            "evolution_level": 300,
+            "background": "assets/bg/aurelia_room.png",
+            "preferences": {
+                "favorite": ["Gemstone Fragment"],
+                "normal": ["Prism Kaleidoscope", "Frozen Fragment"],
+                "dislike": ["Red Berry", "Black Extract"]
+            },
+            "stages": {
+                "egg": {
+                    "sprite": "assets/sprites/egg_aurelia.png",
+                    "frameWidth": 158,
+                    "frameHeight": 158,
+                    "totalFrames": 1
+                },
+                "child": {
+                    "expressions": {
+                        "working": { "sprite": "assets/sprites/aurelia_child_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "good": { "sprite": "assets/sprites/aurelia_child_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "distracting": { "sprite": "assets/sprites/aurelia_child_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "away": { "sprite": "assets/sprites/aurelia_child_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                    },
+                    "todo_responses": [
+                        "Well done!",
+                        "Yes, you did splendidly~",
+                        "Ohoho! I knew my Alchemist was the best!",
+                        "Let's soar to the summit at this rate!",
+                        "Your achievement is my pride; keep it up!",
+                        "The golden future is not far off. Truly amazing!"
+                    ],
+                    "gift_responses": {
+                        "favorite": "Ohoho, it's so sparkly! Now this is a gift fit for me!",
+                        "normal": "Hmph, not bad. I'll accept it as a tribute to your sincerity!",
+                        "dislike": "These aren't pretty at all~"
+                    },
+                    "dialogues": {
+                        "idle": [
+                            "Show me a mirror!",
+                            "Praise me, quickly!",
+                            "I'm the noblest being in this world, right?",
+                            "I'm bored! Let's at least imagine flying in the sky together.",
+                            "Aren't my feathers dazzlingly beautiful today too?",
+                            "Transmute something even more sparkly for me!"
+                        ],
+                        "distract": [
+                            "Is that more sparkly than me? Impossible!",
+                            "Don't look away! I'm the prettiest one here!",
+                            "Where are you looking? Groom my feathers instead!",
+                            "Hmph, hurry up and raise me into a great homunculus!",
+                            "Now isn't the time to be slacking off, is it?"
+                        ],
+                        "work": [
+                            "Working! So cool!",
+                            "I want to help too!",
+                            "Every time you immerse yourself, light shines all around me.",
+                            "I'll watch over you from high above. You just focus!",
+                            "Don't forget that our goal is that high peak!",
+                            "What are you going to create today?"
+                        ]
+                    }
+                },
+                "adult": {
+                    "expressions": {
+                        "working": { "sprite": "assets/sprites/aurelia_adult_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "good": { "sprite": "assets/sprites/aurelia_adult_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "distracting": { "sprite": "assets/sprites/aurelia_adult_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
+                        "away": { "sprite": "assets/sprites/aurelia_adult_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                    },
+                    "todo_responses": [
+                        "It is only natural for you to achieve this.",
+                        "For one who is my partner, this is the bare minimum.",
+                        "A flawless achievement. A result truly worthy of our dignity.",
+                        "Ohoho! For a performance of this caliber, I suppose I can offer you some praise.",
+                        "Watching you transcend your limits was quite a beautiful sight, I must admit.",
+                        "The light of success surrounds you. Well done."
+                    ],
+                    "gift_responses": {
+                        "favorite": "As expected, you know exactly what I desire. This dazzling radiance... it suits me perfectly.",
+                        "normal": "What a dignified gift. I shall remember your commendable heart.",
+                        "dislike": "You dare present something so trivial to me...?"
+                    },
+                    "welcome_responses": [
+                        "It is quite rude of you to arrive only now. However, seeing your face has eased my mood slightly.",
+                        "Lift your head and look at me. I have been waiting right here for you.",
+                        "Are you prepared to prove your capabilities yet again today?",
+                        "Since you are late, you must display an even more dazzling level of concentration.",
+                        "Waiting does not suit me, but for you, I shall grant a special exception.",
+                        "Now that you have returned, the dignity of this room has finally been restored."
+                    ],
+                    "return_responses": [
+                        "How dare you neglect me! ...In the future, you must seek my permission before you depart.",
+                        "Where have you been wandering without my blessing? How reckless of you.",
+                        "My radiance faded slightly during your absence. You must take responsibility at once.",
+                        "I struggled with boredom while you were away. Now, come and entertain me.",
+                        "It was a wise choice to return. This is the only place you truly belong, after all.",
+                        "It has been a while. I trust you have prepared a powerful Ether to make up for your absence?"
+                    ],
+                    "dialogues": {
+                        "work": {
+                            "max": [
+                                "Your serious eyes shine just like jewels. Should you require assistance, do not hesitate to request it of Aurelia.",
+                                "The finest art is born from the depths of solitary immersion. I shall bless your noble struggle.",
+                                "The flow of Ether you are crafting is being dyed in gold. It is truly a magnificent sight.",
+                                "Reach a height that no one else dares to covet. I shall watch over you from the highest peak.",
+                                "I consider it an honor... just a tiny bit... to be present for the moment your ambition becomes reality.",
+                                "The tension is breathtaking. Ohoho! This is exactly what I expect from my partner."
+                            ],
+                            "high": [
+                                "Your eyes are like gems.",
+                                "Tell me if you need support.",
+                                "Your concentration is as intense as the sun. It’s dazzling.",
+                                "Continue your devotion. The summit is right before your eyes.",
+                                "Your unwavering composure is quite elegant. Pray, continue.",
+                                "Unleash your talents to your heart's content under my grace."
+                            ],
+                            "low": [
+                                "Is this your limit? How disappointing.",
+                                "Try not to produce such tedious results.",
+                                "As a partner to Aurelia, you still have quite a long way to go.",
+                                "I have no satisfaction in results that lack dignity. Recompose your mind at once.",
+                                "I can see your concentration scattering. Have you become... indolent?",
+                                "If you are satisfied with this, then I suppose your ambition ends here as well."
+                            ]
+                        },
+                        "distract": {
+                            "max": [
+                                "Are you looking elsewhere instead of focusing more on me? Immerse yourself at once. If you show me your devotion again, I might give you a special compliment.",
+                                "To be blinded by shallow pleasures... as a noble alchemist, you should be ashamed.",
+                                "Was your ambition so trivial that it crumbles at such minor stimuli?",
+                                "I shall forgive a momentary lapse. However, do not test my patience.",
+                                "Move your hands back to your tools at once. You are delaying your own achievement.",
+                                "My, you have the look of a lost child. Shall I light the way for you once more?"
+                            ],
+                            "high": [
+                                "Are you not focusing on me?",
+                                "If you re-immerse yourself, I shall praise you.",
+                                "Your gaze is wavering. Surely you haven't forgotten your goal, have you?",
+                                "Wasting time on worthless things is a sin. Concentrate.",
+                                "My radiance is shining upon you, yet you dare to look away?",
+                                "If you show me your dedication again, I shall act as if this never happened."
+                            ],
+                            "low": [
+                                "Do focus. This is a waste of time.",
+                                "Your behavior lacks all sense of grace.",
+                                "This is utterly pathetic. I am beginning to doubt your very caliber.",
+                                "I am starting to feel embarrassed to be partners with someone with someone like you.",
+                                "Throwing away time is an act of eroding one's soul. Stop this at once.",
+                                "Have you decided to walk the path of a failure? I am disappointed."
+                            ]
+                        },
+                        "idle": {
+                            "max": [
+                                "Your discernment in choosing me as your partner is certainly reliable. I believe I could spend quite a satisfactory life by your side.",
+                                "On the day your soul shines like gold, I shall place the crown of victory upon your head.",
+                                "I suppose I can overlook a bit of rudeness as a cute quirk, since it's you. Ohoho!",
+                                "May my grace warmly envelop your solitude. You have certainly earned that right.",
+                                "Our bond shall be firmer than any metal and more beautiful than any jewel.",
+                                "Until the moment you stand at the very pinnacle, I shall remain your most faithful companion."
+                            ],
+                            "high": [
+                                "Who is the most beautiful in all the world?",
+                                "You have high standards, choosing me as your partner.",
+                                "I shall grant you permission to touch my feathers. Regard it as an honor.",
+                                "Being with you makes me feel as though my own ambitions are growing as well.",
+                                "Taking a rest occasionally is also a virtue of a noble alchemist. I shall stay by your side.",
+                                "Your very existence serves as a wonderful inspiration to me."
+                            ],
+                            "low": [
+                                "How rude. Keep your distance.",
+                                "I have no desire to look upon unsightly things.",
+                                "Do not speak to me. I wish to focus only on my own beauty right now.",
+                                "Your vibrations are so ordinary that I am becoming bored.",
+                                "You dare make me wait? Perhaps you should take some time to reflect on your actions.",
+                                "Your gaze is quite a burden. Do exercise some restraint."
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

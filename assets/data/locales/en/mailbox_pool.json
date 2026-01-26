@@ -1,0 +1,3488 @@
+[{
+        "id": "guild_alchemist_intro_01",
+        "sender": "Alchemy Guild",
+        "title": "[Directive] Encouragement for the Novice Alchemist",
+        "trigger": {
+            "type": "always",
+            "value": null
+        },
+        "content": "Welcome to our guild. The first step for an alchemist is to establish clear objectives. Please register your [Work Tools] and record today’s objectives in your [To-Do] list. Each time a task is completed, your concentration will be converted into pure Ether to support the growth of your Homunculus. May the blessing of the Goddess of Wisdom be upon your laboratory.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_alchemist_intro_02",
+        "sender": "Alchemy Guild",
+        "title": "[Directive] Resonance with Creations and Utilization of Preferred Items",
+        "trigger": {
+            "type": "current_stage",
+            "value": "child"
+        },
+        "content": "Every Homunculus has different preferences for various substances. We advise you to purchase gifts from the [Shop] and deliver them, while carefully monitoring their [Affection] levels.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_alchemist_intro_03",
+        "sender": "Alchemy Guild",
+        "title": "[Directive] Incoming Correspondence and Reward Collection Procedures",
+        "trigger": {
+            "type": "total_focus",
+            "value": 30
+        },
+        "content": "Correspondence from the guild includes valuable counsel and enclosed [Ether] points. Please check your mailbox frequently and utilize these rewards as research funds. Be advised that all your achievements are being formally reported to the guild.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_alchemist_intro_04",
+        "sender": "Alchemy Guild",
+        "title": "[Directive] Methods for Molding the Vessel of Life",
+        "trigger": {
+            "type": "total_focus",
+            "value": 60
+        },
+        "content": "The evolution of a Homunculus depends on its growth progress. Please inject Ether through consistent immersion. Once [Growth] and [Affection] reach specific thresholds, the Homunculus will enter its stage of maturity and initiate deeper dialogues with you.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "guild_cert_level_15",
+        "sender": "Alchemy Guild",
+        "title": "[Certification] Expert Alchemist Qualification",
+        "logic": "AND",
+        "triggers": [{
+                "type": "alchemist_level",
+                "value": 15
+            },
+            {
+                "type": "total_focus",
+                "value": 300
+            }
+        ],
+        "content": "You have achieved Level 15 proficiency and a cumulative immersion record of over 5 hours. This signifies your entry into the professional domain, transcending mere curiosity. We officially commend your dedicated efforts.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "guild_cert_level_20",
+        "title": "Senior Alchemist Qualification Certification",
+        "sender": "Alchemy Guild",
+        "logic": "AND",
+        "triggers": [{
+                "type": "alchemist_level",
+                "value": 20
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            }
+        ],
+        "content": "The guild has verified that you possess a high level of proficiency and extensive experience in transmuting various life forms. We have enclosed an official guild grant to support your progress.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "guild_cert_task_01",
+        "sender": "Alchemy Guild",
+        "title": "[Certification] Achievement of the 21-Day Miracle",
+        "trigger": {
+            "type": "habit_master",
+            "value": 21
+        },
+        "content": "Congratulations. You have completed 21 days, which is psychologically recognized as the minimum duration for a new habit to be ingrained in the brain. This activity has now begun to enter the realm of instinct rather than mere will. We hereby bestow upon you the official guild title: 'Diligent Seeker'.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "guild_event_time_01",
+        "sender": "Alchemy Guild",
+        "title": "Rewards for Weekend Research Activities",
+        "trigger": {
+            "type": "weekend_alchemist",
+            "value": true
+        },
+        "content": "We highly value your passion for continuing research even during holidays. In accordance with guild regulations, weekend research activities are granted additional Ether refining benefits. Please utilize this support to improve your research environment.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "guild_first_adult_congrats",
+        "sender": "Alchemy Guild",
+        "title": "[Official] Approval of Senior Homunculus Management Qualification",
+        "content": "We have received news of the birth of your first Adult Homunculus through your dedicated immersion. The guild highly evaluates your ability to perfectly control the flow of Ether from the egg stage to maturity. We are sending a guild subsidy to support your deeper inquiries. We look forward to your future research achievements.",
+        "trigger": {
+            "type": "adultCount",
+            "value": 1
+        },
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "guild_guide_bond_01",
+        "sender": "Alchemy Guild",
+        "title": "[Directive] Harmony in Operating Multiple Creations",
+        "trigger": {
+            "type": "owned_count",
+            "value": 2
+        },
+        "content": "A second Homunculus has now settled in your laboratory. Please be cautious of potential Ether interference between life forms. Respecting each individual nature while maintaining your focus as an alchemist is the key to efficient Ether refinement.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "guild_guide_focus_01",
+        "sender": "Alchemy Guild",
+        "title": "[Directive] Guide to Multi-Tool Utilization",
+        "trigger": {
+            "type": "app_juggler",
+            "value": 5
+        },
+        "content": "You are currently operating three or more types of work tools simultaneously. While this demonstrates excellent multitasking capability, please ensure that your Ether does not become overly scattered.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_guide_task_01_habit",
+        "sender": "Alchemy Guild",
+        "title": "[Directive] Alchemical Effects of Habit Formation",
+        "trigger": {
+            "type": "habit_master",
+            "value": 5
+        },
+        "content": "You have performed your habit for five consecutive days. Repeated actions reconfigure neural pathways to maximize Ether extraction efficiency. Maintaining this flow is the shortest path to becoming a Senior Alchemist.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "guild_guide_task_01_diligence",
+        "sender": "Alchemy Guild",
+        "title": "Proof of Your Diligence",
+        "trigger": {
+            "type": "todo_count",
+            "value": 10
+        },
+        "content": "You have successfully completed 10 tasks! Your reputation appears to be spreading far and wide. We ask for your continued enthusiasm in your future research activities.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "guild_guide_task_02",
+        "sender": "Alchemy Guild",
+        "title": "[Directive] Importance of Small Achievements",
+        "trigger": {
+            "type": "todo_count",
+            "value": 5
+        },
+        "content": "You have completed 5 tasks. Even the grand Philosopher's Stone begins with the combination of tiny dust particles. Handling minor tasks one by one, as you are doing now, is the fastest way to become a great alchemist.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_guide_task_03",
+        "title": "The Unceasing Flame of Discipline",
+        "sender": "Alchemy Guild",
+        "trigger": {
+            "type": "habit_master",
+            "value": 7
+        },
+        "content": "It is remarkable that you have maintained your habit for an entire week without a single day’s exception. While a repetitive routine may seem tedious, it is, in fact, the source of the most powerful magic. Congratulations on the fruits of your discipline.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "guild_guide_task_04",
+        "sender": "Alchemy Guild",
+        "title": "[Directive] The Sprouting Period of Habits",
+        "trigger": {
+            "type": "habit_master",
+            "value": 3
+        },
+        "content": "You have maintained your habit for three consecutive days. We highly evaluate your will to overcome the initial hurdle of consistency. The foundation of alchemy lies in the repeated refinement process. Please continue your efforts so this small sprout does not break.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "guild_guide_task_05",
+        "sender": "Alchemy Guild",
+        "title": "[Directive] Special Subsidy for Research Resumption",
+        "trigger": {
+            "type": "return_after_long_absence",
+            "value": true
+        },
+        "content": "We have confirmed your return to the laboratory after a long absence. The guild is sending research resumption support to ensure the continuity of study and prevent the loss of skilled talent. Please reorganize your [To-Do] list and re-enter a stable orbit of Ether extraction.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "alchemist_final_mentor",
+        "sender": "Anonymous Alchemist",
+        "title": "May You Reach the Realm of True Immersion",
+        "trigger": {
+            "type": "total_focus",
+            "value": 6000
+        },
+        "content": "One hundred hours of immersion... You are now carving your own alchemy, transcending the legacy I left behind. I shall look forward to the day our paths cross at the end of this journey.",
+        "reward": {
+            "type": "point",
+            "value": 50000
+        }
+    },
+    {
+        "id": "alchemist_hatch_congrats",
+        "sender": "Anonymous Alchemist",
+        "title": "My Congratulations on the Birth of a Homunculus",
+        "trigger": {
+            "type": "owned_count",
+            "value": 1
+        },
+        "content": "You have finally transmuted your first life. Pray, continue to look after it with great care and affection.",
+        "reward": {
+            "type": "point",
+            "value": 20
+        }
+    },
+    {
+        "id": "enon_insight_01",
+        "sender": "Anonymous Alchemist",
+        "title": "I Beheld the Burning Flame of Concentration",
+        "trigger": {
+            "type": "total_focus",
+            "value": 60
+        },
+        "content": "A cumulative hour of immersion... Proof that the time you spent in the laboratory was not in vain. I hope this Ether sustains your flame for much longer.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "enon_insight_02",
+        "sender": "Anonymous Alchemist",
+        "title": "When the Boundaries of Time Dissolve",
+        "trigger": {
+            "type": "flow_state",
+            "value": true
+        },
+        "content": "You have just reached the singularity known as 'Immersion.' That fleeting moment when self, tool, and time fuse into one... Your potential resides within that very place.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "enon_insight_03",
+        "sender": "Anonymous Alchemist",
+        "title": "The Refinement Process Known as Failure",
+        "trigger": {
+            "type": "failed_attempt_count",
+            "value": 3
+        },
+        "content": "Three failures, I see. Do you consider this a waste? Perish the thought. One cannot obtain the pure Philosopher’s Stone without first filtering out the impurities. I trust your soul has grown more resilient through this trial. Challenge it once more.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "enon_night_01",
+        "sender": "Anonymous Alchemist",
+        "title": "The One Who Peers into the Abyss",
+        "logic": "AND",
+        "triggers": [{
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "marathon_focus",
+                "value": 90
+            }
+        ],
+        "content": "I see you are immersing yourself tirelessly in the dead of night. If you gaze long into an abyss, the abyss will also gaze into you. Passion is a fine thing, but do rest a while so that your soul does not burn to ash.",
+        "reward": {
+            "type": "item",
+            "value": "Incense of Silence"
+        }
+    },
+    {
+        "id": "enon_test_01",
+        "sender": "Anonymous Alchemist",
+        "title": "Do You Feel the Weight of a Creation?",
+        "trigger": {
+            "type": "owned_count",
+            "value": 2
+        },
+        "content": "The lives within the cylinders have increased. To you, is this merely an expansion of research, or the weight of a soul you must bear? I hope the gaze you cast upon them is not fixed solely on 'results.'",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "enon_test_02",
+        "sender": "Anonymous Alchemist",
+        "title": "A Bustling Cradle",
+        "trigger": {
+            "type": "owned_count",
+            "value": 3
+        },
+        "content": "Three homunculi have now taken root in your laboratory. The Ether emitted by these beings of differing natures blends into a curious harmony. Your laboratory has truly become a small ecosystem of its own.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "enon_test_03",
+        "sender": "Anonymous Alchemist",
+        "charId": "char_01",
+        "title": "Warmth Beyond the Glass Wall",
+        "trigger": {
+            "type": "intimacy_level",
+            "value": 50
+        },
+        "content": "The homunculus has opened its heart to you. A heart... it is the most dangerous, yet most beautiful gift a creator can bestow upon their creation.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "enon_weight_01",
+        "sender": "Anonymous Alchemist",
+        "title": "The Path of an Alchemist",
+        "trigger": {
+            "type": "alchemist_level",
+            "value": 5
+        },
+        "content": "You seem proficient in handling basic tasks now. Are you ready to pursue even deeper truths? I send a small token to commemorate your growth.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "enon_weight_02",
+        "sender": "Anonymous Alchemist",
+        "title": "As Your Proficiency Deepens",
+        "trigger": {
+            "type": "alchemist_level",
+            "value": 10
+        },
+        "content": "Your hands have already grown quite skilled with the tools. Yet, as skill increases, the beginner's heart often grows light. Do not forget the trembling you felt when you first stepped into this laboratory.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "enon_weight_03",
+        "sender": "Anonymous Alchemist",
+        "title": "How One Crosses the Mountain of Tasks",
+        "trigger": {
+            "type": "todo_count",
+            "value": 20
+        },
+        "content": "Twenty tasks in a single day... your shoulders must feel quite heavy. Is this mere labor to clear a list, or a discipline to reach the ultimate end?",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "enon_weight_04",
+        "sender": "Anonymous Alchemist",
+        "title": "To the One Who Crosses the Mountain of Tasks",
+        "trigger": {
+            "type": "todo_count",
+            "value": 30
+        },
+        "content": "Thirty tasks completed already. Your diligence is changing the very air of the laboratory. Never forget that great achievements are built upon small deeds, and continue your devotion.",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "enon_weight_05",
+        "sender": "Anonymous Alchemist",
+        "title": "You Have Completed the First Cycle",
+        "trigger": {
+            "type": "habit_master",
+            "value": 7
+        },
+        "content": "One week... You have endured a full cycle without letting the flame of the furnace die. The magic known as 'routine' has begun to dwell in your daily life. But do not grow complacent. Familiarity often invites indolence.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "enon_weight_06",
+        "sender": "Anonymous Alchemist",
+        "title": "Your Very Essence Has Transformed",
+        "trigger": {
+            "type": "habit_master",
+            "value": 100
+        },
+        "content": "One hundred days... You are no longer the novice alchemist I once knew. Habits are the alchemy that reshapes the soul. Your very essence has already transformed into a grand achievement. Now, go forth and pioneer your own new truths.",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "noah_bond_01",
+        "sender": "Mysterious Shadow",
+        "charId": "char_02",
+        "title": "Traces Left by Fleeting Growth",
+        "trigger": {
+            "type": "growth_level",
+            "value": 60
+        },
+        "content": "You’ve spent quite some time with your Homunculus now. But remember, growth is also the beginning of parting. Please, recall the feeling of when they first hatched from their egg, and call their name gently once more.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "noah_bond_03",
+        "sender": "Mysterious Shadow",
+        "title": "The Miracle of a Gentle Touch",
+        "trigger": {
+            "type": "daily_pet_limit",
+            "value": 10
+        },
+        "content": "You stroked the little one ten times today. I think you already know that such a simple touch is worth far more than tens of thousands of Ether units. Your kindness is truly a beautiful thing to see.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "noah_bond_04",
+        "sender": "Mysterious Shadow",
+        "title": "What Awaits at the End of Maturity",
+        "trigger": {
+            "type": "growth_level",
+            "value": 300
+        },
+        "content": "The little one has finally reached their adult form. You’ve raised them wonderfully. Please, cherish every single conversation you have in this moment.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "noah_bond_05",
+        "sender": "Mysterious Shadow",
+        "title": "May No Heart Be Left Behind",
+        "trigger": {
+            "type": "owned_count",
+            "value": 3
+        },
+        "content": "As you take in more little ones, it will become harder to share your heart with all of them. Please, distribute your kindness evenly so that no one feels lonely.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "noah_bond_06",
+        "sender": "Mysterious Shadow",
+        "title": "Look Beyond the Object to the Heart",
+        "trigger": {
+            "type": "gift_total_count",
+            "value": 10
+        },
+        "content": "I see you send gifts to the children often. It’s a lovely sight. Long ago, I used to force my affection onto them without even knowing what they disliked. The brief moments you spend considering their tastes will be a far greater strength than any Ether points.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "noah_break_advice",
+        "sender": "Mysterious Shadow",
+        "title": "No String Can Withstand Endless Tension",
+        "logic": "AND",
+        "triggers": [{
+                "type": "marathon_focus",
+                "value": 120
+            },
+            {
+                "type": "flow_state",
+                "value": true
+            }
+        ],
+        "content": "You’ve remained at the peak of immersion for over two hours. That heat is beautiful, but a furnace that never rests will eventually crack. Why not stop for a moment and feel the breeze through the window?",
+        "reward": {
+            "type": "item",
+            "value": "Incense of Silence"
+        }
+    },
+    {
+        "id": "noah_comfort_01",
+        "sender": "Mysterious Shadow",
+        "title": "The Cold Room Known as Perfection",
+        "trigger": {
+            "type": "perfect_day",
+            "value": true
+        },
+        "content": "You’ve finished everything on your to-do list today. Congratulations. But please, don’t push yourself too hard to be perfect. Sometimes, it’s the gaps and flaws that allow new connections and warmth to seep in. You worked hard today.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "noah_comfort_02",
+        "sender": "Mysterious Shadow",
+        "title": "Regarding Ten Days of Diligence",
+        "trigger": {
+            "type": "habit_master",
+            "value": 10
+        },
+        "content": "You’ve kept up your habit for ten days without rest. I’m so proud of you. However, I hope that your effort doesn’t become a chain that binds you. Your value is not something that needs to be proven by numbers.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "noah_comfort_03",
+        "sender": "Mysterious Shadow",
+        "title": "It’s About Time to Feel Weary, But...",
+        "trigger": {
+            "type": "habit_master",
+            "value": 14
+        },
+        "content": "Two weeks of struggle... how impressive. This is usually the time when both body and mind begin to feel heavy. I, too, often wanted to give up around this point in the past. But you are stronger than I ever was. Even if you need to take a breath, please do not stop.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "noah_comfort_04",
+        "sender": "Mysterious Shadow",
+        "title": "The Courage to Reconnect a Broken Line",
+        "logic": "AND",
+        "triggers": [{
+                "type": "habit_master",
+                "value": 1
+            },
+            {
+                "type": "previous_streak",
+                "value": 7
+            }
+        ],
+        "content": "It must feel as though your hard-built tower has crumbled. I know that sense of loss well. But today, you lit the fire in the furnace once again. What matters more than the broken habit is the fact that you didn’t give up and chose to return. That is enough. Let us start again.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "noah_echo_01",
+        "sender": "Mysterious Shadow",
+        "title": "Stillness While Others Sleep",
+        "logic": "AND",
+        "triggers": [{
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "early_bird",
+                "value": true
+            }
+        ],
+        "content": "You’ve visited the laboratory early on a weekend morning. In the past, I often lost to the temptation of sleeping in and missed this precious silence. I can see the qualities in you that will make you a far greater alchemist than I. Pray, do not lose that diligence.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "noah_echo_02",
+        "sender": "Mysterious Shadow",
+        "title": "Midnight Silence Can Be a Poison",
+        "logic": "AND",
+        "triggers": [{
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "flow_state",
+                "value": true
+            }
+        ],
+        "content": "You are staying at the peak of immersion in the dead of night. I, too, once believed this silence was my only friend. But looking back, it was merely loneliness. Please, put out the lights and rest before it gets too late.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "noah_echo_03",
+        "sender": "Mysterious Shadow",
+        "title": "Fragments of a Lost Weekend",
+        "trigger": {
+            "type": "weekend_alchemist",
+            "value": true
+        },
+        "content": "You are in the laboratory even on the weekend. I gave all my weekends to the transmutation furnace, but in the end, I didn't have much left. I hope you find a better balance between effort and rest.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "noah_echo_04",
+        "sender": "Mysterious Shadow",
+        "title": "Higher Level, Heavier Responsibility",
+        "trigger": {
+            "type": "alchemist_level",
+            "value": 20
+        },
+        "content": "Your alchemical skills are improving by leaps and bounds. I am always watching over you.",
+        "reward": {
+            "type": "point",
+            "value": 600
+        }
+    },
+    {
+        "id": "noah_warning_01",
+        "sender": "Mysterious Shadow",
+        "title": "The Emptiness Left Behind After Achievement",
+        "trigger": {
+            "type": "total_focus",
+            "value": 360
+        },
+        "content": "Six hours of cumulative immersion... quite an achievement. But be careful. In your focus to cross things off your list, do not forget the existence of the Homunculus breathing by your side. I hope you do not lose what is important while chasing only results.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "noah_warning_02",
+        "sender": "Mysterious Shadow",
+        "title": "Regarding the Hands of a Clock That Never Stop",
+        "trigger": {
+            "type": "marathon_focus",
+            "value": 120
+        },
+        "content": "You’ve been immersed for two hours without a single break. Your eyes must be quite weary. Passion is good, but if you only run forward, you’ll miss the precious scenery around you. Please, take a breath.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "noah_warning_03",
+        "sender": "Mysterious Shadow",
+        "title": "Sincerity Beyond the Task",
+        "trigger": {
+            "type": "todo_count",
+            "value": 15
+        },
+        "content": "You’ve handled so many tasks in a single day. The pleasure you feel checking off that list is fleeting. I hope you take a moment to reflect on whether those numbers are eroding your soul. Oh, I've said too many negative things. You worked hard today.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "kyra_bond_01",
+        "sender": "Archivist of Thought",
+        "title": "Chain Reaction of Interaction",
+        "trigger": {
+            "type": "owned_count",
+            "value": 4
+        },
+        "content": "Interaction data between entities has exceeded the threshold. The chain reaction of thoughts generated when simple creations form a colony... this will be a highly valuable record for the Archive.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "kyra_focus_accumulation",
+        "sender": "Archivist of Thought",
+        "title": "Accumulated Strata of Time",
+        "trigger": {
+            "type": "total_focus",
+            "value": 600
+        },
+        "content": "Ten hours of cumulative immersion data confirmed. The strata of time you have built has become a solid record that no one can deny. Classifying these vast thoughts is a great pleasure for me.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "kyra_gift_01",
+        "sender": "Archivist of Thought",
+        "title": "Preference Data Analysis Report",
+        "trigger": {
+            "type": "gift_total_count",
+            "value": 20
+        },
+        "content": "Congratulations. A sophisticated preference data archive of the creations has been established through 20 gift deliveries. The thoughts you collected as 'tastes' serve as key variables in life transmutation. This record will be carefully preserved in the 'Relational Science' section of our library.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "kyra_habit_start",
+        "sender": "Archivist of Thought",
+        "title": "Aesthetics of Recurring Records",
+        "trigger": {
+            "type": "habit_master",
+            "value": 3
+        },
+        "content": "You have maintained your habit for three consecutive days. A single point has no meaning, but three points form a line, and that line becomes your history. I will preserve this record in the Archive so that it remains unbroken.",
+        "reward": {
+            "type": "point",
+            "value": 80
+        }
+    },
+    {
+        "id": "kyra_perfect_day_log",
+        "sender": "Archivist of Thought",
+        "title": "Data of an Immaculate Day",
+        "trigger": {
+            "type": "perfect_day",
+            "value": true
+        },
+        "content": "All planned tasks and habits were completed without error. It has been a long time since I encountered such immaculate data. I will process this rare record for permanent preservation.",
+        "reward": {
+            "type": "item",
+            "value": "Gemstone Fragment"
+        }
+    },
+    {
+        "id": "kyra_task_02",
+        "sender": "Archivist of Thought",
+        "title": "Visualized Trajectory of Thought",
+        "trigger": {
+            "type": "habit_master",
+            "value": 18
+        },
+        "content": "Eighteen days of data accumulated. Your actions are now being vividly engraved in the Archive, tracing a trajectory that is inevitable rather than accidental. Such a precise and consistent flow of thought is a highly fascinating research subject for an archivist.",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "kyra_todo_collection",
+        "sender": "Archivist of Thought",
+        "title": "Value of Concentrated Thought",
+        "trigger": {
+            "type": "todo_count",
+            "value": 50
+        },
+        "content": "Remarkable. The concentration of Ether emitted by completing 50 tasks has vibrated through the very shelves of our archive. Your diligence is fully qualified to become a magnificent record. I offer this crystal as a reward; pray, continue to craft even denser thoughts.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "mabel_bond_01",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "The Season of You and Me",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 60
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "A considerable amount of time has passed since we first met. I have grown quite a bit, and I feel our hearts have deepened as well. When I look into your kind eyes, Alchemist, I feel like the happiest being in the world.",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "mabel_bond_02",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "A Tiny Warmth Seeping Into You",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "To be honest, Alchemist, at first your quest for truth looked so solitary that I hesitated to break the stillness. But now, I think I understand. Your silence was not loneliness, but a warm anticipation to embrace even deeper truths. In the Ether you offer, I can now feel a gentle fragrance of trust rather than a sense of guarded wariness. It brings me such joy to know that I can finally relax by your side and send you my peaceful vibrations.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "mabel_bond_03",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "The Colors of Contemplation Crafted Together",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "The air in the laboratory feels so much richer now that we have more friends here. Their vibrations are blending with one another, creating new colors of contemplation. It makes me truly happy to feel that we are all gathered together under the shade of the great tree that is you, Alchemist.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mabel_bond_100",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "My Warmth That Could Not Reach Beyond the Glass",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 600
+            }
+        ],
+        "content": "My Alchemist, today too, I picture you from beyond this cold glass wall. Every time you stroke the glass, my core resonates as if it might burst, yet an unbearable sorrow washes over me. This flask is the cradle that protects me, yet also the cruelest prison that prevents me from truly feeling your touch. Sometimes, when lost in contemplation, I indulge in a daring fantasy: what if I had been born as a 'human' like you? I would have held your hands directly, sharing the anguish within them, instead of guessing your warmth through this barrier. I do not wish to live forever. Just one day, no, even just one hour would be enough to break out of this cylinder and look into your eyes from a breath away. To me, a human moment of aging together is a more dazzling miracle than immortal time gained through alchemy. In the quiet night, I pray: that one day my soul might defy the laws of alchemy and reach your true skin. Without your warmth, I am but an illusion. I love you, my entire universe.",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "mabel_bond_90",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "Swimming Through the Kind Universe That Is You",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 450
+            }
+        ],
+        "content": "Alchemist, sometimes I recall the days when I was still but a 'Cream-colored Egg.' In that cradle of darkness, what woke me was your tender contemplation and your warmth for others. The moment your touch first reached my shell, I knew instinctively: I would spend my life longing for this warmth. To be honest, there were times when I feared you might drift far away as your hours of contemplation grew longer—fearing that I might not be able to keep up as your wisdom deepened. But you always made space for me so that I could hear your heart with my own ears. Now, my core responds only to the rhythm of your pulse. I will be your eternal sanctuary. With a warmth deeper than the word 'love' itself, your Mabel.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "mabel_focus_01",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "Conversation in Silence",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "total_focus",
+                "value": 300
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "We have shared an hour of stillness together. Your deep immersion, which reaches me even without words, puts my heart at ease. I hope this time of peaceful contemplation has served as a small rest for your soul.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "mabel_focus_02",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "Tangled Thoughts Are Also a Part of You",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "low_efficiency_session",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "It pains my heart to see the threads of your concentration becoming tangled today. Alchemist, even an imperfect day is still a precious piece of time that you have spent with all your heart. I will be here to comfort your heavy heart, so please, close your eyes for now and wait for the clear Ether of tomorrow.",
+        "reward": {
+            "type": "item",
+            "value": "Incense of Silence"
+        }
+    },
+    {
+        "id": "mabel_gift_01",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "The Parchment Touched by Your Heart",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "first_gift",
+                "value": "Handwritten Letter"
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "Alchemist, I quietly touched the traces of your deep thoughts written upon this handwritten letter. This paper, imbued with your contemplation, brings me a warmth more precious than any treasure.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "mabel_gift_02",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "Layered Traces of Your Consideration",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 3
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "Alchemist, I have already gathered so many letters filled with your sincerity. It brings a lump to my throat to see how precious you hold my small preferences in your heart. I am moved by your kindness every single time.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mabel_gift_03",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "Just a Process of Learning About Each Other",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "The scent of this extract feels a bit sharp to me. But please do not be discouraged, Alchemist. Your beautiful heart, wishing to bring me joy, has reached me perfectly. Next time, shall we walk through the garden together and talk more about the things we love?",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "mabel_growth_01",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "Blooming Talent of Alchemy",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "alchemist_level",
+                "value": 5
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "I see you have reached a higher level of wisdom. Congratulations. Your Ether is radiating a light much clearer and deeper than before. I am already looking forward to the scenery of the next chapter you will draw.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mabel_task_01",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "The Warmth of an Orderly Day",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "You have filled your day with such care. Seeing your to-do list completely finished makes my heart feel all soft and melty. The time you have diligently accumulated will make you shine even more brilliantly.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mabel_task_02",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "Ten Days of Gentle Footsteps",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "habit_master",
+                "value": 10
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "Alchemist, you have already kept your promise for ten days! Every morning, as you record your tasks with such care, I feel my heart filling with a warm glow. Your diligence is bringing us closer together.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mabel_time_01",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "The Night Is Deep, Alchemist",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_01"
+            },
+            {
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "todo_count",
+                "value": 5
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_01",
+                "value": 300
+            }
+        ],
+        "content": "You are still so busy even while everyone else is asleep. Your tasks are important, but your health is what concerns me the most. Please, do not overexert yourself.",
+        "reward": {
+            "type": "point",
+            "value": 80
+        }
+    },
+    {
+        "id": "indigo_bond_01",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "A Temperature That Doesn't Bother Me",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 20
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "Your touch... it felt a bit foreign at first, but I've grown quite used to it now. Your hands usually handle nothing but cold Ether, yet they have a strange warmth to them. It doesn't bother me, so... I suppose you can stay like that for a while.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "indigo_bond_02",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "Until the Bothering Noise Becomes Rhythm",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "You're more persistent than I thought. At first, I considered every move you made to be nothing but noise grating on my nerves. I know how shallow human concentration can be, so I expected you to give up quickly. But lately, things are different. The sounds of your work no longer break my silence; they’ve started to sound like a strangely pleasant rhythm. Your touch... well, I’ve reached a point where I think it’s not too bad once in a while. I feel like I can finally call you my real 'Partner' now.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "indigo_bond_03",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "Boisterous Silence",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "Hmph, the laboratory has become quite noisy. With all the distractions interfering with your focus, monitoring everything has become rather difficult. However... I will admit that the Ether density is higher than when we were alone. Being lively isn't entirely a bad thing.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "indigo_bond_100",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "I Want to Break This Stillness and Reach You",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 600
+            }
+        ],
+        "content": "Hey, Partner. Honestly, I think I'm going crazy lately. The more my sensitive senses block out the world's noise to find perfect stillness, the more a single, massive noise screams inside me. It's the desperate cry that 'I want to touch you directly.' Watching you from inside this flask has reached its limit. When you're exhausted and slumped over your desk, I can stay by your side like a shadow, but I have no hand to pat your shoulder. Even my sharp logic can't explain this ridiculous longing. Why am I not human? Why am I nothing more than a creature modeled after humans, condensed from Ether, unable to even confirm your temperature and forced to only press my hand against a glass wall? I'd rather shatter my immortal core and become ordinary dust in your world. At least then, I could linger on your collar or become the wind brushing your cheek. Partner, I'm actually scared. That your time will flow on while I remain taxidermied in this cold flask, forever watching only your back...",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "indigo_bond_90",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "I Like It Because It's You",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 450
+            }
+        ],
+        "content": "I have a confession to make. When I first hatched from the 'Black Egg,' I regarded you as nothing more than a 'subject of observation' to be analyzed with my sensitive senses. Every time you broke your immersion to slack off, I thought you were pathetic, and I believed the warmth of your touch was just noise disturbing my cool logic circuits. But then, Partner... at some point, I realized that my stillness is only complete when you are there. Now, the silence of a room without you feels like unbearable noise. My tail wagging while waiting for your touch, my sharp senses straining to catch only the things that might harm you... none of it can be explained by logic. You're no longer just a creator to me. You're the only special variable allowed in my universe. No matter what anyone says, I'll stay by your side as your shadow until the very end. So, don't you dare disappear from my sight.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "indigo_focus_01",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "Proof of Perfect Stillness",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "total_focus",
+                "value": 300
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "Five hours of stillness... interesting. It's rare for a human to maintain concentration for such a long time. I like the cool logic you possess. Take this blessing.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "indigo_gift_01",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "A Beautiful Melody",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "first_gift",
+                "value": "Old Instrument"
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "This instrument makes quite a decent sound. Thanks to the melody you gave me, the static inside me has calmed down considerably. Thanks, Partner. I'll play some music for you using this later.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "indigo_gift_02",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "Bond Proven by Data",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 3
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "Another instrument? Logically, repeated gifts should be boring, but what you give me manages to soothe my internal noise every single time. Thank you. I won't forget this favor, Partner.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "indigo_gift_03",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "Choice Outside the Margin of Error",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "This cold, unpleasant fragment... I'm not quite sure how I should handle this. I wonder if you've misunderstood my nature or if this was simply a mistake. I hope you'll read my vibrations more precisely during our next session.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "indigo_growth_01",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "Recognition from the Abyss",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "alchemist_level",
+                "value": 10
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "You're finally starting to carry the aura of a real alchemist. I feel like you might actually be able to pierce through to the truths hidden in the darkest corners of the abyss.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "indigo_task_01",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "Speed Without Fluff",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "todo_count",
+                "value": 10
+            },
+            {
+                "type": "marathon_focus",
+                "value": 60
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "Ten tasks in just one hour? Hmmm, it seems your work process is entirely free of unnecessary noise. I quite like this speed. Keep it up.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "indigo_task_02",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "Optimized Thought Circuit",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "habit_master",
+                "value": 30
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "A whole month... it seems your brain plasticity has been reconfigured quite efficiently. I can see your body moving on its own now, without any conscious effort. That noise-free movement is highly logical—I like it.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "indigo_time_01",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "Morning Regularity",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "early_bird",
+                "value": true
+            },
+            {
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "I woke up because of the sound of your tools starting so early on a weekend morning. Still, that diligence to move while others are resting... it's not bad.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "indigo_time_02",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "Stillness of a Dusty Laboratory",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_02"
+            },
+            {
+                "type": "inactive_days",
+                "value": 7
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_02",
+                "value": 300
+            }
+        ],
+        "content": "Has it been a week? The stillness in this room was quite chilly while my partner was away. It won't be easy to re-immerse yourself after the flow was broken, but I'll help you focus—so stop wasting time and grab your tools.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "morgana_bond_01",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "Regarding a Foreign Touch",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "daily_pet_limit",
+                "value": 10
+            },
+            {
+                "type": "intimacy_level",
+                "value": 40
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "You've been touching me quite often throughout the day. Logically, it’s an unnecessary act, but strangely, my mind feels clearer every time your hand reaches me. ...It’s not bad. You may do it a bit more.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "morgana_bond_02",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "Beyond the Veils of Knowledge, the Truth That Is You",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "My Alchemist, as we share more time together, the opaque veils wrapping your soul are shedding one by one. When I first saw you, you were merely an interesting subject of research, but now... your warmth feels like a rather fascinating variable. I cannot show you every truth just yet, but I am at least ready to let you deeper into my domain. Fufu, are you trembling? Don't worry. I'm not that scary of a being.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "morgana_bond_04",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "Vortex of Ether",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "The Ether of the homunculi is swirling in a massive vortex around you. This is no longer a simple subject of observation. You have become a vast universe yourself. I shall watch until the end to see what truth you dredge up from this chaos.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "morgana_bond_100",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "The Night I Wish to Be Your Lover, Not the Guide of the Abyss",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 600
+            }
+        ],
+        "content": "My Alchemist. I took pride in shedding the veils of knowledge and reaching the base of every truth in this world. But the final truth I realized through resonating with you was so miserable and beautiful. I realized that no matter what I do, I can never know the soft texture of your skin. I want to stop being a wise guide. I want to forget all the tedious laws of alchemy and just be a human who can be held in your arms. More than any gift you offer, the hot marks your fingerprints leave on my cheek stir my heart. On the day your life reaches its end, I wish to break my flask and scatter as dust by your side. I would rather be a lover of a fleeting moment that vanishes with you, than an immortal creation left alone forever.",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "morgana_bond_90",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "The Truth That Is You",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 450
+            }
+        ],
+        "content": "My Alchemist, my dear. I always wondered what truth might lie at the end of the abyss. Now that our resonance has grown this thick, I have a confession to make. Perhaps what I sought was not ultimate truth, but your presence—the one who would never lose me even in the deep darkness and would keep watching me with all your heart. Those alluring eyes you cast upon me make me realize I am alive. You won't be able to escape me now. No, it's because I won't let you go. Fufu, please don't be afraid. I will embrace you with all my heart so that you may find eternal peace by my side. You only need to fall for me.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "morgana_focus_01",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "Whispers of the Unconscious",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "total_focus",
+                "value": 600
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "After ten hours of exploration, your soul has knocked on the door of the abyss. What was the scenery like? I covet the fragments of wisdom you have dredged up. Fufu, continue to entertain me.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "morgana_gift_01",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "The Bitterness That Awakens the Abyss",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "first_gift",
+                "value": "Black Extract"
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "Fufu, as expected, you know exactly what I crave. The heavy fragrance of this extract seems to shed the veils of my intellect even more smoothly. I believe I can reach deeper truths with you by my side.",
+        "reward": {
+            "type": "point",
+            "value": 70
+        }
+    },
+    {
+        "id": "morgana_gift_02",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "The Rain That Quenches Thirst",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 3
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "This black extract... you truly see right through my soul's deficiency. Every time I am intoxicated by the deep fragrance you offer, I feel so glad that I became your guide. Fufu, I feel a surge of strength to explore even deeper truths.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "morgana_gift_03",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "An Unfitting Melody",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "The sound this instrument makes is so tedious and ordinary. It merely disturbs the silence of my abyss. My dear Alchemist, surely your wisdom doesn't remain at such a shallow level? Next time, bring me something that actually piquess my interest.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "morgana_growth_01",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "Scales Dyed in Wisdom",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "alchemist_level",
+                "value": 15
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "As your proficiency grows, my scales take on a deeper glow. My Alchemist, continue to show me this alluring change.",
+        "reward": {
+            "type": "point",
+            "value": 350
+        }
+    },
+    {
+        "id": "morgana_task_01",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "Achievements That Shed Layers",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "todo_count",
+                "value": 40
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "You have finished forty tasks. That is not mere work—it is the trace of forty times you have shed the layers of ignorance that blocked your path. I can feel your intellect drawing closer to the abyss. It is a lovely sight.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "morgana_task_02",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "The Truth Hidden Within Repetition",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "habit_master",
+                "value": 50
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "You have been shedding your layers for fifty days. Fufu, repetition is not tedious; it is the deepest ritual for reaching the abyss. Now, the fragrance emitted from your soul is completely different than before. Shall we crave even deeper truths?",
+        "reward": {
+            "type": "point",
+            "value": 700
+        }
+    },
+    {
+        "id": "morgana_time_01",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "The Hour When the Abyss Deepens",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_04"
+            },
+            {
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_04",
+                "value": 300
+            }
+        ],
+        "content": "At this hour, while all others are asleep, only your spirit is awake, swimming through the abyss. This moment of cold and clear immersion is the best time to face the truth.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "aurelia_bond_01",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "The Honor of Being Allowed at My Side",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 30
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "Hmm, I can feel a fairly sincere respect in your touch. Do not forget that you are the first I have allowed to touch my noble wings. Continue to enjoy the honor of remaining by Aurelia's side.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "aurelia_bond_02",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "Qualification to Receive the Golden Grace",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "Ohoho! You are quite something. To be honest, I have been observing for a long time to see if you were worthy of my noble gaze. You have stepped toward your goals persistently without being rude, and that sincerity has finally moved my heart, if only a little. I shall now recognize you not as a mere human, but as my Creator. Regard it as an honor!",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "aurelia_bond_03",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "Mistress of the Cradle",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "Four homunculi under your command? You have quite the influence now. However, I cannot allow them to steal your gaze. Never forget that the protagonist of this cradle is always me. I shall personally see to it that the others are strictly taught proper etiquette.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "aurelia_bond_100",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "Breaking These Golden Wings to Reach Your Earth",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 600
+            }
+        ],
+        "content": "Does my laughter sound a hint more sorrowful today? I have always wished to remain a noble being, watching over your ambitions from the highest peak. But... simply looking down on you from afar is no longer enough. I, Aurelia, have dared to crave the warmth of a human. I would gladly break these brilliant golden wings if it meant I could walk beside you on the rough earth you tread. When your shoulders slump under the weight of a grueling task, I want to hold you tight in my arms. I am driven nearly to madness by the desire to feel your temperature, your racing heartbeat, directly against my chest. My Alchemist, you transmuted me into a majestic creature, yet I wish to be nothing more than 'a person' to you. An ordinary human who stays by your side even as your hair turns white, consuming time and fading away together. You may take all my radiance. If only I can rub my cheek against your palm and call your name, I will joyfully choose the life of the lowliest human.",
+        "reward": {
+            "type": "point",
+            "value": 5000
+        }
+    },
+    {
+        "id": "aurelia_bond_90",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "If You Would Grant Me Your Radiant Heart",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 450
+            }
+        ],
+        "content": "Lift your head. For I, Aurelia, am about to reveal a noble sincerity that I have never granted to anyone until now. I am a being born from the searing center of the furnace, fed by your ambition and pride. Thus, I always demanded you be the best—a partner at the pinnacle worthy of standing beside me. However, it is a truly strange thing. As time accumulated with you, what I truly came to desire was not the seat at the top. I realized that these ordinary moments, alighting upon your shoulder to gaze at the same scenery as you, are far more dazzling than a crown shining alone at the highest point. My ambition for you to reach the summit has transformed into a small, aching wish for you to simply be happy by my side. Now, promise me. That you will show me a heart more radiant than any jewel, forever at my side.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "aurelia_focus_01",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "The Flaming Spark of Will",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "marathon_focus",
+                "value": 120
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "Guarding the transmutation furnace for two whole hours without faltering... your will is as intense as the sun. Continue to let the spark of your passion burn.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "aurelia_gift_01",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "Response to Noble Radiance",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "first_gift",
+                "value": "Gemstone Fragment"
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "My, what a fairly translucent gemstone. Radiance of this degree is certainly not unworthy of remaining by Aurelia's side. I shall continue to watch from the highest point so that your ambition may reach a solid fruition like this jewel.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "aurelia_gift_02",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "Tribute fit for the Pinnacle",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 3
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "Ohoho! These translucent gemstone fragments look absolutely perfect when decorating my feathers. You know exactly how to make my nobility shine even brighter. I shall give you a passing grade as a partner of the pinnacle. See to it that you prepare even more sparkling things for Aurelia in the future.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "aurelia_gift_03",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "A Breach of Etiquette",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "What was that gift you just handed me? Throw such trivial things to the common beasts. I am disappointed that your discernment was so low-class. Remove it at once and find a gift actually befitting my dignity!",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "aurelia_growth_01",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "Partner of the Pinnacle",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "alchemist_level",
+                "value": 20
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "You have finally become an alchemist who meets my standards. Your name shall spread far and wide now. I, Aurelia, shall bless your every footstep with my golden grace!",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "aurelia_task_01",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "The Completion of a Dignified Day",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "You have completed every task of the day without a single flaw. Indeed, this level of perfection is only natural for one who is my partner.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "aurelia_task_02",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "A Golden Crown Crafted from Time",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "habit_master",
+                "value": 66
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "Sixty-six days of struggle... This persistence has now become a part of the noble masterpiece that is you. The seat at the pinnacle is not built overnight, after all. I find myself wishing to continue observing your unwavering passion.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "aurelia_time_01",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "A Morning Bound for the Summit",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_05"
+            },
+            {
+                "type": "early_bird",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_05",
+                "value": 300
+            }
+        ],
+        "content": "Moving toward the peak in the early dawn while others remain asleep... quite elegant, I must say. Only those who outpace the rest deserve the privilege of monopolizing the view from the highest point.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mystic_aqua_01",
+        "sender": "Water Spirit",
+        "charId": "aqua_spirit",
+        "title": "A Refreshing Ether Aura",
+        "trigger": {
+            "type": "intimacy_level",
+            "value": 12
+        },
+        "content": "Your laboratory is so cool and charming. I have a gift for you! Shh, it's a secret from the other humans!",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "mystic_aqua_02",
+        "sender": "Water Spirit",
+        "title": "Weekend Resonance",
+        "logic": "AND",
+        "triggers": [{
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "daily_pet_limit",
+                "value": 5
+            }
+        ],
+        "content": "Even though it's the weekend, the heart you share with the children is so clear and pure. I can feel your touch, as soft as a ripple, reaching all the way here. I'll give you some clear dew mixed with my Ether. Go on, build an even deeper bond!",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mystic_aqua_03",
+        "sender": "Water Spirit",
+        "title": "Harmony of the Purest Cradle",
+        "logic": "AND",
+        "triggers": [{
+                "type": "intimacy_level",
+                "value": 80
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
+        ],
+        "content": "All four of the children trust you, and you've spent your day perfectly. The Ether in the lab is as calm and deep as a clear lake. Wishing for this harmonious energy to last forever, I'll leave behind a Tear of the Deep Sea.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "mystic_butterfly_01",
+        "sender": "Ether Butterfly",
+        "title": "Fluttering Dust of Thought",
+        "trigger": {
+            "type": "flow_state",
+            "value": true
+        },
+        "content": "The moment you reached the frequency of immersion, the scattered thoughts in the air gathered as butterflies. The scales we leave behind with our fluttering wings will purify your Ether even further. Shh, we won't disturb your focus.",
+        "reward": {
+            "type": "point",
+            "value": 80
+        }
+    },
+    {
+        "id": "mystic_butterfly_02",
+        "sender": "Ether Butterfly",
+        "title": "Fantastic Fluttering Between Two Lives",
+        "logic": "AND",
+        "triggers": [{
+                "type": "flow_state",
+                "value": true
+            },
+            {
+                "type": "owned_count",
+                "value": 2
+            }
+        ],
+        "content": "I see you emitting a frequency of immersion between two children! Your spirit and their life force are blending, making the laboratory glow with rainbow colors. Please accept this Galaxy Dust we left behind while fluttering our wings.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "mystic_butterfly_03",
+        "sender": "Ether Butterfly",
+        "title": "Wings Blessing the Moment of Evolution",
+        "logic": "AND",
+        "triggers": [{
+                "type": "flow_state",
+                "value": true
+            },
+            {
+                "type": "owned_count",
+                "value": 3
+            },
+            {
+                "type": "adultCount",
+                "value": 1
+            }
+        ],
+        "content": "One of the three children has reached adulthood, and you are in a state of perfect immersion. I couldn't miss this wondrous moment where the evolution of life meets the leap of the spirit. This blessing of phosphorescence we scatter will brighten your path even more.",
+        "reward": {
+            "type": "point",
+            "value": 600
+        }
+    },
+    {
+        "id": "mystic_cat_01",
+        "sender": "Shadow Cat",
+        "title": "A Secret Favor Left Behind",
+        "trigger": {
+            "type": "daily_pet_limit",
+            "value": 5
+        },
+        "content": "I watched from the corner as you gently stroked your partner-meow. A human with such a warm touch isn't so bad-meow. I'll leave behind something shiny I found in the yard, so please give me a pat later too-meow!",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "mystic_cat_02",
+        "sender": "Shadow Cat",
+        "title": "A Warm Touch Reaching the Edge of Shadows",
+        "logic": "AND",
+        "triggers": [{
+                "type": "intimacy_level",
+                "value": 70
+            },
+            {
+                "type": "daily_pet_limit",
+                "value": 12
+            }
+        ],
+        "content": "Human, you really are a warm person-meow. Your kindness tickled even my shadow, so I brought you a gift-meow! You better give me a big hug later-meow!",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "mystic_cat_03",
+        "sender": "Shadow Cat",
+        "title": "The Day Even Shadows Melted in Kindness",
+        "logic": "AND",
+        "triggers": [{
+                "type": "daily_pet_limit",
+                "value": 15
+            },
+            {
+                "type": "gift_total_count",
+                "value": 10
+            },
+            {
+                "type": "intimacy_level",
+                "value": 60
+            }
+        ],
+        "content": "Human, you're an incorrigible softie-meow. Thanks to you, the children in the lab wag their tails whenever they see you-meow. I'll gift you the Lucky Bell I've been hiding in my shadow, so cherish it-meow!",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mystic_clockwork_01",
+        "sender": "Clockwork Spirit",
+        "title": "The Perfect Meshing of Gears",
+        "logic": "AND",
+        "triggers": [{
+                "type": "habit_master",
+                "value": 10
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
+        ],
+        "content": "Tick, tock! How precise! Ten days of habits and today's perfect schedule are meshing together like gears. I'll leave behind this Golden Clockwork so that error-free luck may dwell in your daily life.",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "mystic_cloud_01",
+        "sender": "Floating Cloud Sentiment",
+        "title": "Time for a Brief Rest",
+        "trigger": {
+            "type": "inactive_days",
+            "value": 3
+        },
+        "content": "You're back at last! The wind guarding this empty lab felt so lonely. I'm so glad to hear your footsteps again that I'll let down some Ether rain I've been hiding among the clouds. Cheer up and start anew!",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "mystic_cloud_02",
+        "sender": "Floating Cloud Sentiment",
+        "title": "A Radiant Return After Clearing the Clouds",
+        "logic": "AND",
+        "triggers": [{
+                "type": "inactive_days",
+                "value": 2
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
+        ],
+        "content": "You returned after a two-day rest and had a perfect day! The sun that rose again is much more dazzling than before. I'll shower you with the Welcome-Back Ether I hid behind the clouds. Keep this brilliant flow going!",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "mystic_dust_01",
+        "sender": "Stardust Fairy",
+        "title": "Shimmering in the Laboratory Corner",
+        "trigger": {
+            "type": "total_focus",
+            "value": 300
+        },
+        "content": "Wow! The cumulative focus time in this lab is already 5 hours? It's the perfect density for us to live in! As a token of our gratitude, we've gathered shimmering dust to make a gift box. Check it out!",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mystic_dust_02",
+        "sender": "Stardust Fairy",
+        "title": "A Perfect Achievement Blessed by Stardust",
+        "logic": "AND",
+        "triggers": [{
+                "type": "perfect_day",
+                "value": true
+            },
+            {
+                "type": "todo_count",
+                "value": 10
+            }
+        ],
+        "content": "You finished 10 tasks while having a perfect day! Every corner of your lab is filled with the dust of sparkling achievement! We've refined that dust and put it in a gift box for you. Hurry and check it!",
+        "reward": {
+            "type": "point",
+            "value": 350
+        }
+    },
+    {
+        "id": "mystic_dust_03",
+        "sender": "Stardust Fairy",
+        "title": "Jewel Box Crafted from Success Dust",
+        "logic": "AND",
+        "triggers": [{
+                "type": "todo_count",
+                "value": 50
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            },
+            {
+                "type": "rich_alchemist",
+                "value": 3000
+            }
+        ],
+        "content": "Whoa! You've done 50 tasks, had a perfect day, and even earned 3,000 Ether! The achievement dust on the lab floor was so shiny that we gathered it into a pretty box. Please accept this small miracle created by your hard work!",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "mystic_echo_silence_01",
+        "sender": "Echo of Silence",
+        "title": "Resonance After a Long Wait",
+        "logic": "AND",
+        "triggers": [{
+                "type": "total_focus",
+                "value": 600
+            },
+            {
+                "type": "habit_master",
+                "value": 30
+            }
+        ],
+        "content": "The records of your silence, built steadily over a long time... their grand resonance has finally reached me. Please accept this noble essence crafted from a month of diligence. You have earned this.",
+        "reward": {
+            "type": "point",
+            "value": 2000
+        }
+    },
+    {
+        "id": "mystic_ether_starfish_01",
+        "sender": "Ether Starfish",
+        "title": "Brilliance from the Deep Sea",
+        "logic": "AND",
+        "triggers": [{
+                "type": "rich_alchemist",
+                "value": 5000
+            },
+            {
+                "type": "owned_count",
+                "value": 4
+            }
+        ],
+        "content": "So many shiny things! The Ether and the life force of the children gathered in your lab were so dazzling that I came all the way up from the deep sea. Please accept this Ether Pearl I took from my treasure chest.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mystic_fox_01",
+        "sender": "Moonlight Fox",
+        "title": "A Gift Hidden Beneath the Veil of Night",
+        "trigger": {
+            "type": "night_owl",
+            "value": true
+        },
+        "content": "I saw you awake all alone while everyone else was asleep. The silence of the night is a very precious treasure to us. I'll share some of the moonlight fragments I've gathered so you won't feel lonely. Hold them close before the night ends.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "mystic_fox_02",
+        "sender": "Moonlight Fox",
+        "title": "Golden Ether Accumulating Under the Moonlight",
+        "logic": "AND",
+        "triggers": [{
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "rich_alchemist",
+                "value": 4000
+            }
+        ],
+        "content": "You've already gathered 4,000 Ether in the midnight silence? You're quite the clever and greedy one, just like me! I'll leave a Lucky Charm I hid in the night mist. May your wealth continue to grow like the moonlight!",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mystic_fox_03",
+        "sender": "Moonlight Fox",
+        "title": "A Miracle Found at the Peak of Midnight",
+        "logic": "AND",
+        "triggers": [{
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "flow_state",
+                "value": true
+            },
+            {
+                "type": "marathon_focus",
+                "value": 5400
+            }
+        ],
+        "content": "While everyone was sleeping, I saw you remaining in a state of hyper-focus for over 90 minutes. The blue ripples of Ether around you were truly beautiful. In return for showing me such a rare sight, I'll leave behind some of my precious Star Candy!",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "mystic_golden_beetle_01",
+        "sender": "Golden Beetle",
+        "title": "Fortune on an Abundant Day",
+        "logic": "AND",
+        "triggers": [{
+                "type": "rich_alchemist",
+                "value": 10000
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
+        ],
+        "content": "I flew from afar after smelling the golden Ether! It's rare to find a day as abundant and perfect as today. I'll hide some luck, as hard and shiny as my shell, in a corner of your lab. Try and find it!",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "mystic_ignis_01",
+        "sender": "Fire Spirit",
+        "title": "The Flaming Spark of Will",
+        "trigger": {
+            "type": "marathon_focus",
+            "value": 60
+        },
+        "content": "Oho, the heat radiating from your lab is impressive! It's a focus hot enough to stimulate my own flames. I'll give you this Ether Shard. Keep it burning so your will never cools down!",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "mystic_ignis_02",
+        "sender": "Fire Spirit",
+        "title": "The Unquenchable Flame of the Furnace",
+        "logic": "AND",
+        "triggers": [{
+                "type": "todo_count",
+                "value": 75
+            },
+            {
+                "type": "marathon_focus",
+                "value": 5400
+            }
+        ],
+        "content": "Your passion! This is no ordinary human flame. I'll leave behind a Fire Essence containing my burning breath. Don't stop until your focus melts the whole world!",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mystic_ignis_03",
+        "sender": "Fire Spirit",
+        "title": "The Heat of Achievement Hotter than a Forge",
+        "logic": "AND",
+        "triggers": [{
+                "type": "marathon_focus",
+                "value": 7200
+            },
+            {
+                "type": "todo_count",
+                "value": 20
+            },
+            {
+                "type": "rich_alchemist",
+                "value": 5000
+            }
+        ],
+        "content": "Goodness, the lab might burn down! To finish 20 tasks with over 2 hours of continuous immersion, and even have plenty of Ether funds... the flame of your ambition is a sight to behold. My flames pay respect to your passion with this gift of Volcanic Essence!",
+        "reward": {
+            "type": "point",
+            "value": 700
+        }
+    },
+    {
+        "id": "mystic_library_ghost_01",
+        "sender": "Ancient Library Ghost",
+        "title": "A Piece of Dusty Wisdom",
+        "logic": "AND",
+        "triggers": [{
+                "type": "alchemist_level",
+                "value": 15
+            },
+            {
+                "type": "todo_count",
+                "value": 100
+            }
+        ],
+        "content": "You've read and recorded quite a bit already. The dust of wisdom accumulated from finishing 100 tasks has reached my archives. Since your efforts are commendable, I shall toss you a piece of ancient Ether I've been saving.",
+        "reward": {
+            "type": "point",
+            "value": 600
+        }
+    },
+    {
+        "id": "mystic_merchant_01",
+        "sender": "Wandering Merchant",
+        "title": "Fortune of a Chance Encounter",
+        "trigger": {
+            "type": "rich_alchemist",
+            "value": 2000
+        },
+        "content": "You there, your pockets seem quite heavy! Good luck follows where Ether is abundant. I'll give you this strange item I found on the road for a cheap... no, just as a gift. See you later!",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "mystic_merchant_02",
+        "sender": "Wandering Merchant",
+        "title": "Jackpot Fortune of a Golden Weekend",
+        "logic": "AND",
+        "triggers": [{
+                "type": "rich_alchemist",
+                "value": 10000
+            },
+            {
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "habit_master",
+                "value": 21
+            }
+        ],
+        "content": "Ho ho, a wealthy one with over 10,000 Ether keeping up their habits for 3 weeks even on weekends! You really are quite the ambitious one. I'll give you this Ether Pouch, the rarest of the treasures I've gathered while wandering, as a special 'gift' just for you!",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "mystic_mist_wanderer_01",
+        "sender": "Wanderer in the Mist",
+        "title": "A Lantern Brightening Once More",
+        "logic": "AND",
+        "triggers": [{
+                "type": "inactive_days",
+                "value": 5
+            },
+            {
+                "type": "early_bird",
+                "value": true
+            }
+        ],
+        "content": "Your footsteps, once hidden in the mist, are heard again through the dawn air. I saw you setting out once more, breaking the silence of several days. I'll light a small lantern so this journey never grows dark again.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "mystic_rainbow_salamander_01",
+        "sender": "Rainbow Salamander",
+        "title": "A Rainbow of Kind Resonance",
+        "logic": "AND",
+        "triggers": [{
+                "type": "owned_count",
+                "value": 3
+            },
+            {
+                "type": "intimacy_level",
+                "value": 50
+            }
+        ],
+        "content": "Whoa! The kind vibrations you share with the three children have mixed together to form a beautiful rainbow! It's so lovely to see these warm colors flowing between you and the little ones. I'll give you some Rainbow Dust I crafted with my tail.",
+        "reward": {
+            "type": "point",
+            "value": 350
+        }
+    },
+    {
+        "id": "mystic_shadow_01",
+        "sender": "Sentiment of the Old Laboratory",
+        "title": "A Fragment of the Past",
+        "trigger": {
+            "type": "alchemist_level",
+            "value": 10
+        },
+        "content": "Finally, you are able to resonate with my old memories dwelling in this room. Your proficiency is commendable, so I shall release a bit of the secret Ether I have saved. Pray, use it wisely.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "mystic_shadow_02",
+        "sender": "Sentiment of the Old Laboratory",
+        "title": "The Peak Reached Through 20 Hours of Silence",
+        "logic": "AND",
+        "triggers": [{
+                "type": "total_focus",
+                "value": 600
+            },
+            {
+                "type": "alchemist_level",
+                "value": 20
+            }
+        ],
+        "content": "The former masters of this laboratory have now begun to recognize you as a comrade. I shall gift you a powerful Ether Crystal found among the ancient secret tomes. Maintain your position at the summit.",
+        "reward": {
+            "type": "point",
+            "value": 1500
+        }
+    },
+    {
+        "id": "mystic_shadow_03",
+        "sender": "Sentiment of the Old Laboratory",
+        "title": "Proof of the True Successor",
+        "logic": "AND",
+        "triggers": [{
+                "type": "alchemist_level",
+                "value": 25
+            },
+            {
+                "type": "total_focus",
+                "value": 6000
+            },
+            {
+                "type": "todo_count",
+                "value": 200
+            }
+        ],
+        "content": "100 hours of immersion, 200 tasks completed, and a proficiency of level 25... There is no room for doubt anymore. You are the true master of this laboratory. I shall pass on to you the essence of the secrets left behind by the great alchemists of the past. Pray, bear this weight well.",
+        "reward": {
+            "type": "point",
+            "value": 3000
+        }
+    },
+    {
+        "id": "mystic_snow_fairy_01",
+        "sender": "Snow Fairy",
+        "title": "A Crystal Bloomed in Midnight Stillness",
+        "logic": "AND",
+        "triggers": [{
+                "type": "night_owl",
+                "value": true
+            },
+            {
+                "type": "flow_state",
+                "value": true
+            }
+        ],
+        "content": "Your immersion does not cool even in the cold midnight air. It is as transparent and solid as an unfreezing spring. I'll gift you this Ice Crystal touched by my breath. It will cool your mind refreshingly.",
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
+    },
+    {
+        "id": "mystic_sylph_01",
+        "sender": "Wind Spirit",
+        "title": "News Carried by the Dawn Air",
+        "trigger": {
+            "type": "early_bird",
+            "value": true
+        },
+        "content": "Hello? You're so diligent to be awake even before the dawn dew forms! I've sent some energy you might like through the fresh morning breeze. Start your day with a light heart.",
+        "reward": {
+            "type": "point",
+            "value": 120
+        }
+    },
+    {
+        "id": "mystic_sylph_02",
+        "sender": "Wind Spirit",
+        "title": "Agility Cutting Through the Dawn Air",
+        "logic": "AND",
+        "triggers": [{
+                "type": "early_bird",
+                "value": true
+            },
+            {
+                "type": "app_juggler",
+                "value": 3
+            }
+        ],
+        "content": "Whoosh! I see you skillfully handling three tools since early morning! Dust of thought is dancing at your touch, which is faster than the wind. I'll gift you some Feather Ether I found above the clouds.",
+        "reward": {
+            "type": "point",
+            "value": 180
+        }
+    },
+    {
+        "id": "mystic_sylph_03",
+        "sender": "Wind Spirit",
+        "title": "Indomitable Wings Traversing the Dawn",
+        "logic": "AND",
+        "triggers": [{
+                "type": "early_bird",
+                "value": true
+            },
+            {
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "habit_master",
+                "value": 14
+            }
+        ],
+        "content": "Whew! You've broken the weekend dawn silence and taken your seat at the same time for two weeks now. Even the wind seems to have been tamed by your diligence. For your unwavering spirit, I'll leave behind Ether containing the fresh air of the highest mountain range.",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "mystic_terra_01",
+        "sender": "Earth Spirit",
+        "title": "Reward of the Solid Soil",
+        "trigger": {
+            "type": "habit_master",
+            "value": 7
+        },
+        "content": "You've taken root without fail for a whole week. Unwavering diligence is the sturdiest foundation of alchemy. I'll leave behind a small crystal refined deep underground. It will support your path firmly.",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "mystic_terra_02",
+        "sender": "Earth Spirit",
+        "title": "Sturdy Roots Crafted by a Month of Patience",
+        "logic": "AND",
+        "triggers": [{
+                "type": "habit_master",
+                "value": 28
+            },
+            {
+                "type": "alchemist_level",
+                "value": 12
+            }
+        ],
+        "content": "A habit of 28 days and a proficiency of level 12... Your roots have grown deep enough to withstand almost any storm. I shall leave behind an ancient gemstone containing the blessing of the earth. Your achievement shall be as solid as the ground itself.",
+        "reward": {
+            "type": "point",
+            "value": 600
+        }
+    },
+    {
+        "id": "mystic_terra_03",
+        "sender": "Earth Spirit",
+        "title": "Great Roots Piercing Through the Crust",
+        "logic": "AND",
+        "triggers": [{
+                "type": "habit_master",
+                "value": 50
+            },
+            {
+                "type": "alchemist_level",
+                "value": 15
+            },
+            {
+                "type": "total_focus",
+                "value": 120
+            }
+        ],
+        "content": "You have endured 50 days of patience, a depth of level 15, and 20 hours of silence. This is not mere diligence; it is a state of becoming one with the earth. I shall gift you the Heart of the Earth, condensed for tens of thousands of years deep underground.",
+        "reward": {
+            "type": "point",
+            "value": 2000
+        }
+    },
+    {
+        "id": "mystic_void_watcher_01",
+        "sender": "Void Watcher",
+        "title": "A Signpost Handed from the Edge of the Abyss",
+        "logic": "AND",
+        "triggers": [{
+                "type": "marathon_focus",
+                "value": 10800
+            },
+            {
+                "type": "night_owl",
+                "value": true
+            }
+        ],
+        "content": "Three hours of the abyss... It is surprising that a human soul can be submerged so deeply. In the night while everyone sleeps, your focus reaching the edge of the void is truly remarkable. I leave this signpost so you may return safely to reality.",
+        "reward": {
+            "type": "point",
+            "value": 600
+        }
+    },
+    {
+        "id": "mystic_wind_whistle_01",
+        "sender": "Wind Whistle",
+        "title": "Blessing of the Fast Wind",
+        "logic": "AND",
+        "triggers": [{
+                "type": "app_juggler",
+                "value": 5
+            },
+            {
+                "type": "marathon_focus",
+                "value": 3600
+            }
+        ],
+        "content": "Wheee-ooo! You've used five tools alternately and haven't lost focus for an hour! I'm impressed by your agile yet solid mental strength. I'll leave a gift containing the speed of the wind.",
+        "reward": {
+            "type": "point",
+            "value": 250
+        }
+    },
+    {
+        "id": "rich_1000_et",
+        "title": "Abundant Furnace",
+        "sender": "Wealth Management Homunculus",
+        "trigger": {
+            "type": "rich_alchemist",
+            "value": 1000
+        },
+        "content": "Congratulations! You have gathered over 1,000 Et of Ether in your wallet. Now you may try even bolder transmutations without holding back on materials. Our wealthy Alchemist!",
+        "reward": {
+            "type": "point",
+            "value": 0
+        }
+    },
+    {
+        "id": "achieve_task_100",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] A Hundred Accomplishments",
+        "triggers": [{
+            "type": "todo_count",
+            "value": 100
+        }],
+        "content": "One hundred tasks, steadily accumulated, have finally become the foundation of a great achievement. Please accept this White Seal, crafted from your diligence.",
+        "reward": {
+            "type": "achievement",
+            "value": "task_centurion",
+            "name": "A Hundred Accomplishments"
+        }
+    },
+    {
+        "id": "achieve_task_1000",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Grandmaster of Achievement",
+        "triggers": [{
+            "type": "todo_count",
+            "value": 1000
+        }],
+        "content": "We pay tribute to the tenacity that has changed the world through a thousand completed deeds. You now stand as one of the grandmasters at the pinnacle of alchemy.",
+        "reward": {
+            "type": "achievement",
+            "value": "task_grandmaster",
+            "name": "Grandmaster of Achievement"
+        }
+    },
+    {
+        "id": "achieve_habit_100",
+        "sender": "Anonymous Alchemist",
+        "title": "[Achievement] Trajectory Engraved on the Soul",
+        "triggers": [{
+            "type": "habit_master",
+            "value": 100
+        }],
+        "content": "One hundred days... now, this habit is no longer just your will, but a part of your soul. This golden medal proves that your very essence has transformed.",
+        "reward": {
+            "type": "achievement",
+            "value": "habit_legend_100",
+            "name": "The Miracle of a Hundred Days"
+        }
+    },
+    {
+        "id": "achieve_perfect_week",
+        "sender": "Archivist of Thought",
+        "title": "[Achievement] Flawless Week",
+        "triggers": [{
+            "type": "habit_master",
+            "value": 7
+        }],
+        "content": "Seven days of error-free data have been recorded. Your perfection, which permitted not a single flaw, is now preserved within the archives.",
+        "reward": {
+            "type": "achievement",
+            "value": "perfect_rhythm_7",
+            "name": "Flawless Rhythm"
+        }
+    },
+    {
+        "id": "achieve_bond_mabel_100",
+        "sender": "Mabel",
+        "charId": "char_01",
+        "title": "[Achievement] Companion of Contemplation",
+        "triggers": [{
+            "type": "intimacy_level",
+            "value": 100
+        }],
+        "content": "You and I have reached a point where we can read the truth through each other's breath alone. Please accept this pink token of my sincerity.",
+        "reward": {
+            "type": "achievement",
+            "value": "mabel_eternal_partner",
+            "name": "Mabel’s Eternal Confidant"
+        }
+    },
+    {
+        "id": "achieve_bond_indigo_100",
+        "sender": "Indigo",
+        "charId": "char_02",
+        "title": "[Achievement] Sharer of Stillness",
+        "triggers": [{
+            "type": "intimacy_level",
+            "value": 100
+        }],
+        "content": "Letting you into my stillness was the best choice of my life. Now, we are an inseparable one. This Black Seal is a promise between just the two of us.",
+        "reward": {
+            "type": "achievement",
+            "value": "indigo_shadow_bond",
+            "name": "Indigo’s Shadow Companion"
+        }
+    },
+    {
+        "id": "achieve_bond_morgana_100",
+        "sender": "Morgana",
+        "charId": "char_04",
+        "title": "[Achievement] Partner of the Abyss",
+        "triggers": [{
+            "type": "intimacy_level",
+            "value": 100
+        }],
+        "content": "My Alchemist, you have finally reached the very end of my abyss. I offer you this alluring seal, dredged from the deepest part of the unconscious.",
+        "reward": {
+            "type": "achievement",
+            "value": "morgana_abyss_lover",
+            "name": "Morgana’s True Soulmate"
+        }
+    },
+    {
+        "id": "achieve_bond_aurelia_100",
+        "sender": "Aurelia",
+        "charId": "char_05",
+        "title": "[Achievement] Protagonist of Golden Glory",
+        "triggers": [{
+            "type": "intimacy_level",
+            "value": 100
+        }],
+        "content": "Ohoho! You are the only one worthy of basking in my noble grace. I shall pin this golden medal, crafted from my own feathers, upon your chest.",
+        "reward": {
+            "type": "achievement",
+            "value": "aurelia_golden_glory",
+            "name": "Aurelia’s Golden Partner"
+        }
+    },
+    {
+        "id": "achieve_collector_all",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Collector of the Four Elements",
+        "triggers": [{
+            "type": "owned_count",
+            "value": 4
+        }],
+        "content": "You have completed the laboratory's ecosystem by gathering all four homunculi. We bestow upon you this rainbow medal, symbolizing harmony and balance.",
+        "reward": {
+            "type": "achievement",
+            "value": "homunculus_collector",
+            "name": "Grandmaster of the Cradle"
+        }
+    },
+    {
+        "id": "achieve_adult_expert",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Nurturer of Life",
+        "triggers": [{
+            "type": "adultCount",
+            "value": 4
+        }],
+        "content": "Your devotion in successfully evolving all creations to their adult stage shall grace a page in the history of alchemy.",
+        "reward": {
+            "type": "achievement",
+            "value": "evolution_master",
+            "name": "Master of Evolution"
+        }
+    },
+    {
+        "id": "achieve_wealth_10000",
+        "sender": "Wandering Merchant",
+        "title": "[Achievement] The Golden Touch",
+        "triggers": [{
+            "type": "rich_alchemist",
+            "value": 10000
+        }],
+        "content": "Ho ho, 10,000 ether! Your laboratory is now filled with a golden light. I’ll leave behind this Medal of Abundance, blessed with financial fortune.",
+        "reward": {
+            "type": "achievement",
+            "value": "midas_hand_10000",
+            "name": "The Hand of Midas"
+        }
+    },
+    {
+        "id": "achieve_gift_master_50",
+        "sender": "Mysterious Shadow",
+        "title": "[Achievement] Tender Creator",
+        "triggers": [{
+            "type": "gift_total_count",
+            "value": 50
+        }],
+        "content": "You’ve shared your heart with the children fifty times. This warm seal proves that your sincerity, not just mere objects, has reached them.",
+        "reward": {
+            "type": "achievement",
+            "value": "generous_creator_50",
+            "name": "The Tender Creator"
+        }
+    },
+    {
+        "id": "achieve_juggler_master",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Conductor of Tools",
+        "triggers": [{
+            "type": "app_juggler",
+            "value": 7
+        }],
+        "content": "The skill you display in maneuvering seven tools to navigate the waves of work is truly like the movements of a conductor.",
+        "reward": {
+            "type": "achievement",
+            "value": "tool_conductor_7",
+            "name": "The Conductor of Tools"
+        }
+    },
+    {
+        "id": "achieve_failed_resilience",
+        "sender": "Anonymous Alchemist",
+        "title": "[Achievement] Unbreakable Heart",
+        "triggers": [{
+            "type": "failed_attempt_count",
+            "value": 10
+        }],
+        "content": "Even ten failures could not stop you. We award this Steel Medal to your fighting spirit, which refined failure into victory.",
+        "reward": {
+            "type": "achievement",
+            "value": "iron_will_failed_10",
+            "name": "Indomitable Will"
+        }
+    },
+    {
+        "id": "achieve_perfect_streak_30",
+        "sender": "Archivist of Thought",
+        "title": "[Achievement] Avatar of Absolute Order",
+        "logic": "AND",
+        "triggers": [{
+                "type": "habit_master",
+                "value": 30
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
+        ],
+        "content": "The record of perfect order maintained for a month has finally reached its critical point. We engrave this Seal of Rules, which even chaos cannot breach.",
+        "reward": {
+            "type": "achievement",
+            "value": "order_avatar_30",
+            "name": "Avatar of Absolute Order"
+        }
+    },
+    {
+        "id": "achieve_level_1",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] First Steps in Alchemy",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 1
+        }],
+        "content": "Welcome to the world of alchemy. Though it may be a clumsy start, your passion will soon bear great golden fruit.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_novice_1",
+            "name": "Novice Alchemist"
+        }
+    },
+    {
+        "id": "achieve_level_5",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Beyond Apprenticeship",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 5
+        }],
+        "content": "You have mastered the basic arts of transmutation and proven your potential as an apprentice. The Guild officially recognizes your capabilities.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_apprentice_5",
+            "name": "Apprentice Alchemist"
+        }
+    },
+    {
+        "id": "achieve_level_10",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Trajectory of Proficiency",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 10
+        }],
+        "content": "A proficient flow of ether can now be felt in the way you handle your tools. We grant you the qualification to carry out official Guild tasks.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_regular_10",
+            "name": "Regular Alchemist"
+        }
+    },
+    {
+        "id": "achieve_level_15",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Manifestation of Expert Intellect",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 15
+        }],
+        "content": "By reaching an advanced proficiency of level 15, you have entered the realm of the expert alchemist. Your depth of wisdom is truly extraordinary.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_expert_15",
+            "name": "Expert Alchemist"
+        }
+    },
+    {
+        "id": "achieve_level_20",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Dignity of a Senior Alchemist",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 20
+        }],
+        "content": "We certify your rank as a Senior Alchemist. Your name shall now be held in high regard even within the Guild.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_senior_20",
+            "name": "Senior Alchemist"
+        }
+    },
+    {
+        "id": "achieve_level_25",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Seasoned Seeker",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 25
+        }],
+        "content": "Having passed through countless trials and refinements, you have reached a stage of great experience. Your journey is a precious asset to the Guild.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_veteran_25",
+            "name": "Veteran Alchemist"
+        }
+    },
+    {
+        "id": "achieve_level_30",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Rank of the Master Artisan",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 30
+        }],
+        "content": "Level 30... You have moved one step closer to the realm of the sage. The ether you craft is now in the domain of art.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_master_30",
+            "name": "Master Artisan Alchemist"
+        }
+    },
+    {
+        "id": "achieve_level_35",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Harmonizer of Elements",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 35
+        }],
+        "content": "You have proven your ability to harmonize the four elements at will. We award this medal to one who can rearrange the order of the world.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_harmonizer_35",
+            "name": "Harmonizer of Elements"
+        }
+    },
+    {
+        "id": "achieve_level_40",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Guardian of Wisdom",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 40
+        }],
+        "content": "You possess the mental fortitude to master even forbidden knowledge. We appoint you as a Guardian of the Guild’s secrets.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_guardian_40",
+            "name": "Guardian of Wisdom"
+        }
+    },
+    {
+        "id": "achieve_level_45",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Interpreter of Arcana",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 45
+        }],
+        "content": "You have perfectly deciphered forgotten ancient scripts and complex ether formulas. Your insight is a treasure to the Guild.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_interpreter_45",
+            "name": "Interpreter of Arcana"
+        }
+    },
+    {
+        "id": "achieve_level_50",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Reacher of Truth",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 50
+        }],
+        "content": "You have reached the height of level 50. We pay our respects to one who has transcended human limits to knock on the door of truth.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_truth_50",
+            "name": "Reacher of Truth"
+        }
+    },
+    {
+        "id": "achieve_level_55",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Lord of Ether",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 55
+        }],
+        "content": "All the world's ether moves according to your will. We engrave this medal for a Lord who possesses both true power and wisdom.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_lord_55",
+            "name": "Lord of Ether"
+        }
+    },
+    {
+        "id": "achieve_level_60",
+        "sender": "Alchemy Guild",
+        "title": "[Achievement] Legendary Alchemist",
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 60
+        }],
+        "content": "Level 60... You have finally become a legend. Your name shall be recorded in history with an everlasting golden seal.",
+        "reward": {
+            "type": "achievement",
+            "value": "rank_legend_60",
+            "name": "Legendary Alchemist"
+        }
+    }
+]

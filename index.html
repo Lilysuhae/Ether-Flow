@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self';">
-    <title>Ether Flow</title>
+    <title data-i18n="window.title">Ether Flow</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,27 +15,27 @@
 <body>
     <div id="app">
         <div class="window-controls">
-            <button id="pin-btn" class="win-btn active" onclick="window.toggleAlwaysOnTop()" data-tooltip="항상 위에 고정">
+            <button id="pin-btn" class="win-btn active" onclick="window.toggleAlwaysOnTop()" data-i18n="window.tooltip.pin" data-tooltip="항상 위에 고정">
                 <i class="fas fa-thumbtack"></i>
             </button>
-            <button class="win-btn" onclick="window.toggleSettings(true)" data-tooltip="설정">
+            <button class="win-btn" onclick="window.toggleSettings(true)" data-i18n="window.tooltip.settings" data-tooltip="설정">
                 <i class="fas fa-cog"></i>
             </button>
-            <button class="win-btn" onclick="window.minimizeApp()" data-tooltip="최소화">
+            <button class="win-btn" onclick="window.minimizeApp()" data-i18n="window.tooltip.minimize" data-tooltip="최소화">
                 <i class="fas fa-minus"></i>
             </button>
-            <button class="win-btn close" onclick="window.askClose()" data-tooltip="종료">
+            <button class="win-btn close" onclick="window.askClose()" data-i18n="window.tooltip.close" data-tooltip="종료">
                 <i class="fas fa-times"></i>
             </button>
         </div>
 
         <header id="drag-header">
             <div class="header-left">
-                <h2 class="ether-glow-title">Ether Flow</h2>
+                <h2 class="ether-glow-title" data-i18n="window.title">Ether Flow</h2>
             </div>
             <div class="header-right">
                 <span id="work-points">0 Et</span>
-                <span id="status-badge" class="waiting">
+                <span id="status-badge" class="waiting" data-i18n="header.status.waiting">
                     <i class="fas fa-hourglass-start"></i> 대기 중
                 </span>
             </div>
@@ -51,7 +51,7 @@
 
                     <div id="intimacy-display">
                         <div class="intimacy-info-row">
-                            <span id="char-name-tag">알</span>
+                            <span id="char-name-tag" data-i18n="game.character.default_name">알</span>
                             <span id="intimacy-stat"><i class="fas fa-heart"></i> <span id="intimacy-val">0.0</span></span>
                         </div>
                         <div class="intimacy-container">
@@ -78,8 +78,42 @@
                             <div id="exp-bar"></div>
                         </div>
                         <div class="time-stats">
-                            <div class="time-item">오늘 <b id="today-time">00:00:00</b></div>
-                            <div class="time-item">누적 <b id="total-time">00:00:00</b></div>
+                            <div class="time-item"><span data-i18n="game.stats.today">오늘</span> <b id="today-time">00:00:00</b></div>
+                            <div class="time-item"><span data-i18n="game.stats.total">누적</span> <b id="total-time">00:00:00</b></div>
+                        </div>
+                    </div>
+
+                    <div id="gold-mini-player">
+                        <div class="player-node" id="node-ambient">
+                            <div id="panel-ambient" class="player-panel">
+                                <div class="panel-header">AMBIENT</div>
+                                <div id="list-ambient" class="track-list"></div>
+                                <div class="control-bar">
+                                    <button class="ctrl-btn prev-btn" data-type="ambient"><i class="fa-solid fa-backward-step"></i></button>
+                                    <button class="ctrl-btn play-btn" id="play-amb"><i class="fa-solid fa-play"></i></button>
+                                    <button class="ctrl-btn next-btn" data-type="ambient"><i class="fa-solid fa-forward-step"></i></button>
+                                    <input type="range" class="vol-slider" id="vol-amb" min="0" max="1" step="0.01" value="0.3">
+                                    <button class="ctrl-btn loop-btn" id="loop-amb" title="한 곡 반복"><i class="fa-solid fa-repeat"></i></button>
+                                    <button class="ctrl-btn shuffle-btn" id="shuffle-amb" title="순서 섞기"><i class="fa-solid fa-shuffle"></i></button>
+                                </div>
+                            </div>
+                            <div class="trigger-icon" id="trig-amb"><i class="fa-solid fa-wind"></i></div>
+                        </div>
+
+                        <div class="player-node" id="node-music">
+                            <div id="panel-music" class="player-panel">
+                                <div class="panel-header">MUSIC</div>
+                                <div id="list-music" class="track-list"></div>
+                                <div class="control-bar">
+                                    <button class="ctrl-btn prev-btn" data-type="music"><i class="fa-solid fa-backward-step"></i></button>
+                                    <button class="ctrl-btn play-btn" id="play-mus"><i class="fa-solid fa-play"></i></button>
+                                    <button class="ctrl-btn next-btn" data-type="music"><i class="fa-solid fa-forward-step"></i></button>
+                                    <input type="range" class="vol-slider" id="vol-mus" min="0" max="1" step="0.01" value="0.4">
+                                    <button class="ctrl-btn loop-btn" id="loop-mus" title="한 곡 반복"><i class="fa-solid fa-repeat"></i></button>
+                                    <button class="ctrl-btn shuffle-btn" id="shuffle-mus" title="순서 섞기"><i class="fa-solid fa-shuffle"></i></button>
+                                </div>
+                            </div>
+                            <div class="trigger-icon" id="trig-mus"><i class="fa-solid fa-music"></i></div>
                         </div>
                     </div>
                 </div>
@@ -88,22 +122,22 @@
                     <label class="group-label">Alchemy & Connection</label>
                     <div class="action-row">
                         <button class="btn btn-game" onclick="window.openShop()">
-                            <i class="fas fa-gift"></i>상점
+                            <i class="fas fa-gift"></i><span data-i18n="game.actions.shop">상점</span>
                         </button>
                         <button class="btn btn-game" onclick="window.openInventory()">
-                            <i class="fa-solid fa-bag-shopping"></i>가방
+                            <i class="fa-solid fa-bag-shopping"></i><span data-i18n="game.actions.inventory">가방</span>
                         </button>
                         <button class="btn btn-game" onclick="window.openSedimentModal()">
-                            <i class="fas fa-egg"></i> 연성
+                            <i class="fas fa-egg"></i> <span data-i18n="game.actions.craft">연성</span>
                         </button>
                         <button class="btn btn-game" onclick="window.toggleAchievementModal(true)">
-                            <i class="fas fa-medal"></i>업적
+                            <i class="fas fa-medal"></i><span data-i18n="game.actions.achievement">업적</span>
                         </button>
                         <button class="btn btn-game" onclick="window.toggleCollection(true)">
-                            <i class="fas fa-book-bookmark"></i>도감
+                            <i class="fas fa-book-bookmark"></i><span data-i18n="game.actions.collection">도감</span>
                         </button>
                         <button class="btn btn-game" onclick="window.toggleMailbox(true)">
-                            <i class="fas fa-envelope"></i>서신
+                            <i class="fas fa-envelope"></i><span data-i18n="game.actions.mailbox">서신</span>
                             <span id="mail-badge" class="mail-badge" style="display: none;">0</span>
                         </button>
                     </div>
@@ -113,7 +147,7 @@
                     <label class="group-label">Work</label>
                     <div class="action-row">
                         <button class="btn btn-task" onclick="window.openDailyLog()">
-                            <i class="fas fa-chart-pie"></i>작업기록
+                            <i class="fas fa-chart-pie"></i><span data-i18n="game.actions.log">작업기록</span>
                         </button>
                     </div>
                 </div>
@@ -121,18 +155,18 @@
 
             <div id="controls" class="right-side">
                 <div class="control-group focus">
-                    <label class="group-label">사용중인 작업 도구</label>
+                    <label class="group-label" data-i18n="sidebar.work_tool.title">사용중인 작업 도구</label>
                     <div id="current-app-box" class="current-app-box">
                         <i class="fa-regular fa-window-restore"></i>
-                        <span id="current-app-name">활성 창 감지 중...</span>
-                        <button class="btn-add-current" onclick="window.addCurrentApp()" data-tooltip="작업 도구 등록">
+                        <span id="current-app-name" data-i18n="sidebar.work_tool.detecting">활성 창 감지 중...</span>
+                        <button class="btn-add-current" onclick="window.addCurrentApp()" data-i18n="sidebar.work_tool.add_tooltip" data-tooltip="작업 도구 등록">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
 
                     <div id="work-apps-accordion" class="accordion active">
                         <div class="accordion-header" onclick="window.toggleAccordion('work-apps-accordion')">
-                            <span class="group-label">등록된 작업 도구</span>
+                            <span class="group-label" data-i18n="sidebar.work_tool.registered">등록된 작업 도구</span>
                             <i class="fas fa-chevron-down accordion-icon"></i>
                         </div>
                         <div class="accordion-content">
@@ -142,14 +176,14 @@
 
                     <div id="molip-habit-accordion" class="accordion active">
                         <div class="accordion-header" onclick="window.toggleAccordion('molip-habit-accordion')">
-                            <div class="accordion-title-group"> <span class="group-label">매일의 습관</span>
+                            <div class="accordion-title-group"> <span class="group-label" data-i18n="sidebar.habit.title">매일의 습관</span>
                                 <span id="habit-count-badge" class="count-badge">0/0</span>
                             </div>
                             <i class="fas fa-chevron-down accordion-icon"></i>
                         </div>
                         <div class="accordion-content">
                             <div class="todo-input-group">
-                                <input type="text" id="habit-input" placeholder="매일 반복할 습관 등록">
+                                <input type="text" id="habit-input" data-i18n="sidebar.habit.placeholder" placeholder="매일 반복할 습관 등록">
                                 <button class="btn-todo-add" onclick="window.addHabit()">
                                     <i class="fas fa-plus"></i>
                                 </button>
@@ -160,14 +194,14 @@
 
                     <div id="molip-todo-accordion" class="accordion active">
                         <div class="accordion-header" onclick="window.toggleAccordion('molip-todo-accordion')">
-                            <div class="accordion-title-group"> <span class="group-label">오늘의 할 일</span>
+                            <div class="accordion-title-group"> <span class="group-label" data-i18n="sidebar.todo.title">오늘의 할 일</span>
                                 <span id="todo-count-badge" class="count-badge">0/0</span>
                             </div>
                             <i class="fas fa-chevron-down accordion-icon"></i>
                         </div>
                         <div class="accordion-content">
                             <div class="todo-input-group">
-                                <input type="text" id="todo-input" placeholder="할 일 등록">
+                                <input type="text" id="todo-input" data-i18n="sidebar.todo.placeholder" placeholder="할 일 등록">
                                 <button class="btn-todo-add" onclick="window.addMolipTodo()">
                                     <i class="fas fa-plus"></i>
                                 </button>
@@ -185,28 +219,31 @@
     <div id="settings-modal" class="modal-overlay">
         <div class="modal-window">
             <div class="modal-header">
-                <h3><i class="fas fa-cog"></i> 시스템 설정</h3>
+                <h3><i class="fas fa-cog"></i> <span data-i18n="settings.title">시스템 설정</span></h3>
                 <button class="win-btn" onclick="window.toggleSettings(false)"><i class="fas fa-times"></i></button>
             </div>
             <div class="settings-tabs">
-                <button id="btn-tab-general" class="tab-btn active" onclick="window.switchSettingsTab('general')">일반</button>
-                <button id="btn-tab-apps" class="tab-btn" onclick="window.switchSettingsTab('apps')">작업 설정</button>
-                <button id="btn-tab-distract" class="tab-btn" onclick="window.switchSettingsTab('distract')">딴짓 설정</button>
+                <button id="btn-tab-general" class="tab-btn active" onclick="window.switchSettingsTab('general')" data-i18n="settings.tabs.general">일반</button>
+                <button id="btn-tab-sound" class="tab-btn" onclick="window.switchSettingsTab('sound')" data-i18n="settings.tabs.sound">사운드</button>
+                <button id="btn-tab-apps" class="tab-btn" onclick="window.switchSettingsTab('apps')" data-i18n="settings.tabs.apps">작업 설정</button>
+                <button id="btn-tab-distract" class="tab-btn" onclick="window.switchSettingsTab('distract')" data-i18n="settings.tabs.distract">딴짓 설정</button>
             </div>
             <div class="settings-body">
                 <div id="tab-content-general" class="tab-content active">
-                    <!-- <div class="settings-group">
-                        <div class="pretty-select-container">
-                            <label class="settings-label">언어 설정</label>
-                            <select id="language-select" class="pretty-select" onchange="window.changeLanguage(this.value)">
-                                <option value="en">English</option>
-                                <option value="ko" selected>한국어</option>
-                            </select>
-                            <i class="fas fa-chevron-down select-arrow"></i>
-                        </div>
-                    </div> -->
                     <div class="settings-group">
-                        <label class="settings-label">폰트 설정</label>
+                        <label class="settings-label" data-i18n="settings.general.language">언어 설정</label>
+                        <div class="pretty-select-container">
+                            <select id="language-select" class="pretty-select" disabled style="opacity: 0.6; cursor: not-allowed;">
+                                <option value="ko">한국어</option>
+                                <option value="en">English (Locked)</option>
+                            </select>
+                            <i class="fas fa-lock select-arrow"></i> </div>
+                        <p class="setting-hint">
+                            연금술 길드에서 언어 확장 작업을 진행 중입니다.
+                        </p>
+                    </div>
+                    <div class="settings-group">
+                        <label class="settings-label" data-i18n="settings.general.font">폰트 설정</label>
                         <div class="pretty-radio-group">
                             <label class="pretty-radio">
                                 <input type="radio" name="font-choice" value="paperlogy" onchange="window.changeFont('paperlogy')">
@@ -223,7 +260,7 @@
                         </div>
                     </div>
                     <div class="settings-group">
-                        <label class="settings-label">테마 설정</label>
+                        <label class="settings-label" data-i18n="settings.general.theme">테마 설정</label>
                         <div class="pretty-radio-group">
                             <label class="pretty-radio">
                                 <input type="radio" name="theme-choice" value="DEFAULT_DARK" onchange="window.changeTheme('DEFAULT_DARK')">
@@ -240,21 +277,44 @@
                         </div>
                     </div>
                     <div class="settings-group">
-                        <label class="settings-label">화면 레이아웃</label>
+                        <label class="settings-label" data-i18n="settings.general.layout">화면 레이아웃</label>
                         <div id="horizontal-mode-toggle" class="window-mode-toggle" onclick="window.toggleHorizontalMode()">
-                            <span>넓게 보기</span>
+                            <span data-i18n="settings.general.layout_wide">넓게 보기</span>
                             <div class="switch-base">
                                 <div class="switch-circle"></div>
                             </div>
                         </div>
                     </div>
                     <div class="settings-group" style="margin-top: 40px;">
-                        <button class="btn btn-danger" style="width: 100%;" onclick="window.resetAllData()">전체 데이터 초기화</button>
+                        <button class="btn btn-danger" style="width: 100%;" onclick="window.resetAllData()" data-i18n="settings.general.reset_btn">전체 데이터 초기화</button>
+                    </div>
+                </div>
+                <div id="tab-content-sound" class="tab-content" style="display: none;">
+                    <!-- <div class="settings-group">
+                        <label class="settings-label">전체 사운드</label>
+                        <div id="master-sound-toggle" class="window-mode-toggle" onclick="window.toggleMasterSound()">
+                            <span>전체 사운드 켜기</span>
+                            <div class="switch-base"><div class="switch-circle"></div></div>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <label class="settings-label">시스템 사운드</label>
+                        <div id="system-sound-toggle" class="window-mode-toggle" onclick="window.toggleSystemSound()">
+                            <span>시스템 사운드 켜기</span>
+                            <div class="switch-base"><div class="switch-circle"></div></div>
+                        </div>
+                    </div> -->
+                    <div class="settings-group">
+                        <label class="settings-label">프로그램 실행 시 배경음 자동 재생</label>
+                        <div id="auto-play-toggle" class="window-mode-toggle" onclick="window.toggleAutoPlay()">
+                            <span>자동 재생 켜기</span>
+                            <div class="switch-base"><div class="switch-circle"></div></div>
+                        </div>
                     </div>
                 </div>
                 <div id="tab-content-apps" class="tab-content" style="display: none;">
                     <div class="settings-group">
-                        <label class="settings-label">일과 초기화 기준 시간</label>
+                        <label class="settings-label" data-i18n="settings.work.reset_time">일과 초기화 기준 시간</label>
                         <div class="pretty-select-container">
                             <select id="reset-hour-select" class="pretty-select" onchange="window.changeResetHour(this.value)">
                                 <option value="0">오전 00:00 (자정)</option>
@@ -264,48 +324,48 @@
                             </select>
                             <i class="fas fa-chevron-down select-arrow"></i>
                         </div>
-                        <p class="setting-hint">설정한 시간 이전의 작업은 '어제' 기록으로 합산됩니다.</p>
+                        <p class="setting-hint" data-i18n="settings.work.reset_hint">설정한 시간 이전의 작업은 '어제' 기록으로 합산됩니다.</p>
                     </div>
                     <div class="settings-group">
-                        <label class="settings-label">오늘의 할일 목록 관리</label>
+                        <label class="settings-label" data-i18n="settings.work.todo_manage">오늘의 할일 목록 관리</label>
                         <div id="hide-completed-toggle" class="window-mode-toggle" onclick="window.toggleHideCompleted()">
-                            <span>완료된 항목 숨기기</span>
+                            <span data-i18n="settings.work.hide_completed">완료된 항목 숨기기</span>
                             <div id="hide-completed-switch" class="switch-base">
                                 <div class="switch-circle"></div>
                             </div>
                         </div>
                         <div id="show-past-toggle" class="window-mode-toggle" style="margin-top: 8px;" onclick="window.toggleShowPast()">
-                            <span>이전에 등록한 항목 표시</span>
+                            <span data-i18n="settings.work.show_past">이전에 등록한 항목 표시</span>
                             <div class="switch-base">
                                 <div class="switch-circle"></div>
                             </div>
                         </div>
                     </div>
                     <div class="settings-group">
-                        <label class="settings-label">데이터 최적화</label>
+                        <label class="settings-label" data-i18n="settings.work.optimization">데이터 최적화</label>
                         <div id="auto-delete-toggle" class="window-mode-toggle" onclick="window.toggleAutoDelete()">
-                            <span>7일 지난 할 일 완료 항목 자동 삭제</span>
+                            <span data-i18n="settings.work.auto_delete">7일 지난 할 일 완료 항목 자동 삭제</span>
                             <div class="switch-base">
                                 <div class="switch-circle"></div>
                             </div>
                         </div>
-                        <p class="setting-hint">완료된 지 일주일이 지난 할 일들을 자동으로 정리합니다.</p>
+                        <p class="setting-hint" data-i18n="settings.work.auto_delete_hint">완료된 지 일주일이 지난 할 일들을 자동으로 정리합니다.</p>
                     </div>
                 </div>
                 <div id="tab-content-distract" class="tab-content" style="display: none;">
                     <div class="settings-group">
-                        <label class="settings-label">현재 실행 중인 도구 등록</label>
+                        <label class="settings-label" data-i18n="settings.distract.current_reg">현재 실행 중인 도구 등록</label>
                         <div class="current-app-box" style="margin-bottom: 10px;">
                             <i class="fas fa-ghost"></i>
                             <span id="current-distract-name">도구 감지 중...</span>
-                            <button class="btn-add-current btn-danger" onclick="window.addDistractionApp()" data-tooltip="딴짓 차단 등록" style="background: var(--danger-red) !important;">
+                            <button class="btn-add-current btn-danger" onclick="window.addDistractionApp()" data-i18n="settings.distract.add_tooltip" data-tooltip="딴짓 차단 등록" style="background: var(--danger-red) !important;">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
 
                         <div id="distract-apps-accordion" class="accordion active">
                             <div class="accordion-header" onclick="window.toggleAccordion('distract-apps-accordion')">
-                                <label class="settings-label">등록된 딴짓 도구 목록</label>
+                                <label class="settings-label" data-i18n="settings.distract.registered_list">등록된 딴짓 도구 목록</label>
                                 <i class="fas fa-chevron-down accordion-icon"></i>
                             </div>
                             <div class="accordion-content">
@@ -313,18 +373,17 @@
                             </div>
                         </div>
                     </div>
-                    <p class="setting-hint">여기에 등록된 도구를 사용하면 딴짓임을 감지하고 상태 뱃지에 <b>딴짓 중</b>으로 표시됩니다.</p>
+                    <p class="setting-hint" data-i18n="settings.distract.hint">여기에 등록된 도구를 사용하면 딴짓임을 감지하고 상태 뱃지에 <b>딴짓 중</b>으로 표시됩니다.</p>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <div id="inventory-modal" class="modal-overlay" style="display: none;">
         <div class="modal-window inventory-window-vertical">
             <div class="modal-header">
                 <div class="header-title">
-                    <h3>가방</h3>
+                    <h3 data-i18n="modals.inventory.title">가방</h3>
                 </div>
                 <button class="close-btn" onclick="window.closeInventory()">&times;</button>
             </div>
@@ -337,10 +396,10 @@
                     <div id="inventory-detail-icon" style="font-size: 3rem;"></div>
                     <h4 id="inventory-detail-name" style="margin-bottom: 10px; color: var(--primary-gold);"></h4>
                     <p id="inventory-detail-desc" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;"></p>
-                    <button id="inventory-action-btn" class="btn btn-game" style="width: 80%; margin: 0 auto; background:var(--primary-gold);">사용하기</button>
+                    <button id="inventory-action-btn" class="btn btn-game" style="width: 80%; margin: 0 auto; background:var(--primary-gold);" data-i18n="modals.inventory.btn_use">사용하기</button>
                 </div>
 
-                <div id="inventory-empty-hint" class="empty-inventory-hint" style="color:rgba(255,255,255,0.2); margin-top: 60px; text-align: center;">
+                <div id="inventory-empty-hint" class="empty-inventory-hint" style="color:rgba(255,255,255,0.2); margin-top: 60px; text-align: center;" data-i18n="modals.inventory.empty_hint">
                     아이템을 선택해 정보를 확인하세요.
                 </div>
             </div>
@@ -350,7 +409,7 @@
     <div id="mailbox-modal" class="modal-overlay">
         <div class="modal-window mailbox-window">
             <div class="modal-header">
-                <h3>전해진 서신</h3>
+                <h3 data-i18n="modals.mailbox.title">전해진 서신</h3>
                 <button class="win-btn" onclick="window.toggleMailbox(false)"><i class="fas fa-times"></i></button>
             </div>
             <div id="mail-list" class="mail-list-container"></div>
@@ -367,7 +426,7 @@
                 <div id="letter-view-content"></div>
                 <div id="letter-reward-zone"></div>
                 <div class="letter-footer">
-                    <button class="btn-letter-close" onclick="window.closeLetterView()">접어두기</button>
+                    <button class="btn-letter-close" onclick="window.closeLetterView()" data-i18n="modals.mailbox.btn_close">접어두기</button>
                 </div>
             </div>
         </div>
@@ -376,7 +435,7 @@
     <div id="sediment-modal" class="modal-overlay" style="display: none;">
         <div class="modal-window glass">
             <div class="modal-header">
-                <h3>연성로</h3>
+                <h3 data-i18n="modals.craft.title">연성로</h3>
                 <div class="header-btns">
                     <button class="win-btn" onclick="window.closeSedimentModal()"><i class="fas fa-times"></i></button>
                 </div>
@@ -384,28 +443,28 @@
 
             <div class="modal-body">
                 <div class="saturation-area">
-                    <div class="area-label">현재 에테르 침전 농도 <span id="sat-value">0%</span></div>
+                    <div class="area-label"><span data-i18n="modals.craft.sat_label">현재 에테르 침전 농도</span> <span id="sat-value">0%</span></div>
                     <div class="sat-bar-container">
                         <div id="sat-bar-fill" style="width: 0%;"></div>
                     </div>
-                    <p class="sat-guide">할일에 몰입할수록 침전 농도가 오르며,<br>농도가 높을수록 희귀한 부산물을 호문클루스가 수집합니다.</p>
+                    <p class="sat-guide" data-i18n="modals.craft.sat_hint">할일에 몰입할수록 침전 농도가 오르며,<br>농도가 높을수록 희귀한 부산물을 호문클루스가 수집합니다.</p>
                 </div>
 
                 <div class="sediment-inventory">
-                    <label>건져낸 부산물</label>
+                    <label data-i18n="modals.craft.inv_label">건져낸 부산물</label>
                     <div class="inventory-grid" id="sediment-grid">
                     </div>
                 </div>
 
                 <div class="abyss-altar">
-                    <h4>호문클루스 연성 재료</h4>
-                    <p>어떤 생명이 탄생할지 알 수 없습니다.</p>
+                    <h4 data-i18n="modals.craft.recipe_title">호문클루스 연성 재료</h4>
+                    <p data-i18n="modals.craft.recipe_hint">어떤 생명이 탄생할지 알 수 없습니다.</p>
                     <div class="recipe-check">
                         <div id="req-ether" class="req-item"><span class="dot"></span> 에테르 : <span class="val">0 / 10,000</span>Et</div>
                         <div id="req-sludge" class="req-item"><span class="dot"></span> 에테르 슬러지 : <span class="val">0 / 15</span></div>
                     </div>
 
-                    <button id="btn-abyss-craft" class="btn-craft-large disabled" onclick="window.startAbyssCrafting()">
+                    <button id="btn-abyss-craft" class="btn-craft-large disabled" onclick="window.startAbyssCrafting()" data-i18n="modals.craft.btn_shortage">
                         재료가 부족하여 연성할 수 없습니다
                     </button>
                 </div>
@@ -416,7 +475,7 @@
     <div id="collection-modal" class="modal-overlay">
         <div class="modal-window">
             <div class="modal-header">
-                <h3>도감</h3>
+                <h3 data-i18n="game.actions.collection">도감</h3>
                 <button class="win-btn" onclick="window.toggleCollection(false)"><i class="fas fa-times"></i></button>
             </div>
             <div id="collection-grid" class="grid-container"></div>
@@ -426,30 +485,30 @@
     <div id="char-detail-modal" class="modal-overlay">
         <div class="modal-window detail-window">
             <div class="modal-header">
-                <h3><i class="fas fa-info-circle"></i> 호문클루스 정보</h3>
+                <h3><i class="fas fa-info-circle"></i> <span data-i18n="game.actions.collection">호문클루스 정보</span></h3>
                 <button class="win-btn" onclick="window.closeCharDetail()"><i class="fas fa-times"></i></button>
             </div>
             <div class="detail-body">
                 <div class="detail-top-section">
                     <div class="detail-img-box"><img id="detail-char-img" src="" alt=""></div>
                     <div class="detail-main-stats">
-                        <div class="detail-stat-item"><label>이름</label><span id="detail-char-name">-</span></div>
-                        <div class="detail-stat-item"><label>성장 단계</label><span id="detail-char-stage">-</span></div>
-                        <div class="detail-stat-item"><label>함께한 시간</label><span id="detail-total-companionship">0h 0m</span></div>
+                        <div class="detail-stat-item"><label data-i18n="game.character.label_name">이름</label><span id="detail-char-name">-</span></div>
+                        <div class="detail-stat-item"><label data-i18n="game.character.label_stage">성장 단계</label><span id="detail-char-stage">-</span></div>
+                        <div class="detail-stat-item"><label data-i18n="game.character.label_time">함께한 시간</label><span id="detail-total-companionship">0h 0m</span></div>
                     </div>
                 </div>
                 <div class="detail-progress-section">
-                    <div class="detail-label-row"><label>성장 진행도</label><span id="detail-growth-text">0 / 1440 min</span></div>
+                    <div class="detail-label-row"><label data-i18n="game.character.label_growth">성장 진행도</label><span id="detail-growth-text">0 / 1440 min</span></div>
                     <div class="progress-container">
                         <div id="detail-growth-bar"></div>
                     </div>
                 </div>
-                <div class="detail-desc-section"><label>기록된 내력</label>
+                <div class="detail-desc-section"><label data-i18n="game.character.label_history">기록된 내력</label>
                     <p id="detail-char-desc"></p>
                 </div>
                 <div class="info-row preferences-block" style="display: block;">
                     <div class="pref-section" id="section-favorite">
-                        <div class="pref-title fav">
+                        <div class="pref-title fav" data-i18n="game.character.label_fav">
                             <i class="fas fa-heart"></i> 선호하는 선물
                         </div>
                         <div class="pref-items-container" id="list-favorite">
@@ -457,14 +516,14 @@
                     </div>
 
                     <div class="pref-section" id="section-dislike" style="margin-top: 12px;">
-                        <div class="pref-title dis">
+                        <div class="pref-title dis" data-i18n="game.character.label_dislike">
                             <i class="fas fa-skull"></i> 싫어하는 선물
                         </div>
                         <div class="pref-items-container" id="list-dislike">
                         </div>
                     </div>
                 </div>
-                <div class="detail-footer"><button id="detail-select-btn" class="btn btn-primary" style="width: 100%;">파트너로 선택하기</button></div>
+                <div class="detail-footer"><button id="detail-select-btn" class="btn btn-primary" style="width: 100%;" data-i18n="game.character.btn_select">파트너로 선택하기</button></div>
             </div>
         </div>
     </div>
@@ -473,21 +532,21 @@
         <div class="modal-window glass-effect shop-window-glass">
             <div class="modal-header shop-header">
                 <div class="header-title">
-                    <h3>상점</h3>
+                    <h3 data-i18n="modals.shop.title">상점</h3>
                 </div>
                 <button class="close-btn" onclick="window.closeShop()">&times;</button>
             </div>
 
             <div class="shop-tab-bar">
-                <button class="shop-tab-re active" data-target="gift" onclick="window.switchShopTab('gift', this)">선물</button>
-                <button class="shop-tab-re" data-target="material" onclick="window.switchShopTab('material', this)">연구 재료</button>
+                <button class="shop-tab-re active" data-target="gift" onclick="window.switchShopTab('gift', this)" data-i18n="modals.shop.tab_gift">선물</button>
+                <button class="shop-tab-re" data-target="material" onclick="window.switchShopTab('material', this)" data-i18n="modals.shop.tab_material">연구 재료</button>
             </div>
 
             <div id="shop-grid" class="shop-grid-glass"></div>
 
             <div class="shop-footer-glass">
                 <div class="shop-ether-info">
-                    <span class="label">보유 에테르:</span>
+                    <span class="label" data-i18n="modals.shop.holding_ether">보유 에테르:</span>
                     <span id="shop-ether-count">0</span>
                     <span class="unit">Et</span>
                 </div>
@@ -498,7 +557,7 @@
     <div id="achievement-modal" class="modal-overlay">
         <div class="modal-window detail-window">
             <div class="modal-header">
-                <h3>업적</h3>
+                <h3 data-i18n="game.actions.achievement">업적</h3>
                 <div class="header-btns">
                     <button class="win-btn" onclick="window.toggleAchievementModal(false)">
                         <i class="fas fa-times"></i>
@@ -515,9 +574,9 @@
     <div id="daily-log-modal" class="modal-overlay">
         <div class="modal-window detail-window">
             <div class="modal-header">
-                <h3>작업기록</h3>
+                <h3 data-i18n="modals.log.title">작업기록</h3>
                 <div class="header-btns">
-                    <button class="win-btn" onclick="window.saveLogAsReceipt()" data-tooltip="영수증으로 저장"><i class="fas fa-camera"></i></button>
+                    <button class="win-btn" onclick="window.saveLogAsReceipt()" data-i18n="modals.log.tooltip_save" data-tooltip="영수증으로 저장"><i class="fas fa-camera"></i></button>
                     <button class="win-btn" onclick="window.closeDailyLog()"><i class="fas fa-times"></i></button>
                 </div>
             </div>
@@ -529,8 +588,8 @@
             </div>
 
             <div class="shop-tab-bar" style="margin-bottom: 15px;">
-                <button class="shop-tab-re active" onclick="window.switchLogTab('list', this)">목록</button>
-                <button class="shop-tab-re" onclick="window.switchLogTab('chart', this)">통계</button>
+                <button class="shop-tab-re active" onclick="window.switchLogTab('list', this)" data-i18n="modals.log.tab_list">목록</button>
+                <button class="shop-tab-re" onclick="window.switchLogTab('chart', this)" data-i18n="modals.log.tab_chart">통계</button>
             </div>
 
             <div id="daily-log-list" class="detail-body"></div>
@@ -538,8 +597,8 @@
             <div id="daily-log-chart-area" class="detail-body" style="display: none;">
                 <div class="stat-container">
                     <div class="stat-label-row">
-                        <span style="color: #a0c4ff;">집중 <b id="stat-work-percent">0%</b></span>
-                        <span style="color: #ff6b6b;">딴짓 <b id="stat-distract-percent">0%</b></span>
+                        <span style="color: #a0c4ff;"><span data-i18n="modals.log.chart_work">집중</span> <b id="stat-work-percent">0%</b></span>
+                        <span style="color: #ff6b6b;"><span data-i18n="modals.log.chart_distract">딴짓</span> <b id="stat-distract-percent">0%</b></span>
                     </div>
                     <div class="stat-gauge-total">
                         <div id="stat-bar-work" style="width: 50%; background: #a0c4ff; transition: width 0.5s ease;"></div>
@@ -548,12 +607,12 @@
                 </div>
 
                 <div class="stat-detail-group">
-                    <label class="stat-group-label work"><i class="fas fa-fire"></i> 집중 점유율</label>
+                    <label class="stat-group-label work"><i class="fas fa-fire"></i> <span data-i18n="modals.log.share_work">집중 점유율</span></label>
                     <div id="stat-detail-list" class="stat-scroll-area"></div>
                 </div>
 
                 <div class="stat-detail-group">
-                    <label class="stat-group-label distract"><i class="fas fa-ghost"></i> 딴짓 점유율</label>
+                    <label class="stat-group-label distract"><i class="fas fa-ghost"></i> <span data-i18n="modals.log.share_distract">딴짓 점유율</span></label>
                     <div id="stat-distract-detail-list" class="stat-scroll-area"></div>
                 </div>
             </div>
@@ -567,8 +626,8 @@
                 <p id="confirm-message" style="margin-top: 15px; line-height: 1.6; color: white;"></p>
             </div>
             <div class="confirm-actions">
-                <button id="confirm-no" class="btn btn-modal-cancel">아니오</button>
-                <button id="confirm-yes" class="btn btn-modal-confirm">예</button>
+                <button id="confirm-no" class="btn btn-modal-cancel" data-i18n="modals.exit.no">아니오</button>
+                <button id="confirm-yes" class="btn btn-modal-confirm" data-i18n="modals.exit.yes">예</button>
             </div>
         </div>
     </div>
@@ -576,12 +635,12 @@
     <div id="exit-confirm-modal" class="modal-overlay">
         <div class="modal-window confirm-window">
             <div class="confirm-content">
-                <h3>연구 종료</h3>
-                <p>오늘의 일정을 마치고 연구실을 나가시겠습니까?</p>
+                <h3 data-i18n="modals.exit.title">연구 종료</h3>
+                <p data-i18n="modals.exit.msg">오늘의 일정을 마치고 연구실을 나가시겠습니까?</p>
             </div>
             <div class="confirm-actions">
-                <button class="btn btn-modal-cancel" onclick="window.closeAllModals()">아니오</button>
-                <button class="btn btn-modal-confirm" onclick="window.quitApp()">예</button>
+                <button class="btn btn-modal-cancel" onclick="window.closeAllModals()" data-i18n="modals.exit.no">아니오</button>
+                <button class="btn btn-modal-confirm" onclick="window.quitApp()" data-i18n="modals.exit.yes">예</button>
             </div>
         </div>
     </div>
@@ -624,16 +683,16 @@
             <div class="envelope-body">
                 <div class="seal-wax"></div>
             </div>
-            <p class="click-guide">편지의 봉인을 해제하여 확인하십시오.</p>
+            <p class="click-guide" data-i18n="intro.seal_hint">편지의 봉인을 해제하여 확인하십시오.</p>
         </div>
         <div id="legacy-letter" class="intro-step" onclick="window.resonanceStage()">
             <div class="letter-paper">
                 <div id="letter-content"></div>
             </div>
-            <p class="click-guide" style="color: rgba(44, 44, 46, 0.5); margin-top: 20px;">이름 모를 연금술사로부터</p>
+            <p class="click-guide" style="color: rgba(44, 44, 46, 0.5); margin-top: 20px;" data-i18n="intro.letter_from">이름 모를 연금술사로부터</p>
         </div>
         <div id="resonance-stage" class="intro-step">
-            <h2 class="resonance-guide">당신과 함께 할 호문클루스를 선택하세요.</h2>
+            <h2 class="resonance-guide" data-i18n="intro.choice_guide">당신과 함께 할 호문클루스를 선택하세요.</h2>
             <div id="sphere-container"></div>
             <div id="ps-description"></div>
         </div>
@@ -642,12 +701,12 @@
     <div id="intro-confirm-modal" class="modal-overlay" style="z-index: 600000; display: none;">
         <div class="modal-window confirm-window" style="border: 1px solid var(--primary-gold);">
             <div class="confirm-content">
-                <h3 style="color: var(--primary-gold);">알 선택</h3>
+                <h3 style="color: var(--primary-gold);" data-i18n="intro.confirm_title">알 선택</h3>
                 <p id="intro-confirm-msg" style="margin-top: 15px; line-height: 1.6; color: white;"></p>
             </div>
             <div class="confirm-actions">
-                <button class="btn btn-modal-cancel" onclick="window.closeIntroConfirm()" style="color: var(--text-secondary);">뒤로</button>
-                <button id="intro-confirm-btn" class="btn btn-modal-confirm" style="color: var(--primary-gold); font-weight: 800;">확인</button>
+                <button class="btn btn-modal-cancel" onclick="window.closeIntroConfirm()" style="color: var(--text-secondary);" data-i18n="intro.btn_back">뒤로</button>
+                <button id="intro-confirm-btn" class="btn btn-modal-confirm" style="color: var(--primary-gold); font-weight: 800;" data-i18n="intro.btn_confirm">확인</button>
             </div>
         </div>
     </div>

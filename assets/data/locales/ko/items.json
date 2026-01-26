@@ -1,0 +1,30 @@
+{
+  "game": {
+    "items": {
+      "handwritten_letter_name": "손편지",
+      "handwritten_letter_desc": "종이 위에 꾹꾹 눌러 담은 마음이 느껴지는 편지입니다.",
+      "red_berry_name": "붉은 열매",
+      "red_berry_desc": "잘 익은 열매에서 은은한 생명력이 느껴집니다.",
+      "black_extract_name": "검은 추출액",
+      "black_extract_desc": "쓴맛 뒤에 정신이 맑아지는 기운이 감도는 액체입니다.",
+      "old_record_name": "낡은 기록서",
+      "old_record_desc": "누군가의 탐구 흔적이 가득한 오래된 책입니다.",
+      "old_instrument_name": "낡은 악기",
+      "old_instrument_desc": "오랜 세월을 견뎠지만, 맑은 소리를 내는 악기입니다.",
+      "warm_blanket_name": "따뜻한 모포",
+      "warm_blanket_desc": "결이 곱게 가공된 직물입니다.",
+      "ice_shard_name": "빙결 조각",
+      "ice_shard_desc": "과열된 연성로의 열기를 식힐 냉기를 머금은 조각입니다.",
+      "gem_shard_name": "원석 조각",
+      "gem_shard_desc": "가공되지 않은 순수한 마력의 결정체입니다.",
+      "silent_candle_name": "침묵의 향초",
+      "silent_candle_desc": "타오를수록 주변의 잡음을 지우고 깊은 정적을 불러오는 향입니다.",
+      "prism_kaleidoscope_name": "프리즘 만화경",
+      "prism_kaleidoscope_desc": "빛을 산란시켜 평범한 풍경을 수만 갈래의 환상적인 색채로 나누어 보여주는 도구입니다.",
+      "dried_flower_name": "마른 안개꽃",
+      "dried_flower_desc": "화려하진 않지만 책상 위에서 묵묵히 자리를 지킵니다.",
+      "old_parchment_name": "낡은 양피지",
+      "old_parchment_desc": "연구 기록을 휘갈기기 좋은 종이입니다."
+    }
+  }
+}

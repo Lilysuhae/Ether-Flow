@@ -1,0 +1,14 @@
+{
+  "game": {
+    "items": {
+      "ether_sludge_name": "에테르 슬러지",
+      "bleached_scales_name": "탈색된 비늘",
+      "petrified_memory_name": "석화된 기억",
+      "transparent_husk_name": "투명한 허물",
+      "pulsing_crystal_name": "박동하는 결정",
+      "floating_eye_name": "부유하는 안구",
+      "abyssal_dregs_name": "심연의 침전물",
+      "incomplete_fetus_name": "불완전한 태아"
+    }
+  }
+}

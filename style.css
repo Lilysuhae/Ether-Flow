@@ -4494,11 +4494,42 @@ header .header-right {
     opacity: 0;
     transform: translateX(30px);
     transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); /* 더 부드러운 애니메이션 */
+    word-break: keep-all;       /* 한글 가독성 보호 */
+    overflow-wrap: break-word;
 }
 
 .toast-notification.show {
     opacity: 1;
     transform: translateX(0);
+}
+
+/* 1. 토스트 본체: 내부 요소들이 삐져나가지 않도록 설정 */
+#app:not(.horizontal-mode) ~ #toast-container .toast-notification {
+    width: 300px !important;    /* 너비를 더 타이트하게 제한 */
+    display: flex !important;
+    align-items: center;
+    overflow: hidden;               /* 혹시 모를 탈출 원천 차단 */
+}
+
+/* 2. 토스트 내부 텍스트(span): 여기가 핵심입니다 */
+#app:not(.horizontal-mode) ~ #toast-container .toast-notification span {
+    flex: 1;                        /* 남은 공간을 꽉 채우게 함 */
+    min-width: 0;                   /* Flex 아이템의 최소 너비 해제 (줄바꿈 필수 조건) */
+    
+    /* 줄바꿈 강제 설정 */
+    white-space: normal !important; /* nowrap 방지 */
+    word-break: break-all !important; /* 좁은 폭에서는 단어 파괴해서라도 줄바꿈 */
+    overflow-wrap: anywhere;        /* 모든 위치에서 줄바꿈 허용 */
+    
+    line-height: 1.4;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* 3. 아이콘 크기 고정: 텍스트에 밀리지 않게 설정 */
+#app:not(.horizontal-mode) ~ #toast-container .toast-notification i {
+    flex-shrink: 0;                 /* 아이콘 크기 유지 */
+    font-size: 1rem;
 }
 
 /* 타입별 아주 미세한 틴트 (배경 투명도 0.08) */
@@ -4596,7 +4627,8 @@ header .header-right {
     white-space: pre-wrap !important; /* \n 줄바꿈 인식 */
     line-height: 1.5;
     text-align: center;
-    max-width: 200px;
+    max-width: 130px;
+    word-wrap: break-word;
     word-break: keep-all;
 }
 
@@ -5536,3 +5568,188 @@ header .header-right {
 .btn-game {
     position: relative !important; /* 뱃지가 버튼을 기준으로 움직이게 함 */
 }
+
+
+/* ============================================================
+   [🔊 Real Glassmorphism Player - Scrollable Edition]
+   ============================================================ */
+
+#gold-mini-player {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    z-index: 9998;
+    display: flex;
+    gap: 4px;
+    pointer-events: none;
+}
+
+.player-node {
+    pointer-events: auto;
+}
+
+/* 1. 트리거 아이콘: 테두리 없애고 은은한 광택만 남김 */
+.trigger-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 0.8em !important;
+    background: rgba(255, 255, 255, 0.05); /* 아주 옅은 배경 */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 얇은 유리 테두리 */
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.trigger-icon:hover, .trigger-icon.active {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 1);
+}
+
+/* 2. 패널: 노란선 제거, 완벽한 유리 질감 */
+.player-panel {
+    position: absolute;
+    top: 2.8em;
+    right: 0;
+    width: 286px;
+    background: rgba(18, 18, 22, 0.65);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08); /* 아주 미세한 테두리 */
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* 상단 빛반사 효과 */
+    border-radius: 0.8em;
+    padding: 0.8em;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    animation: glassUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.player-panel.active { display: flex; }
+
+.panel-header {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    padding-left: 4px;
+}
+
+/* 3. 스크롤 가능한 리스트 영역 (핵심) */
+.track-list {
+    max-height: 125px; /* 곡이 5~6개 넘어가면 스크롤 생김 */
+    overflow-y: auto;  /* 세로 스크롤 허용 */
+    margin-bottom: 16px;
+    padding-right: 4px; /* 스크롤바 공간 확보 */
+}
+
+/* 커스텀 스크롤바 (못생긴 기본 스크롤바 제거) */
+.track-list::-webkit-scrollbar {
+    width: 4px;
+}
+.track-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+.track-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+.track-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* 리스트 아이템 */
+.menu-item {
+    padding: 0.4em 0.6em;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    transition: all 0.2s;
+    margin-bottom: 2px;
+    font-size: 0.8em;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: translateX(4px); /* 호버 시 살짝 밀림 */
+}
+
+/* 선택된 아이템: 노란색 대신 하얀 빛 */
+.menu-item.selected {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 4. 컨트롤 바 */
+.control-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.2); /* 더 어둡게 눌러줌 */
+    padding: 8px 12px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ctrl-btn {
+    width: 30px; 
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.5);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+}
+
+.ctrl-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+.ctrl-btn.active { color: #fff; background: rgba(255, 255, 255, 0.25); box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+
+/* 슬라이더: 미니멀 화이트 */
+.vol-slider {
+    width: 60px;
+    height: 3px;
+    accent-color: #fff;
+    cursor: pointer;
+}
+
+.vol-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.vol-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+}
+
+@keyframes glassUp {
+    from { opacity: 0; transform: translateY(10px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
