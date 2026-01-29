@@ -1,10 +1,9 @@
-name: Build Electron App
-
 on:
   push:
-    branches: [ main ]
-  tag:
-    - 'v*'
+    branches:
+      - main
+    tags: # s를 붙이고 push 아래로 들여쓰기 했습니다.
+      - 'v*'
 
 jobs:
   build:
