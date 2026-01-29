@@ -1,15 +1,22 @@
 name: Build Electron App
+
 on:
   push:
     branches: [ main ]
+
 jobs:
   build:
     runs-on: windows-latest
+
     permissions:
-      contents: write # 빌드된 파일을 다룰 수 있는 권한을 추가합니다.
+      contents: write # 빌드 봇이 저장소에 접근할 권한
+
     steps:
+      # [수정된 부분] 전체 Git 기록을 가져오도록 옵션을 추가했습니다.
       - uses: actions/checkout@v4
-      
+        with:
+          fetch-depth: 0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -21,16 +28,16 @@ jobs:
           python-version: '3.11'
 
       - run: npm install
-      
+
       - name: Rebuild native modules
         run: npx electron-rebuild -v 40.0.0 
-      
+
       - name: Build Electron app
-        # -p never 플래그를 사용하여 '절대 배포(Publish)하지 않음'을 명시합니다.
+        # -p never: GitHub Release에 자동 배포하지 않고 빌드만 수행
         run: npx electron-builder --win --x64 -p never
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
