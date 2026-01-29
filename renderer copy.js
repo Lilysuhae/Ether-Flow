@@ -39,7 +39,14 @@ window.CharacterRenderer = CharacterRenderer;
 require('./src/introManager.js');
 
 // --- [필수 상태 변수 선언] ---
-let masterData = null;
+let masterData = { 
+    settings: { 
+        monitor: { workKeywords: [], distractKeywords: [] },
+        sound: { master: true, system: true, autoPlay: true }
+    },
+    inventory: { byproducts: {} },
+    collection: []
+};
 window.masterData = masterData;          // 통합 데이터 객체 (JSON 파일 기반)
 let lastActiveWin = null;       // 메인 프로세스에서 받은 활성 창 정보
 let isActuallyWorking = false;  // 작업 도구 매칭 여부
@@ -57,9 +64,11 @@ let mailDisplayLimit = 10; // 초기 노출 개수
 let currentStatus = "good"; // [추가] 현재 상태를 저장하여 클릭 시 사용
 let awayStartTime = null;       // [추가] 부재 시작 시간 기록용
 let lastIdleState = false;      // [추가] 직전 유휴 상태 기억용
+let shopItems = [];
+window.shopItems = [];
 
 // --- [매니저 선언] ---
-const renderer = new CharacterRenderer('main-canvas'); 
+let renderer = null;
 window.renderer = renderer; // [추가] 전역 인스턴스 연결
 window.charRenderer = renderer; // [추가] 호환성을 위해 하나 더 연결
 let progress = null;
@@ -76,7 +85,6 @@ let charGrowthMap = {};
 let dailyAppTimeMap = {};
 let currentPartner = null;
 let currentStage = '';
-let draggedTodoIndex = null;
 
 window.molipTodos = molipTodos;
 window.molipHabits = molipHabits;
@@ -99,14 +107,51 @@ let currentPriority = 0;      // 현재 출력 중인 대사의 우선순위 (0:
 let dialogueLockUntil = 0;    // 이 시간(ms)까지는 낮은 우선순위 대사 무시
 let lastDialogue = "";          // [추가] 중복 대사 방지용 기록
 
+function syncReferences() {
+    if (!masterData) return;
 
+    if (!masterData.settings) masterData.settings = {};
+    if (!masterData.settings.accordionStates) masterData.settings.accordionStates = {};
+
+    if (!masterData.settings.workApps) masterData.settings.workApps = [];
+    if (!masterData.settings.distractionApps) masterData.settings.distractionApps = [];
+
+    workApps = masterData.settings.workApps;
+    distractionApps = masterData.settings.distractionApps;
+    molipTodos = masterData.todo;
+    molipHabits = masterData.habit;
+    
+    if (!masterData.character) masterData.character = {};
+    const c = masterData.character;
+    c.intimacyMap = c.intimacyMap || {};
+    c.growthMap = c.growthMap || {};
+    c.givenGiftsMap = c.givenGiftsMap || {};
+    c.dailyPetCountMap = c.dailyPetCountMap || {};
+    c.dailyGiftCountMap = c.dailyGiftCountMap || {};
+
+    charIntimacyMap = c.intimacyMap;
+    charGrowthMap = c.growthMap;
+    givenGiftsMap = c.givenGiftsMap;
+    dailyPetCountMap = c.dailyPetCountMap;
+    dailyGiftCountMap = c.dailyGiftCountMap;
+
+    masterData.dailyAppTimeMap = masterData.dailyAppTimeMap || {};
+    dailyAppTimeMap = masterData.dailyAppTimeMap;
+
+    window.molipTodos = molipTodos;
+    window.molipHabits = molipHabits;
+    window.dailyAppTimeMap = dailyAppTimeMap;
+}
+
+/**
+ * [renderer.js] 상점 아이템 데이터 (아이콘 이미지화 버전)
+ */
 window.getShopItems = () => [
-    // category: 'material' (재료 및 도구 탭용)
     {
         id: "handwritten_letter",
         category: "gift",
         name: window.t('game.items.handwritten_letter_name'),
-        icon: '<i class="fa-solid fa-envelope"></i>',
+        icon: "assets/images/items/handwritten_letter.png",
         price: 5,
         desc: window.t('game.items.handwritten_letter_desc')
     },
@@ -114,7 +159,7 @@ window.getShopItems = () => [
         id: "red_berry",
         category: "gift",
         name: window.t('game.items.red_berry_name'),
-        icon: '<i class="fa-solid fa-apple-whole"></i>',
+        icon: "assets/images/items/red_berry.png",
         price: 20,
         desc: window.t('game.items.red_berry_desc')
     },
@@ -122,7 +167,7 @@ window.getShopItems = () => [
         id: "black_extract",
         category: "gift",
         name: window.t('game.items.black_extract_name'),
-        icon: '<i class="fa-solid fa-mug-hot"></i>',
+        icon: "assets/images/items/black_extract.png",
         price: 30,
         desc: window.t('game.items.black_extract_desc')
     },
@@ -130,7 +175,7 @@ window.getShopItems = () => [
         id: "old_record",
         category: "gift",
         name: window.t('game.items.old_record_name'),
-        icon: '<i class="fa-solid fa-book"></i>',
+        icon: "assets/images/items/old_record.png",
         price: 60,
         desc: window.t('game.items.old_record_desc')
     },
@@ -138,7 +183,7 @@ window.getShopItems = () => [
         id: "old_instrument",
         category: "gift",
         name: window.t('game.items.old_instrument_name'),
-        icon: '<i class="fa-solid fa-guitar"></i>',
+        icon: "assets/images/items/old_instrument.png",
         price: 50,
         desc: window.t('game.items.old_instrument_desc')
     },
@@ -146,7 +191,7 @@ window.getShopItems = () => [
         id: "warm_blanket",
         category: "gift",
         name: window.t('game.items.warm_blanket_name'),
-        icon: '<i class="fa-solid fa-rug"></i>',
+        icon: "assets/images/items/warm_blanket.png",
         price: 60,
         desc: window.t('game.items.warm_blanket_desc')
     },
@@ -154,7 +199,7 @@ window.getShopItems = () => [
         id: "ice_shard",
         category: "gift",
         name: window.t('game.items.ice_shard_name'),
-        icon: '<i class="fa-solid fa-ice-cream"></i>',
+        icon: "assets/images/items/ice_shard.png",
         price: 30,
         desc: window.t('game.items.ice_shard_desc')
     },
@@ -162,7 +207,7 @@ window.getShopItems = () => [
         id: "gem_shard",
         category: "gift",
         name: window.t('game.items.gem_shard_name'),
-        icon: '<i class="fa-solid fa-gem"></i>',
+        icon: "assets/images/items/gem_shard.png",
         price: 80,
         desc: window.t('game.items.gem_shard_desc')
     },
@@ -170,7 +215,7 @@ window.getShopItems = () => [
         id: "silent_candle",
         category: "gift",
         name: window.t('game.items.silent_candle_name'),
-        icon: '<i class="fa-solid fa-wind"></i>',
+        icon: "assets/images/items/silent_candle.png",
         price: 25,
         desc: window.t('game.items.silent_candle_desc')
     },
@@ -178,7 +223,7 @@ window.getShopItems = () => [
         id: "prism_kaleidoscope",
         category: "gift",
         name: window.t('game.items.prism_kaleidoscope_name'),
-        icon: '<i class="fa-solid fa-eye"></i>',
+        icon: "assets/images/items/prism_kaleidoscope.png",
         price: 70,
         desc: window.t('game.items.prism_kaleidoscope_desc')
     },
@@ -186,7 +231,7 @@ window.getShopItems = () => [
         id: "dried_flower",
         category: "gift",
         name: window.t('game.items.dried_flower_name'),
-        icon: '<i class="fa-solid fa-clover"></i>',
+        icon: "assets/images/items/dried_flower.png",
         price: 15,
         desc: window.t('game.items.dried_flower_desc')
     },
@@ -194,7 +239,7 @@ window.getShopItems = () => [
         id: "old_parchment",
         category: "material",
         name: window.t('game.items.old_parchment_name'),
-        icon: '<i class="fa-solid fa-envelope"></i>',
+        icon: "assets/images/items/old_parchment.png",
         price: 5,
         desc: window.t('game.items.old_parchment_desc')
     },
@@ -204,29 +249,31 @@ window.getShopItems = () => [
 const sounds = {
     click: new Audio(path.join(__dirname, 'assets', 'sounds', 'click.mp3')),
     paper: new Audio(path.join(__dirname, 'assets', 'sounds', 'paper.mp3')),
-    check: new Audio(path.join(__dirname, 'assets', 'sounds', 'check.mp3'))
+    check: new Audio(path.join(__dirname, 'assets', 'sounds', 'check.mp3')),
+    send: new Audio(path.join(__dirname, 'assets', 'sounds', 'send.mp3'))
 };
 
 window.playSFX = (key) => {
-    // 1[방어막] 데이터가 아직 로드되지 않았거나 설정이 없으면 즉시 중단
-    const soundSettings = (window.masterData && window.masterData.settings) ? window.masterData.settings.sound : null;
-
-    // 데이터가 없거나, 전체 소리가 꺼져있거나, 시스템 소리가 꺼져있으면 재생 안 함
-    if (!soundSettings || !soundSettings.master || !soundSettings.system) {
-        return;
-    }
+    // 1. 설정 체크
+    const s = (window.masterData && window.masterData.settings) ? window.masterData.settings.sound : null;
+    if (!s || !s.master || !s.system) return;
 
     const sound = sounds[key];
     if (sound) {
         try {
+            // [핵심] 기존 재생을 강제 중지하고 0초로 리셋 (이미 재생 중일 때 씹히는 현상 방지)
+            sound.pause();
             sound.currentTime = 0;
-            sound.volume = 0.5;
-            sound.play().catch(e => {
-                // 브라우저 정책상 사용자 상호작용 전에는 재생이 안 될 수 있음
-                console.warn("SFX Play 인터럽트:", e);
-            });
+            
+            // 아주 짧은 지연 후 재생하여 브라우저의 거부 반응을 우회합니다.
+            setTimeout(() => {
+                const playPromise = sound.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => console.warn("SFX 재생 차단 우회:", e));
+                }
+            }, 5);
         } catch (err) {
-            console.error("SFX 재생 중 에러:", err);
+            console.error("SFX 엔진 오류:", err);
         }
     }
 };
@@ -261,108 +308,115 @@ window.cleanAppName = function(name) {
 // [SECTION 1] 통합 데이터 저장 시스템 (Atomic Save)
 // --------------------------------------------------------------------------
 /**
- * 모든 현재 상태를 메모리에서 수집하여 main.js를 통해 save_data.json에 안전하게 기록합니다.
+ * [renderer.js] 모든 연구 데이터를 수집하여 하드디스크에 안전하게 기록합니다.
+ * 참조 방식을 사용하여 데이터 누락을 차단하고, 날짜 보존 로직을 통해 무한 새로고침을 방지합니다.
  */
-// renderer.js 약 75행 부근의 saveAllData 함수 전체를 교체하세요.
-function saveAllData() {
-    if (!masterData || window.isResetting) return Promise.resolve({ success: false });
+async function saveAllData() {
+    // 1. [방어] 초기화 중이거나 데이터가 로드되지 않은 경우 저장을 차단합니다.
+    if (!masterData || window.isResetting) {
+        console.warn("⚠️ [System] 저장 중단: 리셋 중이거나 데이터 미로드");
+        return { success: false };
+    }
 
     try {
-        if (progress) masterData.progress = progress.getSaveData();
+        console.log("💾 [System] 데이터 저장 시퀀스 개시...");
+
+        // 2. [핵심] 날짜 정보 백업 (무한 새로고침 방지용)
+        // updateLoop에서 이미 새 날짜를 주입했을 것이므로, 이 값을 '진짜'로 간주하여 보호합니다.
+        const currentSaveDate = masterData.progress ? masterData.progress.lastSaveDate : window.getMolipDate();
+
+        // 3. 매니저 클래스들의 최신 상태를 마스터 데이터로 집결합니다.
+        if (progress) masterData.progress = progress.getSaveData(); 
         if (collection) masterData.collection = collection.getSaveData();
-        if (mailbox) masterData.mailbox = mailbox.getSaveData();
 
-        masterData.character = {
-            intimacyMap: charIntimacyMap || {},
-            growthMap: charGrowthMap || {},
-            givenGiftsMap: givenGiftsMap || {},
-            dailyPetCountMap: dailyPetCountMap || {},
-            dailyGiftCountMap: dailyGiftCountMap || {},
-            selectedPartnerId: currentPartner ? currentPartner.id : null
-        };
-
-        // [핵심 수정] dailyAppTimeMap이 비어있어도 구조는 유지하며 저장합니다.
-        masterData.dailyAppTimeMap = dailyAppTimeMap || {};
-
-        masterData.todo = [...molipTodos];
-        masterData.habit = [...molipHabits];
-
-        masterData.settings = {
-            workApps: workApps || [],
-            distractionApps: distractionApps || [],
-            isHorizontalMode: window.isHorizontalMode,
-            isWindowMode: window.isWindowMode,
-            isAlwaysOnTop: window.isAlwaysOnTop,
-            hideCompleted: window.hideCompleted,
-            showPastCompleted: window.showPastCompleted,
-            resetHour: window.resetHour,
-            autoDeleteOldTasks: window.autoDeleteOldTasks,
-            font: window.masterData?.settings?.font,
-            accordionStates: {} 
-        };
-
-        document.querySelectorAll('.accordion').forEach(acc => {
-            if (acc.id) masterData.settings.accordionStates[acc.id] = acc.classList.contains('active');
-        });
-
+        // window.mailbox와 mailbox 변수 모두 체크하여 최신 데이터 확보
+        const mb = window.mailbox || mailbox;
+        if (mb) {
+            // 매니저로부터 받은 기록(isRead 포함)을 마스터 데이터에 주입
+            masterData.mailbox = mb.getSaveData(); 
+        }
+        
+        // 4. [보강] getSaveData() 결과물에 날짜가 누락되었을 경우를 대비해 백업본으로 강제 복구합니다.
         if (masterData.progress) {
-            masterData.progress.lastSaveDate = window.getMolipDate();
+            masterData.progress.lastSaveDate = currentSaveDate;
         }
 
-        // masterData.logs는 recordWorkLogEntry에서 직접 수정되므로 그대로 포함되어 저장됩니다.
-        return ipcRenderer.invoke('save-game-data', masterData);
+        // 5. [참조 유지] 할 일, 습관, 캐릭터 정보는 syncReferences() 덕분에 
+        // 이미 masterData 내부에 실시간 반영되어 있으므로 별도 복사 과정이 필요 없습니다.
+
+        // 6. UI 및 시스템 설정값을 최종 동기화합니다.
+        if (masterData.settings) {
+            masterData.settings.isHorizontalMode = window.isHorizontalMode;
+            masterData.settings.isWindowMode = window.isWindowMode;
+            masterData.settings.isAlwaysOnTop = window.isAlwaysOnTop;
+            masterData.settings.hideCompleted = window.hideCompleted;
+            masterData.settings.showPastCompleted = window.showPastCompleted;
+            masterData.settings.resetHour = window.resetHour;
+            masterData.settings.autoDeleteOldTasks = window.autoDeleteOldTasks;
+        }
+
+        // 7. [핵심] 메인 프로세스에 실제 파일 쓰기를 요청하고 파일 작성이 끝날 때까지 대기합니다.
+        const result = await ipcRenderer.invoke('save-game-data', masterData);
+        
+        if (result && result.success) {
+            console.log(`💾 [System] 데이터 보존 완료 (기준 날짜: ${currentSaveDate})`);
+            return { success: true };
+        } else {
+            throw new Error("파일 시스템 응답 실패");
+        }
     } catch (err) {
-        console.error("데이터 저장 실패:", err);
-        return Promise.resolve({ success: false });
+        console.error("❌ [System] 데이터 저장 중 오류 발생:", err);
+        if (window.showToast) {
+            window.showToast("데이터 저장에 실패했습니다. 파일 쓰기 권한을 확인하세요.", "error");
+        }
+        return { success: false };
     }
 }
+
+// 전역 연결
 window.saveAllData = saveAllData;
 
 // --------------------------------------------------------------------------
 // [SECTION 2] 캐릭터 성장 및 스프라이트 관리
 // --------------------------------------------------------------------------
 
-/**
- * 캐릭터의 성장 상태(알/어린이/성체)를 판별하여 캔버스 이미지를 교체하고 애니메이션을 제어합니다.
- */
 async function refreshCharacterSprite() {
-    if (!currentPartner) return;
-    const canvas = document.getElementById('main-canvas'); 
+    const r = window.renderer; 
+    if (!currentPartner || !r) return;
 
+    // 1. 배경 적용
     const gameView = document.getElementById('game-view');
     if (gameView && currentPartner.background) {
         gameView.style.backgroundImage = `url('${currentPartner.background}')`;
     }
     
-    // 1. 알 상태일 때 (흔들림 애니메이션 및 크기 보정)
+    // 2. 성장 단계 계산
+    const totalSec = charGrowthMap[currentPartner.id] || 0;
+    const newStage = (totalSec / 60) >= (currentPartner.evolution_level || EVOLUTION_TARGET_MIN) ? 'adult' : 'child';
+
+    // 3. 알 상태 특수 처리
     if (collection.activeEgg && collection.activeEgg.type === currentPartner.id) {
         currentStage = 'egg';
-        lastLoadedId = currentPartner.id;
-        
-        // [강제 적용] 흔들림 클래스 추가
-        if (canvas) canvas.classList.add('egg-hatching-anim'); 
-        
-        await renderer.loadCharacter(currentPartner.stages.egg);
+        await r.loadCharacter(currentPartner.stages.egg);
+        if (r.draw) r.draw();
         return;
     }
 
-    // 2. 부화 후 상태 (애니메이션 제거)
-    if (canvas) canvas.classList.remove('egg-hatching-anim'); 
-
-    const totalSec = charGrowthMap[currentPartner.id] || 0;
-    const growthMin = totalSec / 60;
-    const targetMin = currentPartner.evolution_level || EVOLUTION_TARGET_MIN;
-    const newStage = growthMin >= targetMin ? 'adult' : 'child';
-
+    // 4. 이미지 로드 및 초기 표정 설정
     if (currentStage !== newStage || lastLoadedId !== currentPartner.id) {
         currentStage = newStage;
         lastLoadedId = currentPartner.id;
         const stageData = currentPartner.stages[currentStage];
+        
         if (stageData.expressions) {
-            await renderer.loadExpressions(stageData.expressions);
+            await r.loadExpressions(stageData.expressions);
+            r.setExpression('good'); // ★ 로드 후 즉시 첫 표정 그리기
         } else {
-            await renderer.loadCharacter(stageData);
+            await r.loadCharacter(stageData);
         }
+        
+        if (r.draw) r.draw(); // 강제 출력
+        window.lastCharacterState = null; 
     }
 }
 
@@ -854,6 +908,7 @@ window.switchShopTab = (category, btnElement) => {
 };
 
 // 3. 아이템 렌더링 (필터링 로직 강화)
+// [renderer.js] 905라인부터 951라인까지 이 코드로 덮어쓰세요.
 window.renderShopItems = (category) => {
     const grid = document.getElementById('shop-grid'); 
     if (!grid) return;
@@ -865,27 +920,17 @@ window.renderShopItems = (category) => {
         shopEther.innerText = window.collection.points.toLocaleString();
     }
 
-    // 2. [아티스트 요청] 연구 재료(material) 탭은 '준비 중' 메시지 출력
-    if (category === 'material') {
-        grid.innerHTML = `
-            <div style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; color: rgba(255, 255, 255, 0.2); text-align: center;">
-                <i class="fas fa-hammer" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
-                <div style="font-size: 1.1rem; font-weight: bold; letter-spacing: 1px;">연구 재료 준비 중</div>
-                <div style="font-size: 0.85rem; margin-top: 8px; opacity: 0.7;">새로운 재료들을 가공하고 있습니다.<br>다음 업데이트를 기대해 주세요.</div>
-            </div>
-        `;
-        return; 
-    }
-
-    // 3. 선물(gift) 등 실제 판매 아이템 필터링
-    const filtered = shopItems.filter(item => item.category === category);
+    // 2. 🛡️ [에러 해결] 기존의 if (category === 'material') 블록을 삭제하고 공통 로직을 타게 합니다.
+    // window.shopItems가 초기화되지 않았을 경우를 대비해 직접 호출합니다.
+    const itemsToFilter = (window.shopItems && window.shopItems.length > 0) ? window.shopItems : window.getShopItems();
+    const filtered = itemsToFilter.filter(item => item.category === category);
 
     if (filtered.length === 0) {
         grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(255,255,255,0.2);">판매 중인 물품이 없습니다.</div>`;
         return;
     }
-
-    // 4. 아이템 카드 생성
+    
+    // 3. ✨ [이미지 출력 해결] 각 아이템을 <img> 태그로 안전하게 감싸서 출력합니다.
     filtered.forEach(item => {
         const card = document.createElement('div');
         card.className = 'shop-card-glass';
@@ -895,7 +940,9 @@ window.renderShopItems = (category) => {
         const canAfford = (window.collection) ? window.collection.points >= item.price : false;
 
         card.innerHTML = `
-            <div class="shop-card-icon">${item.icon}</div>
+            <div class="shop-card-icon">
+                <img src="${item.icon}" class="shop-img-icon" onerror="this.src='assets/images/items/default.png'">
+            </div>
             <div class="shop-card-name">${item.name}</div>
             <div class="shop-card-price">${item.price.toLocaleString()} Et</div>
             <button class="btn-buy-glass" 
@@ -1048,8 +1095,23 @@ window.addDistractionApp = () => {
     saveAllData(); // 파일에 즉시 저장
 };
 
-window.removeWorkApp = (name) => { workApps = workApps.filter(a => a !== name); window.renderWorkAppList(); saveAllData(); };
-window.removeDistractionApp = (name) => { distractionApps = distractionApps.filter(a => a !== name); window.renderDistractionAppList(); saveAllData(); };
+// [renderer.js 약 660행] 작업 도구 삭제
+window.removeWorkApp = (name) => { 
+    // 1. 마스터 데이터 상자 안의 배열을 직접 필터링하여 교체합니다.
+    masterData.settings.workApps = masterData.settings.workApps.filter(a => a !== name); 
+    // 2. 이름표(참조)를 다시 상자 내용물에 붙여줍니다.
+    syncReferences(); 
+    window.renderWorkAppList(); 
+    saveAllData(); 
+};
+
+// [renderer.js 약 661행] 딴짓 도구 삭제
+window.removeDistractionApp = (name) => { 
+    masterData.settings.distractionApps = masterData.settings.distractionApps.filter(a => a !== name); 
+    syncReferences(); 
+    window.renderDistractionAppList(); 
+    saveAllData(); 
+};
 
 // TO-DO 리스트 관리
 // [renderer.js] 상단 상태 변수 선언부에 추가
@@ -1106,7 +1168,7 @@ window.renderTodos = () => {
     const molipToday = window.getMolipDate(); // 시스템 기준 오늘 날짜
 
     // 1. [기존 로직] 화면에 표시할 후보군 선정 (Rule A, B, C 반영)
-    let displayTodos = molipTodos.filter(t => {
+    let displayTodos = (molipTodos || []).filter(t => {
         if (!t) return false;
 
         const isToday = t.date === molipToday;
@@ -1124,7 +1186,7 @@ window.renderTodos = () => {
     });
 
     // 2. [기존 로직] 뱃지 계산 (오늘 할 일 기준)
-    const todayPool = molipTodos.filter(t => t && t.date === molipToday);
+    const todayPool = (molipTodos || []).filter(t => t && t.date === molipToday);
     const total = todayPool.length;
     const completed = todayPool.filter(t => t.completed).length;
 
@@ -1206,6 +1268,7 @@ window.toggleTodo = (id) => {
     const index = molipTodos.findIndex(t => String(t.id) === String(id));
     if (index === -1) return;
 
+    window.playSFX('check');
     const molipToday = window.getMolipDate(); // 시스템 기준 오늘 날짜
     const wasCompleted = molipTodos[index].completed;
 
@@ -1255,7 +1318,14 @@ window.toggleTodo = (id) => {
     saveAllData();
 };
 
-window.deleteTodo = (id) => { molipTodos = molipTodos.filter(t => String(t.id) !== String(id)); window.renderTodos(); saveAllData(); };
+window.deleteTodo = (id) => { 
+    // 1. 저장 상자(masterData) 내부의 데이터를 직접 필터링
+    masterData.todo = masterData.todo.filter(t => String(t.id) !== String(id)); 
+    // 2. 이름표(참조)를 다시 상자 내용물에 붙여줌
+    syncReferences(); 
+    window.renderTodos(); 
+    saveAllData(); 
+};
 
 // --------------------------------------------------------------------------
 // [SECTION 6] 작업 로그 및 영수증 엔진
@@ -1573,6 +1643,12 @@ let typingInterval = null;
 window.showDialogue = function(overrideText, priority = 1) {
     if (!currentPartner) return;
 
+    const isPanelOpen = document.querySelector('.player-panel.active');
+    // 패널이 열려있다면 대사를 출력하지 않고 즉시 종료합니다.
+    if (isPanelOpen) {
+        return;
+    }
+
     const now = Date.now();
     // 1. [우선순위 체크] 현재 더 중요한 대사가 출력 중이면 무시
     if (priority < currentPriority && now < dialogueLockUntil) return;
@@ -1745,52 +1821,53 @@ window.updateUI = function() {
  * 메인 루프: 감지, 기록, 저장, 캐릭터 피드백을 총괄합니다.
  */
 async function updateLoop() {
-    // 1. 데이터 로드 전이거나 리셋 중이면 중단
+    // 1. 기본 방어막
     if (!masterData || window.isResetting) return;
 
-    // 데이터 안전장치 (기록 멈춤 방지)
+    // 🛡️ [데이터 구조 강제 초기화] - 없는 서랍을 즉시 만듭니다.
+    if (!masterData.settings) masterData.settings = {};
+    if (!masterData.settings.monitor) masterData.settings.monitor = { workKeywords: [], distractKeywords: [] };
+    if (!masterData.progress) masterData.progress = { lastSaveDate: window.getMolipDate(), todayFocusTime: 0 };
+
+    // 🛡️ [안전 변수 생성] - 전역 변수가 undefined여도 빈 배열([])로 취급해 에러를 막습니다.
+    const safeTodos = (typeof molipTodos !== 'undefined' && molipTodos) ? molipTodos : [];
+    const safeHabits = (typeof molipHabits !== 'undefined' && molipHabits) ? molipHabits : [];
+    const safeOwnedIds = (collection && collection.ownedIds) ? collection.ownedIds : [];
+    const safeGifts = (typeof givenGiftsMap !== 'undefined' && givenGiftsMap) ? givenGiftsMap : {};
+    const safeWorkApps = (typeof workApps !== 'undefined' && workApps) ? workApps : [];
+    const safeDistractionApps = (typeof distractionApps !== 'undefined' && distractionApps) ? distractionApps : [];
+    const safeWorkKeys = masterData.settings.monitor.workKeywords || [];
+    const safeDistractKeys = masterData.settings.monitor.distractKeywords || [];
+
     if (!dailyAppTimeMap) dailyAppTimeMap = masterData.dailyAppTimeMap || {};
-    const safeWorkApps = workApps || [];
-    const safeDistractionApps = distractionApps || [];
 
     try {
-        const nowMolipDate = window.getMolipDate(); // 'YYYY-MM-DD' 형식
+        const nowMolipDate = window.getMolipDate();
         
-        // --- [3번 원인 해결: 동기화 후 저장 및 안전한 재시작] ---
+        // --- [1] 날짜 변경 감지 및 자정 리셋 ---
         if (masterData.progress && masterData.progress.lastSaveDate !== nowMolipDate) {
             console.log(`[시스템] 날짜 변경 감지: ${masterData.progress.lastSaveDate} -> ${nowMolipDate}`);
-            
-            // 1. 모든 관리자 객체에 새 날짜를 강제로 주입 (덮어쓰기 방지)
             masterData.progress.lastSaveDate = nowMolipDate; 
             if (progress) {
-                progress.lastSaveDate = nowMolipDate; // 매니저 내부 날짜 동기화
-                progress.todayFocusTime = 0;          // 오늘 시간 리셋
+                progress.lastSaveDate = nowMolipDate; 
+                progress.todayFocusTime = 0;
             }
-            
-            // 2. 습관 및 기타 일일 데이터 초기화
             checkHabitReset(); 
-            
-            // 3. 사용자에게 알림 표시 (데이터 저장 중임을 알림)
             window.showToast("새로운 하루가 시작되었습니다. 연구 기록을 정리 중입니다...", "info");
 
-            // 4. 저장 후 0.5초 대기했다가 새로고침 (파일 쓰기 완료 시간 확보)
-            const saveResult = await saveAllData(); // 저장 결과 확인
-    
+            const saveResult = await saveAllData(); 
             if (saveResult && saveResult.success) {
                 console.log("[시스템] 자정 데이터 보존 완료. 앱을 재시작합니다.");
                 setTimeout(() => { location.reload(); }, 500);
             } else {
-                // 저장이 실패했다면 새로고침을 멈추고 경고를 띄워 데이터를 보호합니다.
                 window.showToast("데이터 저장 실패! 저장 공간을 확인해 주세요.", "error");
             }
             return;
         }
 
-        // --- 3. 활성 창 분석 및 UI 업데이트 ---
+        // --- [2] 활성 창 분석 및 UI 업데이트 ---
         const rawOwner = lastActiveWin?.owner || "Ether Flow";
         const cleanedName = window.cleanAppName(rawOwner);
-        
-        // 내 연구실(본인 앱) 판정 로직
         const isSelf = (
             cleanedName === "Ether Flow" || 
             cleanedName === "Electron" || 
@@ -1798,65 +1875,41 @@ async function updateLoop() {
             rawOwner.includes("Ether Flow")
         );
 
-        // 상단 등록칸 이름 표기
+        // 상단 앱 이름 표기
         const appNameEl = document.getElementById('current-app-name');
         const distractNameEl = document.getElementById('current-distract-name');
         if (appNameEl) appNameEl.innerText = isSelf ? "내 연구실" : cleanedName;
         if (distractNameEl) distractNameEl.innerText = isSelf ? "내 연구실" : cleanedName;
 
-        // [핵심 수정] HTML ID 없이도 부모 요소를 통해 버튼을 정확히 찾아 비활성화합니다.
+        // 등록 버튼 활성화/비활성화 제어
         const workAddBtn = document.querySelector('#current-app-box .btn-add-current');
         const distractAddBtn = document.querySelector('#tab-content-distract .btn-add-current');
-        
         if (workAddBtn) {
             workAddBtn.disabled = isSelf;
             workAddBtn.style.opacity = isSelf ? "0.5" : "1";
-            workAddBtn.style.pointerEvents = isSelf ? "none" : "auto";
-            workAddBtn.style.cursor = isSelf ? "default" : "pointer";
         }
         if (distractAddBtn) {
             distractAddBtn.disabled = isSelf;
             distractAddBtn.style.opacity = isSelf ? "0.5" : "1";
-            distractAddBtn.style.pointerEvents = isSelf ? "none" : "auto";
-            distractAddBtn.style.cursor = isSelf ? "default" : "pointer";
         }
 
-        // --- 4. 상태 판정 및 복귀(Return) 감지 ---
+        // --- [3] 상태 판정 및 복귀 감지 ---
         isActuallyWorking = !isSelf && safeWorkApps.some(app => rawOwner.toLowerCase().includes(app.toLowerCase()));
         isDistraction = !isSelf && safeDistractionApps.some(app => rawOwner.toLowerCase().includes(app.toLowerCase()));
-        
         const isFocusing = isActuallyWorking && !isIdle && !isDistraction;
         
-        // 복귀 감지 로직
-        if (isIdle && !lastIdleState) {
-            awayStartTime = Date.now(); 
-        }
+        if (isIdle && !lastIdleState) awayStartTime = Date.now(); 
         if (!isIdle && lastIdleState && awayStartTime) {
             const awayDuration = (Date.now() - awayStartTime) / 1000;
-            // 3분 이상 자리를 비웠던 성체라면 복귀 대사 출력
-            if (awayDuration >= 180 && currentStage === 'adult') {
-                window.showRandomDialogue('return'); 
-            }
+            if (awayDuration >= 180 && currentStage === 'adult') window.showRandomDialogue('return'); 
             awayStartTime = null;
         }
         lastIdleState = isIdle; 
 
-        // --- 5. 캐릭터 표정 및 상태별 대사 매핑 ---
-        let exprKey = 'good';      // CharacterRenderer용 키
-        let dialogueKey = 'idle';  // characters.json용 키
+        // --- [4] 캐릭터 표정 및 상태별 대사 ---
+        let exprKey = isFocusing ? 'working' : (isDistraction ? 'distracting' : (isIdle ? 'away' : 'good'));
+        let dialogueKey = isFocusing ? 'work' : (isDistraction ? 'distract' : 'idle');
 
-        if (isFocusing) {
-            exprKey = 'working';
-            dialogueKey = 'work';
-        } else if (isDistraction) {
-            exprKey = 'distracting';
-            dialogueKey = 'distract';
-        } else if (isIdle) {
-            exprKey = 'away';
-            dialogueKey = 'idle';
-        }
-
-        // [중요] 알 상태(egg)가 아닐 때만 표정 변화를 시도하여 에러를 방지합니다.
         if (currentStage !== 'egg' && window.renderer && typeof window.renderer.setExpression === 'function') {
             if (window.lastCharacterState !== exprKey) {
                 window.renderer.setExpression(exprKey);
@@ -1865,30 +1918,13 @@ async function updateLoop() {
             }
         }
 
-        // 상태 변화 시 시각적/언어적 피드백 실행
-        if (window.renderer && typeof window.renderer.setExpression === 'function') {
-            if (window.lastCharacterState !== exprKey) {
-                // 표정 교체
-                window.renderer.setExpression(exprKey);
-                
-                // 복귀 상황이 아닐 때만 상태 대사 출력
-                if (!awayStartTime) window.showRandomDialogue(dialogueKey);
-                
-                window.lastCharacterState = exprKey;
-                console.log(`[캐릭터] 상태 전환: ${exprKey}`);
-            }
-        }
-
-        // --- 6. 실시간 데이터 기록 ---
+        // --- [5] 실시간 데이터 기록 ---
         if (isFocusing || isDistraction) {
             recordWorkLogEntry(rawOwner, isFocusing ? 'work' : 'distract');
             if (isFocusing) {
-                // [핵심 추가] 현재 파트너의 성장 시간(초)을 실시간으로 누적합니다.
                 if (currentPartner && !collection.activeEgg) {
                     charGrowthMap[currentPartner.id] = (charGrowthMap[currentPartner.id] || 0) + 1;
                 }
-
-                // [수정] nowMolipDate('YYYY-MM-DD')를 키로 사용합니다.
                 if (!dailyAppTimeMap[nowMolipDate]) dailyAppTimeMap[nowMolipDate] = {};
                 dailyAppTimeMap[nowMolipDate][cleanedName] = (dailyAppTimeMap[nowMolipDate][cleanedName] || 0) + 1;
                 
@@ -1900,57 +1936,42 @@ async function updateLoop() {
             }
         }
 
-        // --- 서신(Mailbox) 트리거 체크 ---
+        // --- [6] 서신(Mailbox) 트리거 체크 (모든 스탯 보존) ---
         if (mailbox) {
-            // 성체 수 계산 로직
             const adultCount = charData.characters.filter(char => {
                 const growthSec = charGrowthMap[char.id] || 0;
                 return (growthSec / 60) >= (char.evolution_level || EVOLUTION_TARGET_MIN);
             }).length;
 
-            // 완벽한 하루(Todo/Habit 모두 완료) 체크
-            const allTodosDone = molipTodos.length > 0 && molipTodos.every(t => t.completed);
-            const allHabitsDone = molipHabits.length > 0 && molipHabits.every(h => h.completed);
-            const isPerfectDay = allTodosDone && allHabitsDone;
-
-            // [중요] 서신 매니저에 보낼 현재 파트너의 개별 쓰다듬기 카운트 계산
+            const isPerfectDay = (safeTodos.length > 0 && safeTodos.every(t => t.completed)) && 
+                                (safeHabits.length > 0 && safeHabits.every(h => h.completed));
             const petKey = `${currentPartner?.id}_${nowMolipDate}`;
+            const lastSaveDateVal = masterData.progress.lastSaveDate ? new Date(masterData.progress.lastSaveDate) : new Date();
+            const daysSinceLastSave = Math.floor((new Date() - lastSaveDateVal) / (1000 * 60 * 60 * 24));
 
-            // 장기 부재 복귀 체크 (7일 이상)
-            const lastSaveDate = new Date(masterData.progress.lastSaveDate);
-            const daysSinceLastSave = Math.floor((new Date() - lastSaveDate) / (1000 * 60 * 60 * 24));
+            // ✨ 아티스트님이 원하시는 모든 상세 스탯을 stats 객체에 담습니다.
             const stats = {
-                // 기본 수치
                 level: progress.level,
                 alchemist_level: progress.level,
                 points: collection.points,
                 rich_alchemist: collection.points,
-                
-                // 시간 데이터 (mailboxManager.js에서 분 단위 변환하므로 초 단위 전송)
                 totalTime: progress.totalFocusTime,
                 total_focus: progress.totalFocusTime,
                 marathonTime: window.marathonTime || 0,
                 marathon_focus: window.marathonTime || 0,
-                
-                // 캐릭터 상태
                 partnerId: currentPartner?.id,
                 current_stage: currentStage,
                 intimacy_level: charIntimacyMap[currentPartner?.id] || 0,
                 growth_level: charGrowthMap[currentPartner?.id] || 0,
                 adultCount: adultCount,
                 all_growth: charGrowthMap,
-                
-                // 과업 및 습관 (누적 통계)
-                todoCount: molipTodos.filter(t => t.completed).length,
-                todo_count: molipTodos.filter(t => t.completed).length,
-                habit_master: Math.max(...molipHabits.map(h => h.streak || 0), 0),
-                ownedCount: collection.ownedIds.length,
-                owned_count: collection.ownedIds.length,
-                
-                // 행위 기반 및 특수 조건
+                todoCount: safeTodos.filter(t => t.completed).length,
+                todo_count: safeTodos.filter(t => t.completed).length,
+                habit_master: safeHabits.length > 0 ? Math.max(...safeHabits.map(h => h.streak || 0), 0) : 0,
+                ownedCount: safeOwnedIds.length,
+                owned_count: safeOwnedIds.length,
                 app_juggler: safeWorkApps.length,
-                daily_pet_limit: dailyPetCountMap[nowMolipDate] || 0,
-                gift_total_count: Object.values(givenGiftsMap).reduce((sum, list) => sum + list.length, 0),
+                gift_total_count: Object.values(safeGifts).reduce((sum, list) => sum + (list ? list.length : 0), 0),
                 isPerfectDay: isPerfectDay,
                 perfect_day: isPerfectDay,
                 isFlowActive: isFocusing,
@@ -1958,11 +1979,7 @@ async function updateLoop() {
                 failed_attempt_count: masterData.failedCount || 0,
                 inactive_days: daysSinceLastSave,
                 return_after_long_absence: daysSinceLastSave >= 7,
-
-                // [핵심 수정] 캐릭터별 카운트가 적용된 petKey를 사용하여 값을 전달합니다.
                 daily_pet_limit: dailyPetCountMap[petKey] || 0,
-                
-                // 환경 데이터
                 currentHour: new Date().getHours(),
                 currentDay: new Date().getDay(),
                 early_bird: new Date().getHours() >= 6 && new Date().getHours() <= 9,
@@ -1975,11 +1992,11 @@ async function updateLoop() {
                 window.showToast("새로운 서신이 "+ newMails.length +"통 도착했습니다.", "info");
                 if (window.renderMailList) window.renderMailList();
                 window.updateMailNotification();
-                saveAllData(); // 서신 수신 시 상태 보존을 위해 저장
+                saveAllData(); 
             }
         }
 
-        // --- 7. 시스템 및 UI 갱신 ---
+        // --- [7] 시스템 및 UI 갱신 ---
         checkHatching();
         checkEvolution();
         updateStatusBadge(); 
@@ -2153,240 +2170,199 @@ window.toggleHideCompleted = () => {
 };
 
 /**
- * [renderer.js] 엔진 시작: 데이터 로드, 매니저 초기화, UI 복구 및 환영 인사 실행
+ * [renderer.js] 엔진 시작: 렌더러 재연결 -> 데이터 로드 -> 파트너 복구
  */
 async function startEngine() {
-    masterData = await ipcRenderer.invoke('load-game-data');
-    window.masterData = masterData;
-
-    // [수정] masterData 설정과 상관없이 'ko'로 고정 호출
-    const isSuccess = await window.loadLanguageData('ko');
-
-    if (!isSuccess || !window.charData) {
-        window.showToast("언어 파일을 찾을 수 없어 시동을 중단합니다.", "error");
-        return; 
-    }
-
-    window.shopItems = window.getShopItems();
-
-    // [핵심 추가] 데이터 로드 실패 시 다음 로직을 진행하지 않도록 차단합니다.
-    if (!isSuccess || !window.charData) {
-        window.showToast("언어 파일을 찾을 수 없어 연구실 가동을 중단합니다. 폴더 구조를 확인하세요.", "error");
-        return; // 여기서 멈춰야 characters를 읽으려다 발생하는 에러를 막을 수 있습니다.
-    }
-
-    // --- [안전한 데이터 복구 로직] ---
+    // 🛡️ [수정] masterData 자체가 없을 때만 잠시 대기 (통째로 초기화 금지)
     if (!masterData) {
-        // 1. 아예 데이터 파일이 없는 신규 유저인 경우에만 전체 초기화 실행
+        console.log("⏳ [System] 데이터 로드를 기다리는 중...");
+        return setTimeout(window.startEngine, 100);
+    }
+
+    // 🚨 중요: masterData = { ... } 이런 코드가 있다면 절대 삭제하세요!
+    // 아래처럼 없는 속성만 하나씩 안전하게 보충해야 합니다.
+    if (!masterData.settings) masterData.settings = {};
+    if (!masterData.settings.monitor) masterData.settings.monitor = { workKeywords: [], distractKeywords: [] };
+    if (!masterData.tasks) masterData.tasks = [];
+    if (!masterData.habits) masterData.habits = [];
+
+    // 인트로 완료 여부 확인 (기존 데이터 보존)
+    if (masterData.isFirstRun === undefined) masterData.isFirstRun = true;
+
+    console.log("🚀 [System] 엔진 가동 시작...");
+
+    // 🚨 TypeError 방지 핵심 로직
+    masterData.inventory = masterData.inventory || { items: {}, byproducts: {} };
+    masterData.inventory.byproducts = masterData.inventory.byproducts || {};
+    masterData.settings = masterData.settings || {};
+    masterData.mailbox = masterData.mailbox || { mailHistory: [] };
+    
+    console.log(masterData);
+
+    // ✨ [핵심 수정 1] 상점 아이템을 만들기 전에 '언어 파일'부터 완벽하게 로드합니다.
+    await window.loadLanguageData('ko');
+
+    // ✨ [핵심 수정 2] 번역 데이터가 확보된 '지금' 상점 아이템을 생성합니다.
+    shopItems = window.getShopItems();
+    window.shopItems = shopItems;
+
+
+    syncReferences(); // 데이터 참조 연결
+
+    // 3. 시스템 설정 로드 (ReferenceError: s 해결)
+    if (masterData.settings) {
+        const s = masterData.settings;
+        window.resetHour = s.resetHour || 0;
+        window.isHorizontalMode = s.isHorizontalMode ?? true;
+        window.hideCompleted = s.hideCompleted ?? false;
+        window.showPastCompleted = s.showPastCompleted ?? false;
+    }
+
+    isEngineStarted = true;
+    await window.loadLanguageData('ko');
+    
+    // 3. 데이터 초기화 및 보정 로직
+    if (!savedData) {
         masterData = {
             progress: { level: 1, exp: 0, totalFocusTime: 0, todayFocusTime: 0, lastSaveDate: window.getMolipDate() },
             collection: { ownedIds: [], points: 0, activeEgg: null },
             mailbox: { mailHistory: [] },
             settings: { 
-                workApps: [], distractionApps: [], isHorizontalMode: true, 
-                isWindowMode: true, isAlwaysOnTop: false, font: 'paperlogy', language: 'ko' 
+                workApps: [], distractionApps: [], isHorizontalMode: true, isWindowMode: true, 
+                isAlwaysOnTop: false, font: 'paperlogy', language: 'ko',
+                sound: { master: true, system: true, autoPlay: true },
+                accordionStates: {}, hideCompleted: false, showPastCompleted: false,
+                autoDeleteOldTasks: false, resetHour: 0
             },
-            character: { intimacyMap: {}, growthMap: {} },
+            character: { intimacyMap: {}, growthMap: {}, selectedPartnerId: null },
             todo: [], habit: [], stats: { dailyAppTimeMap: {} },
-            inventory: { items: {}, byproducts: {} }
+            inventory: { items: {}, byproducts: {} },
+            achievements: [], cylinderSaturation: 0, hatchCount: 1
         };
     } else {
-        // 2. [핵심] 기존 데이터가 있다면, 누락된 필드만 개별적으로 채워넣어 데이터 보존 (업데이트 시 필수)
-        masterData.progress = masterData.progress || { level: 1, exp: 0, totalFocusTime: 0, todayFocusTime: 0, lastSaveDate: window.getMolipDate() };
-        masterData.collection = masterData.collection || { ownedIds: [], points: 0, activeEgg: null };
-        masterData.mailbox = masterData.mailbox || { mailHistory: [] };
-        masterData.settings = masterData.settings || { 
-            workApps: [], distractionApps: [], isHorizontalMode: true, 
-            isWindowMode: true, isAlwaysOnTop: false, font: 'paperlogy', language: 'ko' 
-        };
+        masterData = savedData;
+        masterData.settings = masterData.settings || {};
+        masterData.settings.accordionStates = masterData.settings.accordionStates || {};
         masterData.character = masterData.character || { intimacyMap: {}, growthMap: {} };
-        masterData.todo = masterData.todo || [];
-        masterData.habit = masterData.habit || [];
-        masterData.stats = masterData.stats || { dailyAppTimeMap: {} };
-        masterData.inventory = masterData.inventory || { items: {}, byproducts: {} };
-
-        // 설정(settings) 내부에 특정 항목(예: 언어)이 빠진 경우도 대비
-        if (!masterData.settings.language) masterData.settings.language = 'ko';
+        masterData.collection = masterData.collection || { ownedIds: [], points: 0, activeEgg: null };
     }
 
-    console.log(masterData);
+    window.masterData = masterData;
+    syncReferences(); // 데이터 연결
 
-    // 2. 매니저 및 시스템 데이터 복구
-    workApps = masterData.settings.workApps || []; 
-    distractionApps = masterData.settings.distractionApps || [];
-    if (typeof initializeByproductData === 'function') initializeByproductData();
+    // 4. 설정값 적용
+    if (masterData.settings) {
+        const s = masterData.settings; 
+        window.resetHour = s.resetHour || 0;
+        window.isHorizontalMode = s.isHorizontalMode ?? true;
+        window.isWindowMode = s.isWindowMode ?? true;
+        window.isAlwaysOnTop = s.isAlwaysOnTop ?? false;
+        window.hideCompleted = s.hideCompleted ?? false;
+        window.showPastCompleted = s.showPastCompleted ?? false;
+        window.autoDeleteOldTasks = s.autoDeleteOldTasks ?? false;
+    }
 
-    progress = new ProgressManager(masterData.progress); 
-    window.progress = progress;
+    isEngineStarted = true;
 
+    // 5. 언어 및 매니저 로드
+    await window.loadLanguageData('ko');
+
+    progress = new ProgressManager(masterData.progress);
     collection = new CollectionManager(masterData.collection);
-    window.collection = collection;
 
-    const mailData = (masterData.mailbox && masterData.mailbox.mailHistory) 
-                     ? masterData.mailbox.mailHistory 
-                     : (Array.isArray(masterData.mailbox) ? masterData.mailbox : []);
-    mailbox = new MailboxManager(mailData, mailPoolData);
+    const history = masterData.mailbox?.mailHistory || (Array.isArray(masterData.mailbox) ? masterData.mailbox : []);
+    mailbox = new MailboxManager(history, mailPoolData);
+    
+    window.progress = progress;
+    window.collection = collection;
     window.mailbox = mailbox;
 
-    // 3. 오늘 날짜 기준 시간 복구 (형식 통일: YYYY-MM-DD)
-    const todayStr = window.getMolipDate();
-    if (masterData.progress && masterData.progress.lastSaveDate === todayStr) {
-        progress.todayFocusTime = masterData.progress.todayFocusTime || 0; 
+    // 6. [핵심] 파트너 자동 복구 (ID가 없으면 알이나 도감에서 찾아냄)
+    const savedId = masterData.character?.selectedPartnerId;
+    const hasOwned = collection.ownedIds && collection.ownedIds.length > 0;
+    const hasEgg = !!collection.activeEgg;
+    
+    // 신규 유저 판정 (아무것도 없을 때)
+    if (!savedId && !hasEgg && !hasOwned) {
+        const intro = document.getElementById('intro-sequence');
+        if (intro) intro.style.display = 'flex';
+        console.log("🆕 신규 유저 인트로 실행");
     } else {
-        // [수정] 새로운 날에 앱을 켰다면 시간뿐만 아니라 습관도 리셋합니다.
-        progress.todayFocusTime = 0; 
+        // 복구 우선순위: 저장된ID -> 도감 첫번째 -> 알
+        const targetId = savedId || (hasOwned ? collection.ownedIds[0] : (hasEgg ? collection.activeEgg.type : null));
         
-        // 이 시점에서 마스터 데이터의 날짜를 갱신하기 전에 리셋을 먼저 호출합니다.
-        checkHabitReset(); 
-        
-        if(masterData.progress) masterData.progress.lastSaveDate = todayStr;
-        saveAllData();
+        if (targetId) {
+            currentPartner = charData.characters.find(c => c.id === targetId);
+            if (currentPartner) {
+                // 이미지를 그립니다.
+                await refreshCharacterSprite(); 
+            }
+        }
     }
 
-    // 4. 캐릭터 및 유대 데이터 로드
-    const charSave = masterData.character || {};
-    charIntimacyMap = charSave.intimacyMap || {}; 
-    charGrowthMap = charSave.growthMap || {}; 
-    givenGiftsMap = charSave.givenGiftsMap || {};
-    dailyPetCountMap = charSave.dailyPetCountMap || {};
+    // 7. UI 최종 적용
+    if (masterData.settings.accordionStates) {
+        Object.entries(masterData.settings.accordionStates).forEach(([id, isActive]) => {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('active', !!isActive);
+        });
+    }
 
-    // [핵심 추가] 영수증용 시간 데이터 복구
-    dailyAppTimeMap = masterData.dailyAppTimeMap || {}; 
-    window.dailyAppTimeMap = dailyAppTimeMap; // 콘솔 확인용 연결
-
-    molipTodos = (masterData.todo || []).filter(t => t !== null);
-    molipHabits = (masterData.habit || []).filter(h => h !== null);
-
-    // 5. 시스템 설정 동기화 및 즉시 적용
-    const s = masterData.settings || {};
-    window.isHorizontalMode = (s.isHorizontalMode !== undefined) ? s.isHorizontalMode : true; 
-    window.isWindowMode = (s.isWindowMode !== undefined) ? s.isWindowMode : true; 
-    window.isAlwaysOnTop = s.isAlwaysOnTop || false;
-
-    // [작업 설정값 복구]
-    window.resetHour = s.resetHour || 0;
-    window.hideCompleted = s.hideCompleted || false;
-    window.showPastCompleted = s.showPastCompleted || false;
-    window.autoDeleteOldTasks = s.autoDeleteOldTasks || false;
-
-    // 시스템 레이아웃 및 윈도우 모드 적용
     window.applyHorizontalMode();
     window.applyWindowMode();
-
-    // ★ [추가] 아코디언 상태 복구 로직
-    // 저장된 아코디언 상태가 있다면 해당 ID를 찾아 active 클래스를 토글합니다.
-    const savedAccordionStates = masterData.settings.accordionStates || {};
-    Object.keys(savedAccordionStates).forEach(id => {
-        const acc = document.getElementById(id);
-        if (acc) {
-            const isActive = savedAccordionStates[id];
-            if (isActive) {
-                acc.classList.add('active');
-            } else {
-                acc.classList.remove('active');
-            }
-        }
-    });
-
-    // 6. 파트너 로드 및 인트로 판정 (강화된 조건)
-    const savedId = charSave.selectedPartnerId;
-    
-    // [핵심] 알 상태거나, 이미 보유한 캐릭터가 한 마리라도 있다면 인트로 대상이 아님
-    const hasOwnedChars = masterData.collection?.ownedIds && masterData.collection.ownedIds.length > 0;
-    const hasActiveEgg = !!masterData.collection?.activeEgg;
-    
-    const introLayer = document.getElementById('intro-sequence');
-
-    // [조건 변경] 파트너ID도 없고, 알도 없고, 보유 캐릭터도 '셋 다 없을 때만' 인트로 실행
-    if (!savedId && !hasActiveEgg && !hasOwnedChars) {
-        if (introLayer) introLayer.style.display = 'flex';
-        console.log("[시스템] 신규 유저로 감지되어 인트로를 실행합니다.");
-    } else {
-        if (introLayer) introLayer.style.display = 'none';
-        
-        // 유아기/성체 캐릭터가 있다면 해당 ID로 파트너 설정
-        // 만약 savedId가 날아갔더라도 ownedIds의 첫 번째 캐릭터를 자동으로 불러와 복구합니다.
-        const targetId = savedId || (hasOwnedChars ? masterData.collection.ownedIds[0] : (hasActiveEgg ? masterData.collection.activeEgg.type : null));
-        
-        currentPartner = charData.characters.find(c => c.id === targetId); 
-        
-        if (currentPartner) {
-            await refreshCharacterSprite(); 
-            console.log(`[시스템] 파트너(${currentPartner.name}) 데이터를 성공적으로 복구했습니다.`);
-
-            // --- [핵심 추가] 성체기 환영 인사(welcome_responses) 출력 로직 ---
-            // 1. 현재 단계가 성체(adult)인지 확인합니다.
-            if (currentStage === 'adult') {
-                const stageData = currentPartner.stages.adult;
-                
-                // 2. JSON에 welcome_responses가 정의되어 있는지 확인합니다.
-                if (stageData && stageData.welcome_responses && stageData.welcome_responses.length > 0) {
-                    // 3. 랜덤하게 대사를 하나 선택합니다.
-                    const welcomeText = stageData.welcome_responses[Math.floor(Math.random() * stageData.welcome_responses.length)];
-                    
-                    // 4. 앱이 켜진 직후 바로 대사창이 뜨면 어색하므로 1.5초의 지연 시간을 둡니다.
-                    setTimeout(() => {
-                        // 우선순위 2(시스템 대사)로 출력하여 다른 대사에 씹히지 않게 합니다.
-                        window.showDialogue(welcomeText, 2);
-                    }, 1500);
-                }
-            }
-        }
-
-        if (typeof window.startMainGameEngine === 'function') {
-            window.startMainGameEngine();
-
-            // --- [핵심 추가] 시작 후 2초간 자동 상태 대사 차단 로직 ---
-            // 1. 현재 시간으로부터 2초(2000ms) 동안 대사 시스템을 잠급니다.
-            dialogueLockUntil = Date.now() + 2000; 
-            
-            // 2. 현재 우선순위를 3으로 높여, 우선순위 2 이하인 '상태 변경 대사'를 무시하게 합니다.
-            currentPriority = 3; 
-
-            // 3. 2초 후에 우선순위를 다시 일반 상태(0)로 복구합니다.
-            setTimeout(() => {
-                if (currentPriority === 3) currentPriority = 0;
-            }, 2000);
-
-            // --- [선택 사항] 성체기 환영 인사는 허용하고 싶을 경우 ---
-            if (currentStage === 'adult') {
-                const stageData = currentPartner.stages.adult;
-                if (stageData && stageData.welcome_responses?.length > 0) {
-                    const welcomeText = stageData.welcome_responses[Math.floor(Math.random() * stageData.welcome_responses.length)];
-                    setTimeout(() => {
-                        // 환영 인사는 잠금을 뚫고 출력되도록 우선순위 3을 부여합니다.
-                        window.showDialogue(welcomeText, 3);
-                    }, 1500); 
-                }
-            }
-        }
-    }
-
-    // 7. UI 초기 렌더링
     window.applySavedFont();
+    if (window.updatePinUI) window.updatePinUI();
+    if (window.updatePastItemsUI) window.updatePastItemsUI();
+
     window.renderWorkAppList(); 
     window.renderDistractionAppList();
+
+    if (!masterData.tasks) masterData.tasks = [];
     window.renderTodos(); 
+    if (!masterData.habits) masterData.habits = [];
     window.renderHabits();
+
     window.updateUI();
     window.updateMailNotification();
 
-    // [추가] 학회로부터 온 업데이트 소식을 체크합니다.
-    checkForUpdateMail();
-    isEngineStarted = true;
+    // ✨ [핵심 추가] 시동 즉시 첫 번째 서신 트리거 체크 실행
+    if (mailbox) {
+        console.log("📨 [System] 초기 서신 트리거 확인 중...");
+        // level 1, points 0 등의 초기 stats 전달
+        mailbox.checkTriggers({ level: 1, alchemist_level: 1, points: 0, total_focus: 0 });
+        window.updateMailNotification();
+        window.renderMailList();
+    }
 
-    document.body.classList.add('ready');
-    if (typeof renderer !== 'undefined' && renderer.startLoop) renderer.startLoop();
+    if (typeof window.startMainGameEngine === 'function') window.startMainGameEngine();
 
-    // 🎵 [추가] 오디오 엔진 UI를 버튼들과 연결합니다.
+// 🎨 [핵심] 루프 가동
+    if (window.renderer && typeof window.renderer.startLoop === 'function') {
+        window.renderer.startLoop(); 
+    }
+
+    // 🎵 오디오 엔진 바인딩 호출
     if (typeof window.setupEngine === 'function') {
         window.setupEngine();
-        console.log("🎵 [Audio] 오디오 컨트롤러 연결 완료");
+        console.log("🎵 [System] 오디오 컨트롤러 연결 완료");
     }
+    
+    window.startMainGameEngine();
+    document.body.classList.add('ready');
 }
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    const unlockAudio = () => {
+        Object.values(sounds).forEach(s => {
+            s.play().then(() => { s.pause(); s.currentTime = 0; }).catch(() => {});
+        });
+        document.removeEventListener('click', unlockAudio); // 한 번만 실행 후 제거
+        console.log("🔊 [System] 오디오 엔진 잠금 해제 완료");
+    };
+    document.addEventListener('click', unlockAudio);
+
+
     const todoInput = document.getElementById('todo-input');
     if (todoInput) {
         todoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); window.addMolipTodo(); } });
@@ -2523,19 +2499,17 @@ document.addEventListener('mouseout', (e) => {
 
 // 메인 버튼 클릭 사운드
     document.addEventListener('click', (e) => {
-        const target = e.target.closest('.control-group button');
-        if (target) {
+    // 버튼(.btn-game, button), 메뉴 아이템, 그리고 서신함 닫기 버튼 등을 포괄합니다.
+    const btn = e.target.closest('btn-focus') || 
+                e.target.closest('.btn-game');
+
+    if (btn) {
+        // [방어] 버튼이 비활성화 상태가 아닐 때만 소리를 냅니다.
+        if (!btn.disabled) {
             window.playSFX('click');
         }
-    });
-
-    // 투두 체크 사운드
-    document.addEventListener('click', (e) => {
-        const target = e.target.closest('.todo-checkbox');
-        if (target) {
-            window.playSFX('check');
-        }
-    });
+    }
+}, true);
 
     startEngine();
 });
@@ -2562,12 +2536,7 @@ window.hideTooltip = () => {
 let isEngineStarted = false; 
 
 ipcRenderer.on('init-data', async (event, data) => {
-    // [방어 로직] 데이터가 유효하지 않거나 이미 엔진이 구동(로드)된 상태라면 무시합니다.
-    if (!data || isEngineStarted) {
-        console.log("🚩 [방어] 이미 데이터가 로드되었거나 유효하지 않은 신호입니다. 중복 초기화를 차단합니다.");
-        return;
-    }
-    
+    if (isEngineStarted) return;
     console.log("🚩 [동기화] 메인 프로세스로부터 데이터를 수신했습니다.");
 
     // 2. 전역 마스터 데이터 객체 할당
@@ -2787,9 +2756,6 @@ window.setLayoutMode = (isHorizontal) => {
 };
 
 // [renderer.js] 설정 모달 열기/닫기 제어 함수 수정
-/**
- * [renderer.js] 설정 모달을 열 때 현재 저장된 값으로 UI를 동기화합니다.
- */
 window.toggleSettings = (show) => {
     const modal = document.getElementById('settings-modal');
     if (!modal) return;
@@ -2846,6 +2812,9 @@ window.toggleSettings = (show) => {
             if (themeRadio) themeRadio.checked = true;
         }
 
+        // ✨ [추가] 사운드 UI 상태 동기화 호출
+        window.updateSoundUI();
+
         window.switchSettingsTab('general'); 
     }
 };
@@ -2864,13 +2833,19 @@ window.closeAllModals = () => {
 };
 
 // [추가] 아코디언 열림/닫힘 제어 함수
-// [renderer.js] 약 1184행 부근 toggleAccordion 함수 수정
 window.toggleAccordion = (id) => {
     const accordion = document.getElementById(id);
     if (accordion) {
-        accordion.classList.toggle('active');
+        // 1. 시각적 토글
+        const isActive = accordion.classList.toggle('active');
         
-        // ★ 추가: 상태가 변할 때마다 즉시 저장 시스템에 반영
+        // 2. [핵심] 마스터 데이터에 상태 기록
+        if (!masterData.settings.accordionStates) {
+            masterData.settings.accordionStates = {};
+        }
+        masterData.settings.accordionStates[id] = isActive;
+        
+        // 3. 즉시 저장
         saveAllData(); 
     }
 };
@@ -2912,7 +2887,6 @@ window.applySavedFont = function() {
         const savedFont = window.masterData.settings.font;
         // [핵심] 초기화 단계이므로 저장을 하지 않도록 false를 전달합니다.
         window.changeFont(savedFont, false); 
-        console.log(`[시스템] 저장된 폰트 적용: ${savedFont}`);
     }
 };
 
@@ -3086,8 +3060,8 @@ window.renderHabits = () => {
     if (!list) return;
 
     // 1. 습관 뱃지 계산 (전체 습관 중 오늘 완료한 것)
-    const total = molipHabits.length;
-    const completed = molipHabits.filter(h => h && h.completed).length;
+    const total = (molipHabits || []).length;
+    const completed = (molipHabits || []).filter(h => h && h.completed).length;
 
     if (badge) {
         badge.innerText = `${completed}/${total}`;
@@ -3100,7 +3074,7 @@ window.renderHabits = () => {
         displayHabits = molipHabits.filter(h => !h.completed);
     }
 
-    if (displayHabits.length === 0) {
+    if ((displayHabits || []).length === 0) {
         list.innerHTML = '<li class="empty-list-msg">등록된 습관이 없습니다.</li>';
         return;
     }
@@ -3130,6 +3104,8 @@ window.toggleHabit = (id) => {
     // 1. 대상 습관 데이터 확보
     const habit = molipHabits.find(h => h.id === id);
     if (!habit) return;
+
+    window.playSFX('check');
 
     const molipToday = window.getMolipDate(); // 시스템 기준 오늘 날짜
     const wasCompleted = habit.completed;
@@ -3260,23 +3236,17 @@ window.saveHabitInlineEdit = (id, newText) => {
  * @param {string} id - 삭제할 습관의 고유 ID
  */
 window.deleteHabit = (id) => {
-    // 인앱 커스텀 모달 호출
-    window.showConfirm(
-        "습관 파기", 
-        "이 습관 수련을 중단하시겠습니까?\n삭제 시 연속 달성 기록이 모두 사라집니다.", 
-        () => {
-            // [예]를 눌렀을 때만 실행되는 실제 삭제 로직
-            molipHabits = molipHabits.filter(h => String(h.id) !== String(id));
-            
-            window.renderHabits();
-            saveAllData();
-            window.showToast("습관 기록을 파기했습니다.", "info");
-        }
-    );
+    window.showConfirm("습관 파기", "삭제 시 연속 달성 기록이 모두 사라집니다.", () => {
+        // 1. 저장 상자 내부 데이터 직접 필터링
+        masterData.habit = masterData.habit.filter(h => String(h.id) !== String(id));
+        // 2. 이름표 재연결
+        syncReferences();
+        window.renderHabits();
+        saveAllData();
+    });
 };
 
 // [renderer.js] 데이터 복구 및 청소 함수
-
 /**
  * 데이터 내부에 섞인 null 값을 제거하고 정상화하는 긴급 복구 함수입니다.
  */
@@ -3434,47 +3404,47 @@ ipcRenderer.on('active-window-update', (event, data) => { // 'active-window'에�
 // [renderer.js 상단] 업적 리스트 정의
 window.achievementList = [
     // 0. 연금술 레벨
-    { id: 'rank_novice_1', name: '연금술 입문', icon: '📜', desc: '연금술의 세계에 첫 발을 내디뎠습니다.' },
-    { id: 'rank_apprentice_5', name: '수습 연금술사', icon: '🧪', desc: '기초 연성법을 익히고 가능성을 증명했습니다.' },
-    { id: 'rank_regular_10', name: '정식 연금술사', icon: '⚒️', desc: '능숙한 도구 사용으로 정식 대원이 되었습니다.' },
-    { id: 'rank_expert_15', name: '전문 연금술사', icon: '📖', desc: '고도화된 지식과 실무 능력을 겸비했습니다.' },
-    { id: 'rank_senior_20', name: '상급 연금술사', icon: '🎖️', desc: '길드 내에서 존경받는 상급 연구자의 자리에 올랐습니다.' },
-    { id: 'rank_veteran_25', name: '노련한 연금술사', icon: '⏳', desc: '수많은 경험을 통해 노련한 통찰력을 갖추었습니다.' },
-    { id: 'rank_master_30', name: '연금술 명장', icon: '🔨', desc: '에테르 연성을 예술의 경지로 끌어올린 명장입니다.' },
-    { id: 'rank_harmonizer_35', name: '원소의 조율자', icon: '🌪️', desc: '사대 원소의 균형을 완벽하게 다스리는 조율자입니다.' },
-    { id: 'rank_guardian_40', name: '지혜의 파수꾼', icon: '🛡️', desc: '심연의 지식을 수호하고 금기를 다스리는 파수꾼입니다.' },
-    { id: 'rank_interpreter_45', name: '비전의 해석자', icon: '🔎', desc: '고대의 비전과 비밀스러운 공식을 완벽히 해석했습니다.' },
-    { id: 'rank_truth_50', name: '진리의 도달자', icon: '⚖️', desc: '인간의 한계를 넘어 진리의 문턱에 도달한 탐구자입니다.' },
-    { id: 'rank_lord_55', name: '에테르의 군주', icon: '🏰', desc: '세상의 모든 에테르 흐름을 지배하는 위대한 군주입니다.' },
-    { id: 'rank_legend_60', name: '전설의 연금술사', icon: '🌟', desc: '연금술 역사에 영원히 기록될 신화적인 존재가 되었습니다.' },
+    { id: 'rank_novice_1', name: '연금술 입문', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '연금술의 세계에 첫 발을 내디뎠습니다.', hint: '' },
+    { id: 'rank_apprentice_5', name: '수습 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '기초 연성법을 익히고 가능성을 증명했습니다.', hint: '' },
+    { id: 'rank_regular_10', name: '정식 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '능숙한 도구 사용으로 정식 대원이 되었습니다.', hint: '' },
+    { id: 'rank_expert_15', name: '전문 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '고도화된 지식과 실무 능력을 겸비했습니다.', hint: '' },
+    { id: 'rank_senior_20', name: '상급 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '길드 내에서 존경받는 상급 연구자의 자리에 올랐습니다.', hint: '' },
+    { id: 'rank_veteran_25', name: '노련한 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '수많은 경험을 통해 노련한 통찰력을 갖추었습니다.', hint: '' },
+    { id: 'rank_master_30', name: '연금술 명장', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '에테르 연성을 예술의 경지로 끌어올린 명장입니다.', hint: '' },
+    { id: 'rank_harmonizer_35', name: '원소의 조율자', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '사대 원소의 균형을 완벽하게 다스리는 조율자입니다.', hint: '' },
+    { id: 'rank_guardian_40', name: '지혜의 파수꾼', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '심연의 지식을 수호하고 금기를 다스리는 파수꾼입니다.', hint: '' },
+    { id: 'rank_interpreter_45', name: '비전의 해석자', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '고대의 비전과 비밀스러운 공식을 완벽히 해석했습니다.', hint: '' },
+    { id: 'rank_truth_50', name: '진리의 도달자', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '인간의 한계를 넘어 진리의 문턱에 도달한 탐구자입니다.', hint: '' },
+    { id: 'rank_lord_55', name: '에테르의 군주', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '세상의 모든 에테르 흐름을 지배하는 위대한 군주입니다.', hint: '' },
+    { id: 'rank_legend_60', name: '전설의 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '연금술 역사에 영원히 기록될 신화적인 존재가 되었습니다.', hint: '' },
 
     // 1. 몰입 및 시간 관련 업적
-    { id: 'focus_depth_5000', name: '몰입의 심연', icon: '🌀', desc: '누적 5,000분의 몰입을 달성하여 심연의 끝에 도달했습니다.' },
-    { id: 'marathon_king_180', name: '불굴의 집중력', icon: '🕯️', desc: '한 번의 흐트러짐 없이 180분간 연성로의 불꽃을 지켜냈습니다.' },
-    { id: 'night_monarch', name: '심야의 수호자', icon: '🌙', desc: '모두가 잠든 밤, 고요한 정적 속에서 가장 찬란한 진리를 일깨웠습니다.' },
-    { id: 'dawn_pioneer', name: '새벽의 선구자', icon: '🌅', desc: '가장 맑은 새벽 에테르를 정제하며 완벽한 하루를 시작했습니다.' },
+    { id: 'focus_depth_5000', name: '몰입의 심연', icon: 'assets/images/achievements/achievement_task.png', desc: '누적 5,000분의 몰입을 달성하여 심연의 끝에 도달했습니다.', hint: '' },
+    { id: 'marathon_king_180', name: '불굴의 집중력', icon: 'assets/images/achievements/achievement_task.png', desc: '한 번의 흐트러짐 없이 180분간 연성로의 불꽃을 지켜냈습니다.', hint: '' },
+    { id: 'night_monarch', name: '심야의 수호자', icon: 'assets/images/achievements/achievement_task.png', desc: '모두가 잠든 밤, 고요한 정적 속에서 가장 찬란한 진리를 일깨웠습니다.', hint: '' },
+    { id: 'dawn_pioneer', name: '새벽의 선구자', icon: 'assets/images/achievements/achievement_task.png', desc: '가장 맑은 새벽 에테르를 정제하며 완벽한 하루를 시작했습니다.', hint: '' },
 
     // 2. 과업 및 습관 관련 업적
-    { id: 'task_centurion', name: '백 번의 성취', icon: '💯', desc: '백 번의 과업 완수를 통해 연금술의 견고한 토대를 쌓았습니다.' },
-    { id: 'task_grandmaster', name: '성취의 거장', icon: '🏛️', desc: '천 번의 마침표를 찍으며 연금술의 거장 반열에 올랐습니다.' },
-    { id: 'habit_legend_100', name: '백일의 기적', icon: '🌳', desc: '100일간의 성실함으로 영혼의 본질을 변화시키는 연금술을 완성했습니다.' },
-    { id: 'perfect_rhythm_7', name: '완전무결한 리듬', icon: '⏳', desc: '일주일간 단 하나의 결점도 없는 완벽한 생활 리듬을 유지했습니다.' },
+    { id: 'task_centurion', name: '백 번의 성취', icon: 'assets/images/achievements/achievement_task.png', desc: '백 번의 과업 완수를 통해 연금술의 견고한 토대를 쌓았습니다.', hint: '' },
+    { id: 'task_grandmaster', name: '성취의 거장', icon: 'assets/images/achievements/achievement_task.png', desc: '천 번의 마침표를 찍으며 연금술의 거장 반열에 올랐습니다.', hint: '' },
+    { id: 'habit_legend_100', name: '백일의 기적', icon: 'assets/images/achievements/achievement_task.png', desc: '100일간의 성실함으로 영혼의 본질을 변화시키는 연금술을 완성했습니다.', hint: '' },
+    { id: 'perfect_rhythm_7', name: '완전무결한 리듬', icon: 'assets/images/achievements/achievement_task.png', desc: '일주일간 단 하나의 결점도 없는 완벽한 생활 리듬을 유지했습니다.', hint: '' },
 
     // 3. 유대 및 캐릭터 관련 업적
-    { id: 'mabel_eternal_partner', name: '메이벨의 유일한 이해자', icon: '🌸', desc: '메이벨과 영혼의 무게를 나누는 절대적인 신뢰 관계가 되었습니다.' },
-    { id: 'indigo_shadow_bond', name: '인디고의 그림자 동반자', icon: '🌑', desc: '인디고의 정적 속에 머물며 완벽한 그림자 우대를 공유하게 되었습니다.' },
-    { id: 'morgana_abyss_lover', name: '모르가나의 진실한 반려', icon: '🐍', desc: '모르가나와 함께 심연의 끝에서 가장 은밀한 진실을 마주했습니다.' },
-    { id: 'aurelia_golden_glory', name: '아우렐리아의 황금빛 파트너', icon: '👑', desc: '아우렐리아로부터 정점의 가호를 받는 고결한 동반자로 인정받았습니다.' },
-    { id: 'homunculus_collector', name: '요람의 대주인', icon: '🌈', desc: '네 마리의 호문클루스를 모두 거느려 연구실의 생태계를 완성했습니다.' },
-    { id: 'evolution_master', name: '진화의 마스터', icon: '✨', desc: '모든 피조물을 성공적으로 성체기까지 인도한 육성의 대가입니다.' },
+    { id: 'mabel_eternal_partner', name: '메이벨의 유일한 이해자', icon: 'assets/images/achievements/mabel_eternal_partner.png', desc: '메이벨과 영혼의 무게를 나누는 절대적인 신뢰 관계가 되었습니다.', hint: '' },
+    { id: 'indigo_shadow_bond', name: '인디고의 그림자 동반자', icon: 'assets/images/achievements/indigo_shadow_bond.png', desc: '인디고의 정적 속에 머물며 완벽한 그림자 우대를 공유하게 되었습니다.', hint: '' },
+    { id: 'morgana_abyss_lover', name: '모르가나의 진실한 반려', icon: 'assets/images/achievements/morgana_abyss_lover.png', desc: '모르가나와 함께 심연의 끝에서 가장 은밀한 진실을 마주했습니다.', hint: '' },
+    { id: 'aurelia_golden_glory', name: '아우렐리아의 황금빛 파트너', icon: 'assets/images/achievements/aurelia_golden_glory.png', desc: '아우렐리아로부터 정점의 가호를 받는 고결한 동반자로 인정받았습니다.', hint: '' },
+    { id: 'homunculus_collector', name: '요람의 대주인', icon: 'assets/images/achievements/homunculus_collector.png', desc: '네 마리의 호문클루스를 모두 거느려 연구실의 생태계를 완성했습니다.', hint: '' },
+    { id: 'evolution_master', name: '진화의 마스터', icon: 'assets/images/achievements/evolution_master.png', desc: '모든 피조물을 성공적으로 성체기까지 인도한 육성의 대가입니다.', hint: '' },
 
     // 4. 전문성 및 자산 관련 업적
-    { id: 'sage_alchemist_30', name: '대연금술사의 증표', icon: '🔮', desc: '30레벨의 숙련도에 도달하여 연금술의 현자 경지를 증명했습니다.' },
-    { id: 'midas_hand_10000', name: '황금의 손', icon: '💰', desc: '10,000 에테르를 모아 연구실을 황금빛 풍요로 가득 채웠습니다.' },
-    { id: 'generous_creator_50', name: '다정한 창조주', icon: '🎁', desc: '50번의 선물을 통해 피조물들에게 진심 어린 다정함을 전했습니다.' },
-    { id: 'tool_conductor_7', name: '도구의 지휘자', icon: '🎻', desc: '일곱 개의 도구를 자유자재로 다루며 업무의 파도를 지휘합니다.' },
-    { id: 'iron_will_failed_10', name: '불굴의 의지', icon: '🛡️', desc: '열 번의 실패조차 굴복시키지 못한 단단한 연금술사의 의지를 지녔습니다.' },
-    { id: 'order_avatar_30', name: '절대 질서의 화신', icon: '⚖️', desc: '한 달간의 완벽한 규칙을 통해 혼돈을 이겨내고 절대 질서의 화신이 되었습니다.' }
+    { id: 'sage_alchemist_30', name: '대연금술사의 증표', icon: 'assets/images/achievements/sage_alchemist_30.png', desc: '30레벨의 숙련도에 도달하여 연금술의 현자 경지를 증명했습니다.', hint: '' },
+    { id: 'midas_hand_10000', name: '황금의 손', icon: 'assets/images/achievements/midas_hand_10000.png', desc: '10,000 에테르를 모아 연구실을 황금빛 풍요로 가득 채웠습니다.', hint: '' },
+    { id: 'generous_creator_50', name: '다정한 창조주', icon: 'assets/images/achievements/generous_creator_50.png', desc: '50번의 선물을 통해 피조물들에게 진심 어린 다정함을 전했습니다.', hint: '' },
+    { id: 'tool_conductor_7', name: '도구의 지휘자', icon: 'assets/images/achievements/tool_conductor_7.png', desc: '일곱 개의 도구를 자유자재로 다루며 업무의 파도를 지휘합니다.', hint: '' },
+    { id: 'iron_will_failed_10', name: '불굴의 의지', icon: 'assets/images/achievements/iron_will_failed_10.png', desc: '열 번의 실패조차 굴복시키지 못한 단단한 연금술사의 의지를 지녔습니다.', hint: '' },
+    { id: 'order_avatar_30', name: '절대 질서의 화신', icon: 'assets/images/achievements/order_avatar_30.png', desc: '한 달간의 완벽한 규칙을 통해 혼돈을 이겨내고 절대 질서의 화신이 되었습니다.', hint: '' }
 ];
 
 /**
@@ -3496,9 +3466,16 @@ const sessionUnlockedAchievements = new Set();
  * 1. 서신 상세보기 (발신자 표시 + 타이핑 연출 + [스킵 기능 추가])
  */
 window.openLetter = (mailId) => {
-    if (!window.mailbox) return;
+    // 1. 매니저 확인
+    const mb = window.mailbox || mailbox;
+    if (!mb) return;
     
-    const mail = window.mailbox.receivedMails.find(m => String(m.id) === String(mailId));
+    // 타이머 및 효과음 초기화
+    if (window.mailTypeTimer) { clearInterval(window.mailTypeTimer); window.mailTypeTimer = null; }
+    window.playSFX('paper');
+
+    // 2. 대상 서신 찾기
+    const mail = mb.receivedMails.find(m => String(m.id) === String(mailId));
     if (!mail) return;
 
     const modal = document.getElementById('letter-view-modal');
@@ -3539,6 +3516,9 @@ window.openLetter = (mailId) => {
     modal._currentSkipHandler = handleLetterSkip;
     modal.addEventListener('click', handleLetterSkip);
 
+    // 데이터 상태 업데이트 (읽음 처리 및 저장)
+    mail.isRead = true;
+
     // 본문 타이핑 효과 시작
     if (contentEl) {
         if (window.mailTypeTimer) clearInterval(window.mailTypeTimer);
@@ -3551,8 +3531,6 @@ window.openLetter = (mailId) => {
         });
     }
 
-    // 데이터 상태 업데이트 (읽음 처리 및 저장)
-    mail.isRead = true;
     saveAllData();
     if (window.renderMailList) window.renderMailList();
     if (window.updateMailNotification) window.updateMailNotification();
@@ -3701,9 +3679,6 @@ window.claimMailReward = (mailId) => {
 /**
  * [renderer.js] 업적 그리드 렌더링
  */
-/**
- * [renderer.js] 업적 그리드 렌더링 (아이콘 적용 + 마스킹 + 공용 툴팁)
- */
 window.renderAchievementGrid = () => {
     const grid = document.getElementById('achievement-grid');
     if (!grid) return;
@@ -3732,15 +3707,15 @@ window.renderAchievementGrid = () => {
         // 미해금 시: 물음표(?) 표시
         let iconHtml = "";
         if (isUnlocked) {
-            const iconVal = ach.icon || '🏆';
-            // 폰트어썸 클래스(fa-...)인지 일반 이모지인지 판별
-            if (iconVal.startsWith('fa-')) {
-                iconHtml = `<i class="fa-solid ${iconVal}"></i>`;
+            const iconVal = ach.icon || 'assets/images/achieve/default.png';
+            // ✨ 경로가 .png로 끝나면 img 태그로 출력
+            if (iconVal.endsWith('.png')) {
+                iconHtml = `<img src="${iconVal}" class="achieve-img-icon">`;
             } else {
                 iconHtml = `<span style="font-size: 2rem;">${iconVal}</span>`;
             }
         } else {
-            iconHtml = `<span style="font-size: 2rem; color: rgba(0,0,0,0.2);"><i class="fa-solid fa-question"></i></span>`;
+            iconHtml = `<img src="${ach.icon}" class="achieve-img-icon locked-img">`;
         }
         
         slot.innerHTML = iconHtml;
@@ -3759,6 +3734,9 @@ window.toggleAchievementModal = (show) => {
 };
 
 window.unlockAchievement = (achievementId) => {
+    // 🛡️ [방어막] 업적 배열이 없으면 즉시 빈 배열로 만듭니다. (에러 원천 차단)
+    if (!masterData.achievements) masterData.achievements = [];
+
     const id = String(achievementId);
     if (masterData.achievements.includes(id) || sessionUnlockedAchievements.has(id)) return;
 
@@ -3778,9 +3756,19 @@ window.unlockAchievement = (achievementId) => {
  * 6. 서신 창 닫기
  */
 window.closeLetterView = () => {
-    if (window.mailTypeTimer) clearInterval(window.mailTypeTimer);
+    // 1. [핵심] 창을 닫는 즉시 돌고 있던 모든 타이핑 타이머를 강제 종료합니다.
+    if (window.mailTypeTimer) {
+        clearInterval(window.mailTypeTimer);
+        window.mailTypeTimer = null;
+    }
+
     const modal = document.getElementById('letter-view-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+    }
+
+    // 2. 포커스를 강제로 바디로 돌려 클릭 이벤트가 씹히지 않게 합니다.
+    document.body.focus();
 };
 
 // 1. 모달 열기
@@ -3801,46 +3789,50 @@ window.closeSedimentModal = () => {
 
 /* 연성로 */
 window.refreshSedimentUI = () => {
-    // 1. 실제 농도 수치 반영
-    const satValue = Math.floor(cylinderSaturation); 
+    // 1. [방어] masterData나 inventory가 없을 경우를 대비해 기본값을 설정합니다.
+    if (!masterData.inventory) masterData.inventory = { byproducts: {} };
+    const inventory = masterData.inventory.byproducts || {};
+    
+    // 2. 농도 수치 및 바 반영
+    const satValue = Math.floor(cylinderSaturation || 0); 
     const satValEl = document.getElementById('sat-value');
     const satBarEl = document.getElementById('sat-bar-fill');
-    if(satValEl) satValEl.innerText = `${satValue}%`;
-    if(satBarEl) satBarEl.style.width = `${satValue}%`;
+    if (satValEl) satValEl.innerText = `${satValue}%`;
+    if (satBarEl) satBarEl.style.width = `${satValue}%`;
     
-    // 2. 인벤토리 렌더링
+    // 3. 인벤토리 슬롯 렌더링
     const grid = document.getElementById('sediment-grid');
     if (!grid) return;
 
-    const inventory = masterData.inventory.byproducts;
-    
     grid.innerHTML = byproductTable.map(item => {
-        const count = inventory[item.id] || 0;
+        const count = inventory[item.id] || 0; // 이제 여기서 에러가 나지 않습니다.
         const hasItem = count > 0;
         
         return `
             <div class="sediment-slot ${hasItem ? 'has-item' : ''}">
-                <div class="sediment-icon">${hasItem ? item.icon : '<i class="fas fa-question"></i>'}</div>
+                <div class="sediment-icon">
+                    ${hasItem ? `<img src="${item.icon}" class="sediment-img" alt="${item.name}">` : '<i class="fas fa-question"></i>'}
+                </div>
                 <div class="sediment-name">${hasItem ? item.name : '???'}</div>
                 <div class="sediment-count">${hasItem ? 'x' + count : ''}</div>
             </div>
         `;
     }).join('');
 
-    // 3. 연성 제단 업데이트 (조건 체크)
-    window.updateAltarStatus(); 
+    // 4. 연성 제단 업데이트 (조건 체크)
+    if (window.updateAltarStatus) window.updateAltarStatus(); 
 };
 
 // [renderer.js] 실린더 심층 부산물 데이터 정의
 const byproductTable = [
-    { id: 'ether_sludge', name: '에테르 슬러지', icon: '🌑', rarity: 'common', minSat: 50, chance: 0.12 },
-    { id: 'bleached_scales', name: '탈색된 비늘', icon: '🍂', rarity: 'common', minSat: 50, chance: 0.10 },
-    { id: 'petrified_memory', name: '석화된 기억', icon: '🪨', rarity: 'uncommon', minSat: 65, chance: 0.08 },
-    { id: 'transparent_husk', name: '투명한 허물', icon: '🌬️', rarity: 'uncommon', minSat: 65, chance: 0.06 },
-    { id: 'pulsing_crystal', name: '박동하는 결정', icon: '💎', rarity: 'rare', minSat: 80, chance: 0.04 },
-    { id: 'floating_eye', name: '부유하는 안구', icon: '👁️', rarity: 'rare', minSat: 80, chance: 0.03 },
-    { id: 'abyssal_dregs', name: '심연의 침전물', icon: '🌌', rarity: 'epic', minSat: 90, chance: 0.015 },
-    { id: 'incomplete_fetus', name: '불완전한 태아', icon: '🧪', rarity: 'epic', minSat: 95, chance: 0.01 }
+    { id: 'ether_sludge', name: '에테르 슬러지', icon: 'assets/images/items/sludge.png', rarity: 'common', minSat: 50, chance: 0.12 },
+    { id: 'bleached_scales', name: '탈색된 비늘', icon: 'assets/images/items/scales.png', rarity: 'common', minSat: 50, chance: 0.10 },
+    { id: 'petrified_memory', name: '석화된 기억', icon: 'assets/images/items/memory.png', rarity: 'uncommon', minSat: 65, chance: 0.08 },
+    { id: 'transparent_husk', name: '투명한 허물', icon: 'assets/images/items/husk.png', rarity: 'uncommon', minSat: 65, chance: 0.06 },
+    { id: 'pulsing_crystal', name: '박동하는 결정', icon: 'assets/images/items/crystal.png', rarity: 'rare', minSat: 80, chance: 0.04 },
+    { id: 'floating_eye', name: '부유하는 안구', icon: 'assets/images/items/eye.png', rarity: 'rare', minSat: 80, chance: 0.03 },
+    { id: 'abyssal_dregs', name: '심연의 침전물', icon: 'assets/images/items/dregs.png', rarity: 'epic', minSat: 90, chance: 0.015 },
+    { id: 'incomplete_fetus', name: '불완전한 태아', icon: 'assets/images/items/fetus.png', rarity: 'epic', minSat: 95, chance: 0.01 }
 ];
 
 // [상태 변수]
@@ -4269,7 +4261,9 @@ window.renderInventory = () => {
         const slot = document.createElement('div');
         slot.className = 'inventory-slot-glass';
         slot.innerHTML = `
-            <div class="slot-icon">${info.icon}</div>
+            <div class="slot-icon">
+                <img src="${info.icon}" class="inventory-img-icon">
+            </div>
             <div class="slot-count">${count}</div>
         `;
         
@@ -4303,7 +4297,9 @@ window.selectInventoryItem = (id, info) => {
 
     detailArea.innerHTML = `
         <div id="detail-info-area">
-            <div class="detail-icon-lg">${info.icon}</div>
+            <div class="detail-icon-lg">
+                <img src="${info.icon}" class="inventory-img-large" onerror="this.src='assets/images/default.png'">
+            </div>
             <div class="detail-name-lg">${info.name}</div>
             <div class="detail-desc-lg">${info.desc || info.description || ''}</div>
             ${remainingText}
@@ -4560,7 +4556,6 @@ window.giveGift = (charId, itemInfo) => {
 };
 
 /**
- * [renderer.js] 학회로부터 온 업데이트 소식을 체크합니다.
  * versionInfo가 null일 경우를 대비한 방어 로직이 추가되었습니다.
  */
 async function checkForUpdateMail() {
@@ -4688,8 +4683,6 @@ window.loadLanguageData = async (lang = 'ko') => {
         // [요청 반영] 무조건 한국어로 고정
         const targetLang = 'ko'; 
         const basePath = path.join(__dirname, 'assets', 'data', 'locales', targetLang);
-        
-        console.log(`🔍 [System] 언어 팩 로드 시도: ${targetLang}`);
 
         // 1. 캐릭터 및 메일 데이터 로드
         charData = require(path.join(basePath, 'characters.json'));
@@ -4758,8 +4751,11 @@ ipcRenderer.on('user-idle-state', (event, state) => {
     console.log(`[시스템] 유휴 상태 변경: ${isIdle}`);
 });
 
-// 음악 플레이어
+/* ============================================================
+   [🎵 오디오 시스템: 자동 재생 및 마지막 상태 복구 통합본] 
+   ============================================================ */
 (function initRestoredPlayer() {
+    // 1. 오디오 트랙 데이터 정의
     const trackData = {
         ambient: [
             { name: '잔잔한 파도', file: 'beautiful-ocean-waves.mp3' },
@@ -4781,12 +4777,22 @@ ipcRenderer.on('user-idle-state', (event, state) => {
     };
 
     const audios = { ambient: new Audio(), music: new Audio() };
-    const state = {
-        ambient: { cur: 0, loop: true, shuffle: false },
-        music: { cur: 0, loop: true, shuffle: false }
+
+    // ✨ [수정] 저장된 마지막 곡 인덱스 가져오기
+    const getSavedIdx = (type) => {
+        const s = masterData?.settings?.sound;
+        if (!s) return 0;
+        return (type === 'ambient' ? s.lastAmbient : s.lastMusic) || 0;
     };
 
-    // ✨ [추가] 리스트를 실제로 그려주는 함수 (이게 없어서 목록이 비어있었습니다)
+    const state = {
+        ambient: { cur: getSavedIdx('ambient'), loop: true, shuffle: false },
+        music: { cur: getSavedIdx('music'), loop: true, shuffle: false }
+    };
+
+    /**
+     * 리스트 UI 갱신 함수 (스코프 내 보호됨)
+     */
     const refreshList = (type) => {
         const container = document.getElementById(`list-${type}`);
         if (!container) return;
@@ -4798,32 +4804,44 @@ ipcRenderer.on('user-idle-state', (event, state) => {
             </div>
         `).join('');
 
-        // 클릭 시 해당 트랙 재생 연결
         container.querySelectorAll('.menu-item').forEach(el => {
-            el.onmousedown = (e) => {
+            el.onclick = (e) => {
                 e.stopPropagation();
                 playTrack(type, parseInt(el.dataset.idx));
             };
         });
     };
 
-    const playTrack = (type, idx) => {
+    /**
+     * 곡 재생 및 인덱스 저장 로직
+     */
+    const playTrack = (type, idx, isAuto = false) => {
         const list = trackData[type];
         idx = (idx + list.length) % list.length;
         state[type].cur = idx;
         const audio = audios[type];
+
+        // ✨ [기록] 현재 듣는 곡 번호를 세이브 데이터에 저장
+        if (masterData.settings && masterData.settings.sound) {
+            if (type === 'ambient') masterData.settings.sound.lastAmbient = idx;
+            else masterData.settings.sound.lastMusic = idx;
+        }
+
+        const triggerBtn = document.getElementById(`trig-${type === 'ambient' ? 'amb' : 'mus'}`);
+
         try {
-            if (typeof path !== 'undefined') {
-                audio.src = path.join(__dirname, 'assets', 'sounds', type, list[idx].file);
-            }
+            audio.src = path.join(__dirname, 'assets', 'sounds', type, list[idx].file);
             audio.loop = state[type].loop;
+            
             audio.play().then(() => {
                 const btn = document.getElementById(type === 'ambient' ? 'play-amb' : 'play-mus');
                 if (btn) btn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-            }).catch(e => {});
+                if (triggerBtn) triggerBtn.classList.add('active'); // 이너글로우 활성화
+                if (!isAuto) saveAllData(); // 수동 재생 시 즉시 저장
+            }).catch(e => {
+                console.log(`🔇 [Audio] ${type} 자동 재생 대기 중 (상호작용 필요)`);
+            });
         } catch (err) {}
-        
-        // 재생 시 목록의 '선택' 표시 갱신
         refreshList(type);
     };
 
@@ -4834,72 +4852,221 @@ ipcRenderer.on('user-idle-state', (event, state) => {
 
     const prevTrack = (type) => { playTrack(type, state[type].cur - 1); };
 
+    /**
+     * [핵심] 모든 오디오 UI 바인딩 및 자동 재생 시퀀스
+     */
     window.setupEngine = () => {
-        console.log("🎵 [Audio] 오디오 UI 바인딩 시작");
+        console.log("🎵 [Audio] 오디오 시스템 바인딩 및 자동 재생 체크 시작");
+        
         ['ambient', 'music'].forEach(type => {
             const prefix = type === 'ambient' ? 'amb' : 'mus';
+            const panel = document.getElementById(`panel-${type}`);
+            const trigBtn = document.getElementById(`trig-${prefix}`); //
+            const s = masterData?.settings?.sound;
 
-            // ✨ [추가] 엔진 설정 시 목록을 처음에 한 번 그려줍니다.
+            // 1. 리스트 및 초기 상태 설정
             refreshList(type);
 
-            window.bindIfExists(`trig-${prefix}`, 'onmousedown', () => {
-                const panel = document.getElementById(`panel-${type}`);
-                if (panel) {
-                    const isActive = panel.classList.contains('active');
-                    document.querySelectorAll('.player-panel').forEach(p => p.classList.remove('active'));
-                    if (!isActive) panel.classList.add('active');
-                }
-            });
-
-            window.bindIfExists(`play-${prefix}`, 'onmousedown', () => {
-                const audio = audios[type];
-                const btn = document.getElementById(`play-${prefix}`);
-                if (audio.paused) { audio.play(); btn.innerHTML = '<i class="fa-solid fa-pause"></i>'; }
-                else { audio.pause(); btn.innerHTML = '<i class="fa-solid fa-play"></i>'; }
-            });
-
-            const panel = document.getElementById(`panel-${type}`);
-            if (panel) {
-                const nextBtn = panel.querySelector('.next-btn');
-                const prevBtn = panel.querySelector('.prev-btn');
-                if (nextBtn) nextBtn.onmousedown = (e) => { e.stopPropagation(); nextTrack(type); };
-                if (prevBtn) prevBtn.onmousedown = (e) => { e.stopPropagation(); prevTrack(type); };
-            }
+            // 2. [중요] 모든 이벤트 바인딩을 자동 재생보다 '먼저' 수행합니다.
             
-            // 볼륨 조절 연결
-            window.bindIfExists(`vol-${prefix}`, 'oninput', (e) => audios[type].volume = e.target.value);
+            // 패널 토글 버튼 (trig-amb, trig-mus)
+            if (trigBtn) {
+                trigBtn.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const isActive = panel.classList.contains('active');
+                    // 모든 패널 닫기 후 토글
+                    document.querySelectorAll('.player-panel').forEach(p => p.classList.remove('active'));
+                    if (!isActive) {
+                        panel.classList.add('active');
+                        refreshList(type);
+                    }
+                };
+            }
+
+            // 재생/일시정지 버튼
+            const playBtn = document.getElementById(`play-${prefix}`);
+            if (playBtn) {
+                playBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    if (audios[type].paused) {
+                        audios[type].play();
+                        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+                        if (trigBtn) trigBtn.classList.add('active');
+                    } else {
+                        audios[type].pause();
+                        playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+                        if (trigBtn) trigBtn.classList.remove('active');
+                    }
+                };
+            }
+
+            // 볼륨 슬라이더
+            const volSlider = document.getElementById(`vol-${prefix}`);
+            if (volSlider) {
+                audios[type].volume = parseFloat(volSlider.value);
+                volSlider.oninput = (e) => {
+                    e.stopPropagation();
+                    audios[type].volume = parseFloat(e.target.value);
+                };
+            }
+
+            // 3. ✨ 모든 바인딩이 끝난 후, '자동 재생' 조건 확인 및 실행
+            if (s && s.autoPlay === true) {
+                const savedIdx = (type === 'ambient') ? s.lastAmbient : s.lastMusic;
+                if (savedIdx !== undefined && savedIdx !== null) {
+                    console.log(`▶️ [Audio] ${type} 자동 재생 시도 (Track: ${savedIdx})`);
+                    // isAuto = true를 전달하여 불필요한 중복 저장을 방지합니다.
+                    playTrack(type, savedIdx, true); 
+                }
+            }
         });
     };
+    
+})();
 
-    window.bindIfExists = (id, event, handler) => {
+/* ============================================================
+   [🔊 사운드 시스템: 토글 및 데이터 동기화] 
+   ============================================================ */
+
+window.updateSoundUI = () => {
+    // 1. [데이터 체크] 사운드 설정이 없으면 기본값 생성
+    if (!masterData.settings || !masterData.settings.sound) {
+        if (masterData.settings) {
+            masterData.settings.sound = { master: true, system: true, autoPlay: true };
+        } else {
+            return; // 설정 데이터가 아직 로드되지 않음
+        }
+    }
+    
+    const s = masterData.settings.sound;
+
+    // 2. [핵심] HTML의 ID와 코드의 ID를 100% 일치시킵니다.
+    const masterEl = document.getElementById('master-sound-toggle');
+    const systemEl = document.getElementById('system-sound-toggle');
+    const autoPlayEl = document.getElementById('auto-play-toggle'); 
+
+    // 3. 각 요소가 존재할 때만 active 클래스를 토글합니다.
+    if (masterEl) masterEl.classList.toggle('active', !!s.master);
+    if (systemEl) systemEl.classList.toggle('active', !!s.system);
+    if (autoPlayEl) autoPlayEl.classList.toggle('active', !!s.autoPlay);
+    
+    console.log("🔊 [System] 사운드 UI 모션 동기화 완료");
+};
+
+// --- [개별 토글 로직] ---
+
+window.toggleMasterSound = () => {
+    if (!masterData.settings.sound) masterData.settings.sound = { master: true, system: true, autoPlay: true };
+    
+    // 상태 반전 및 UI 갱신
+    masterData.settings.sound.master = !masterData.settings.sound.master;
+    window.updateSoundUI();
+    saveAllData(); //
+    
+    window.showToast(masterData.settings.sound.master ? "전체 소리가 켜졌습니다." : "전체 소리가 꺼졌습니다.", "info");
+};
+
+window.toggleSystemSound = () => {
+    if (!masterData.settings.sound) masterData.settings.sound = { master: true, system: true, autoPlay: true };
+    
+    masterData.settings.sound.system = !masterData.settings.sound.system;
+    window.updateSoundUI();
+    saveAllData();
+    
+    window.showToast(masterData.settings.sound.system ? "시스템 효과음이 활성화되었습니다." : "시스템 효과음이 비활성화되었습니다.", "info");
+};
+
+window.toggleAutoPlay = () => {
+    // [보강] 데이터 경로가 없으면 즉시 생성
+    if (!masterData.settings.sound) {
+        masterData.settings.sound = { master: true, system: true, autoPlay: true };
+    }
+    
+    // 상태 반전
+    masterData.settings.sound.autoPlay = !masterData.settings.sound.autoPlay;
+    
+    // UI 갱신 및 저장
+    window.updateSoundUI();
+    saveAllData(); 
+    
+    window.showToast(masterData.settings.sound.autoPlay ? "자동 재생 모드가 활성화되었습니다." : "자동 재생 모드가 비활성화되었습니다.", "info");
+};
+
+
+
+/**
+ * [renderer.js] 모니터링 키워드 관리 시스템
+ */
+// 2. 키워드 리스트 렌더링 함수
+window.renderMonitorSettings = () => {
+    const monitor = masterData.settings.monitor;
+    
+    const render = (id, list, type) => {
         const el = document.getElementById(id);
-        if (el) el[event] = (e) => { if (e && e.stopPropagation) e.stopPropagation(); handler(e); };
+        if (!el) return;
+        el.innerHTML = list.map((k, idx) => `
+            <li class="keyword-item">
+                <span>${k}</span>
+                <button class="btn-del-keyword" onclick="window.removeKeyword('${type}', ${idx})">
+                    <i class="fas fa-times"></i>
+                </button>
+            </li>
+        `).join('');
     };
 
-})(); // 오디오 엔진 방 종료
-
-// --- [공용 함수 구역] ---
-window.updateSoundUI = () => {
-    if (!masterData || !masterData.settings || !masterData.settings.sound) return;
-    const s = masterData.settings.sound;
-    const masterEl = document.getElementById('master-sound-toggle');
-    if (masterEl) masterEl.classList.toggle('active', !!s.master);
+    render('work-keyword-list', monitor.workKeywords, 'work');
+    render('distract-keyword-list', monitor.distractKeywords, 'distract');
 };
 
-window.toggleMasterSound = () => { /* 내용 생략 */ };
-window.toggleSystemSound = () => { /* 내용 생략 */ };
-window.toggleAutoPlay = () => { /* 내용 생략 */ };
+// 3. 키워드 추가 함수
+/**
+ * [renderer.js] 키워드 추가 함수 (방어 로직 포함)
+ */
+window.addKeyword = () => {
+    const input = document.getElementById('keyword-input');
+    const typeSelect = document.getElementById('keyword-type-select');
+    
+    if (!input || !typeSelect) return;
 
-window.togglePastItems = () => {
-    if (!masterData.settings) return;
-    masterData.settings.showPastCompleted = !masterData.settings.showPastCompleted;
-    window.showPastCompleted = masterData.settings.showPastCompleted;
+    const type = typeSelect.value;
+    const val = input.value.trim();
+
+    // 🛡️ 방어 로직 1: 빈 값 체크
+    if (!val) {
+        if (window.showToast) window.showToast("키워드를 입력해주세요!", "error");
+        input.focus();
+        return;
+    }
+
+    const monitor = masterData.settings.monitor;
+    const targetList = (type === 'work') ? monitor.workKeywords : monitor.distractKeywords;
+
+    // 🛡️ 방어 로직 2: 중복 키워드 체크
+    if (targetList.includes(val)) {
+        if (window.showToast) window.showToast("이미 등록된 키워드입니다.", "warning");
+        input.value = '';
+        input.focus();
+        return;
+    }
+
+    // 데이터 추가
+    targetList.push(val);
+
+    // UI 갱신 및 저장
+    input.value = '';
+    input.focus(); // 연속 입력 편의성
+    window.renderMonitorSettings();
     saveAllData();
-    window.updatePastItemsUI();
-    window.renderTodos(); // 마침표 에러 수정 완료
+    
+    if (window.showToast) window.showToast(`'${val}' 키워드가 등록되었습니다.`, "success");
 };
 
-window.updatePastItemsUI = () => {
-    const el = document.getElementById('show-past-toggle');
-    if (el) el.classList.toggle('active', !!window.showPastCompleted);
+// 4. 키워드 삭제 함수
+window.removeKeyword = (type, idx) => {
+    if (type === 'work') masterData.settings.monitor.workKeywords.splice(idx, 1);
+    else masterData.settings.monitor.distractKeywords.splice(idx, 1);
+    
+    window.renderMonitorSettings();
+    saveAllData();
 };

@@ -196,12 +196,12 @@
         "title": "시스템 설정",
         "tabs": {
             "general": "일반",
-            "apps": "작업 설정",
-            "distract": "딴짓 설정"
+            "apps": "작업",
+            "distract": "딴짓"
         },
         "general": {
-            "font": "폰트 설정",
-            "theme": "테마 설정",
+            "font": "폰트",
+            "theme": "테마",
             "layout": "화면 레이아웃",
             "layout_wide": "넓게 보기",
             "reset_btn": "전체 데이터 초기화"

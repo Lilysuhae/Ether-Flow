@@ -149,9 +149,6 @@
                         <button class="btn btn-task" onclick="window.openDailyLog()">
                             <i class="fas fa-chart-pie"></i><span data-i18n="game.actions.log">작업기록</span>
                         </button>
-                        <button class="btn btn-task" onclick="" disabled>
-                            <i class="fa-solid fa-stopwatch"></i><span>준비중</span>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -222,16 +219,15 @@
     <div id="settings-modal" class="modal-overlay">
         <div class="modal-window">
             <div class="modal-header">
-                <h3><span data-i18n="settings.title">시스템</span></h3>
+                <h3><i class="fas fa-cog"></i> <span data-i18n="settings.title">시스템</span></h3>
                 <button class="win-btn" onclick="window.toggleSettings(false)"><i class="fas fa-times"></i></button>
             </div>
             <div class="settings-tabs">
-                <button id="btn-tab-general" class="tab-btn active" onclick="window.switchSettingsTab('general')"><i class="fa-solid fa-gear"></i></button>
-                <button id="btn-tab-sound" class="tab-btn" onclick="window.switchSettingsTab('sound')"><i class="fa-solid fa-volume-high"></i></button>
-                <button id="btn-tab-apps" class="tab-btn" onclick="window.switchSettingsTab('apps')"><i class="fa-solid fa-list-check"></i></button>
-                <button id="btn-tab-distract" class="tab-btn" onclick="window.switchSettingsTab('distract')"><i class="fa-solid fa-ghost"></i></button>
-                <button id="btn-tab-monitor" class="tab-btn" onclick="window.switchSettingsTab('monitor')"><i class="fa-solid fa-quote-left"></i></button>
-                <button id="btn-tab-etc" class="tab-btn" onclick="window.switchSettingsTab('etc')"><i class="fa-solid fa-ellipsis"></i></button>
+                <button id="btn-tab-general" class="tab-btn active" onclick="window.switchSettingsTab('general')" data-i18n="settings.tabs.general">일반</button>
+                <button id="btn-tab-sound" class="tab-btn" onclick="window.switchSettingsTab('sound')" data-i18n="settings.tabs.sound">사운드</button>
+                <button id="btn-tab-apps" class="tab-btn" onclick="window.switchSettingsTab('apps')" data-i18n="settings.tabs.apps">작업</button>
+                <button id="btn-tab-distract" class="tab-btn" onclick="window.switchSettingsTab('distract')" data-i18n="settings.tabs.distract">딴짓</button>
+                <button id="btn-tab-monitor" class="tab-btn" onclick="window.switchSettingsTab('monitor')" data-i18n="settings.tabs.monitor">키워드</button>
             </div>
             <div class="settings-body">
                 <div id="tab-content-general" class="tab-content active">
@@ -283,11 +279,15 @@
                     </div>
                     <div class="settings-group">
                         <label class="settings-label" data-i18n="settings.general.layout">화면 레이아웃</label>
-                        <div class="window-mode-btns">
-                            <button id="btn-layout-horizontal" onclick="window.changeWindowMode('horizontal')">가로</button>
-                            <button id="btn-layout-vertical" onclick="window.changeWindowMode('vertical')">세로</button>
-                            <button id="btn-layout-mini" onclick="window.changeWindowMode('mini')">미니</button>
+                        <div id="horizontal-mode-toggle" class="window-mode-toggle" onclick="window.toggleHorizontalMode()">
+                            <span data-i18n="settings.general.layout_wide">넓게 보기</span>
+                            <div class="switch-base">
+                                <div class="switch-circle"></div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="settings-group" style="margin-top: 40px;">
+                        <button class="btn btn-danger" style="width: 100%;" onclick="window.resetAllData()" data-i18n="settings.general.reset_btn">전체 데이터 초기화</button>
                     </div>
                 </div>
                 <div id="tab-content-sound" class="tab-content" style="display: none;">
@@ -400,37 +400,6 @@
                                 <ul id="distract-keyword-list" class="glass-keyword-list"></ul>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div id="tab-content-etc" class="tab-content" style="display: none;">
-                    <div class="settings-section">
-                        <label class="settings-label" data-i18n="settings.general.">버전 정보</label>
-                        <p>V 0.5.4</p>
-                    </div>
-                    <div class="settings-section">
-                        <label class="settings-label" data-i18n="settings.general.">제작자</label>
-                        <div>
-                            Lily :: Ether Flow  
-                            <a href="https://x.com/snowflor_lily" onclick="event.preventDefault(); require('electron').shell.openExternal(this.href)" data-tooltip="트위터 바로가기">
-                                <i class="fa-brands fa-twitter"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="settings-section">
-                        <label class="settings-label" data-i18n="settings.general.">감사한 분들</label>
-                        <ul>
-                            <li>Duraena</li>
-                            <li>sheryl</li>
-                            <li>Latimeria</li>
-                            <li>Hyeon</li>
-                            <li>nari</li>
-                            <li>Vitte</li>
-                            <li>Jelly</li>
-                        </ul>
-                    </div>
-                    <div class="settings-section last">
-                        <label class="settings-label" data-i18n="settings.general.">데이터 초기화</label>
-                        <button class="btn btn-danger" style="width: 100%;" onclick="window.resetAllData()" data-i18n="settings.general.reset_btn">전체 데이터 초기화</button>
                     </div>
                 </div>
             </div>

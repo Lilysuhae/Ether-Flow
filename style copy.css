@@ -1221,7 +1221,7 @@ canvas {
   margin: 1em 0;
 }
 .control-group.focus {
-  margin-bottom: 1em;
+  margin-bottom: 2em;
 }
 
 .group-label {
@@ -1243,7 +1243,7 @@ canvas {
   width: 100%;
 }
 
-/* 게임 라인 아이콘: 골드 */
+/* 게임 라인 아이콘: 핑크 */
 .btn-game i {
   color: var(--primary-gold) !important;
 }
@@ -2385,7 +2385,7 @@ canvas {
 
 .pretty-radio-group {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     margin-top: 10px;
 }
 
@@ -2792,17 +2792,8 @@ canvas {
 .control-group.game .action-row {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 4px !important;
+    gap: 8px !important;
     margin-bottom: 10px;
-}
-
-.control-group.game .action-row img {
-    width: 32px;
-    height: 32px;
-    image-rendering: pixelated;      /* 크롬, 엣지, 최신 브라우저 */
-    image-rendering: -moz-crisp-edges; /* 파이어폭스 */
-    image-rendering: crisp-edges;    /* 사파리 및 기타 */
-    object-fit: contain;
 }
 
 .control-group.game .btn {
@@ -2812,15 +2803,6 @@ canvas {
 .control-group.focus .btn {
     width: 100% !important;
     height: 52px !important;
-}
-
-@media screen and (max-width: 360px) {
-    .control-group.game .action-row {
-        grid-template-columns: repeat(6, 1fr) !important;
-    }
-    .control-group.game .action-row button span {
-        display: none;
-    }
 }
 
 /* 5. 호버 인터랙션: 에테르 에너지가 활성화되는 연출 */
@@ -5622,7 +5604,7 @@ header .header-right {
     width: 36px;
     height: 36px;
     font-size: 0.8em !important;
-    background: rgba(0, 0, 0, 0.8); /* 아주 옅은 배경 */
+    background: rgba(255, 255, 255, 0.05); /* 아주 옅은 배경 */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1); /* 얇은 유리 테두리 */
@@ -5818,12 +5800,6 @@ header .header-right {
     width: 100%;
 }
 
-@media screen and (max-width: 360px) {
-    #sediment-grid {
-    grid-template-columns: repeat(3, 1fr);
-}
-}
-
 /* 부산물 슬롯 디자인 최적화 */
 .sediment-slot {
     border-radius: 0.5em;
@@ -5915,7 +5891,7 @@ header .header-right {
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
     border: 1px solid var(--glass-border);
-    border-radius: 14px;
+    border-radius: 8px;
     padding: 10px 15px;
 }
 
@@ -5926,7 +5902,7 @@ header .header-right {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 14px;
+    border-radius: 8px;
     background-color: var(--ios-blue);
 }
 
@@ -5988,46 +5964,7 @@ header .header-right {
     padding: 0;
 }
 
-@media screen and (max-width: 360px) {
-    /* [style.css] 세로 모드 전용 키워드 설정창 보정 */
-
-    /* 1. 세로 모드에서 입력행을 세로로 쌓기 */
-    .keyword-input-group {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 8px !important;
-        height: auto !important;
-    }
-
-    /* 2. 각 요소의 너비를 100%로 확장 */
-    .pretty-select-container,
-    #keyword-type-select,
-    #keyword-input,
-    .btn-add-keyword {
-        width: 100% !important;
-        margin: 0 !important;
-    }
-
-    /* 3. 입력창 높이 및 패딩 최적화 */
-    #keyword-input {
-        padding: 12px;
-        font-size: 0.9rem;
-    }
-
-    /* 4. 키워드 태그 리스트가 좁은 곳에서도 잘 흐르도록 설정 */
-    .glass-keyword-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        padding: 10px 0;
-    }
-
-    .keyword-tag {
-        max-width: 100%; /* 너무 긴 키워드 방지 */
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-}
+.btn-del-key:hover { color: #ff6b6b; }
 
 .pref-item-img {
     width: 16px;   /* 도감 리스트에 적절한 작은 크기 */
@@ -6057,148 +5994,4 @@ header .header-right {
     line-height: 1.8em;      /* 줄 간격을 넉넉히 주어 가독성을 높입니다 */
     white-space: pre-line; /* 만약 타이핑 없이 출력되는 경우를 대비한 안전장치 */
     word-break: break-all;
-}
-
-
-/* [style.css] 미니 위젯 모드 레이아웃 정의 */
-#app.mode-mini .sidebar-container,
-#app.mode-mini .right-sidebar,
-#app.mode-mini .main-content-scroll > *:not(.main-header):not(#game-container) {
-    display: none !important;
-}
-
-#app.mode-mini .app-container {
-    display: block; /* 사이드바가 없으므로 블록 레이아웃으로 변경 */
-}
-
-#app.mode-mini .main-content-scroll {
-    padding: 10px;
-    height: 100vh;
-}
-
-#app.mode-mini #game-container {
-    margin-top: 10px;
-    height: calc(100vh - 120px); /* 헤더 제외 남은 공간 차지 */
-}
-
-#app.mode-mini .control-group {
-    display: none;
-}
-
-#app.mode-mini #left-side {
-    overflow: hidden;
-}
-
-#app.mode-mini .right-side {
-    display: none;
-}
-
-
-/* [style.css] 레이아웃 모드 버튼 그룹 스타일링 */
-.window-mode-btns {
-    display: flex;
-    gap: 8px;
-    padding: 4px;
-    border-radius: 12px;
-    border: 1px solid var(--glass-border);
-}
-
-.window-mode-btns button {
-    flex: 1;
-    padding: 10px 16px;
-    border: none;
-    background: transparent;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'Paperlogy', sans-serif;
-    font-size: 0.85rem;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-}
-
-/* 마우스 호버 시 */
-.window-mode-btns button:hover {
-    background: var(--ios-blue);
-    color: var(--text-primary);
-}
-
-/* 활성화(선택됨) 상태 - 상점 탭과 동일한 디자인 */
-.window-mode-btns button.active {
-    background: var(--ios-blue);
-    color: var(--text-primary);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    font-weight: 600;
-}
-
-/* [style.css] 스크롤 기능 복구 및 드래그 영역 조정 */
-
-/* 1. 전체 배경은 여전히 드래그 가능하게 유지합니다 */
-#app, body {
-    -webkit-app-region: drag !important;
-}
-
-/* 2. ✨ [핵심] 스크롤이 일어나야 하는 영역은 반드시 no-drag여야 합니다 */
-.window-controls,
-#main-layout {
-    -webkit-app-region: no-drag !important;
-    overflow-y: auto !important; /* 스크롤바 활성화 */
-    user-select: auto !important;
-}
-
-/* 3. 사이드바와 하단 패널 등 '클릭'이 잦은 곳도 no-drag로 확실히 분리합니다 */
-.sidebar-container,
-.right-sidebar,
-.inventory-window-vertical,
-.modal-window,
-.player-panel {
-    -webkit-app-region: no-drag !important;
-}
-
-/* 4. 💡 팁: 실제 드래그는 '버튼이 없는 빈 공간'이나 '헤더'에서 하시면 됩니다 */
-.main-header {
-    /* 헤더는 클릭할 게 적으므로 다시 drag로 설정해 손잡이 역할을 하게 합니다 */
-    -webkit-app-region: drag !important;
-}
-
-#tab-content-etc .settings-section {
-    margin-bottom: 1.5em;
-}
-
-#tab-content-etc .settings-section p,
-#tab-content-etc .settings-section div,
-#tab-content-etc .settings-section ul li {
-    color: var(--text-secondary);
-    font-size: 0.9em;
-}
-
-#tab-content-etc .settings-section div a{
-    margin-left: 0.25em;
-}
-
-#tab-content-etc .settings-section ul {
-    list-style: none;
-}
-
-#tab-content-etc .settings-section ul li {
-    line-height: 1.4em;
-}
-
-#tab-content-etc .settings-section.last {
-    margin-bottom: 0;
-}
-
-/* 알이 숨 쉬듯이 까딱거리는 애니메이션 */
-@keyframes egg-wobble {
-    0% { transform: rotate(0deg) scale(2); }
-    25% { transform: rotate(-2deg) scale(2.02); } /* 살짝 왼쪽으로 */
-    50% { transform: rotate(0deg) scale(2); }
-    75% { transform: rotate(2deg) scale(2.02); }  /* 살짝 오른쪽으로 */
-    100% { transform: rotate(0deg) scale(2); }
-}
-
-/* 이 클래스가 붙으면 캔버스가 움직입니다 */
-.egg-anim-active {
-    animation: egg-wobble 2.5s infinite ease-in-out;
-    /* transform-origin: bottom center; 바닥을 중심으로 움직임 */
-    image-rendering: pixelated;
 }

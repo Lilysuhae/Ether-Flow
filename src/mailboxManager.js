@@ -106,7 +106,11 @@ class MailboxManager {
                         isMet = (stats.currentDay === 0 || stats.currentDay === 6);
                         break;
                     default:
-                        isMet = (stats[condition.type] === condition.value);
+                        if (typeof stats[condition.type] === 'number' && typeof condition.value === 'number') {
+                            isMet = (stats[condition.type] >= condition.value);
+                        } else {
+                            isMet = (stats[condition.type] === condition.value);
+                        }
                 }
                 return isMet;
             };

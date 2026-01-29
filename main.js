@@ -120,28 +120,32 @@ ipcMain.on('set-always-on-top', (e, stayOnTop) => {
     }
 });
 
-// [수정] 스크린샷의 잘림 현상을 방지하기 위해 사이즈를 키웠습니다.
-ipcMain.on('set-layout-size', (e, isHorizontal) => {
+// [main.js] 윈도우 모드 전환 로직 통합 수리
+ipcMain.on('set-window-mode', (event, mode) => {
     if (!mainWindow) return;
 
-    // 1. [핵심] 크기 조절을 방해할 수 있는 모든 제약을 잠시 해제합니다.
+    // 1. ✨ 모든 제약을 먼저 완전히 해제하여 초기화합니다.
     mainWindow.setResizable(true);
-    mainWindow.setMinimumSize(100, 100); 
+    mainWindow.setMinimumSize(0, 0);
     mainWindow.setMaximumSize(9999, 9999);
 
-    if (isHorizontal) {
-        // 가로 모드 (넓게 보기): 너비 800
-        // [수정] 세 번째 인자(animate)를 false로 설정하여 즉각 반응하게 합니다.
-        mainWindow.setSize(800, 900, false); 
-    } else {
-        // 세로 모드 (기본): 너비 360
-        mainWindow.setSize(360, 900, false);
+    // 2. 모드별 크기 적용
+    if (mode === 'horizontal') {
+        mainWindow.setSize(800, 800, true); // 시원하게 가로로 확장
+        mainWindow.setMinimumSize(800, 800);
+    } 
+    else if (mode === 'vertical') {
+        mainWindow.setSize(360, 800, true);
+        mainWindow.setMinimumSize(360, 640); // 최소 높이 설정
+        mainWindow.setMaximumSize(360, 1500);
+    } 
+    else if (mode === 'mini') {
+        // ✨ 미니 모드: 이제 445(또는 436)로 정상적으로 줄어듭니다.
+        mainWindow.setSize(360, 460, true); 
+        mainWindow.setMinimumSize(360, 460);
+        mainWindow.setMaximumSize(360, 460);
+        mainWindow.setResizable(false);
     }
-    
-    // 2. 창이 작아질 때 화면 밖으로 나가는 것을 방지하기 위해 위치 재조정 (선택 사항)
-    // mainWindow.center(); 
-
-    console.log(`[레이아웃 변경] 가로모드: ${isHorizontal}, 현재 크기: ${mainWindow.getSize()}`);
 });
 
 ipcMain.on('save-log-image', async (event, rect) => {
