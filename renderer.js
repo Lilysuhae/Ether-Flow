@@ -3057,7 +3057,7 @@ window.addKeyword = () => {
     if (!typeSelect || !input) return;
 
     const type = typeSelect.value;
-    const val = input.value.trim().toLowerCase(); // 좌우 공백 제거 및 소문자화
+    const val = input.value
 
     // 🛡️ [수정] 공백 검증 및 사용자 피드백 추가
     if (!val || val.length === 0) {
