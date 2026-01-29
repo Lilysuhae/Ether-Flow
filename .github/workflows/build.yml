@@ -3,8 +3,8 @@ name: Build Electron App
 on:
   push:
     branches: [ main ]
-    tags: 
-      - 'v*'
+  tag:
+    - 'v*'
 
 jobs:
   build:
@@ -17,10 +17,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Fix Git Config
+
+      # 1. Git 환경 문제 원천 차단
+      - name: Fix Git Environment
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
           git config --global --add safe.directory "*"
 
       - name: Setup Node.js
@@ -39,9 +41,11 @@ jobs:
         run: npx electron-rebuild -v 40.0.0 
 
       - name: Build Electron app
-        run: npx electron-builder --win --x64 --publish never -c.git.require=false
+        run: npx electron-builder --win --x64 --publish never
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # ✨ [이게 핵심 치트키!] Git 관련 에러가 나도 무시하고 빌드를 진행하게 합니다.
+          ELECTRON_BUILDER_ALLOW_HANDLE_GIT_FAILED: true 
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
