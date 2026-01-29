@@ -1,8 +1,10 @@
+name: Build Electron App
+
 on:
   push:
     branches:
       - main
-    tags: # s를 붙이고 push 아래로 들여쓰기 했습니다.
+    tags:
       - 'v*'
 
 jobs:
@@ -13,11 +15,11 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 1. Git 환경 문제 원천 차단
       - name: Fix Git Environment
         run: |
           git config --global user.email "github-actions@github.com"
@@ -34,7 +36,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - run: npm install
+      - name: Install dependencies
+        run: npm install
 
       - name: Rebuild native modules
         run: npx electron-rebuild -v 40.0.0 
@@ -43,7 +46,7 @@ jobs:
         run: npx electron-builder --win --x64 --publish never
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # ✨ [이게 핵심 치트키!] Git 관련 에러가 나도 무시하고 빌드를 진행하게 합니다.
+          # Git 에러를 무시하는 강력한 치트키 유지
           ELECTRON_BUILDER_ALLOW_HANDLE_GIT_FAILED: true 
 
       - name: Upload Artifact

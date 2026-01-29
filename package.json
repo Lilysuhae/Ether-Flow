@@ -9,6 +9,10 @@
     "rebuild": "electron-rebuild -v 40.0.0",
     "build": "npm run rebuild && electron-builder --win --x64"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lilysuhae/Ether-Flow.git"
+  },
   "build": {
     "appId": "com.lilysuhae.etherflow",
     "productName": "Ether Flow",
