@@ -3,19 +3,25 @@ name: Build Electron App
 on:
   push:
     branches: [ main ]
+    tags: 
+      - 'v*'
 
 jobs:
   build:
     runs-on: windows-latest
 
     permissions:
-      contents: write # 빌드 봇이 저장소에 접근할 권한
+      contents: write
 
     steps:
-      # [수정된 부분] 전체 Git 기록을 가져오도록 옵션을 추가했습니다.
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Fix Git Config
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git config --global --add safe.directory "*"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -33,8 +39,7 @@ jobs:
         run: npx electron-rebuild -v 40.0.0 
 
       - name: Build Electron app
-        # -p never: GitHub Release에 자동 배포하지 않고 빌드만 수행
-        run: npx electron-builder --win --x64 -p never
+        run: npx electron-builder --win --x64 --publish never -c.git.require=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
