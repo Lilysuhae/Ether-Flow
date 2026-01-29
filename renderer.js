@@ -212,6 +212,7 @@ function syncReferences() {
     window.autoDeleteOldTasks = !!masterData.settings.autoDeleteOldTasks;
     window.resetHour = masterData.settings.resetHour || 0;
     window.isHorizontalMode = masterData.settings.isHorizontalMode ?? true;
+    window.isAlwaysOnTop = masterData.settings.isAlwaysOnTop ?? true;
 
     // 5. 캐릭터 데이터 맵 동기화
     if (!masterData.character) masterData.character = {};
@@ -2071,7 +2072,9 @@ function initializeByproductData() {
  */
 window.updateCylinderSystem = () => {
     // 1. 농도 변화 계산
-    if (isActuallyWorking && !isIdle) {
+    // [수정] 작업 중이더라도 '딴짓(isDistraction)' 상태라면 농도가 낮아지도록 조건 강화
+    // (키워드 딴짓, 앱 딴짓 모두 isDistraction에 포함됩니다.)
+    if (isActuallyWorking && !isIdle && !isDistraction) {
         cylinderSaturation = Math.min(100, cylinderSaturation + 0.15);
     } else {
         cylinderSaturation = Math.max(0, cylinderSaturation - 0.07);
@@ -2092,7 +2095,8 @@ window.updateCylinderSystem = () => {
     const now = Date.now();
     if (now - lastSedimentTick >= 60000) {
         lastSedimentTick = now;
-        if (cylinderSaturation >= 50) {
+        // 50% 이상이고 알 상태가 아닐 때만 침전물 발생
+        if (cylinderSaturation >= 50 && !collection.activeEgg) {
             processSedimentation();
         }
     }
@@ -2102,6 +2106,8 @@ window.updateCylinderSystem = () => {
  * 6. 침전물 획득 처리 (가챠 성공 시)
  */
 window.processSedimentation = () => {
+    if (collection.activeEgg) return;
+
     const item = window.getSedimentDrop(); 
     if (!item) return;
 
@@ -3478,6 +3484,7 @@ async function saveAllData() {
             masterData.settings.workApps = workApps; 
             masterData.settings.distractionApps = distractionApps;
             masterData.settings.isHorizontalMode = window.isHorizontalMode;
+            masterData.settings.isAlwaysOnTop = window.isAlwaysOnTop;
             masterData.settings.windowMode = masterData.settings.windowMode || 'horizontal';
             masterData.settings.currentTheme = masterData.settings.currentTheme || 'DEFAULT_DARK';
         }
@@ -4010,18 +4017,44 @@ async function startEngine() {
     try {
         // 2. 데이터 로드
         const savedData = await ipcRenderer.invoke('load-game-data');
+        
+        // [수정 1] 신규 유저 기본값에 'achievements: []' 추가
         masterData = savedData || { 
-            progress: {}, settings: {}, character: {}, collection: {}, 
+            progress: { 
+                level: 1, 
+                exp: 0, 
+                totalFocusTime: 0, 
+                todayFocusTime: 0,
+                lastSaveDate: window.getMolipDate()
+            }, 
+            settings: {}, 
+            character: {}, 
+            collection: {}, 
+            achievements: [], // 👈 [중요] 업적 저장 배열 초기화
             inventory: { items: {}, byproducts: {} }, 
-            mailbox: { mailHistory: [] }, todo: [], habit: [] 
+            mailbox: { mailHistory: [] }, 
+            todo: [], 
+            habit: [] 
         };
 
+        // [안전장치] 기존 데이터에 progress나 level이 없는 경우 보정
         if (!masterData.progress) masterData.progress = {};
-        masterData.progress.lastSaveDate = window.getMolipDate(); // <--- 이 줄이 핵심입니다!
+        if (typeof masterData.progress.level === 'undefined') {
+            masterData.progress.level = 1;
+            masterData.progress.exp = 0;
+        }
+
+        // [수정 2] 기존 유저도 업적 배열이 없으면 빈 배열 생성 (에러 방지)
+        if (!masterData.achievements) {
+            masterData.achievements = [];
+        }
+
+        // 날짜 동기화
+        masterData.progress.lastSaveDate = window.getMolipDate();
 
         window.masterData = masterData;
 
-        // 3. 데이터 구조 보정
+        // 3. 데이터 구조 보정 (나머지 안전장치)
         masterData.inventory = masterData.inventory || { items: {}, byproducts: {} };
         masterData.settings = masterData.settings || {};
         masterData.mailbox = masterData.mailbox || { mailHistory: [] };
@@ -4029,7 +4062,7 @@ async function startEngine() {
             masterData.mailbox = { mailHistory: masterData.mailbox };
         }
         
-        // [필수] 전역 변수 연결 (여기서 workApps가 채워집니다)
+        // [필수] 전역 변수 연결
         syncReferences(); 
 
         // 4. 언어 및 리소스 로드
@@ -4073,14 +4106,15 @@ async function startEngine() {
             }
         }
 
-        // 8. UI 최종 적용 [✨ 여기가 핵심입니다]
+        // 8. UI 최종 적용
         window.applyHorizontalMode();
         window.applyWindowMode();
         window.applySavedFont();
+        ipcRenderer.send('set-always-on-top', window.isAlwaysOnTop);
+        window.updatePinUI();
         window.updateUI();
         window.updateMailNotification();
         
-        // [누락 수정] 앱 켜자마자 사이드바 목록과 키워드를 그립니다.
         window.applyAccordionStates();
         window.renderWorkAppList(); 
         window.renderMonitorSettings(); 
