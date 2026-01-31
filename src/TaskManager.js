@@ -320,14 +320,14 @@ class TaskManager {
         const today = new Date().getDay();
         const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
-        // 1. 뱃지 업데이트 및 강조 효과 처리
+        // 1. 뱃지 업데이트
         if (badge) {
             const completedCount = this.habits.filter(h => h.completed).length;
             badge.innerText = `${completedCount}/${this.habits.length}`;
             badge.classList.toggle('all-completed', this.habits.length > 0 && completedCount === this.habits.length);
         }
 
-        // 2. ✨ [핵심 수정] 습관이 없을 때 메시지 출력 로직
+        // 2. 목록 없음 처리
         if (this.habits.length === 0) {
             list.innerHTML = '<li class="empty-list-msg">등록된 습관이 없습니다.</li>';
             return;
@@ -335,9 +335,11 @@ class TaskManager {
 
         // 3. 습관 리스트 생성
         list.innerHTML = this.habits.map(h => {
+            // ✨ [핵심 수정] h.days가 없거나 깨져있을 경우 빈 배열로 처리하여 에러 방지
             const safeDays = Array.isArray(h.days) ? h.days : [];
-            const isToday = h.days.includes(today);
-            const dayText = h.days.length === 7 ? "매일" : h.days.map(d => dayNames[d]).join(', ');
+            
+            const isToday = safeDays.includes(today);
+            const dayText = safeDays.length === 7 ? "매일" : safeDays.map(d => dayNames[d]).join(', ');
 
             return `
             <li class="todo-item habit-item ${h.completed ? 'completed' : ''} ${!isToday ? 'not-today' : ''}" data-id="${h.id}">
