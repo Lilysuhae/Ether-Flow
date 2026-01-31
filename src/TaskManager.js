@@ -335,6 +335,7 @@ class TaskManager {
 
         // 3. 습관 리스트 생성
         list.innerHTML = this.habits.map(h => {
+            const safeDays = Array.isArray(h.days) ? h.days : [];
             const isToday = h.days.includes(today);
             const dayText = h.days.length === 7 ? "매일" : h.days.map(d => dayNames[d]).join(', ');
 
