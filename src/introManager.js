@@ -1,6 +1,27 @@
 // [introManager.js] 
 // 주의: 상단에 require('../assets/data/characters.json') 등이 있으면 중복 선언 에러가 발생하므로 모두 제거했습니다.
 
+/**
+ * [introManager.js 또는 인트로 렌더링 함수]
+ * 첫 계약 후보 리스트를 생성할 때 선물 전용 캐릭터를 제외합니다.
+ */
+function renderIntroChoices() {
+    // 1. 전체 캐릭터 데이터에서 '선물 전용'이 아닌 것들만 추출
+    const introPool = charData.characters.filter(char => char.isGiftOnly !== true);
+
+    // 2. 필터링된 introPool을 사용하여 선택지 UI를 생성
+    const choiceContainer = document.getElementById('intro-choice-container');
+    if (!choiceContainer) return;
+
+    choiceContainer.innerHTML = introPool.map(char => `
+        <div class="intro-char-card" onclick="window.selectFirstPartner('${char.id}')">
+            <img src="${char.stages.child.expressions.good.sprite}" alt="${char.name}">
+            <h3>${char.name}</h3>
+            <p>${char.description}</p>
+        </div>
+    `).join('');
+}
+
 // 1. 인트로 스크립트 데이터
 const introScript = [
     "세상은 더 이상 깊이를 갈망하지 않아.", 
@@ -67,17 +88,22 @@ window.renderResonanceSpheres = function() {
     const container = document.getElementById('sphere-container');
     const psDesc = document.getElementById('ps-description');
     
-    // renderer.js에서 전역 공유한 window.charData를 참조합니다.
     const allCharacters = (window.charData && window.charData.characters) ? window.charData.characters : []; 
 
-    if (!container || allCharacters.length === 0) {
-        console.error("❌ 에러: 컨테이너가 없거나 캐릭터 데이터 로드 실패", window.charData);
+    // ✨ 1. [수정] 나타낼 캐릭터 ID 목록을 정의합니다.
+    const targetIds = ['char_01', 'char_02', 'char_04', 'char_05'];
+
+    // ✨ 2. [수정] 전체 캐릭터 중 위 목록에 포함된 캐릭터만 선별합니다.
+    const introPool = allCharacters.filter(char => targetIds.includes(char.id));
+
+    if (!container || introPool.length === 0) {
+        console.error("❌ 에러: 컨테이너가 없거나 지정된 캐릭터 데이터 로드 실패", window.charData);
         return;
     }
 
     container.innerHTML = ''; 
 
-    allCharacters.forEach((char) => {
+    introPool.forEach((char) => {
         const sphere = document.createElement('div');
         sphere.className = 'sphere';
         // 클릭 영역 보장 (Electron 드래그 무시)

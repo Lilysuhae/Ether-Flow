@@ -89,6 +89,7 @@ let lastActiveWin = null;       // 메인 프로세스에서 받은 활성 창 �
 let isActuallyWorking = false;  // 작업 도구 매칭 여부
 let isDistraction = false;      // 딴짓 도구 매칭 여부
 let isIdle = false;             // 부재 중 상태
+let lastInputTime = Date.now(); // 마지막 입력 시간을 현재로 초기화
 let lastIdleState = false;      // [추가] 직전 유휴 상태 기억용
 let awayStartTime = null;       // [추가] 부재 시작 시간 기록용
 let currentStatus = "good";     // [추가] 현재 상태를 저장하여 클릭 시 사용
@@ -98,6 +99,12 @@ let currentPartner = null;
 let currentStage = '';
 let lastLoadedId = null;        // 마지막으로 로드된 캐릭터의 ID
 window.isHatching = false;      // [추가] 현재 부화 연출이 진행 중인지 체크
+
+['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(eventName => {
+    window.addEventListener(eventName, () => {
+        lastInputTime = Date.now(); // 입력이 감지되면 시간을 현재로 갱신
+    }, { passive: true });
+});
 
 /* ============================================================
    [5] 변수 선언: 데이터 컬렉션 (Maps & Arrays)
@@ -127,6 +134,8 @@ window.hideCompleted = false;
 window.showPastCompleted = false;
 window.autoDeleteOldTasks = false;
 window.resetHour = 0;           // 기본값 자정
+window.currentPartner = currentPartner; 
+window.currentStage = currentStage;
 
 // UI 관련 변수
 let logViewDate = new Date();   // 로그 뷰어용 날짜
@@ -334,11 +343,43 @@ window.getShopItems = () => [
     },
     {
         id: "old_parchment",
-        category: "material",
+        category: "gift",
         name: window.t('game.items.old_parchment_name'),
         icon: "assets/images/items/old_parchment.png",
         price: 5,
         desc: window.t('game.items.old_parchment_desc')
+    },
+    {
+        id: "abyssal_quill",
+        category: "gift",
+        name: window.t('game.items.abyssal_quill_name'),
+        icon: "assets/images/items/abyssal_quill.png",
+        price: 60,
+        desc: window.t('game.items.abyssal_quill_desc')
+    },
+    {
+        id: "golden_curd",
+        category: "gift",
+        name: window.t('game.items.golden_curd_name'),
+        icon: "assets/images/items/golden_curd.png",
+        price: 25,
+        desc: window.t('game.items.golden_curd_desc')
+    },
+    {
+        id: "resonance_bell",
+        category: "gift",
+        name: window.t('game.items.resonance_bell_name'),
+        icon: "assets/images/items/resonance_bell.png",
+        price: 50,
+        desc: window.t('game.items.resonance_bell_desc')
+    },
+    {
+        id: "resonance_bell",
+        category: "material",
+        name: window.t('game.items.resonance_bell_name'),
+        icon: "assets/images/items/resonance_bell.png",
+        price: 5,
+        desc: window.t('game.items.resonance_bell_desc')
     },
     {
         id: "music_seashell",
@@ -357,6 +398,49 @@ window.playSFX = (key) => {
     if (soundManager) {
         soundManager.playSFX(key);
     }
+};
+
+// 고유 아이디
+// 1. 고유 아이디 생성 함수 (영문 대소문자 + 숫자 20자)
+function generateGlobalUserId(length = 20) {
+    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const randomValues = new Uint8Array(length);
+    window.crypto.getRandomValues(randomValues);
+    for (let i = 0; i < length; i++) {
+        result += charset[randomValues[i] % charset.length];
+    }
+    return result;
+}
+
+// 2. 아이디 초기화 및 표시 함수
+window.initAccountInfo = function() {
+    let userId = window.molipUserId || localStorage.getItem('molip_user_id');
+    
+    if (!userId) {
+        userId = generateGlobalUserId(20);
+        window.molipUserId = userId;
+        localStorage.setItem('molip_user_id', userId);
+        
+        // ✨ [수정] 즉시 전체 데이터 저장 시퀀스 실행
+        if (window.saveAllData) {
+            window.saveAllData(); 
+            console.log("🆕 새 고유 ID가 마스터 데이터 파일에 저장되었습니다.");
+        }
+    } else {
+        window.molipUserId = userId;
+    }
+    
+    const displayEl = document.getElementById('user-id-display');
+    if (displayEl) displayEl.value = userId;
+};
+
+// 3. 클립보드 복사 함수
+window.copyUserId = function() {
+    const userId = document.getElementById('user-id-display').value;
+    navigator.clipboard.writeText(userId).then(() => {
+        if (window.showToast) window.showToast("아이디가 복사되었습니다!", "success");
+    });
 };
 
 
@@ -390,6 +474,23 @@ window.switchSettingsTab = (tabId) => {
     } else if (tabId === 'apps') {
         window.renderWorkAppList(); // 작업 도구 목록 갱신
     }
+};
+
+window.toggleSoundSetting = (key) => {
+    // 1. 사운드 설정 객체가 없으면 UI 업데이트 함수를 불러 초기화 유도
+    if (!masterData.settings.sound) {
+        window.updateSoundUI(); 
+    }
+    
+    // 2. 이제 안전하게 값을 반전시킵니다.
+    masterData.settings.sound[key] = !masterData.settings.sound[key];
+    
+    // 3. UI 갱신 및 데이터 저장
+    window.updateSoundUI();
+    saveAllData();
+    window.playSFX('click');
+    
+    console.log(`🎵 [Setting] ${key} 토글됨:`, masterData.settings.sound[key]);
 };
 
 /**
@@ -512,6 +613,9 @@ async function refreshCharacterSprite() {
         if (r.draw) r.draw(); // 강제 출력
         window.lastCharacterState = null; 
     }
+
+    window.currentPartner = currentPartner;
+    window.currentStage = currentStage;
 }
 
 /**
@@ -523,38 +627,34 @@ window.petCharacter = (event) => {
     if (now - lastPetTime < PET_COOLDOWN) return;
     lastPetTime = now;
 
-    // 날짜별 키 생성
     const dateKey = window.getMolipDate(); 
     const petKey = `${currentPartner.id}_${dateKey}`; 
     
-    // 초기화
     if (!dailyPetCountMap[petKey]) dailyPetCountMap[petKey] = 0;
 
-    // 한도(10회) 및 알 상태 체크
-    if (!collection.activeEgg && dailyPetCountMap[petKey] < 10) {
-        // 호감도 상승
-        charIntimacyMap[currentPartner.id] = Math.min(100, (charIntimacyMap[currentPartner.id] || 0) + 0.5);
-        dailyPetCountMap[petKey]++;
-        
-        // 시각 효과
-        createHeartEffect(event.clientX, event.clientY);
+    // ✨ [수정] 알 상태가 아닐 때만 상호작용 및 대사 실행
+    if (!collection.activeEgg) {
+        if (dailyPetCountMap[petKey] < 10) {
+            charIntimacyMap[currentPartner.id] = Math.min(100, (charIntimacyMap[currentPartner.id] || 0) + 0.5);
+            dailyPetCountMap[petKey]++;
+            createHeartEffect(event.clientX, event.clientY);
 
-        // 표정 변화 (3초간 기쁨)
-        renderer.setExpression('good');
-        setTimeout(() => {
-            const backTo = isDistraction ? 'distracting' : (isIdle ? 'away' : 'working');
-            renderer.setExpression(backTo);
-        }, 3000);
+            renderer.setExpression('good');
+            setTimeout(() => {
+                const backTo = isDistraction ? 'distracting' : (isIdle ? 'away' : 'working');
+                renderer.setExpression(backTo);
+            }, 3000);
 
-        // 한도 도달 알림
-        if (dailyPetCountMap[petKey] === 10) {
-            window.showToast(`${currentPartner.name}은(는) 오늘은 충분히 애정을 느낀 것 같습니다.`, "info");
+            if (dailyPetCountMap[petKey] === 10) {
+                window.showToast(`${currentPartner.name}은(는) 오늘은 충분히 애정을 느낀 것 같습니다.`, "info");
+            }
         }
+        // ✨ 대사 출력 함수를 이 블록 안으로 옮겨서 알 상태일 땐 침묵하게 합니다.
+        window.showDialogue(); 
     } 
     
-    window.showDialogue(); // 대사 출력
-    saveAllData();         // 저장
-    window.updateUI();     // UI 갱신
+    saveAllData();
+    window.updateUI();
 };
 
 /**
@@ -872,12 +972,23 @@ window.showCharDetail = (id) => {
         selectBtn.style.display = 'block';
         selectBtn.innerText = isActiveEgg ? "다시 알 품기" : "파트너로 선택하기";
         selectBtn.onclick = async () => {
+            // 1. 메모리 및 전역 변수 업데이트
             currentPartner = char;
+            window.currentPartner = char;
+
+            // ✨ [핵심 추가] 마스터 데이터에 선택된 파트너 ID를 박제합니다.
+            if (!masterData.character) masterData.character = {};
+            masterData.character.selectedPartnerId = char.id;
+
+            // 2. UI 및 스프라이트 갱신
             await refreshCharacterSprite();
             window.updateUI();
             window.closeCharDetail();
             window.toggleCollection(false);
+
+            // 3. 파일 저장 (이제 업데이트된 ID가 settings.json 등에 기록됩니다)
             saveAllData();
+            
             window.showToast(`${char.name}와 다시 몰입을 시작합니다.`, "success");
         };
     }
@@ -1151,21 +1262,40 @@ window.toggleHideCompleted = () => {
 
 // [renderer.js] DOMContentLoaded 이벤트 핸들러 (변수 누락 수리본)
 document.addEventListener('DOMContentLoaded', () => {
+
+    // 1. 앱 외부 클릭 감지 (창이 포커스를 잃을 때)
+    window.addEventListener('blur', () => {
+        // 플레이 리스트 패널들의 active 클래스를 제거합니다.
+        document.querySelectorAll('.player-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+    });
+
+    // 2. 앱 내부의 플레이 리스트 바깥 영역 클릭 감지
+    document.addEventListener('mousedown', (e) => {
+        const panels = document.querySelectorAll('.player-panel');
+        
+        panels.forEach(panel => {
+            // 현재 패널이 열려 있는 상태인지 확인합니다.
+            if (panel.classList.contains('active')) {
+                // 클릭된 지점이 패널 내부도 아니고, 패널을 여는 버튼(trig-amb, trig-mus)도 아닐 때만 닫습니다.
+                const isTriggerBtn = e.target.closest('#trig-amb') || e.target.closest('#trig-mus');
+                
+                if (!panel.contains(e.target) && !isTriggerBtn) {
+                    panel.classList.remove('active');
+                    
+                    // [선택] 버튼의 활성화 상태 아이콘도 일시정지 모양에서 다시 재생 모양으로 바꿔야 할 수 있습니다.
+                    // (이 부분은 SoundManager의 playTrack 상태와 연동되므로 클래스 제거만으로 충분합니다.)
+                }
+            }
+        });
+    });
     
     // ✨ [긴급 복구] 툴팁 및 마우스 추적 변수 선언
     let tooltipTimeout = null;
     let mouseX = 0;
     let mouseY = 0;
     const TOOLTIP_DELAY = 250; // 0.25초 대기
-
-    // 1. 오디오 잠금 해제 리스너 (SoundManager 사용)
-    // const unlockAudioHandler = () => {
-    //     if (soundManager) {
-    //         soundManager.unlockAll();
-    //     }
-    //     document.removeEventListener('click', unlockAudioHandler); 
-    // };
-    // document.addEventListener('click', unlockAudioHandler);
 
     // 2. 키워드 입력창 엔터 이벤트
     const keywordInput = document.getElementById('keyword-input');
@@ -1334,18 +1464,20 @@ window.handleDragOver = (e) => { e.preventDefault(); return false; };
 //앱 종료
 window.quitApp = async () => {
     try {
-        // 1. 종료 전 현재 상태(시간, 호감도, 에테르 등)를 최후로 저장
+        // 1. 종료 전 팝업 닫기
+        document.getElementById('exit-confirm-modal').style.display = 'none';
+        
+        // 2. "최후의 저장" 시도 및 대기 (await 필수)
+        window.showToast("연구 데이터를 정리 중입니다...", "info");
         await saveAllData(); 
-        console.log("종료 전 데이터 저장 완료");
         
-        // 2. [수정] quit-app 대신 main.js의 종료 플래그를 해제하는 final-save-done 신호 전송
-        // 이 신호를 받으면 main.js에서 isQuitting = true를 설정하고 안전하게 종료합니다.
+        console.log("✅ 모든 데이터 보존 완료. 안전하게 종료합니다.");
+        
+        // 3. 메인 프로세스에 종료 허가 신호 전송
         ipcRenderer.send('final-save-done'); 
-        
     } catch (err) {
-        console.error("종료 중 저장 실패:", err);
-        // 저장이 실패하더라도 앱은 꺼져야 하므로 강제 종료 신호를 보냅니다.
-        ipcRenderer.send('quit-app'); 
+        console.error("종료 중 데이터 유실 위험 감지:", err);
+        ipcRenderer.send('quit-app'); // 실패하더라도 앱은 종료
     }
 };
 
@@ -1911,16 +2043,10 @@ window.handleCharacterClick = function () {
 
     // 1. 알 상태 체크
     if (masterData.collection.activeEgg) {
-        const eggData = charData.characters.find(c => c.id === masterData.collection.activeEgg.type);
-        if (eggData && eggData.stages.egg.evolution_text) {
-            window.showDialogue(eggData.stages.egg.evolution_text);
-        } else {
-            window.showDialogue("따뜻한 온기가 느껴지는 알입니다.");
-        }
-        return;
+        window.showDialogue("...");
     }
 
-    // 2. [추가] 캐릭터 상태인 경우 현재 상태(currentStatus) 기반 대사 출력
+    // 2. 캐릭터 상태인 경우에만 현재 상태 기반 대사 출력
     triggerStatusDialogue(currentStatus);
 };
 
@@ -2257,28 +2383,30 @@ window.startAbyssCrafting = () => {
             return;
         }
 
-        // 캐릭터 풀 확보 (중복 방지)
+        // 캐릭터 풀 확보 (중복 방지 + 선물 전용 캐릭터 제외)
         const allChars = charData.characters || [];
         const ownedIds = (collection.ownedIds || []).map(id => String(id));
         const activeEggId = collection.activeEgg ? String(collection.activeEgg.type) : null;
         
         const availablePool = allChars.filter(char => 
-            !ownedIds.includes(String(char.id)) && String(char.id) !== activeEggId
+            !ownedIds.includes(String(char.id)) && 
+            String(char.id) !== activeEggId &&
+            char.isGiftOnly !== true 
         );
 
         if (availablePool.length === 0) {
-            window.showToast("연성 가능한 모든 생명을 연성했습니다!", "info");
+            window.showToast("현재 연성 가능한 모든 생명을 연성했습니다!", "info");
             return;
         }
 
-        // 캐릭터 추첨
+        // 🎲 새로운 캐릭터 추첨
         const nextCharacter = availablePool[Math.floor(Math.random() * availablePool.length)];
 
-        // 자원 차감
+        // 💸 자원 차감
         if (typeof collection !== 'undefined') collection.points -= cost.ether;
         for (const [id, amount] of Object.entries(cost.materials)) { inv[id] -= amount; }
         
-        // 시스템 상태 전환 (부화 중)
+        // 🐣 [핵심] 파트너 및 알 정보 즉시 갱신
         window.isHatching = true; 
         collection.activeEgg = {
             type: nextCharacter.id,
@@ -2287,16 +2415,28 @@ window.startAbyssCrafting = () => {
             date: new Date().toISOString()
         };
 
-        // 데이터 기록
-        masterData.currentCharacterId = nextCharacter.id;
-        window.currentPartner = nextCharacter;
+        // ✨ [중요] 전역 및 로컬 파트너 변수 동기화
+        currentPartner = nextCharacter; // 로컬 변수 갱신
+        window.currentPartner = nextCharacter; // 전역 변수 갱신
+
+        if (!masterData.character) masterData.character = {};
+        masterData.character.selectedPartnerId = nextCharacter.id; // 선택된 ID 박제
+
+        // 진행 데이터에도 현재 파트너 ID를 업데이트합니다.
+        if (masterData.progress) {
+            masterData.progress.currentPartnerId = nextCharacter.id;
+        }
+
+        // 연금술 수치 초기화
         cylinderSaturation = 0;
         masterData.cylinderSaturation = 0;
-        masterData.hatchCount = (masterData.hatchCount || 1) + 1;
+        masterData.hatchCount = (masterData.hatchCount || 0) + 1;
 
-        saveAllData(); 
+        // 데이터 저장 및 UI 즉시 반영 (이름표가 여기서 바뀝니다)
+        saveAllData();
+        window.updateUI();
 
-        // 연출 실행
+        // ✨ 연출 실행
         window.closeSedimentModal();
         window.triggerSupernovaEffect(nextCharacter);
 
@@ -2380,48 +2520,50 @@ window.triggerSupernovaEffect = (newChar) => {
 // [renderer.js 상단] 업적 리스트 정의
 window.achievementList = [
     // 0. 연금술 레벨
-    { id: 'rank_novice_1', name: '연금술 입문', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '연금술의 세계에 첫 발을 내디뎠습니다.', hint: '' },
-    { id: 'rank_apprentice_5', name: '수습 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '기초 연성법을 익히고 가능성을 증명했습니다.', hint: '' },
-    { id: 'rank_regular_10', name: '정식 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '능숙한 도구 사용으로 정식 대원이 되었습니다.', hint: '' },
-    { id: 'rank_expert_15', name: '전문 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '고도화된 지식과 실무 능력을 겸비했습니다.', hint: '' },
-    { id: 'rank_senior_20', name: '상급 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '길드 내에서 존경받는 상급 연구자의 자리에 올랐습니다.', hint: '' },
-    { id: 'rank_veteran_25', name: '노련한 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '수많은 경험을 통해 노련한 통찰력을 갖추었습니다.', hint: '' },
-    { id: 'rank_master_30', name: '연금술 명장', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '에테르 연성을 예술의 경지로 끌어올린 명장입니다.', hint: '' },
-    { id: 'rank_harmonizer_35', name: '원소의 조율자', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '사대 원소의 균형을 완벽하게 다스리는 조율자입니다.', hint: '' },
-    { id: 'rank_guardian_40', name: '지혜의 파수꾼', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '심연의 지식을 수호하고 금기를 다스리는 파수꾼입니다.', hint: '' },
-    { id: 'rank_interpreter_45', name: '비전의 해석자', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '고대의 비전과 비밀스러운 공식을 완벽히 해석했습니다.', hint: '' },
-    { id: 'rank_truth_50', name: '진리의 도달자', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '인간의 한계를 넘어 진리의 문턱에 도달한 탐구자입니다.', hint: '' },
-    { id: 'rank_lord_55', name: '에테르의 군주', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '세상의 모든 에테르 흐름을 지배하는 위대한 군주입니다.', hint: '' },
-    { id: 'rank_legend_60', name: '전설의 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '연금술 역사에 영원히 기록될 신화적인 존재가 되었습니다.', hint: '' },
+    { id: 'rank_novice_1', name: '연금술 입문', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '연금술의 세계에 첫 발을 내디뎠습니다.', hint: '진리의 문을 살짝 두드려봅니다.' },
+    { id: 'rank_apprentice_5', name: '수습 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '기초 연성법을 익히고 가능성을 증명했습니다.', hint: '실습생의 티를 서서히 벗어냅니다.' },
+    { id: 'rank_regular_10', name: '정식 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '능숙한 도구 사용으로 정식 대원이 되었습니다.', hint: '길드에서 당신의 이름을 기억하기 시작합니다.' },
+    { id: 'rank_expert_15', name: '전문 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '고도화된 지식과 실무 능력을 겸비했습니다.', hint: '이론과 실기 중 어느 하나 소홀히 하지 않습니다.' },
+    { id: 'rank_senior_20', name: '상급 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '길드 내에서 존경받는 상급 연구자의 자리에 올랐습니다.', hint: '동료 연금술사들의 선망 어린 시선을 즐깁니다.' },
+    { id: 'rank_veteran_25', name: '노련한 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '수많은 경험을 통해 노련한 통찰력을 갖추었습니다.', hint: '수많은 연성로의 불꽃을 보아온 눈을 증명합니다.' },
+    { id: 'rank_master_30', name: '연금술 명장', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '에테르 연성을 예술의 경지로 끌어올린 명장입니다.', hint: '기술이 예술의 경지에 닿는 찰나를 경험합니다.' },
+    { id: 'rank_harmonizer_35', name: '원소의 조율자', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '사대 원소의 균형을 완벽하게 다스리는 조율자입니다.', hint: '사대 원소 사이의 완벽한 균형점을 찾아냅니다.' },
+    { id: 'rank_guardian_40', name: '지혜의 파수꾼', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '심연의 지식을 수호하고 금기를 다스리는 파수꾼입니다.', hint: '금지된 서가의 문턱을 넘을 자격을 갖춥니다.' },
+    { id: 'rank_interpreter_45', name: '비전의 해석자', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '고대의 비전과 비밀스러운 공식을 완벽히 해석했습니다.', hint: '고대의 문자들이 당신에게 속삭이는 소리를 듣습니다.' },
+    { id: 'rank_truth_50', name: '진리의 도달자', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '인간의 한계를 넘어 진리의 문턱에 도달한 탐구자입니다.', hint: '한계를 넘어선 자만이 볼 수 있는 풍경을 마주합니다.' },
+    { id: 'rank_lord_55', name: '에테르의 군주', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '세상의 모든 에테르 흐름을 지배하는 위대한 군주입니다.', hint: '에테르의 파동이 당신의 맥박과 함께 뜁니다.' },
+    { id: 'rank_legend_60', name: '전설의 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '연금술 역사에 영원히 기록될 신화적인 존재가 되었습니다.', hint: '역사가 당신의 이름을 기록하는 방식을 지켜봅니다.' },
 
     // 1. 몰입 및 시간 관련 업적
-    { id: 'focus_depth_5000', name: '몰입의 심연', icon: 'assets/images/achievements/achievement_task.png', desc: '누적 5,000분의 몰입을 달성하여 심연의 끝에 도달했습니다.', hint: '' },
-    { id: 'marathon_king_180', name: '불굴의 집중력', icon: 'assets/images/achievements/achievement_task.png', desc: '한 번의 흐트러짐 없이 180분간 연성로의 불꽃을 지켜냈습니다.', hint: '' },
-    { id: 'night_monarch', name: '심야의 수호자', icon: 'assets/images/achievements/achievement_task.png', desc: '모두가 잠든 밤, 고요한 정적 속에서 가장 찬란한 진리를 일깨웠습니다.', hint: '' },
-    { id: 'dawn_pioneer', name: '새벽의 선구자', icon: 'assets/images/achievements/achievement_task.png', desc: '가장 맑은 새벽 에테르를 정제하며 완벽한 하루를 시작했습니다.', hint: '' },
+    { id: 'focus_depth_5000', name: '몰입의 심연', icon: 'assets/images/achievements/achievement_task.png', desc: '누적 5,000분의 몰입을 달성하여 심연의 끝에 도달했습니다.', hint: '침묵 속에서 쌓인 시간의 힘을 믿습니다.' },
+    { id: 'marathon_king_180', name: '불굴의 집중력', icon: 'assets/images/achievements/achievement_task.png', desc: '한 번의 흐트러짐 없이 180분간 연성로의 불꽃을 지켜냈습니다.', hint: '눈 한번 깜빡이지 않고 진리를 쫓는 인내를 보입니다.' },
+    { id: 'night_monarch', name: '심야의 수호자', icon: 'assets/images/achievements/achievement_task.png', desc: '모두가 잠든 밤, 고요한 정적 속에서 가장 찬란한 진리를 일깨웠습니다.', hint: '달빛만이 연성로를 비추는 고요한 시간을 보냅니다.' },
+    { id: 'dawn_pioneer', name: '새벽의 선구자', icon: 'assets/images/achievements/achievement_task.png', desc: '가장 맑은 새벽 에테르를 정제하며 완벽한 하루를 시작했습니다.', hint: '태양이 지평선을 넘기 전, 가장 먼저 깨어나 일합니다.' },
 
     // 2. 과업 및 습관 관련 업적
-    { id: 'task_centurion', name: '백 번의 성취', icon: 'assets/images/achievements/achievement_task.png', desc: '백 번의 과업 완수를 통해 연금술의 견고한 토대를 쌓았습니다.', hint: '' },
-    { id: 'task_grandmaster', name: '성취의 거장', icon: 'assets/images/achievements/achievement_task.png', desc: '천 번의 마침표를 찍으며 연금술의 거장 반열에 올랐습니다.', hint: '' },
-    { id: 'habit_legend_100', name: '백일의 기적', icon: 'assets/images/achievements/achievement_task.png', desc: '100일간의 성실함으로 영혼의 본질을 변화시키는 연금술을 완성했습니다.', hint: '' },
-    { id: 'perfect_rhythm_7', name: '완전무결한 리듬', icon: 'assets/images/achievements/achievement_task.png', desc: '일주일간 단 하나의 결점도 없는 완벽한 생활 리듬을 유지했습니다.', hint: '' },
+    { id: 'task_centurion', name: '백 번의 성취', icon: 'assets/images/achievements/achievement_task.png', desc: '백 번의 과업 완수를 통해 연금술의 견고한 토대를 쌓았습니다.', hint: '수많은 작은 마침표들을 모아 하나의 선을 만듭니다.' },
+    { id: 'task_grandmaster', name: '성취의 거장', icon: 'assets/images/achievements/achievement_task.png', desc: '천 번의 마침표를 찍으며 연금술의 거장 반열에 올랐습니다.', hint: '천 번의 휘두름으로 보검을 제련하는 마음을 가집니다.' },
+    { id: 'habit_legend_100', name: '백일의 기적', icon: 'assets/images/achievements/achievement_task.png', desc: '100일간의 성실함으로 영혼의 본질을 변화시키는 연금술을 완성했습니다.', hint: '백 번의 해가 뜨고 질 동안 변치 않는 마음을 증명합니다.' },
+    { id: 'perfect_rhythm_7', name: '완전무결한 리듬', icon: 'assets/images/achievements/achievement_task.png', desc: '일주일간 단 하나의 결점도 없는 완벽한 생활 리듬을 유지했습니다.', hint: '일주일간 완벽한 박자로 춤추듯 생활합니다.' },
 
     // 3. 유대 및 캐릭터 관련 업적
-    { id: 'mabel_eternal_partner', name: '메이벨의 유일한 이해자', icon: 'assets/images/achievements/mabel_eternal_partner.png', desc: '메이벨과 영혼의 무게를 나누는 절대적인 신뢰 관계가 되었습니다.', hint: '' },
-    { id: 'indigo_shadow_bond', name: '인디고의 그림자 동반자', icon: 'assets/images/achievements/indigo_shadow_bond.png', desc: '인디고의 정적 속에 머물며 완벽한 그림자 우대를 공유하게 되었습니다.', hint: '' },
-    { id: 'morgana_abyss_lover', name: '모르가나의 진실한 반려', icon: 'assets/images/achievements/morgana_abyss_lover.png', desc: '모르가나와 함께 심연의 끝에서 가장 은밀한 진실을 마주했습니다.', hint: '' },
-    { id: 'aurelia_golden_glory', name: '아우렐리아의 황금빛 파트너', icon: 'assets/images/achievements/aurelia_golden_glory.png', desc: '아우렐리아로부터 정점의 가호를 받는 고결한 동반자로 인정받았습니다.', hint: '' },
-    { id: 'homunculus_collector', name: '요람의 대주인', icon: 'assets/images/achievements/homunculus_collector.png', desc: '네 마리의 호문클루스를 모두 거느려 연구실의 생태계를 완성했습니다.', hint: '' },
-    { id: 'evolution_master', name: '진화의 마스터', icon: 'assets/images/achievements/evolution_master.png', desc: '모든 피조물을 성공적으로 성체기까지 인도한 육성의 대가입니다.', hint: '' },
+    { id: 'mabel_eternal_partner', name: '메이벨의 유일한 이해자', icon: 'assets/images/achievements/mabel_eternal_partner.png', desc: '메이벨과 영혼의 무게를 나누는 절대적인 신뢰 관계가 되었습니다.', hint: '부드러운 온기가 영원한 약속으로 변하는 과정을 지켜봅니다.' },
+    { id: 'indigo_shadow_bond', name: '인디고의 그림자 동반자', icon: 'assets/images/achievements/indigo_shadow_bond.png', desc: '인디고의 정적 속에 머물며 완벽한 그림자 우대를 공유하게 되었습니다.', hint: '말하지 않아도 전해지는 그림자 같은 침묵을 나눕니다.' },
+    { id: 'morgana_abyss_lover', name: '모르가나의 진실한 반려', icon: 'assets/images/achievements/morgana_abyss_lover.png', desc: '모르가나와 함께 심연의 끝에서 가장 은밀한 진실을 마주했습니다.', hint: '심연보다 깊은 곳에서 함께 허물을 벗어 던집니다.' },
+    { id: 'aurelia_golden_glory', name: '아우렐리아의 황금빛 파트너', icon: 'assets/images/achievements/aurelia_golden_glory.png', desc: '아우렐리아로부터 정점의 가호를 받는 고결한 동반자로 인정받았습니다.', hint: '가장 높은 곳에서 빛나는 태양의 가호를 받을 자격을 증명합니다.' },
+    { id: 'cordelia_eternal_ocean', name: '코델리아의 유일한 바다', icon: 'assets/images/achievements/cordelia_eternal_ocean.png', desc: '유리벽이라는 차가운 경계를 녹여내고, 코델리아와 영혼의 가장 깊은 곳까지 함께 유영하게 되었습니다.', hint: '부드러운 파도에 몸을 맡기고 함께 섞여듭니다.' },
+    { id: 'homunculus_collector', name: '요람의 대주인', icon: 'assets/images/achievements/homunculus_collector.png', desc: '네 마리의 호문클루스를 모두 거느려 연구실의 생태계를 완성했습니다.', hint: '당신의 요람이 다양한 생명으로 가득 차는 순간을 기다립니다.' },
+    { id: 'evolution_master', name: '진화의 마스터', icon: 'assets/images/achievements/evolution_master.png', desc: '모든 피조물을 성공적으로 성체기까지 인도한 육성의 대가입니다.', hint: '모두가 제 본모습을 찾을 때까지 곁을 지킵니다.' },
 
     // 4. 전문성 및 자산 관련 업적
-    { id: 'sage_alchemist_30', name: '대연금술사의 증표', icon: 'assets/images/achievements/sage_alchemist_30.png', desc: '30레벨의 숙련도에 도달하여 연금술의 현자 경지를 증명했습니다.', hint: '' },
-    { id: 'midas_hand_10000', name: '황금의 손', icon: 'assets/images/achievements/midas_hand_10000.png', desc: '10,000 에테르를 모아 연구실을 황금빛 풍요로 가득 채웠습니다.', hint: '' },
-    { id: 'generous_creator_50', name: '다정한 창조주', icon: 'assets/images/achievements/generous_creator_50.png', desc: '50번의 선물을 통해 피조물들에게 진심 어린 다정함을 전했습니다.', hint: '' },
-    { id: 'tool_conductor_7', name: '도구의 지휘자', icon: 'assets/images/achievements/tool_conductor_7.png', desc: '일곱 개의 도구를 자유자재로 다루며 업무의 파도를 지휘합니다.', hint: '' },
-    { id: 'iron_will_failed_10', name: '불굴의 의지', icon: 'assets/images/achievements/iron_will_failed_10.png', desc: '열 번의 실패조차 굴복시키지 못한 단단한 연금술사의 의지를 지녔습니다.', hint: '' },
-    { id: 'order_avatar_30', name: '절대 질서의 화신', icon: 'assets/images/achievements/order_avatar_30.png', desc: '한 달간의 완벽한 규칙을 통해 혼돈을 이겨내고 절대 질서의 화신이 되었습니다.', hint: '' }
+    { id: 'sage_alchemist_30', name: '대연금술사의 증표', icon: 'assets/images/achievements/sage_alchemist_30.png', desc: '30레벨의 숙련도에 도달하여 연금술의 현자 경지를 증명했습니다.', hint: '현자의 돌에 다가가는 첫 번째 관문을 통과합니다.' },
+    { id: 'midas_hand_10000', name: '황금의 손', icon: 'assets/images/achievements/midas_hand_10000.png', desc: '10,000 에테르를 모아 연구실을 황금빛 풍요로 가득 채웠습니다.', hint: '손이 닿는 모든 곳이 황금으로 빛나는 풍요를 누립니다.' },
+    { id: 'generous_creator_50', name: '다정한 창조주', icon: 'assets/images/achievements/generous_creator_50.png', desc: '50번의 선물을 통해 피조물들에게 진심 어린 다정함을 전했습니다.', hint: '대가 없는 선물이 쌓여 특별한 인연의 실타래를 잣습니다.' },
+    { id: 'tool_conductor_7', name: '도구의 지휘자', icon: 'assets/images/achievements/tool_conductor_7.png', desc: '일곱 개의 도구를 자유자재로 다루며 업무의 파도를 지휘합니다.', hint: '실험실의 모든 도구를 조율하는 마에스트로가 됩니다.' },
+    { id: 'iron_will_failed_10', name: '불굴의 의지', icon: 'assets/images/achievements/iron_will_failed_10.png', desc: '열 번의 실패조차 굴복시키지 못한 단단한 연금술사의 의지를 지녔습니다.', hint: '열 번의 재 속에서도 다시 불꽃을 피워 올립니다.' },
+    { id: 'order_avatar_30', name: '절대 질서의 화신', icon: 'assets/images/achievements/order_avatar_30.png', desc: '한 달간의 완벽한 규칙을 통해 혼돈을 이겨내고 절대 질서의 화신이 되었습니다.', hint: '한 달 동안 혼돈을 허락하지 않는 삶을 지속합니다.' }
 ];
+
 /* ============================================================
    [🏆 시스템 통합: 서신, 보상, 업적 관리] 
    ============================================================ */
@@ -2679,28 +2821,39 @@ window.renderAchievementGrid = () => {
     const list = window.achievementList || [];
     
     list.forEach(ach => {
-        const isUnlocked = masterData.achievements.includes(ach.id);
+        // masterData.achievements가 없을 경우를 대비한 안전장치 추가
+        const isUnlocked = (masterData.achievements || []).includes(ach.id);
         
         const slot = document.createElement('div');
         slot.className = `achieve-slot ${isUnlocked ? 'unlocked' : 'locked'}`;
         
-        // 데이터 마스킹
+        // 1. 이름 마스킹
         const title = isUnlocked ? ach.name : "???";
-        const desc = isUnlocked ? (ach.desc || ach.description) : "아직 달성하지 못한 업적입니다.";
         
-        // 툴팁 설정
+        // ✨ [2. 핵심 수정] 해금 여부에 따른 설명/힌트 결정
+        let desc = "";
+        if (isUnlocked) {
+            // 해금 시: 원래 설명 표시
+            desc = ach.desc || ach.description || "상세 정보가 없습니다.";
+        } else {
+            // 미해금 시: 아티스트님이 추가한 'hint' 표시 (없으면 기본 메시지)
+            desc = ach.hint || "아직 달성하지 못한 업적입니다.";
+        }
+        
+        // 3. 툴팁 설정 (힌트가 적용된 desc 사용)
         slot.setAttribute('data-tooltip', `[${title}]\n${desc}`);
 
-        // 아이콘 설정
+        // 4. 아이콘 설정 (기존 로직 유지)
         let iconHtml = "";
         if (isUnlocked) {
             const iconVal = ach.icon || 'assets/img/achieve/default.png';
-            if (iconVal.endsWith('.png')) {
+            if (iconVal && iconVal.endsWith('.png')) {
                 iconHtml = `<img src="${iconVal}" class="achieve-img-icon">`;
             } else {
-                iconHtml = `<span style="font-size: 2rem;">${iconVal}</span>`;
+                iconHtml = `<span style="font-size: 2rem;">${iconVal || '❓'}</span>`;
             }
         } else {
+            // 잠긴 상태: 원본 아이콘에 회색 필터(locked-img) 적용
             iconHtml = `<img src="${ach.icon}" class="achieve-img-icon locked-img">`;
         }
         
@@ -2746,29 +2899,112 @@ window.unlockAchievement = (achievementId) => {
    [🔊 사운드 시스템: 토글 및 데이터 동기화] 
    ============================================================ */
 
+/**
+ * [renderer.js] 사운드 UI 및 제어 시스템 (슬라이더/음소거 통합)
+ */
+
 window.updateSoundUI = () => {
-    // 1. [데이터 체크] 사운드 설정이 없으면 기본값 생성
-    if (!masterData.settings || !masterData.settings.sound) {
-        if (masterData.settings) {
-            masterData.settings.sound = { master: true, system: true, autoPlay: true };
-        } else {
-            return; // 설정 데이터가 아직 로드되지 않음
-        }
+    if (!masterData.settings.sound) {
+        masterData.settings.sound = { 
+            sfxVol: 80, notifVol: 80, timerVol: 100,
+            sfxMute: false, notifMute: false, timerMute: false,
+            master: true, system: true, autoPlay: true 
+        };
     }
     
     const s = masterData.settings.sound;
 
-    // 2. [핵심] HTML의 ID와 코드의 ID를 100% 일치시킵니다.
+    // 1. 마스터/시스템 토글 버튼 (기존)
     const masterEl = document.getElementById('master-sound-toggle');
     const systemEl = document.getElementById('system-sound-toggle');
     const autoPlayEl = document.getElementById('auto-play-toggle'); 
-
-    // 3. 각 요소가 존재할 때만 active 클래스를 토글합니다.
     if (masterEl) masterEl.classList.toggle('active', !!s.master);
     if (systemEl) systemEl.classList.toggle('active', !!s.system);
     if (autoPlayEl) autoPlayEl.classList.toggle('active', !!s.autoPlay);
+
+    // 2. [추가] 슬라이더 및 확성기 아이콘 업데이트
+    const types = ['sfx', 'notif', 'timer'];
+    types.forEach(type => {
+        const slider = document.getElementById(`vol-${type}`);
+        const muteBtn = document.getElementById(`mute-${type}`);
+        const isMuted = !!s[`${type}Mute`];
+
+        if (slider) slider.value = s[`${type}Vol`] || 0;
+        if (muteBtn) {
+            muteBtn.classList.toggle('muted', isMuted);
+            // 확성기 아이콘 변경 (Mute 시 빗금 아이콘)
+            muteBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        }
+    });
+};
+
+// 볼륨 변경 시 실시간 저장 및 적용
+window.updateVolume = (type, val) => {
+    if (!masterData.settings.sound) return;
+    masterData.settings.sound[`${type}Vol`] = parseInt(val);
     
-    console.log("🔊 [System] 사운드 UI 모션 동기화 완료");
+    if (window.soundManager) {
+        window.soundManager.applyVolumeSettings();
+    }
+    saveAllData(); // 즉시 저장
+};
+
+// 확성기(음소거) 토글
+window.toggleMute = (type) => {
+    if (!masterData.settings.sound) return;
+    masterData.settings.sound[`${type}Mute`] = !masterData.settings.sound[`${type}Mute`];
+
+    window.updateSoundUI(); 
+    if (window.soundManager) {
+        window.soundManager.applyVolumeSettings();
+    }
+    saveAllData();
+    window.playSFX('click'); 
+};
+
+
+window.updateSoundUI = () => {
+    if (!masterData.settings.sound) return;
+    
+    const s = masterData.settings.sound;
+    const types = ['sfx', 'notif', 'timer'];
+
+    types.forEach(type => {
+        const slider = document.getElementById(`vol-${type}`);
+        const muteBtn = document.getElementById(`mute-${type}`);
+        const isMuted = !!s[`${type}Mute`]; // 현재 음소거 상태 확인
+
+        // 1. 슬라이더 위치 동기화
+        if (slider) slider.value = s[`${type}Vol`] || 0;
+
+        // 2. 나팔 버튼 비활성화 시각화
+        if (muteBtn) {
+            // CSS 제어를 위해 'muted' 클래스를 넣거나 뺍니다.
+            muteBtn.classList.toggle('muted', isMuted);
+
+            // 아이콘 모양 변경: 활성(volume-up) ↔ 비활성(volume-mute)
+            muteBtn.innerHTML = isMuted 
+                ? '<i class="fas fa-volume-mute"></i>' 
+                : '<i class="fas fa-volume-up"></i>';
+        }
+    });
+};
+
+window.updateVolume = (type, val) => {
+    if (!masterData.settings.sound) return;
+    
+    const vol = parseInt(val);
+    masterData.settings.sound[`${type}Vol`] = vol;
+
+    // ✨ 볼륨이 0이면 자동으로 음소거 처리, 0보다 크면 음소거 해제
+    masterData.settings.sound[`${type}Mute`] = (vol === 0);
+
+    if (window.soundManager) {
+        window.soundManager.applyVolumeSettings();
+    }
+    
+    window.updateSoundUI(); // 아이콘 상태 즉시 갱신
+    saveAllData();
 };
 
 // --- [개별 토글 로직] ---
@@ -3261,14 +3497,16 @@ ipcRenderer.on('user-idle-state', (event, state) => {
  */
 window.getMolipDate = () => {
     const now = new Date();
-    const hour = now.getHours();
-    
-    if (hour < window.resetHour) {
+    // 설정된 초기화 시간(resetHour) 반영
+    if (now.getHours() < (window.resetHour || 0)) {
         now.setDate(now.getDate() - 1);
     }
     
-    // [수정] toDateString() 대신 아래 코드를 사용하세요.
-    return now.toLocaleDateString('en-CA'); 
+    // YYYY-MM-DD 형식으로 직접 포맷팅 (포맷 불일치 방지)
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
 };
 
 /**
@@ -3439,61 +3677,92 @@ window.cleanAppName = function(name) {
 
 /**
  * [renderer.js] 모든 연구 데이터를 수집하여 하드디스크에 안전하게 기록합니다.
- * 참조 방식을 사용하여 데이터 누락을 차단하고, 날짜 보존 로직을 통해 무한 새로고침을 방지합니다.
+ * [Data-Guard Plus] 할일, 습관, 캐릭터 수, 친밀도 총합을 대조하여 비정상 초기화를 차단합니다.
  */
 async function saveAllData() {
-    // 1. [방어] 초기화 중이거나 데이터가 로드되지 않은 경우 저장을 차단합니다.
+    // 1. [시스템 보호] 리셋 작업 중이거나 데이터가 로드되지 않은 경우 저장을 차단합니다.
     if (!masterData || window.isResetting) {
-        console.warn("⚠️ [System] 저장 중단: 리셋 중이거나 데이터 미로드");
+        console.warn("⚠️ [System] 저장 중단: 리셋 모드이거나 데이터 미로드 상태입니다.");
         return { success: false };
     }
 
     try {
-        console.log("💾 [System] 데이터 저장 시퀀스 개시...");
+        // 2. [현재 데이터 수집] 검증을 위한 현재 상태값들을 확보합니다.
+        const currentTodos = window.molipTodos || molipTodos || [];
+        const currentHabits = window.molipHabits || molipHabits || [];
+        const currentUserId = window.molipUserId;
+        
+        // 캐릭터 및 친밀도 데이터 추출
+        const currentOwnedCount = (collection && collection.ownedIds) ? collection.ownedIds.length : 0;
+        const currentIntimacyMap = charIntimacyMap || {};
+        const currentTotalIntimacy = Object.values(currentIntimacyMap).reduce((sum, val) => sum + (Number(val) || 0), 0);
 
-        // 2. [핵심] 날짜 정보 백업 (무한 새로고침 방지용)
-        const currentSaveDate = masterData.progress ? masterData.progress.lastSaveDate : window.getMolipDate();
+        // 3. ✨ [초정밀 데이터 가드] 비정상 공백 감지 시스템
+        // 이전에 유효한 데이터 정보가 기록된 적이 있는 경우에만 검사를 실행합니다.
+        if (window.lastValidTodoCount !== undefined && window.lastValidOwnedCount !== undefined) {
+            
+            // 검증 항목별 공백 여부 판단
+            const isTodoLost = window.lastValidTodoCount > 0 && currentTodos.length === 0;
+            const isHabitLost = window.lastValidHabitCount > 0 && currentHabits.length === 0;
+            const isCharLost = window.lastValidOwnedCount > 0 && currentOwnedCount === 0;
+            const isIntimacyLost = window.lastValidTotalIntimacy > 1 && currentTotalIntimacy === 0; // 최소 1 이상의 친밀도가 증발한 경우
+            const isUserIdLost = !currentUserId;
 
-        // 3. 매니저 클래스들의 최신 상태를 마스터 데이터로 집결합니다.
+            // 의도적인 리셋이 아닌데 하나라도 비정상적으로 비어있다면 저장 차단
+            if (!window.isResetting && (isTodoLost || isHabitLost || isCharLost || isIntimacyLost || isUserIdLost)) {
+                console.error("🚫 [DataGuard Plus] 비정상적인 데이터 유실 감지! 저장을 거부합니다.");
+                console.error(`- 감지 내용: 할일(${isTodoLost}), 습관(${isHabitLost}), 캐릭터(${isCharLost}), 친밀도(${isIntimacyLost}), ID(${isUserIdLost})`);
+                
+                if (window.showToast) {
+                    window.showToast("연구 데이터 유실 위험이 감지되어 파일 보호를 위해 저장이 중단되었습니다.", "error");
+                }
+                return { success: false }; // ❌ 기존 파일을 지키기 위해 덮어쓰기 중단
+            }
+        }
+
+        // 4. [데이터 업데이트] 검증을 통과한 데이터를 masterData 객체에 집결시킵니다.
         if (progress) masterData.progress = progress.getSaveData(); 
         if (collection) masterData.collection = collection.getSaveData();
 
-        // window.mailbox와 mailbox 변수 모두 체크하여 최신 데이터 확보
         const mb = window.mailbox || mailbox;
         if (mb) {
             const history = mb.getSaveData(); 
-            masterData.mailbox = { 
-                mailHistory: Array.isArray(history) ? history : [] 
-            };
+            masterData.mailbox = { mailHistory: Array.isArray(history) ? history : [] };
         }
         
-        // 4. [보강] getSaveData() 결과물에 날짜가 누락되었을 경우를 대비해 백업본으로 강제 복구합니다.
-        if (masterData.progress) {
-            masterData.progress.lastSaveDate = currentSaveDate;
-        }
+        // 날짜 정보 및 핵심 배열 동기화
+        const finalMolipDate = window.getMolipDate();
+        if (masterData.progress) masterData.progress.lastSaveDate = finalMolipDate;
+        
+        masterData.userId = currentUserId;
+        masterData.todo = currentTodos;
+        masterData.habit = currentHabits;
 
-        // 5. [참조 유지] 할 일, 습관, 캐릭터 정보는 syncReferences() 덕분에 
-        // 이미 masterData 내부에 실시간 반영되어 있으므로 별도 복사 과정이 필요 없습니다.
-
-        // 6. UI 및 시스템 설정값을 최종 동기화합니다.
+        // 설정값 및 앱 목록 최종 업데이트
         if (masterData.settings) {
             masterData.settings.hideCompleted = window.hideCompleted;
             masterData.settings.showPastCompleted = window.showPastCompleted;
             masterData.settings.resetHour = window.resetHour;
             masterData.settings.autoDeleteOldTasks = window.autoDeleteOldTasks;
-            masterData.settings.workApps = workApps; 
-            masterData.settings.distractionApps = distractionApps;
+            masterData.settings.workApps = window.workApps || workApps; 
+            masterData.settings.distractionApps = window.distractionApps || distractionApps;
             masterData.settings.isHorizontalMode = window.isHorizontalMode;
             masterData.settings.isAlwaysOnTop = window.isAlwaysOnTop;
             masterData.settings.windowMode = masterData.settings.windowMode || 'horizontal';
             masterData.settings.currentTheme = masterData.settings.currentTheme || 'DEFAULT_DARK';
         }
 
-        // 7. 메인 프로세스에 실제 파일 쓰기를 요청
+        // 5. [최종 기록] 메인 프로세스에 원자적 파일 쓰기를 요청합니다.
         const result = await ipcRenderer.invoke('save-game-data', masterData);
         
         if (result && result.success) {
-            console.log(`💾 [System] 데이터 보존 완료 (기준 날짜: ${currentSaveDate})`);
+            // ✅ 저장 성공 시, 현재 상태를 다음 검증을 위한 '마지막 유효 값'으로 갱신합니다.
+            window.lastValidTodoCount = currentTodos.length;
+            window.lastValidHabitCount = currentHabits.length;
+            window.lastValidOwnedCount = currentOwnedCount;
+            window.lastValidTotalIntimacy = currentTotalIntimacy;
+            
+            console.log(`💾 [System] 데이터 보존 완료 (기준: 할일 ${currentTodos.length}, 습관 ${currentHabits.length}, 캐릭터 ${currentOwnedCount}기)`);
             return { success: true };
         } else {
             throw new Error("파일 시스템 응답 실패");
@@ -3501,7 +3770,7 @@ async function saveAllData() {
     } catch (err) {
         console.error("❌ [System] 데이터 저장 중 오류 발생:", err);
         if (window.showToast) {
-            window.showToast("데이터 저장에 실패했습니다. 파일 쓰기 권한을 확인하세요.", "error");
+            window.showToast("데이터 저장에 실패했습니다. 권한을 확인하세요.", "error");
         }
         return { success: false };
     }
@@ -3591,27 +3860,40 @@ window.updateUI = function() {
 
     if (!curProgress || !curCollection) return;
 
+    // progress 객체에서 최신 데이터를 가져옵니다.
     const d = curProgress.getProgressData();
-    const format = (s) => [Math.floor(s/3600), Math.floor((s%3600)/60), s%60]
-        .map(v => v < 10 ? "0" + v : v).join(":");
-
-    // 시간 및 에테르
-    if (document.getElementById('today-time')) document.getElementById('today-time').innerText = format(d.todayTime);
-    if (document.getElementById('total-time')) document.getElementById('total-time').innerText = format(d.totalTime);
     
-    // 레벨 및 경험치
+    // 시:분:초 포맷 함수
+    const format = (s) => {
+        const val = Math.max(0, Math.floor(s || 0));
+        const h = Math.floor(val / 3600);
+        const m = Math.floor((val % 3600) / 60);
+        const sec = val % 60;
+        return [h, m, sec].map(v => v < 10 ? "0" + v : v).join(":");
+    };
+
+    // ✨ [수정] todayFocusTime과 todayTime 중 존재하는 값을 사용하도록 보강
+    if (document.getElementById('today-time')) {
+        const todayVal = d.todayFocusTime !== undefined ? d.todayFocusTime : (d.todayTime || 0);
+        document.getElementById('today-time').innerText = format(todayVal);
+    }
+    if (document.getElementById('total-time')) {
+        const totalVal = d.totalFocusTime !== undefined ? d.totalFocusTime : (d.totalTime || 0);
+        document.getElementById('total-time').innerText = format(totalVal);
+    }
+    
+    // 레벨 및 경험치 바
     const levelNum = document.getElementById('level-num');
     const expBar = document.getElementById('exp-bar');
     const expPercent = document.getElementById('exp-percent');
-
     if (levelNum) levelNum.innerText = d.level;
     if (expBar) expBar.style.width = `${d.percent || 0}%`;
     if (expPercent) expPercent.innerText = `${Math.round(d.percent || 0)}%`;
 
-    // 에테르 애니메이션
+    // 에테르 포인트 업데이트
     const pointsElement = document.getElementById('work-points');
     if (pointsElement) {
-        const actualPoints = curCollection.points;
+        const actualPoints = curCollection.points || 0;
         if (displayedPoints !== actualPoints && !isPointAnimating) {
             isPointAnimating = true;
             pointsElement.classList.add('point-pop');
@@ -3632,7 +3914,7 @@ window.updateUI = function() {
         }
     }
     
-    // 파트너 정보
+    // 파트너 정보 (이름표 및 호감도)
     if (currentPartner) {
         const nameTag = document.getElementById('char-name-tag');
         if (nameTag) nameTag.innerText = curCollection.activeEgg ? (currentPartner.egg_name || "알") : currentPartner.name;
@@ -3645,25 +3927,14 @@ window.updateUI = function() {
             if (intimacyBar) intimacyBar.style.width = `${currentInt}%`;
         }
     }
-
-    // 소라고둥 버튼
-    const inv = masterData.inventory;
-    const hasSeashell = ((inv?.items?.music_seashell || 0) + (inv?.byproducts?.music_seashell || 0)) > 0;
-    const ambientBtn = document.getElementById('trig-amb');
-    const musicBtn = document.getElementById('trig-mus');
-
-    if (ambientBtn && musicBtn) {
-        const displayStatus = hasSeashell ? 'flex' : 'none';
-        ambientBtn.style.display = displayStatus;
-        musicBtn.style.display = displayStatus;
-    }
 };
-
 
 /* ============================================================
    [🏁 게임 엔진 루프 (Heartbeat)]
    ============================================================ */
-
+/**
+ * 메인 루프: 감지, 기록, 저장, 캐릭터 피드백을 총괄합니다.
+ */
 /**
  * 메인 루프: 감지, 기록, 저장, 캐릭터 피드백을 총괄합니다.
  */
@@ -3787,26 +4058,49 @@ async function updateLoop() {
         // --- [5] 실시간 데이터 기록 ---
         if (isFocusing || isDistraction) {
             let logName = cleanedName;
-            if (matchedWorkKey) logName = `🔑 ${matchedWorkKey}`;
-            else if (matchedDistractKey) logName = `🚫 ${matchedDistractKey}`;
+            // 키워드 변수 에러 방지 처리
+            if (typeof matchedWorkKey !== 'undefined' && matchedWorkKey) logName = `🔑 ${matchedWorkKey}`;
+            else if (typeof matchedDistractKey !== 'undefined' && matchedDistractKey) logName = `🚫 ${matchedDistractKey}`;
 
+            // 로그 기록
             if (logManager) {
                 logManager.recordLog(logName, isFocusing ? 'work' : 'distract');
             }
 
             if (isFocusing) {
+                // 캐릭터 성장도 및 영수증 데이터 누적
                 if (currentPartner && !collection.activeEgg) {
                     charGrowthMap[currentPartner.id] = (charGrowthMap[currentPartner.id] || 0) + 1;
                 }
                 if (!dailyAppTimeMap[nowMolipDate]) dailyAppTimeMap[nowMolipDate] = {};
                 dailyAppTimeMap[nowMolipDate][cleanedName] = (dailyAppTimeMap[nowMolipDate][cleanedName] || 0) + 1;
                 
+                // 타이머 갱신
                 progress.recordFocus(); 
-                if (progress.totalFocusTime % 60 === 0) { 
-                    collection.addPoints(1); 
+
+                // ✨ [핵심 1] 메모리 데이터 실시간 동기화 (파일 저장은 안 해도 데이터는 최신으로 유지)
+                if (masterData.progress && typeof progress.getSaveData === 'function') {
+                    const latest = progress.getSaveData();
+                    masterData.progress.todayFocusTime = latest.todayFocusTime || latest.todayTime;
+                    masterData.progress.totalFocusTime = latest.totalFocusTime || latest.totalTime;
+                }
+
+                // 1분(60초)마다 에테르 지급 및 정기 저장
+                if (progress.totalFocusTime > 0 && progress.totalFocusTime % 60 === 0) { 
+                    if (window.collection) collection.addPoints(1); 
                     saveAllData(); 
                 }
             }
+        }
+
+        // ✨ [핵심 2] 상태 변경 시 즉시 저장 (집중하다가 멈추는 순간 데이터를 박제합니다)
+        // 집중 중(true)이었다가 딴짓/부재(false)로 바뀌는 순간을 포착
+        if (window.lastKnownFocusState !== isFocusing) {
+            if (window.lastKnownFocusState === true && isFocusing === false) {
+                console.log("💾 [System] 집중 종료 감지! 데이터를 긴급 보존합니다.");
+                saveAllData();
+            }
+            window.lastKnownFocusState = isFocusing;
         }
 
         // --- [6] 서신 트리거 체크 ---
@@ -3884,7 +4178,7 @@ async function updateLoop() {
 }
 
 /**
- * 상태 배지 UI 업데이트
+ * [renderer.js] 상태 배지 UI 업데이트 (디자인 클래스 보존 버전)
  */
 function updateStatusBadge() {
     const badgeEl = document.getElementById('status-badge');
@@ -3894,28 +4188,30 @@ function updateStatusBadge() {
     let icon = "";
     let text = "";
 
-    if (isIdle) {
+    // 우선순위: 부재 > 딴짓 > 집중 > 대기
+    if (window.isIdle) { 
         statusClass = "away";
         icon = '<i class="fas fa-moon"></i>';
         text = "부재 중";
-    } else if (isDistraction) {
+    } else if (window.isDistraction) {
         statusClass = "distracting";
         icon = '<i class="fas fa-ghost"></i>';
         text = "딴짓 중";
-    } else if (isActuallyWorking) {
+    } else if (window.isActuallyWorking) {
         statusClass = "working";
         icon = '<i class="fas fa-fire"></i>';
         text = "집중 중";
-        if (progress.totalFocusTime % 300 === 0 && progress.totalFocusTime > 0) {
-            statusClass += " flow-state";
-        }
     } else {
         statusClass = "waiting";
         icon = '<i class="fas fa-hourglass-start"></i>';
         text = "대기 중";
     }
 
-    badgeEl.className = statusClass; 
+    // ✨ [핵심 수정] className을 통째로 바꾸지 않고 classList를 사용해 안전하게 교체합니다.
+    const allStates = ["away", "distracting", "working", "waiting"];
+    badgeEl.classList.remove(...allStates);
+    badgeEl.classList.add(statusClass);
+    
     badgeEl.innerHTML = `${icon} ${text}`;
 }
 
@@ -3925,54 +4221,71 @@ function updateStatusBadge() {
 window.finalizeContract = async (char) => {
     console.log("📜 계약 체결 시작:", char.name);
     
-    // 1. 인트로 화면 페이드 아웃 (부드러운 전환)
+    // 1. 인트로 화면 페이드 아웃
     const intro = document.getElementById('intro-sequence');
     if (intro) {
-        intro.style.transition = "opacity 1.5s ease"; // 1.5초 동안 서서히 사라짐
+        intro.style.transition = "opacity 1.5s ease";
         intro.style.opacity = "0";
     }
 
-    // 2. 데이터 초기화 (알 상태로 등록)
-    // 컬렉션 매니저가 없으면 안전하게 생성
+    // 2. 데이터 및 매니저 초기화
     if (!collection) collection = new CollectionManager({});
     
+    // ✨ [수정] 알 정보 설정 (char 사용, 중복 제거)
     collection.activeEgg = {
         type: char.id,
         progress: 0,
-        target: 900, // 부화 목표 시간 (초)
+        target: 1800, // 부화 목표 시간 (초)
         date: new Date().toISOString()
     };
     
     // 3. 파트너 설정 및 마스터 데이터 동기화
     currentPartner = char;
+    window.currentPartner = char;
+    
     if (!masterData.character) masterData.character = {};
     masterData.character.selectedPartnerId = char.id;
+    
+    // ✨ [수정] 부화 연출 잠금 활성화
+    window.isHatching = true; 
+    
+    // 연금술 상태 초기화
+    cylinderSaturation = 0;
+    masterData.cylinderSaturation = 0;
+    // 첫 알이므로 hatchCount를 1로 설정하거나 기존 값 유지
+    masterData.hatchCount = (masterData.hatchCount || 0) + 1;
 
-    // ✨ [핵심 수정] 계약 맺는 날짜를 오늘로 확정
+    // 4. 날짜 확정 및 최종 저장
     if (!masterData.progress) masterData.progress = {};
     masterData.progress.lastSaveDate = window.getMolipDate();
 
-    // 4. 데이터 저장 (저장 후 새로고침 하지 않음!)
+    // 중복 호출 없이 한 번만 await로 저장합니다.
     await saveAllData();
 
-    // 5. 페이드 아웃이 끝난 후 게임 화면 활성화
+    // 5. 게임 화면 활성화 시퀀스
     setTimeout(async () => {
-        if (intro) intro.style.display = 'none'; // 인트로 완전히 제거
+        if (intro) intro.style.display = 'none'; 
         
         // 캐릭터(알) 스프라이트 로드
         if (typeof refreshCharacterSprite === 'function') {
             await refreshCharacterSprite(); 
         }
         
-        // UI 수치 갱신
+        // UI 및 도감 갱신
         window.updateUI();
+        if (window.renderCollection) window.renderCollection();
 
-        // [핵심] 엔진 가동 (이미 돌고 있지 않다면 시작)
+        // [핵심] 엔진 가동
         if (!window.gameEngineInterval) {
             window.startMainGameEngine();
-            isEngineStarted = true;
+            // isEngineStarted가 전역에 선언되어 있다면 업데이트
+            if (typeof isEngineStarted !== 'undefined') isEngineStarted = true;
         }
 
+        // 부화 연출 잠금 해제 (잠시 후 해제하여 중복 작동 방지)
+        setTimeout(() => { window.isHatching = false; }, 1000);
+
+        window.showToast(`${char.egg_name}과(와) 운명적인 계약을 맺었습니다.`, "success");
     }, 1500);
 };
 
@@ -4009,50 +4322,42 @@ function checkHatching() {
  * 데이터 로드, 매니저 초기화, 캐릭터 복구, 그리고 **UI 초기 렌더링**까지 수행합니다.
  */
 async function startEngine() {
-    // 1. 중복 실행 방지 플래그 체크
-    if (isEngineStarted) return;
-    
+if (isEngineStarted) return;
     console.log("🚀 [System] 연구실 엔진 가동 시퀀스 시작...");
 
     try {
-        // 2. 데이터 로드
         const savedData = await ipcRenderer.invoke('load-game-data');
         
-        // [수정 1] 신규 유저 기본값에 'achievements: []' 추가
         masterData = savedData || { 
-            progress: { 
-                level: 1, 
-                exp: 0, 
-                totalFocusTime: 0, 
-                todayFocusTime: 0,
-                lastSaveDate: window.getMolipDate()
-            }, 
-            settings: {}, 
-            character: {}, 
-            collection: {}, 
-            achievements: [], // 👈 [중요] 업적 저장 배열 초기화
-            inventory: { items: {}, byproducts: {} }, 
-            mailbox: { mailHistory: [] }, 
-            todo: [], 
-            habit: [] 
+            progress: { level: 1, exp: 0, totalFocusTime: 0, todayFocusTime: 0, lastSaveDate: window.getMolipDate() }, 
+            settings: {}, character: {}, collection: {}, achievements: [], 
+            inventory: { items: {}, byproducts: {} }, mailbox: { mailHistory: [] }, todo: [], habit: [] 
         };
 
-        // [안전장치] 기존 데이터에 progress나 level이 없는 경우 보정
+        if (masterData.userId) {
+            window.molipUserId = masterData.userId;
+            localStorage.setItem('molip_user_id', masterData.userId);
+        }
+
+        // [핵심] 기존 데이터의 시간 필드 복구 및 동기화
         if (!masterData.progress) masterData.progress = {};
-        if (typeof masterData.progress.level === 'undefined') {
-            masterData.progress.level = 1;
-            masterData.progress.exp = 0;
+        masterData.progress.level = masterData.progress.level || 1;
+        masterData.progress.todayFocusTime = masterData.progress.todayFocusTime || masterData.progress.todayTime || 0;
+        masterData.progress.totalFocusTime = masterData.progress.totalFocusTime || masterData.progress.totalTime || 0;
+        masterData.progress.lastSaveDate = masterData.progress.lastSaveDate || window.getMolipDate();
+
+        if (!masterData.achievements) masterData.achievements = [];
+        window.masterData = masterData; // 전역 마스터 데이터 확정
+
+        if (progress) {
+            const progressData = progress.getSaveData();
+            // ProgressManager의 데이터 형식을 유지하면서 호환성 키 추가
+            masterData.progress = {
+                ...progressData,
+                todayFocusTime: progressData.todayFocusTime || progressData.todayTime || 0,
+                totalFocusTime: progressData.totalFocusTime || progressData.totalTime || 0
+            };
         }
-
-        // [수정 2] 기존 유저도 업적 배열이 없으면 빈 배열 생성 (에러 방지)
-        if (!masterData.achievements) {
-            masterData.achievements = [];
-        }
-
-        // 날짜 동기화
-        masterData.progress.lastSaveDate = window.getMolipDate();
-
-        window.masterData = masterData;
 
         // 3. 데이터 구조 보정 (나머지 안전장치)
         masterData.inventory = masterData.inventory || { items: {}, byproducts: {} };
@@ -4123,6 +4428,11 @@ async function startEngine() {
         taskManager.renderTodos();
         taskManager.renderHabits();
 
+        if (window.initAccountInfo) {
+            window.initAccountInfo();
+            console.log("🆔 유저 아이디 시스템 가동");
+        }
+
         if (window.renderer && typeof window.renderer.startLoop === 'function') {
             window.renderer.startLoop(); 
         }
@@ -4152,5 +4462,106 @@ async function startEngine() {
 window.setupEngine = () => {
     if (soundManager) {
         soundManager.setupAudioEngine();
+    }
+};
+
+/**
+ * 선물 코드 검증 및 서신 발송 시스템
+ */
+window.redeemGiftCode = function() {
+    const inputEl = document.getElementById('gift-code-input');
+    const code = inputEl.value.trim();
+    const currentId = window.molipUserId; // 현재 접속 중인 고유 ID
+
+    if (!code) return;
+
+    // 1. 이미 사용한 코드인지 확인 (masterData에 기록)
+    if (!masterData.usedCodes) masterData.usedCodes = [];
+    if (masterData.usedCodes.includes(code)) {
+        window.showToast("이미 사용된 코드입니다.", "error");
+        return;
+    }
+
+    // 2. 코드 및 대상 유저 ID 검증 (여기에 코드와 대상 ID를 설정하세요)
+    let rewardMail = null;
+
+    // 예시 1: 특정 아이디(7kX9...)를 가진 유저만 쓸 수 있는 웰컴 코드
+    if (code === "WELCOME_MOLIP" && currentId === "7kX9pZ2mN5qL1vR8jW3n") {
+        rewardMail = {
+            id: `gift_${Date.now()}`,
+            title: "🧪 특별 보급품: 연구 지원금",
+            sender: "학회 지부장",
+            content: "연금술사님, 아티스트님의 복귀를 환영하며 특별 연구 지원금을 보냅니다.",
+            receivedDate: new Date().toISOString(),
+            isRead: false,
+            isRewardClaimed: false,
+            reward: { type: 'point', value: 3000 } // 3000 에테르
+        };
+    } 
+    else if (code === "ETHER_BOOST") {
+        rewardMail = {
+            id: `gift_${Date.now()}`,
+            title: "⚡ 긴급 에테르 보급",
+            sender: "에테르 관리국",
+            content: "실린더 농도 유지를 위한 긴급 에테르 보급품입니다.",
+            receivedDate: new Date().toISOString(),
+            isRead: false,
+            isRewardClaimed: false,
+            reward: { type: 'point', value: 500 }
+        };
+    } else if (code === "MY_NEW_FRIEND") {
+        const targetCharId = "char_02"; // 선물할 캐릭터 ID (인디고)
+        const targetChar = charData.characters.find(c => c.id === targetCharId);
+
+        // 🛡️ 안전 검사: 이미 보유 중이거나 부화 중인지 확인
+        const isOwned = collection.ownedIds.includes(targetCharId);
+        const isHatching = collection.activeEgg && collection.activeEgg.type === targetCharId;
+
+        if (isOwned || isHatching) {
+            window.showToast("이미 연구실에 존재하거나 부화 중인 생명입니다.", "warning");
+            return;
+        }
+
+        // 🎁 알 지급 로직
+        collection.activeEgg = {
+            type: targetCharId,
+            progress: 0,
+            target: 1800, // 부화 필요 시간 (초)
+            date: new Date().toISOString()
+        };
+
+        // ✨ [중요] 현재 파트너를 선물 받은 캐릭터로 교체합니다.
+        window.currentPartner = targetChar;
+        currentPartner = targetChar; // 로컬/전역 모두 갱신
+
+        // 데이터 기록 및 저장
+        masterData.usedCodes.push(code);
+        window.saveAllData();
+        
+        // ✨ 연출 실행: 슈퍼노바 효과와 함께 알 등장
+        if (window.triggerSupernovaEffect) {
+            window.triggerSupernovaEffect(targetChar);
+        }
+        
+        window.showToast(`${targetChar.egg_name}을(를) 선물 받았습니다!`, "success");
+        inputEl.value = "";
+        return;
+    }
+
+    // 3. 결과 처리
+    if (rewardMail) {
+        // 서신함에 추가 및 상태 기록
+        window.mailbox.receivedMails.unshift(rewardMail);
+        masterData.usedCodes.push(code);
+        
+        // 저장 및 UI 갱신
+        window.saveAllData(); 
+        window.updateMailNotification();
+        if (window.renderMailList) window.renderMailList();
+        
+        window.showToast("서신함으로 보급품이 도착했습니다!", "success");
+        inputEl.value = ""; // 입력란 초기화
+    } else {
+        window.showToast("유효하지 않은 코드이거나 대상자가 아닙니다.", "error");
     }
 };

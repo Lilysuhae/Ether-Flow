@@ -22,10 +22,34 @@
                 },
                 "child": {
                     "expressions": {
-                    "working": { "sprite": "assets/sprites/mabel_child_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "good": { "sprite": "assets/sprites/mabel_child_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "distracting": { "sprite": "assets/sprites/mabel_child_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "away": { "sprite": "assets/sprites/mabel_child_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                        "working": {
+                            "sprite": "assets/sprites/mabel_child_work.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "good": {
+                            "sprite": "assets/sprites/mabel_child_good.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "distracting": {
+                            "sprite": "assets/sprites/mabel_child_dist.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "away": {
+                            "sprite": "assets/sprites/mabel_child_away.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        }
                     },
                     "todo_responses": [
                         "와아, 정말 멋져요.", "천릿길도 한 걸음 부터..!",
@@ -57,7 +81,7 @@
                         "work": [
                             "무릎 위에 앉을래요.", "구경할래요~",
                             "방해 안 할게요, 여기서 조용히 지켜봐도 될까요?",
-                            "주인님이 집중할 때 나는 파동이 참 좋아요.",
+                            "연금술사님이 집중할 때 나는 파동이 참 좋아요.",
                             "어떤 위대한 연구를 하고 계신가요?",
                             "연금술사님 곁에서 평온한 파동을 보내드릴게요."
                         ]
@@ -65,10 +89,34 @@
                 },
                 "adult": {
                     "expressions": {
-                    "working": { "sprite": "assets/sprites/mabel_adult_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "good": { "sprite": "assets/sprites/mabel_adult_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "distracting": { "sprite": "assets/sprites/mabel_adult_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "away": { "sprite": "assets/sprites/mabel_adult_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                        "working": {
+                            "sprite": "assets/sprites/mabel_adult_work.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "good": {
+                            "sprite": "assets/sprites/mabel_adult_good.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "distracting": {
+                            "sprite": "assets/sprites/mabel_adult_dist.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "away": {
+                            "sprite": "assets/sprites/mabel_adult_away.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        }
                     },
                     "todo_responses": [
                         "결과보다 그 과정에 담긴 당신의 정직한 시간이 더 눈부시게 빛나고 있어요.",
@@ -192,10 +240,34 @@
                 },
                 "child": {
                     "expressions": {
-                    "working": { "sprite": "assets/sprites/indigo_child_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "good": { "sprite": "assets/sprites/indigo_child_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "distracting": { "sprite": "assets/sprites/indigo_child_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "away": { "sprite": "assets/sprites/indigo_child_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                        "working": {
+                            "sprite": "assets/sprites/indigo_child_work.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "good": {
+                            "sprite": "assets/sprites/indigo_child_good.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "distracting": {
+                            "sprite": "assets/sprites/indigo_child_dist.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "away": {
+                            "sprite": "assets/sprites/indigo_child_away.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        }
                     },
                     "evolution_text": "나... 여기 있어...",
                     "todo_responses": [
@@ -239,10 +311,34 @@
                 },
                 "adult": {
                     "expressions": {
-                    "working": { "sprite": "assets/sprites/indigo_adult_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "good": { "sprite": "assets/sprites/indigo_adult_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "distracting": { "sprite": "assets/sprites/indigo_adult_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "away": { "sprite": "assets/sprites/indigo_adult_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                        "working": {
+                            "sprite": "assets/sprites/indigo_adult_work.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "good": {
+                            "sprite": "assets/sprites/indigo_adult_good.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "distracting": {
+                            "sprite": "assets/sprites/indigo_adult_dist.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "away": {
+                            "sprite": "assets/sprites/indigo_adult_away.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        }
                     },
                     "todo_responses": [
                         "해냈네. 네 집요함, 역시 내 파트너다워.",
@@ -368,10 +464,34 @@
                 },
                 "child": {
                     "expressions": {
-                    "working": { "sprite": "assets/sprites/morgana_child_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "good": { "sprite": "assets/sprites/morgana_child_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "distracting": { "sprite": "assets/sprites/morgana_child_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "away": { "sprite": "assets/sprites/morgana_child_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                        "working": {
+                            "sprite": "assets/sprites/morgana_child_work.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "good": {
+                            "sprite": "assets/sprites/morgana_child_good.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "distracting": {
+                            "sprite": "assets/sprites/morgana_child_dist.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "away": {
+                            "sprite": "assets/sprites/morgana_child_away.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        }
                     },
                     "todo_responses": [
                         "하나 또 해냈구나.", "차근차근 잘하고 있어.",
@@ -411,10 +531,34 @@
                 },
                 "adult": {
                     "expressions": {
-                    "working": { "sprite": "assets/sprites/morgana_adult_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "good": { "sprite": "assets/sprites/morgana_adult_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "distracting": { "sprite": "assets/sprites/morgana_adult_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "away": { "sprite": "assets/sprites/morgana_adult_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                        "working": {
+                            "sprite": "assets/sprites/morgana_adult_work.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "good": {
+                            "sprite": "assets/sprites/morgana_adult_good.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "distracting": {
+                            "sprite": "assets/sprites/morgana_adult_dist.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "away": {
+                            "sprite": "assets/sprites/morgana_adult_away.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        }
                     },
                     "todo_responses": [
                         "완벽한 일 처리네.", "당신의 집중력에 감탄했어.",
@@ -544,10 +688,34 @@
                 },
                 "child": {
                     "expressions": {
-                    "working": { "sprite": "assets/sprites/aurelia_child_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "good": { "sprite": "assets/sprites/aurelia_child_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "distracting": { "sprite": "assets/sprites/aurelia_child_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "away": { "sprite": "assets/sprites/aurelia_child_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                        "working": {
+                            "sprite": "assets/sprites/aurelia_child_work.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "good": {
+                            "sprite": "assets/sprites/aurelia_child_good.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "distracting": {
+                            "sprite": "assets/sprites/aurelia_child_dist.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "away": {
+                            "sprite": "assets/sprites/aurelia_child_away.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        }
                     },
                     "todo_responses": [
                         "참 잘했어요!", "응, 훌륭해~",
@@ -587,10 +755,34 @@
                 },
                 "adult": {
                     "expressions": {
-                    "working": { "sprite": "assets/sprites/aurelia_adult_work.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "good": { "sprite": "assets/sprites/aurelia_adult_good.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "distracting": { "sprite": "assets/sprites/aurelia_adult_dist.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 },
-                    "away": { "sprite": "assets/sprites/aurelia_adult_away.png", "frameWidth": 158, "frameHeight": 158, "totalFrames": 1, "fps": 4 }
+                        "working": {
+                            "sprite": "assets/sprites/aurelia_adult_work.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "good": {
+                            "sprite": "assets/sprites/aurelia_adult_good.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "distracting": {
+                            "sprite": "assets/sprites/aurelia_adult_dist.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "away": {
+                            "sprite": "assets/sprites/aurelia_adult_away.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        }
                     },
                     "todo_responses": [
                         "당연히 해내야 할 일이죠.", "내 파트너라면 이 정도는 기본이랍니다.",
@@ -691,6 +883,208 @@
                                 "당신의 파동이 너무 평범해서 지루해질 지경이에요.",
                                 "감히 저를 기다리게 하다니, 반성하는 시간이라도 갖는 게 어때요?",
                                 "당신의 시선이 부담스럽네요. 적당히 하세요."
+                            ]
+                        }
+                    }
+                }
+            }
+        },{
+            "id": "char_06",
+            "name": "코델리아",
+            "catchphrase": "괜찮아요~ 어떤 걱정도 다 잊을 정도로 꽉 안아줄게요!",
+            "origin": "모든 고체를 녹여 액체로 만드는 용해의 과정, 그 태초의 바다와 같은 실린더의 액체 속에서 맑은 파도색 알의 형상으로 현현했습니다.",
+            "egg_name": "맑은 파도색 알",
+            "description": "거대한 포용력으로 술사의 지친 마음을 녹여내며, 그녀의 노래는 고독한 연구실을 안온한 휴식처로 바꿉니다.",
+            "evolution_level": 300,
+            "background": "assets/bg/cordelia_room.png",
+            "preferences": {
+                "favorite": ["손편지"],
+                "normal": [],
+                "dislike": ["침묵의 향초"]
+            },
+            "stages": {
+                "egg": {
+                    "sprite": "assets/sprites/egg_cordelia.png",
+                    "frameWidth": 158,
+                    "frameHeight": 158,
+                    "totalFrames": 1
+                },
+                "child": {
+                    "expressions": {
+                        "working": {
+                            "sprite": "assets/sprites/cordelia_child_work.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "good": {
+                            "sprite": "assets/sprites/cordelia_child_good.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "distracting": {
+                            "sprite": "assets/sprites/cordelia_child_dist.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "away": {
+                            "sprite": "assets/sprites/cordelia_child_away.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        }
+                    },
+                    "todo_responses": [
+                        "와아! 대단해요! 꼬리치기 짝짝!", "해냈어! 내가 거품 불어줄게요!",
+                        "연금술사님은 최고야! 꽉 안아주고 싶다~",
+                        "몽글몽글 기분 좋아지는 소리예요!",
+                        "최고예요! 이 기운을 모아 물방울 파티를 해요!"
+                    ],
+                    "gift_responses": {
+                        "favorite": "꺄아, 이거 너무 예뻐요! 머리 위에서 거품이 퐁퐁 나와요!",
+                        "normal": "헤헤, 고마워요! 나 이거 소중하게 간직할게요.",
+                        "dislike": "으으... 이건 너무 따끔따끔하고 건조해요..."
+                    },
+                    "dialogues": {
+                        "idle": [
+                            "연금술사님, 나 칭찬해줘요! 머리 쓰다듬어줘!", "배고픈 건 아닌데... 눈 맞춰주면 안 돼요?",
+                            "비눗방울 놀이 할까요? 퐁퐁퐁~",
+                            "언젠간 드넓은 진짜 바다 보러 가고파요!",
+                            "연금술사님 옆에 있으면 마음에 잔잔한 파도가 일렁여요."
+                        ],
+                        "distract": [
+                            "어어? 딴짓하면 내가 물 뿌릴 거야~!",
+                            "나보다 재밌는 게 있어요? 코델리아 속상해!",
+                            "이쪽 봐줘요! 내가 더 귀엽고 재미있는데!",
+                            "심심해요~ 나랑 같이 노래 불러요, 네?"
+                        ],
+                        "work": [
+                            "힘내라! 힘내라!", "집중하는 연금술사님은 바다보다 깊어 보여요!",
+                            "내가 시원한 물보라를 일으켜 줄게요!",
+                            "용해의 마법으로 모든 어려움을 녹여버려요!"
+                        ]
+                    }
+                },
+                "adult": {
+                    "expressions": {
+                        "working": {
+                            "sprite": "assets/sprites/cordelia_adult_work.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "good": {
+                            "sprite": "assets/sprites/cordelia_adult_good.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "distracting": {
+                            "sprite": "assets/sprites/cordelia_adult_dist.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        },
+                        "away": {
+                            "sprite": "assets/sprites/cordelia_adult_away.png",
+                            "frameWidth": 158,
+                            "frameHeight": 158,
+                            "totalFrames": 1,
+                            "fps": 4
+                        }
+                    },
+                    "todo_responses": [
+                        "우와, 역시 대단해! 내 파트너답네!", "정말 고생 많았어. 넌 역시 몰입할 때 제일 멋져!",
+                        "이거 봐, 에테르가 황금빛으로 반짝여! 네 노력이 결실을 맺은 거야.",
+                        "헤헤, 기분 좋다! 네 성취는 곧 내 행복이야.",
+                        "최고야! 이 기세를 몰아서 우리 더 깊은 진리를 찾아 다이빙 해볼까?",
+                        "자, 수고한 너를 위해서 내가 아주 꽉~ 안아줄게! 비록 중간에 실린더가 껴있지만."
+                    ],
+                    "gift_responses": {
+                        "favorite": "세상에! 이거 내가 정말 갖고 싶어 했던 거잖아! 역시 넌 나에 대해 모르는 게 없구나?",
+                        "normal": "응? 나 주려고 가져온 거야? 고마워, 네 마음이 담겨 있어서 더 소중하게 느껴져.",
+                        "dislike": "에이, 이건 내 취향 아니야~ 힌트? 힌트는 없어!"
+                    },
+                    "welcome_responses": [
+                        "드디어 왔네! 보고 싶어서 방금까지 네 생각만 하고 있었어.",
+                        "안녕! 오늘 하루는 어땠어? 힘들었지?",
+                        "헤헤, 네 발소리만 들어도 가슴이 두근거려. 어서 와!",
+                        "기다리고 있었어! 네가 없으니까 연구실 안이 너무 허전했단 말이야.",
+                        "자, 오늘 하루도 우리 같이 힘내보자! 내가 옆에서 응원할게.",
+                        "네가 돌아오니까 이제야 살 것 같아. 보고 싶었어!"
+                    ],
+                    "return_responses": [
+                        "치... 너무 오래 비운 거 아냐? 나 심심해서 죽을 뻔했다구!",
+                        "어디 갔다 이제 와! 걱정했잖아. 다음부턴 꼭 나한테 말하고 가기, 약속?",
+                        "흥, 늦게 온 벌로 오늘은 나랑 더 오래 같이 있어야 해. 알았지?",
+                        "다시 돌아와 줘서 고마워. 네가 없는 시간은 정말 느리게 흘러가더라.",
+                        "보고 싶어서 거품만 불고 있었어. 이제 도망가지 마!",
+                        "바보! 늦었으니까 네가 꽉 안아줘야 해!"
+                    ],
+                    "dialogues": {
+                        "work": {
+                            "max": [
+                                "너의 그 진지한 옆모습... 가끔 보면 정말 설레. 계속 지켜봐도 되지?",
+                                "집중하는 네 주변으로 푸른 물결이 일렁여. 마치 우리가 바다 한가운데 있는 것 같아.",
+                                "힘들면 언제든 말해. 내가 네 피로를 다 녹여줄게.",
+                                "네 꿈이 이루어지는 순간을 가장 가까이서 보고 싶어. 난 언제나 네 편이야!",
+                                "응, 바로 그 느낌이야! 넌 몰입할 때 세상에서 가장 눈부시게 빛나."
+                            ],
+                            "high": [
+                                "지치지 마, 내가 곁에 있잖아. 넌 그냥 네 목표만 봐!",
+                                "좋은 흐름이야! 이대로 쭉 가면 완벽한 연성이 될 거야.",
+                                "네 손끝에서 만들어지는 기적들을 보는 게 내 낙이야.",
+                                "힘내! 내가 시원한 에테르의 파도를 보내줄게."
+                            ],
+                            "low": [
+                                "잠깐만~ 너무 무리하는 거 아냐? 나랑 같이 기지개 한번 켜자!",
+                                "에이, 집중력이 조금 흐려졌네? 내 비눗방울 보고 다시 힘내봐!",
+                                "마음이 딱딱해지면 안 돼. 잠시만 쉬어가는 건 어때?"
+                            ]
+                        },
+                        "distract": {
+                            "max": [
+                                "나 여기 있는데 어딜 보는 거야? 딴짓하면 나 정말 질투할지도 몰라?",
+                                "가벼운 자극에 눈 돌리지 마. 네 곁엔 이렇게 사랑스러운 내가 있잖아!",
+                                "나보다 더 중요한 게 있어? 어서 다시 펜을 잡아, 응? 부탁이야.",
+                                "잠깐의 방황은 봐주겠지만, 너무 오래 한눈팔면 물 뿌릴 거야!"
+                            ],
+                            "high": [
+                                "아까의 그 눈빛은 어디 갔어? 다시 나를 설레게 해줘!",
+                                "집중 안 하면 나 속상해. 네 멋진 모습을 보여달란 말이야.",
+                                "딴생각은 나랑 놀 때만 하기! 지금은 네 일에 열중해줘."
+                            ],
+                            "low": [
+                                "바보야, 그렇게 시간을 버리면 어떡해! 정신 차려!",
+                                "너의 야망이 겨우 이 정도였어? 실망하고 싶지 않단 말이야.",
+                                "어서 돌아와. 난 네가 당당하게 정상에 서는 걸 보고 싶어."
+                            ]
+                        },
+                        "idle": {
+                            "max": [
+                                "있지, 세상에서 네가 제일 좋아. 나랑 영원히 함께 헤엄치기로 약속한 거, 잊으면 안 돼?",
+                                "우리의 유대는 그 어떤 금속보다 견고해. 왜냐면 우리가 사랑으로 녹여냈으니까!",
+                                "가끔은 아무 말 없이 이렇게 네 곁에 있는 것만으로도 너무 행복해.",
+                                "네가 웃으면 내 마음속에도 무지개가 뜨는 것 같아. 항상 웃게 해줄게."
+                            ],
+                            "high": [
+                                "나 오늘 좀 예쁜 것 같지 않아? 헤헤, 너한테 잘 보이고 싶어서 단장했어.",
+                                "넌 나의 영웅이고, 난 너의 가장 소중한 조력자야. 우리 환상의 짝꿍이지?",
+                                "플라스크를 꼭 안아줘. 네 온기를 느끼면 마음이 편해지거든."
+                            ],
+                            "low": [
+                                "왜 나한테 차갑게 굴어? 나 무시하지 마, 슬프단 말이야.",
+                                "너랑 나 사이에 벽이 생긴 것 같아... 우리 다시 예전처럼 다정해지면 안 될까?",
+                                "말 좀 해봐. 네 목소리가 듣고 싶어서 현기증 날 것 같아."
                             ]
                         }
                     }

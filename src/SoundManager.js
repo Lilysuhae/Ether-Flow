@@ -2,45 +2,50 @@ const path = require('path');
 
 class SoundManager {
     constructor() {
-        // ============================================================
-        // [1. SFX (효과음) 초기화]
-        // ============================================================
+        // [1. 효과음 및 알림음 데이터 설정]
+        // 각 소리에 'type'을 부여하여 설정창의 슬라이더(sfx, notif, timer)와 연동합니다.
         this.sounds = {
-            click: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'click.mp3')),
-            paper: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'paper.mp3')),
-            check: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'check.mp3')),
-            send: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'send.mp3'))
+            // SFX (버튼 및 상호작용)
+            click: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'click.mp3')), type: 'sfx' },
+            paper: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'paper.mp3')), type: 'sfx' },
+            // Notification (알림)
+            check: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'check.mp3')), type: 'notif' },
+            send: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'send.mp3')), type: 'notif' },
+            // // Timer (타이머 전용 소리가 있다면 여기에 추가)
+            // timer_end: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'timer.mp3')), type: 'timer' }
         };
 
-        // ============================================================
-        // [2. BGM & Ambient 데이터 정의]
-        // ============================================================
+        // [2. BGM & Ambient 데이터]
         this.trackData = {
             ambient: [
                 { name: '음식점', file: 'busy-restaurant.mp3' },
+                { name: '물 끓는 소리', file: 'pot-of-water-boiling.mp3' },
+                { name: '후라이팬으로 요리', file: 'food-cooking-in-frying-pan.mp3' },
                 { name: '숲 속의 캠프파이어', file: 'campfire-in-the-woods.mp3' },
                 { name: '밤의 숲', file: 'forest-night-time.mp3' },
                 { name: '숲 속을 걷다', file: 'walking-in-a-forest.mp3' },
                 { name: '가벼운 비', file: 'light-rain.mp3' },
-                { name: '물 끓는 소리', file: 'pot-of-water-boiling.mp3' },
+                { name: '부드러운 파도 소리', file: 'beautiful-ocean-waves.mp3' },
                 { name: '큰 파도 소리', file: 'rough-ocean-waves.mp3' },
-                { name: '부드러운 파도 소리', file: 'soothing-ocean-waves.mp3' },
+                { name: '바닷속', file: 'abyss-sea.mp3' },
+                { name: '시냇물', file: 'river.mp3' },
+                { name: '마을 광장', file: 'old-town-city-center.mp3' },
             ],
             music: [
+                { name: 'Whispers in the Lab', file: 'Whispers in the Lab.mp3' },
                 { name: 'theme_mabel', file: 'theme_mabel.mp3' },
                 { name: 'theme_indigo', file: 'theme_indigo.mp3' },
                 { name: 'theme_morgana', file: 'theme_morgana.mp3' },
-                { name: 'theme_aurelia', file: 'theme_aurelia.mp3' }
+                { name: 'theme_aurelia', file: 'theme_aurelia.mp3' },
+                { name: 'theme_cordelia', file: 'theme_cordelia.mp3' }
             ]
         };
 
-        // 오디오 객체 생성
         this.audios = {
             ambient: new Audio(),
             music: new Audio()
         };
 
-        // 초기 상태 값 로드 (저장된 설정이 없으면 0)
         this.state = {
             ambient: { cur: this.getSavedIdx('ambient'), loop: true, shuffle: false },
             music: { cur: this.getSavedIdx('music'), loop: true, shuffle: false }
@@ -48,41 +53,70 @@ class SoundManager {
     }
 
     /**
-     * 저장된 인덱스를 가져오는 헬퍼 메서드
+     * 저장된 인덱스 가져오기
      */
     getSavedIdx(type) {
-        // window.masterData가 로드된 시점에 호출되어야 정확함
         const s = (window.masterData && window.masterData.settings && window.masterData.settings.sound) ? window.masterData.settings.sound : null;
         if (!s) return 0;
         return (type === 'ambient' ? s.lastAmbient : s.lastMusic) || 0;
     }
 
     /**
-     * SFX 재생 메서드
+     * [핵심] 모든 오디오 객체에 마스터 데이터의 볼륨/음소거 설정을 실시간 적용합니다.
+     */
+    applyVolumeSettings() {
+        const s = (window.masterData && window.masterData.settings) ? window.masterData.settings.sound : null;
+        if (!s || !s.master) {
+            // 마스터 사운드가 꺼져 있으면 모든 볼륨을 0으로
+            Object.values(this.sounds).forEach(item => item.audio.volume = 0);
+            this.audios.ambient.volume = 0;
+            this.audios.music.volume = 0;
+            return;
+        }
+
+        // 1. 효과음/알림/타이머 볼륨 적용
+        Object.keys(this.sounds).forEach(key => {
+            const item = this.sounds[key];
+            const type = item.type; // 'sfx', 'notif', 'timer'
+            const baseVol = (s[`${type}Vol`] !== undefined ? s[`${type}Vol`] : 80) / 100;
+            const isMuted = !!s[`${type}Mute`];
+            
+            item.audio.volume = isMuted ? 0 : baseVol;
+        });
+
+        // 2. 환경음/음악 플레이어 볼륨 적용
+        const ambVol = (s.ambVol !== undefined ? s.ambVol : 80) / 100;
+        const musVol = (s.musVol !== undefined ? s.musVol : 80) / 100;
+        
+        this.audios.ambient.volume = ambVol;
+        this.audios.music.volume = musVol;
+    }
+
+    /**
+     * SFX 재생 (중단 에러 방지 및 실시간 볼륨 적용 버전)
      */
     playSFX(key) {
         const s = (window.masterData && window.masterData.settings) ? window.masterData.settings.sound : null;
-        if (!s || !s.master || !s.system) return;
+        if (!s || !s.master) return;
 
-        const sound = this.sounds[key];
-        if (sound) {
+        const item = this.sounds[key];
+        if (item) {
+            this.applyVolumeSettings(); // 재생 직전 최신 볼륨값 동기화
+            const audio = item.audio;
             try {
-                sound.pause();
-                sound.currentTime = 0;
-                setTimeout(() => {
-                    const playPromise = sound.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(e => console.warn("SFX 재생 차단 우회:", e));
-                    }
-                }, 5);
-            } catch (err) {
-                console.error("SFX 엔진 오류:", err);
-            }
+                audio.currentTime = 0; // pause() 없이 시간만 초기화하여 AbortError 방지
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => {
+                        if (e.name !== 'AbortError') console.warn("SFX 재생 오류:", e);
+                    });
+                }
+            } catch (err) { console.error("SFX 엔진 오류:", err); }
         }
     }
 
     /**
-     * UI 리스트 갱신 메서드 (기존 refreshList 대체)
+     * 플레이어 UI 리스트 갱신
      */
     refreshList(type) {
         const container = document.getElementById(`list-${type}`);
@@ -95,7 +129,6 @@ class SoundManager {
             </div>
         `).join('');
 
-        // 클릭 이벤트 연결
         container.querySelectorAll('.menu-item').forEach(el => {
             el.onclick = (e) => {
                 e.stopPropagation();
@@ -105,47 +138,39 @@ class SoundManager {
     }
 
     /**
-     * 트랙 재생 메서드
+     * 트랙 재생 및 볼륨 설정 유지
      */
     playTrack(type, idx, isAuto = false) {
         const list = this.trackData[type];
-        // 인덱스 안전 처리
         idx = (idx + list.length) % list.length;
-        
         this.state[type].cur = idx;
         const audio = this.audios[type];
         const prefix = type === 'ambient' ? 'amb' : 'mus';
 
-        // 설정 저장
         if (window.masterData && window.masterData.settings && window.masterData.settings.sound) {
             if (type === 'ambient') window.masterData.settings.sound.lastAmbient = idx;
             else window.masterData.settings.sound.lastMusic = idx;
         }
 
         try {
-            // [경로 수정] src 폴더 기준이므로 assets로 나가야 함
             audio.src = path.join(__dirname, '..', 'assets', 'sounds', type, list[idx].file);
             audio.loop = this.state[type].loop;
             
+            // 재생 전 현재 마스터 데이터에 저장된 볼륨 적용
+            this.applyVolumeSettings();
+
             audio.play().then(() => {
                 const playBtn = document.getElementById(`play-${prefix}`);
                 if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-                
                 const trigBtn = document.getElementById(`trig-${prefix}`);
                 if (trigBtn) trigBtn.classList.add('active');
-                
                 if (!isAuto && window.saveAllData) window.saveAllData();
             }).catch(e => console.warn(`[SoundManager] ${type} 재생 실패:`, e));
-        } catch (err) {
-            console.error(`[SoundManager] 트랙 로드 에러:`, err);
-        }
+        } catch (err) { console.error(`[SoundManager] 트랙 로드 에러:`, err); }
         
         this.refreshList(type);
     }
 
-    /**
-     * 다음 트랙 재생
-     */
     nextTrack(type) {
         let nextIdx = this.state[type].shuffle 
             ? Math.floor(Math.random() * this.trackData[type].length) 
@@ -153,16 +178,12 @@ class SoundManager {
         this.playTrack(type, nextIdx);
     }
 
-    /**
-     * 이전 트랙 재생
-     */
     prevTrack(type) {
         this.playTrack(type, this.state[type].cur - 1);
     }
 
     /**
-     * [핵심] UI 이벤트 연결 및 초기화 (기존 initRestoredPlayer + window.setupEngine 대체)
-     * renderer.js의 startEngine()에서 이 함수를 호출해야 합니다.
+     * 오디오 엔진 설정 (플레이어 볼륨 슬라이더 저장 기능 포함)
      */
     setupAudioEngine() {
         ['ambient', 'music'].forEach(type => {
@@ -172,24 +193,39 @@ class SoundManager {
             const audio = this.audios[type];
 
             if (!panel || !trigBtn) return;
-
             this.refreshList(type);
 
-            // 1. 패널 열기/닫기
-            trigBtn.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const isActive = panel.classList.contains('active');
-                // 다른 패널 닫기
-                document.querySelectorAll('.player-panel').forEach(p => p.classList.remove('active'));
-                
-                if (!isActive) {
-                    panel.classList.add('active');
-                    this.refreshList(type);
+            // [추가] 볼륨 슬라이더 실시간 저장 로직
+            const volSlider = document.getElementById(`vol-${prefix}`);
+            if (volSlider) {
+                // 초기 슬라이더 위치 설정
+                const s = (window.masterData && window.masterData.settings) ? window.masterData.settings.sound : null;
+                if (s) {
+                    const savedVol = (s[`${prefix}Vol`] !== undefined ? s[`${prefix}Vol`] : 80) / 100;
+                    volSlider.value = savedVol;
+                    audio.volume = savedVol;
                 }
+
+                volSlider.oninput = (e) => { 
+                    e.stopPropagation(); 
+                    const val = parseFloat(e.target.value);
+                    audio.volume = val; 
+                    // masterData에 실시간 기록 및 저장
+                    if (window.masterData && window.masterData.settings.sound) {
+                        window.masterData.settings.sound[`${prefix}Vol`] = Math.round(val * 100);
+                        if (window.saveAllData) window.saveAllData();
+                    }
+                };
+            }
+
+            // --- 기존 플레이어 컨트롤 로직 ---
+            trigBtn.onclick = (e) => {
+                e.preventDefault(); e.stopPropagation();
+                const isActive = panel.classList.contains('active');
+                document.querySelectorAll('.player-panel').forEach(p => p.classList.remove('active'));
+                if (!isActive) panel.classList.add('active');
             };
 
-            // 2. 반복(Loop) 버튼
             const loopBtn = document.getElementById(`loop-${prefix}`);
             if (loopBtn) {
                 loopBtn.classList.toggle('active', this.state[type].loop);
@@ -201,7 +237,6 @@ class SoundManager {
                 };
             }
 
-            // 3. 셔플(Shuffle) 버튼
             const shuffleBtn = document.getElementById(`shuffle-${prefix}`);
             if (shuffleBtn) {
                 shuffleBtn.classList.toggle('active', this.state[type].shuffle);
@@ -212,12 +247,8 @@ class SoundManager {
                 };
             }
 
-            // 4. 곡 종료 시 자동 재생 핸들러
-            audio.onended = () => { 
-                if (!this.state[type].loop) this.nextTrack(type); 
-            };
+            audio.onended = () => { if (!this.state[type].loop) this.nextTrack(type); };
 
-            // 5. 재생/일시정지 버튼
             const playBtn = document.getElementById(`play-${prefix}`);
             if (playBtn) {
                 playBtn.onclick = (e) => {
@@ -234,48 +265,27 @@ class SoundManager {
                 };
             }
 
-            // 6. 이전/다음 버튼
             const prevBtn = panel.querySelector('.prev-btn');
             const nextBtn = panel.querySelector('.next-btn');
             if (prevBtn) prevBtn.onclick = (e) => { e.stopPropagation(); this.prevTrack(type); };
             if (nextBtn) nextBtn.onclick = (e) => { e.stopPropagation(); this.nextTrack(type); };
 
-            // 7. 볼륨 슬라이더
-            const volSlider = document.getElementById(`vol-${prefix}`);
-            if (volSlider) {
-                volSlider.oninput = (e) => { 
-                    e.stopPropagation(); 
-                    audio.volume = parseFloat(e.target.value); 
-                };
-            }
-
-            // 8. 저장된 설정에 따른 자동 재생 (AutoPlay)
-            const s = (window.masterData && window.masterData.settings) ? window.masterData.settings.sound : null;
-            if (s && s.autoPlay) {
-                const savedIdx = type === 'ambient' ? s.lastAmbient : s.lastMusic;
+            const sSetting = (window.masterData && window.masterData.settings) ? window.masterData.settings.sound : null;
+            if (sSetting && sSetting.autoPlay) {
+                const savedIdx = type === 'ambient' ? sSetting.lastAmbient : sSetting.lastMusic;
                 if (savedIdx !== undefined) this.playTrack(type, savedIdx, true);
             }
         });
-
-        console.log("🔊 [SoundManager] 오디오 엔진 연결 완료");
+        console.log("🔊 [SoundManager] 오디오 엔진 통합 완료");
     }
 
-    /**
-     * [추가] 오디오 엔진 잠금 해제 (브라우저 정책 우회용)
-     * 사용자의 첫 클릭 시점에 호출되어야 합니다.
-     */
     unlockAll() {
-        // 1. 모든 효과음(SFX) 짧게 재생 후 정지
         Object.values(this.sounds).forEach(s => {
-            s.play().then(() => { s.pause(); s.currentTime = 0; }).catch(() => {});
+            s.audio.play().then(() => { s.audio.pause(); s.audio.currentTime = 0; }).catch(() => {});
         });
-        
-        // 2. BGM/Ambient 오디오 객체도 잠금 해제
         Object.values(this.audios).forEach(a => {
             a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
         });
-        
-        console.log("🔊 [SoundManager] 오디오 엔진 잠금 해제 완료");
     }
 }
 

@@ -95,6 +95,12 @@
             "dried_flower_desc": "화려하진 않지만 책상 위에서 묵묵히 자리를 지킵니다.",
             "old_parchment_name": "낡은 양피지",
             "old_parchment_desc": "연구 기록을 휘갈기기 좋은 종이입니다.",
+            "abyssal_quill_name": "흑로 깃펜",
+            "abyssal_quill_desc": "흑화의 재 속에서 피어오른 깃털로 만든,날카로운 필기도구입니다.",
+            "golden_curd_name": "황금 커드",
+            "golden_curd_desc": "시간의 온기를 담아낸 달콤한 영양 덩어리입니다.",
+            "resonance_bell_name": "공명 방울",
+            "resonance_bell_desc": "연금술사의 영혼과 공명하여 잡음을 지우는 맑은 방울입니다.",
             "ether_sludge_name": "에테르 슬러지",
             "bleached_scales_name": "탈색된 비늘",
             "petrified_memory_name": "석화된 기억",
@@ -102,7 +108,7 @@
             "pulsing_crystal_name": "박동하는 결정",
             "floating_eye_name": "부유하는 안구",
             "abyssal_dregs_name": "심연의 침전물",
-            "incomplete_fetus_name": "불완전한 태아"
+            "incomplete_fetus_name": "지성인 남은 결정"
         },
         "achievements": {
             "rank_novice_1_name": "연금술 입문",

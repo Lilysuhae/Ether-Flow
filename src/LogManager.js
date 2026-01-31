@@ -19,6 +19,13 @@ class LogManager {
         console.log("✅ [LogManager] 기록 및 통계 시스템 연결 완료");
     }
 
+    formatDate(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
     /**
      * [핵심 추가] 초기화 시간(resetHour)을 고려한 '논리적 현재 날짜' 객체 반환
      * 예: 초기화가 04시이고 현재가 02시라면, 날짜 객체는 '어제'를 반환함.
@@ -111,15 +118,14 @@ class LogManager {
         this.currentLogTab = tab;
 
         document.querySelectorAll('.shop-tab-re').forEach(b => {
-            if (b.closest('#daily-log-modal')) {
-                b.classList.remove('active');
-            }
+            if (b.closest('#daily-log-modal')) b.classList.remove('active');
         });
         if (btn) btn.classList.add('active');
 
         const listArea = document.getElementById('daily-log-list');
         const chartArea = document.getElementById('daily-log-chart-area');
 
+        // ✨ [핵심] 어떤 탭이든 본문 내용을 먼저 갱신하여 날짜 라벨 등을 동기화합니다.
         if (tab === 'list') {
             if (listArea) listArea.style.display = 'block';
             if (chartArea) chartArea.style.display = 'none';
@@ -127,10 +133,8 @@ class LogManager {
         } else {
             if (listArea) listArea.style.display = 'none';
             if (chartArea) chartArea.style.display = 'block';
-            
-            const dateStr = this.logViewDate.toLocaleDateString('en-CA');
-            const dailyLogs = window.masterData.logs?.[dateStr] || [];
-            this.updateLogChart(dailyLogs);
+            // 통계 탭으로 전환 시 차트 강제 갱신
+            this.renderDailyLogContent(); 
         }
     }
 
@@ -189,7 +193,7 @@ class LogManager {
             `;
         }).join('');
 
-        if (this.currentLogTab === 'stat') {
+        if (this.currentLogTab !== 'list') {
             this.updateLogChart(dailyLogs);
         }
     }

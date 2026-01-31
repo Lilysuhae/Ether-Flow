@@ -20,11 +20,17 @@
       "silent_candle_name": "침묵의 향초",
       "silent_candle_desc": "타오를수록 주변의 잡음을 지우고 깊은 정적을 불러오는 향입니다.",
       "prism_kaleidoscope_name": "프리즘 만화경",
-      "prism_kaleidoscope_desc": "빛을 산란시켜 평범한 풍경을 수만 갈래의 환상적인 색채로 나누어 보여주는 도구입니다.",
+      "prism_kaleidoscope_desc": "빛을 산란시켜 평범한 풍경을 수만 갈래의 환상적 색채로 보여주는 도구입니다.",
       "dried_flower_name": "마른 안개꽃",
       "dried_flower_desc": "화려하진 않지만 책상 위에서 묵묵히 자리를 지킵니다.",
       "old_parchment_name": "낡은 양피지",
-      "old_parchment_desc": "연구 기록을 휘갈기기 좋은 종이입니다."
+      "old_parchment_desc": "연구 기록을 휘갈기기 좋은 종이입니다.",
+      "abyssal_quill_name": "흑로 깃펜",
+      "abyssal_quill_desc": "흑화의 재 속에서 피어오른 깃털로 만든,날카로운 필기도구입니다.",
+      "golden_curd_name": "황금 커드",
+      "golden_curd_desc": "시간의 온기를 담아낸 달콤한 영양 덩어리입니다.",
+      "resonance_bell_name": "공명 방울",
+      "resonance_bell_desc": "연금술사의 영혼과 공명하여 잡음을 지우는 맑은 방울입니다."
     }
   }
 }

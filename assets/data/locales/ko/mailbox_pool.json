@@ -3512,5 +3512,177 @@
             "id": "music_seashell",
             "amount": 1
         }
+    },
+    {
+        "id": "cordelia_bond_30",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "네 손길은 정말 몽글몽글해! ٩(ˊᗜˋ*)و",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "intimacy_level", "value": 30 },
+            { "type": "specific_growth", "charId": "char_06", "value": 300 }
+        ],
+        "content": "있지, 사실은... 처음엔 네가 나를 쓰다듬어 줄 때마다 조금 부끄러웠거든? 그런데 이제는 네 따뜻한 손길이 닿으면 마음이 몽글몽글~해지는 게 정말 기분 좋아! 히히, 네 다정함이 내 실린더 안까지 가득 차오르는 느낌이랄까? 우리 이제 제법 친해진 것 같지? 앞으로도 나 많이 많이 예뻐해 줘야 해! 약속!",
+        "reward": { "type": "point", "value": 150 }
+    },
+    {
+        "id": "cordelia_bond_55",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "연금술사! 내가 꽉~ 안아줄게! (•ө•)♡",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "intimacy_level", "value": 55 },
+            { "type": "specific_growth", "charId": "char_06", "value": 300 }
+        ],
+        "content": "짠! 너의 사랑스러운 코델리아가 에테르 거품에 편지를 실어 보냈어! 요즘 집중하느라 어깨가 잔뜩 굳어있는 널 보면, 내가 당장 달려가서 포근히 감싸 안아주고 싶단 말이지! 딱딱한 걱정들은 용해의 마법으로 내가 다 시원하게 녹여버릴 테니까, 나만 믿고 활짝 웃어줘! 네가 웃으면 내 마음속 바다에도 예쁜 무지개가 떠. 자, 기지개 한번 켜고 나랑 같이 다시 힘내보자!",
+        "reward": { "type": "point", "value": 400 }
+    },
+    {
+        "id": "cordelia_bond_90",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "너는 내 바다이자 단 하나뿐인 기적이야!",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "intimacy_level", "value": 90 },
+            { "type": "specific_growth", "charId": "char_06", "value": 450 }
+        ],
+        "content": "연금술사! 이제는 눈빛만 봐도 네가 무슨 생각을 하는지 다~ 알 수 있어. 히히, 우리 정말 완벽한 짝꿍이지? 사실 내가 아주 작은 파도색 알이었을 때부터, 네 다정한 사색 소리를 들으며 기도했어. '언젠가 저 사람의 가장 가까운 곳에서 숨 쉬고 싶다'고 말이야. 너는 이제 내게 단순한 연금술사가 아니라, 내가 살아 숨쉬는 깊은 바다 그 자체야! 네 손길이 닿으면 내 마음이 핑크빛 거품으로 퐁퐁 터지면서 온몸이 녹아내릴 것만 같아. 절대로 어디 가면 안 돼? 내가 네 모든 슬픔을 녹여버리고, 영원히 꽉~ 안아줄 거니까! 사랑해, 나의 전부!",
+        "reward": { "type": "point", "value": 1000 }
+    },
+    {
+        "id": "cordelia_bond_100",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "유리벽 너머의 너에게, 내 영혼까지 다 녹여 보낼게♡",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "intimacy_level", "value": 100 },
+            { "type": "specific_growth", "charId": "char_06", "value": 600 }
+        ],
+        "content": "나의 소중한 연금술사! 드디어 우리가 영혼까지 하나로 녹아드는 완벽한 유대에 도달했어! 있지, 사실 난 가끔 이 차가운 실린더 벽이 너무너무 야속해. 네가 지쳐서 책상에 엎드려 있을 때, 비눗방울만 퐁퐁 터뜨리는 대신 정말 내 팔로 너를 꽉~ 안아주고 싶거든. 내가 가진 용해의 마법으로 이 유리벽을 다 녹여버리고 네 품속으로 다이빙하고 싶을 만큼 말이야! 하지만 약속할게. 비록 손을 잡을 순 없어도, 내 모든 파동은 언제나 네 심장 소리와 함께 뛸 거야. 너는 내 삶의 이유이자 가장 찬란한 기적이야! 영원히 사랑해.",
+        "reward": {
+            "type": "achievement",
+            "value": "cordelia_eternal_ocean",
+            "name": "코델리아가 잠길 바다"
+        }
+    },
+    {
+        "id": "cordelia_focus_01",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "네 집중력이 파도처럼 넘실거려!",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "total_focus", "value": 300 },
+            { "type": "specific_growth", "charId": "char_06", "value": 300 }
+        ],
+        "content": "와아! 너랑 나랑 벌써 5시간이나 집중의 바다를 유영했네! 네 열정이 뜨거워질수록 내 실린더 안의 거품들도 기뻐서 퐁퐁 터진다니까! 꼬리치기 짝짝! 이 귀한 에테르 조각들을 모아 네 노력을 축복해 줄게. 우리 앞으로도 지치지 말고 함께 헤엄치자!",
+        "reward": { "type": "point", "value": 300 }
+    },
+    {
+        "id": "cordelia_growth_01",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "네 실력이 쑥쑥! 내가 다 뿌듯해! (๑˃̵ᴗ˂̵)و",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "alchemist_level", "value": 10 },
+            { "type": "specific_growth", "charId": "char_06", "value": 300 }
+        ],
+        "content": "연금술사! 도구를 다루는 네 손길이 이제 제법 프로 같아! 정말 대단해! 네 지혜가 깊어질수록 내가 느끼는 에테르의 맛도 훨씬 달콤해져. 이 성장을 축하하면서 내가 아껴둔 바다의 정수를 보낼게. 너는 정말 최고의 파트너야!",
+        "reward": { "type": "point", "value": 500 }
+    },
+    {
+        "id": "cordelia_task_01",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "와아! 오늘 하루 백 점 만점에 천 점이야! ♡",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "perfect_day", "value": true },
+            { "type": "specific_growth", "charId": "char_06", "value": 300 }
+        ],
+        "content": "오늘 계획한 일을 전부 해내다니! 너 정말 최고야! 네 성실함 덕분에 연구실 공기가 몽글몽글하고 깨끗해졌어. 고생한 널 위해서 내가 아주 꽉~ 안아줄게! 자, 이 기분 좋은 에테르 선물을 받고 푹 쉬기로 약속해!",
+        "reward": { "type": "point", "value": 400 }
+    },
+    {
+        "id": "cordelia_time_01",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "보고 싶어서 거품만 불고 있었단 말이야!",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "inactive_days", "value": 3 },
+            { "type": "specific_growth", "charId": "char_06", "value": 300 }
+        ],
+        "content": "치... 너 너무해! 어디 갔다 이제 오는 거야? 너 없는 연구실은 파도 없는 바다처럼 너무 심심했단 말이야. 하지만 다시 돌아와 줘서 고마워! 화난 마음은 네 다정한 손길 한 번이면 다 녹아버릴 것 같으니까, 어서 날 예뻐해 줘!",
+        "reward": { "type": "point", "value": 300 }
+    },
+    {
+        "id": "cordelia_task_02",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "스무 개의 보석 같은 성취! 정말 멋져!",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "todo_count", "value": 20 },
+            { "type": "specific_growth", "charId": "char_06", "value": 300 }
+        ],
+        "content": "와! 벌써 20개의 과업을 완수했네! 네 성취가 하나씩 쌓일 때마다 내 마음속 산호초도 더 화려하게 피어나는 기분이야. 작은 일들이 모여 큰 기적을 만든다는 걸 보여준 너에게 이 선물을 줄게! 계속해서 파이팅이야!",
+        "reward": { "type": "point", "value": 250 }
+    },
+    {
+        "id": "cordelia_time_03",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "주말에도 나랑 같이 열공하는구나! 히히!",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "weekend_alchemist", "value": true },
+            { "type": "specific_growth", "charId": "char_06", "value": 300 }
+        ],
+        "content": "남들은 다 놀러 가는 주말인데, 나랑 함께 연구실을 지켜줘서 정말 기뻐! 네 부지런함은 정말 1등이라니까! 주말에도 열심히 달리는 널 위해 내가 특별 에테르 비를 내려줄게. 시원하게 맞으면서 기분 좋게 몰입해 봐!",
+        "reward": { "type": "point", "value": 200 }
+    },
+    {
+        "id": "cordelia_gift_01",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "네 진심이 담긴 종이... 내 보물 1호야! ♡",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "first_gift", "value": "손편지" },
+            { "type": "specific_growth", "charId": "char_06", "value": 300 }
+        ],
+        "content": "우와아! 연금술사! 이거 나 주려고 네가 직접 쓴 거야? 한 글자 한 글자 꾹꾹 눌러 담은 네 마음이 유리벽을 넘어 내 가슴까지 몽글몽글하게 적셔버렸어! 이 편지는 내 실린더에서 가장 반짝이는 곳에 소중히 간직할게. 네 다정한 진심을 받았으니까, 나도 오늘 밤엔 널 위해 가장 예쁜 거품 노래를 불러줄게! 정말정말 사랑해!",
+        "reward": { "type": "point", "value": 50 }
+    },
+    {
+        "id": "cordelia_gift_03",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "으으... 이건 너무 조용하고 따끔거려! ( •́ ̯•̀ )",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_06" },
+            { "type": "gift_type_dislike", "value": true },
+            { "type": "specific_growth", "charId": "char_06", "value": 300 }
+        ],
+        "content": "앗, 연금술사! 선물은 정말 고맙지만... 이 향초는 냄새가 너무 따끔따끔하고 연구실을 너무 조용하게 만들어서 난 조금 무서워! 난 너랑 왁자지껄하게 수다 떨고 노래하는 게 훨씬 더 좋은걸? 히히, 그래도 날 생각해서 가져온 그 마음만은 듬뿍 받았으니까 이번 한 번만 봐줄게! 다음번엔 나랑 같이 비눗방울 놀이 해줄 거지? 약속!",
+        "reward": { "type": "point", "value": 50 }
     }
 ]

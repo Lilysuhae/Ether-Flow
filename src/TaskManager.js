@@ -4,22 +4,18 @@ class TaskManager {
     constructor() {
         this.editingTodoId = null;
         this.dragSrcIndex = null;
+        this.priorityScore = { 'high': 3, 'mid': 2, 'low': 1 };
     }
 
     /**
      * 초기화 및 전역 함수 바인딩
      */
     init() {
-        // 전역 변수 참조 확인
-        this.syncData();
-
-        // HTML 호출용 전역 함수 바인딩
         window.addMolipTodo = this.addMolipTodo.bind(this);
         window.toggleTodo = this.toggleTodo.bind(this);
         window.deleteTodo = this.deleteTodo.bind(this);
         window.editTodo = this.editTodo.bind(this);
         window.saveInlineEdit = this.saveInlineEdit.bind(this);
-        window.confirmEditTodo = this.confirmEditTodo.bind(this);
         
         window.addHabit = this.addHabit.bind(this);
         window.toggleHabit = this.toggleHabit.bind(this);
@@ -32,7 +28,6 @@ class TaskManager {
         window.cleanupOldTasks = this.cleanupOldTasks.bind(this);
         window.checkHabitReset = this.checkHabitReset.bind(this);
 
-        // 드래그 앤 드롭 핸들러 바인딩
         window.handleDragStart = this.handleDragStart.bind(this);
         window.handleDragOver = this.handleDragOver.bind(this);
         window.handleDragEnter = this.handleDragEnter.bind(this);
@@ -40,23 +35,57 @@ class TaskManager {
         window.handleDragEnd = this.handleDragEnd.bind(this);
         window.handleDrop = this.handleDrop.bind(this);
 
-        console.log("✅ [TaskManager] 할 일 및 습관 시스템 연결 완료");
+        this.initMainDatePicker();   
+        this.initHabitDatePicker();  
+        this.initHabitEvents();      
+
+        console.log("✅ [TaskManager] 시간 비우기 기능이 추가된 시스템 가동");
+    }
+
+    get todos() { return window.molipTodos || []; }
+    get habits() { return window.molipHabits || []; }
+
+    /**
+     * 투두 마감일 선택기: allowInput 추가
+     */
+    initMainDatePicker() {
+        if (typeof flatpickr === 'function') {
+            const locale = (window.flatpickr && window.flatpickr.l10ns && window.flatpickr.l10ns.ko) ? "ko" : "default";
+            flatpickr("#todo-deadline-input", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true,
+                locale: locale,
+                disableMobile: true,
+                allowInput: true // ✨ 백스페이스로 지우기 허용
+            });
+        }
     }
 
     /**
-     * 데이터 접근자 (renderer.js에서 연결한 전역 변수 참조)
+     * 습관 시간 선택기: allowInput 추가
      */
-    syncData() {
-        // window.molipTodos와 window.molipHabits는 renderer.js에서 
-        // masterData.todo / masterData.habit과 연결되어 있어야 합니다.
+    initHabitDatePicker() {
+        if (typeof flatpickr === 'function') {
+            const locale = (window.flatpickr && window.flatpickr.l10ns && window.flatpickr.l10ns.ko) ? "ko" : "default";
+            flatpickr("#habit-time-input", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true,
+                locale: locale,
+                disableMobile: true,
+                allowInput: true // ✨ 백스페이스로 지우기 허용
+            });
+        }
     }
 
-    get todos() {
-        return window.molipTodos || [];
-    }
-
-    get habits() {
-        return window.molipHabits || [];
+    initHabitEvents() {
+        const dayButtons = document.querySelectorAll('.day-btn');
+        dayButtons.forEach(btn => {
+            btn.classList.add('active'); 
+            btn.onclick = () => btn.classList.toggle('active');
+        });
     }
 
     // ============================================================
@@ -65,176 +94,79 @@ class TaskManager {
 
     addMolipTodo() {
         const input = document.getElementById('todo-input');
-        if (!input || !input.value.trim()) return;
+        const prioritySelect = document.getElementById('todo-priority-select');
+        const deadlineInput = document.getElementById('todo-deadline-input');
 
-        const molipToday = window.getMolipDate(); 
+        if (!input || !input.value.trim()) return;
 
         this.todos.push({ 
             id: Date.now().toString(36), 
             text: input.value.trim(), 
             completed: false, 
             rewarded: false, 
-            date: molipToday, 
-            order: Date.now() 
+            date: window.getMolipDate(), 
+            order: Date.now(),
+            priority: prioritySelect ? prioritySelect.value : 'low', 
+            deadline: deadlineInput ? deadlineInput.value : '' 
         });
 
         input.value = ''; 
+        if (deadlineInput && deadlineInput._flatpickr) deadlineInput._flatpickr.clear(); // 등록 후 비우기
+        if (prioritySelect) prioritySelect.value = 'low';
+
         this.renderTodos(); 
         if (window.saveAllData) window.saveAllData();
+        if (window.playSFX) window.playSFX('click');
     }
 
-    toggleTodo(id) {
-        const index = this.todos.findIndex(t => String(t.id) === String(id));
-        if (index === -1) return;
-
-        if (window.playSFX) window.playSFX('check');
-        const molipToday = window.getMolipDate(); 
-        const wasCompleted = this.todos[index].completed;
-
-        this.todos[index].completed = !this.todos[index].completed;
-
-        // 과거 날짜의 미완료 항목을 체크 해제 시 오늘 날짜로 갱신
-        if (!this.todos[index].completed && this.todos[index].date !== molipToday) {
-            this.todos[index].date = molipToday;
-            if (window.showToast) window.showToast("미완료된 과업을 오늘로 가져왔습니다.", "info");
-        }
-
-        // 완료 보상
-        if (this.todos[index].completed && !wasCompleted) {
-            // 대사 출력
-            if (window.currentPartner && !window.isHatching) { 
-                const stageData = window.currentPartner.stages[window.currentStage] || window.currentPartner.stages['adult'];
-                const responses = stageData.todo_responses || ["수고하셨습니다!"];
-                const text = Array.isArray(responses) 
-                    ? responses[Math.floor(Math.random() * responses.length)] 
-                    : responses;
-                if (window.showDialogue) window.showDialogue(text);
-            }
-
-            // 보상 지급
-            if (!this.todos[index].rewarded) {
-                if (Math.random() < 0.05) { 
-                    const bonusPoints = 50;
-                    if (window.collection) window.collection.addPoints(bonusPoints);
-                    if (window.showToast) window.showToast(`✨ 보너스! ${bonusPoints} Et 추가 획득`, "event");
-                }
-                if (window.collection) window.collection.addPoints(5);
-                this.todos[index].rewarded = true;
-                if (window.showToast) window.showToast("5 Et 획득!", "success");
-                if (window.updateUI) window.updateUI();
-            }
-        }
-
-        this.renderTodos();
-        if (window.saveAllData) window.saveAllData();
+    formatDeadline(isoString) {
+        if (!isoString) return '';
+        const date = new Date(isoString);
+        return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
     }
 
-    deleteTodo(id) { 
-        // 🛠️ [수정] filter 대신 splice를 사용하여 원본 배열 직접 삭제 (참조 유지)
-        const index = this.todos.findIndex(t => String(t.id) === String(id));
-        if (index !== -1) {
-            this.todos.splice(index, 1); // 배열에서 해당 인덱스 항목 제거
-            this.renderTodos(); 
-            if (window.saveAllData) window.saveAllData(); 
-        }
-    }
-
-    editTodo(id) {
-        const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
-        if (!todoItem) return;
-
-        const textSpan = todoItem.querySelector('.todo-text');
-        const currentText = textSpan.innerText;
-
-        textSpan.innerHTML = `
-            <input type="text" class="inline-edit-input" 
-                   value="${currentText}" 
-                   onkeydown="if(event.key==='Enter') { this.onblur = null; window.saveInlineEdit('${id}', this.value); } 
-                              if(event.key==='Escape') { this.onblur = null; window.renderTodos(); }"
-                   onblur="window.saveInlineEdit('${id}', this.value)">
-        `;
-
-        const input = textSpan.querySelector('input');
-        input.focus();
-        input.select();
-    }
-
-    saveInlineEdit(id, newText) {
-        const trimmedText = newText.trim();
-        if (!trimmedText) {
-            this.renderTodos(); 
-            return;
-        }
-
-        const index = this.todos.findIndex(t => String(t.id) === String(id));
-        if (index !== -1) {
-            this.todos[index].text = trimmedText;
-            this.renderTodos(); 
-            if (window.saveAllData) window.saveAllData();
-            if (window.showToast) window.showToast("수정되었습니다.", "success");
-        }
-    }
-
-    confirmEditTodo() {
-        const input = document.getElementById('todo-edit-input');
-        if (!input) return;
+    /**
+     * 마감 기한 포맷팅 (월-일 및 시간 분리)
+     */
+    formatDeadline(isoString) {
+        if (!isoString) return null;
+        const date = new Date(isoString);
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const hh = String(date.getHours()).padStart(2, '0');
+        const min = String(date.getMinutes()).padStart(2, '0');
         
-        const newText = input.value.trim();
-        if (newText === "") {
-            if (window.showToast) window.showToast("내용을 입력해주세요.", "warning");
-            return;
-        }
-        
-        // renderer.js의 window.editingTodoId 전역 변수 사용
-        const targetId = window.editingTodoId || this.editingTodoId;
-        const index = this.todos.findIndex(t => String(t.id) === String(targetId));
-        
-        if (index !== -1) {
-            this.todos[index].text = newText;
-            this.renderTodos(); 
-            if (window.saveAllData) window.saveAllData();       
-            if (window.closeAllModals) window.closeAllModals();
-            if (window.showToast) window.showToast("수정되었습니다.", "success");
-        }
-        if (window.editingTodoId !== undefined) window.editingTodoId = null;
-        this.editingTodoId = null;
+        return {
+            date: `${mm}-${dd}`,
+            time: `${hh}:${min}`
+        };
     }
 
+    /**
+     * 할 일 목록 렌더링 (습관과 동일한 규칙 적용)
+     */
     renderTodos() {
         const list = document.getElementById('todo-list');
         const badge = document.getElementById('todo-count-badge');
         if (!list) return;
 
         const molipToday = window.getMolipDate();
-
-        let displayTodos = this.todos.filter(t => {
-            if (!t) return false;
-            const isToday = t.date === molipToday;
-            const isUnfinishedPast = !t.completed && t.date !== molipToday;
-            const isFinishedPast = t.completed && t.date !== molipToday;
-
-            if (isToday) return true;
-            if (isUnfinishedPast) return true;
-            if (isFinishedPast && window.showPastCompleted) return true;
-            return false;
-        });
-
-        // 뱃지 업데이트
-        const todayPool = this.todos.filter(t => t && t.date === molipToday);
-        const total = todayPool.length;
-        const completed = todayPool.filter(t => t.completed).length;
+        let displayTodos = this.todos.filter(t => t && (t.date === molipToday || (!t.completed && t.date !== molipToday)));
 
         if (badge) {
-            badge.innerText = `${completed}/${total}`;
-            badge.classList.toggle('all-completed', total > 0 && completed === total);
+            const todayPool = this.todos.filter(t => t.date === molipToday);
+            const comp = todayPool.filter(t => t.completed).length;
+            badge.innerText = `${comp}/${todayPool.length}`;
+            badge.classList.toggle('all-completed', todayPool.length > 0 && comp === todayPool.length);
         }
 
-        if (window.hideCompleted) {
-            displayTodos = displayTodos.filter(t => !t.completed);
-        }
+        if (window.hideCompleted) displayTodos = displayTodos.filter(t => !t.completed);
 
         displayTodos.sort((a, b) => {
             if (a.completed !== b.completed) return a.completed ? 1 : -1;
+            const pA = this.priorityScore[a.priority] || 1;
+            const pB = this.priorityScore[b.priority] || 1;
+            if (pA !== pB) return pB - pA;
             return (a.order || 0) - (b.order || 0);
         });
 
@@ -243,320 +175,271 @@ class TaskManager {
             return;
         }
 
-        list.innerHTML = displayTodos.map((todo, index) => `
-            <li class="todo-item ${todo.completed ? 'completed' : ''}" 
-                data-id="${todo.id}"
-                draggable="true"
-                ondragstart="window.handleDragStart(event, ${index})"
-                ondragover="window.handleDragOver(event)"
-                ondragenter="window.handleDragEnter(event)"
-                ondragleave="window.handleDragLeave(event)"
-                ondrop="window.handleDrop(event, ${index})"
-                ondragend="window.handleDragEnd(event)">
+        list.innerHTML = displayTodos.map((todo, index) => {
+            const deadline = this.formatDeadline(todo.deadline); // ✨ 날짜/시간 객체 수령
+            return `
+            <li class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}" draggable="true"
+                ondragstart="window.handleDragStart(event, ${index})" ondragover="window.handleDragOver(event)"
+                ondrop="window.handleDrop(event, ${index})" ondragend="window.handleDragEnd(event)">
+                <div class="drag-handle"><i class="fas fa-bars"></i></div>
                 <div class="todo-checkbox" onclick="window.toggleTodo('${todo.id}')">
                     ${todo.completed ? '<i class="fas fa-check"></i>' : ''}
                 </div>
-                <span class="todo-text">${todo.text}</span>
-                <div class="todo-actions">
-                    <button class="btn-todo-action btn-edit" onclick="window.editTodo('${todo.id}')">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="btn-todo-action btn-trash" onclick="window.deleteTodo('${todo.id}')">
-                        <i class="fas fa-trash-can"></i>
-                    </button>
+                <div class="todo-content-wrapper">
+                    <div class="todo-text-main">${todo.text}</div>
+                    ${deadline ? `
+                        <div class="todo-deadline-text">
+                            <i class="fas fa-calendar-alt"></i> ${deadline.date} | <i class="fas fa-clock"></i> ${deadline.time}
+                        </div>` : ''}
                 </div>
-            </li>`).join('');
+                <div class="todo-actions">
+                    <button class="btn-todo-action" onclick="window.editTodo('${todo.id}')"><i class="fas fa-pen"></i></button>
+                    <button class="btn-todo-action" onclick="window.deleteTodo('${todo.id}')"><i class="fas fa-trash-can"></i></button>
+                </div>
+                <div class="priority-dot priority-${todo.priority || 'low'}"></div>
+            </li>`;
+        }).join('');
     }
 
-    cleanupOldTasks() {
-        if (!window.autoDeleteOldTasks || !this.todos) return;
+    toggleTodo(id) {
+        const index = this.todos.findIndex(t => String(t.id) === String(id));
+        if (index === -1) return;
+        const wasCompleted = this.todos[index].completed;
+        this.todos[index].completed = !wasCompleted;
 
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        sevenDaysAgo.setHours(0, 0, 0, 0);
-
-        let deletedCount = 0;
-        
-        // 🛠️ [수정] 역순 순회하며 splice로 안전하게 삭제
-        for (let i = this.todos.length - 1; i >= 0; i--) {
-            const t = this.todos[i];
-            if (t.completed) {
-                const taskDate = new Date(t.date);
-                if (taskDate < sevenDaysAgo) {
-                    this.todos.splice(i, 1);
-                    deletedCount++;
-                }
+        if (this.todos[index].completed && !wasCompleted) {
+            const partner = window.currentPartner;
+            const stage = window.currentStage || 'child';
+            if (partner && partner.stages[stage]?.todo_responses) {
+                const res = partner.stages[stage].todo_responses;
+                if (window.showDialogue) window.showDialogue(res[Math.floor(Math.random() * res.length)], 3);
+            }
+            if (!this.todos[index].rewarded && window.collection) {
+                window.collection.addPoints(5);
+                this.todos[index].rewarded = true;
+                if (window.showToast) window.showToast("5 Et 획득!", "success");
             }
         }
+        this.renderTodos();
+        if (window.saveAllData) window.saveAllData();
+    }
 
-        if (deletedCount > 0) {
-            console.log(`[시스템] 오래된 할 일 ${deletedCount}개가 정리되었습니다.`);
+    /**
+     * 투두 수정: 지우기 버튼 추가
+     */
+    editTodo(id) {
+        const todo = this.todos.find(t => String(t.id) === String(id));
+        const item = document.querySelector(`.todo-item[data-id="${id}"]`);
+        if (!todo || !item) return;
+
+        item.innerHTML = `
+            <div class="drag-handle"><i class="fas fa-bars"></i></div>
+            <select class="inline-priority-edit">
+                <option value="low" ${todo.priority === 'low' ? 'selected' : ''}>⚪</option>
+                <option value="mid" ${todo.priority === 'mid' ? 'selected' : ''}>🟡</option>
+                <option value="high" ${todo.priority === 'high' ? 'selected' : ''}>🔴</option>
+            </select>
+            <div class="todo-content-wrapper" style="flex:1;">
+                <input type="text" class="inline-text-edit" value="${todo.text}">
+                <div style="display:flex; align-items:center; gap:5px;">
+                    <input type="text" class="inline-deadline-edit" value="${todo.deadline || ''}" placeholder="기한 없음" style="flex:1;">
+                    <button class="btn-clear-date" onclick="this.previousElementSibling._flatpickr.clear()" title="기한 지우기" 
+                            style="background:none; border:none; color:rgba(255,255,255,0.3); cursor:pointer;">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="todo-actions" style="display:flex; opacity:1;">
+                <button class="btn-todo-action" onclick="window.saveInlineEdit('${id}')"><i class="fas fa-check"></i></button>
+            </div>
+        `;
+        flatpickr(item.querySelector(".inline-deadline-edit"), { 
+            enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ko", allowInput: true 
+        });
+    }
+
+    saveInlineEdit(id) {
+        const item = document.querySelector(`.todo-item[data-id="${id}"]`);
+        const idx = this.todos.findIndex(t => String(t.id) === String(id));
+        if (idx !== -1 && item) {
+            this.todos[idx].text = item.querySelector('.inline-text-edit').value.trim();
+            this.todos[idx].priority = item.querySelector('.inline-priority-edit').value;
+            this.todos[idx].deadline = item.querySelector('.inline-deadline-edit').value;
             this.renderTodos();
             if (window.saveAllData) window.saveAllData();
         }
     }
 
+    deleteTodo(id) {
+        const idx = this.todos.findIndex(t => String(t.id) === String(id));
+        if (idx !== -1) { this.todos.splice(idx, 1); this.renderTodos(); if (window.saveAllData) window.saveAllData(); }
+    }
+
     // ============================================================
-    // [2] 습관(Habit) 로직
+    // [2] 습관 로직
     // ============================================================
 
     addHabit() {
         const input = document.getElementById('habit-input');
+        const timeInput = document.getElementById('habit-time-input');
+        const activeDays = Array.from(document.querySelectorAll('.day-btn.active')).map(btn => parseInt(btn.dataset.day));
+
         if (!input || !input.value.trim()) return;
-        
+
         this.habits.push({
             id: 'habit_' + Date.now().toString(36),
             text: input.value.trim(),
             completed: false,
             rewarded: false,
             streak: 0,
-            lastCompletedDate: null
+            lastCompletedDate: null,
+            days: activeDays.length > 0 ? activeDays : [0,1,2,3,4,5,6],
+            time: timeInput ? timeInput.value : ""
         });
-        
+
+        // 입력창 및 시간 선택기 초기화
         input.value = '';
+        if (timeInput && timeInput._flatpickr) timeInput._flatpickr.clear();
+        
+        // ✨ [수정] 등록 완료 후 모든 요일 버튼을 다시 활성화(active) 상태로 되돌립니다.
+        document.querySelectorAll('.day-btn').forEach(btn => btn.classList.add('active'));
+
         this.renderHabits();
         if (window.saveAllData) window.saveAllData();
         if (window.showToast) window.showToast("새로운 습관을 새겼습니다.", "success");
     }
 
-    toggleHabit(id) {
-        const habit = this.habits.find(h => h.id === id);
-        if (!habit) return;
-
-        if (window.playSFX) window.playSFX('check');
-
-        const molipToday = window.getMolipDate();
-        const wasCompleted = habit.completed;
-
-        habit.completed = !habit.completed;
-
-        if (habit.completed && !wasCompleted) {
-            const lastDate = habit.lastCompletedDate;
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayStr = yesterday.toLocaleDateString('en-CA');
-
-            if (lastDate === yesterdayStr) {
-                habit.streak += 1;
-            } else if (!lastDate || lastDate !== molipToday) {
-                habit.streak = 1; 
-            }
-            
-            habit.lastCompletedDate = molipToday;
-
-            if (!habit.rewarded) {
-                if (window.collection) window.collection.addPoints(10);
-                habit.rewarded = true;
-                if (window.showToast) window.showToast(`습관 완수! ${habit.streak}일째입니다. +10 Et`, "success");
-            } else {
-                if (window.showToast) window.showToast(`오늘의 수련은 이미 마쳤습니다. (${habit.streak}일째)`, "info");
-            }
-        } 
-        
-        this.renderHabits();
-        if (window.updateUI) window.updateUI();
-        if (window.saveAllData) window.saveAllData();
-    }
-
+    /**
+     * 습관 목록 렌더링 (빈 목록 메시지 추가 버전)
+     */
     renderHabits() {
         const list = document.getElementById('habit-list');
         const badge = document.getElementById('habit-count-badge');
         if (!list) return;
 
-        const total = this.habits.length;
-        const completed = this.habits.filter(h => h && h.completed).length;
+        const today = new Date().getDay();
+        const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
+        // 1. 뱃지 업데이트 및 강조 효과 처리
         if (badge) {
-            badge.innerText = `${completed}/${total}`;
-            badge.classList.toggle('all-completed', total > 0 && completed === total);
+            const completedCount = this.habits.filter(h => h.completed).length;
+            badge.innerText = `${completedCount}/${this.habits.length}`;
+            badge.classList.toggle('all-completed', this.habits.length > 0 && completedCount === this.habits.length);
         }
 
-        let displayHabits = this.habits;
-        if (window.hideCompleted) {
-            displayHabits = this.habits.filter(h => !h.completed);
-        }
-
-        if (displayHabits.length === 0) {
+        // 2. ✨ [핵심 수정] 습관이 없을 때 메시지 출력 로직
+        if (this.habits.length === 0) {
             list.innerHTML = '<li class="empty-list-msg">등록된 습관이 없습니다.</li>';
             return;
         }
 
-        list.innerHTML = displayHabits.map(habit => `
-            <li class="todo-item habit-item ${habit.completed ? 'completed' : ''}" data-id="${habit.id}">
-                <div class="todo-checkbox" onclick="window.toggleHabit('${habit.id}')">
-                    ${habit.completed ? '<i class="fas fa-check"></i>' : ''}
+        // 3. 습관 리스트 생성
+        list.innerHTML = this.habits.map(h => {
+            const isToday = h.days.includes(today);
+            const dayText = h.days.length === 7 ? "매일" : h.days.map(d => dayNames[d]).join(', ');
+
+            return `
+            <li class="todo-item habit-item ${h.completed ? 'completed' : ''} ${!isToday ? 'not-today' : ''}" data-id="${h.id}">
+                <div class="todo-checkbox" onclick="window.toggleHabit('${h.id}')">
+                    ${h.completed ? '<i class="fas fa-check"></i>' : ''}
                 </div>
                 <div class="habit-content-wrap">
-                    <span class="todo-text">${habit.text}</span>
-                    ${habit.streak > 0 ? `<span class="habit-streak-badge"><i class="fas fa-fire"></i> ${habit.streak}</span>` : ''}
+                    <span class="todo-text">${h.text}</span>
+                    <div class="habit-info-text">
+                        <i class="fas fa-calendar-alt"></i> ${dayText} ${h.time ? `| <i class="fas fa-clock"></i> ${h.time}` : ''}
+                    </div>
                 </div>
                 <div class="todo-actions">
-                    <button class="btn-todo-action btn-edit" onclick="window.editHabit('${habit.id}')"><i class="fas fa-pen"></i></button>
-                    <button class="btn-todo-action btn-trash" onclick="window.deleteHabit('${habit.id}')"><i class="fas fa-trash-can"></i></button>
+                    <button class="btn-todo-action" onclick="window.editHabit('${h.id}')"><i class="fas fa-pen"></i></button>
+                    <button class="btn-todo-action" onclick="window.deleteHabit('${h.id}')"><i class="fas fa-trash-can"></i></button>
                 </div>
-            </li>`).join('');
+            </li>`;
+        }).join('');
     }
 
-    checkHabitReset() {
-        const molipToday = window.getMolipDate();
-        let isChanged = false;
-
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toLocaleDateString('en-CA');
-
-        if (!this.habits) return;
-
-        this.habits.forEach(habit => {
-            if (!habit) return;
-
-            if (habit.completed && habit.lastCompletedDate !== molipToday) {
-                habit.completed = false; 
-                habit.rewarded = false;  
-                isChanged = true;
-            }
-            
-            if (habit.lastCompletedDate !== molipToday && habit.lastCompletedDate !== yesterdayStr) {
-                if (habit.streak > 0) {
-                    habit.streak = 0; 
-                    isChanged = true;
-                }
-            }
-        });
-
-        if (isChanged) {
+    toggleHabit(id) {
+        const h = this.habits.find(habit => habit.id === id);
+        if (h) {
+            h.completed = !h.completed;
+            if (h.completed && !h.rewarded) { if (window.collection) window.collection.addPoints(10); h.rewarded = true; }
             this.renderHabits();
             if (window.saveAllData) window.saveAllData();
         }
     }
 
+    /**
+     * 습관 수정: 지우기 버튼 추가
+     */
     editHabit(id) {
-        const habitItem = document.querySelector(`.habit-item[data-id="${id}"]`);
-        if (!habitItem) return;
+        const h = this.habits.find(habit => habit.id === id);
+        const item = document.querySelector(`.habit-item[data-id="${id}"]`);
+        if (!h || !item) return;
 
-        const textSpan = habitItem.querySelector('.todo-text');
-        const currentText = textSpan.innerText;
-
-        textSpan.innerHTML = `
-            <input type="text" class="inline-edit-input" 
-                   value="${currentText}" 
-                   onkeydown="if(event.key==='Enter') { this.onblur = null; window.saveHabitInlineEdit('${id}', this.value); } 
-                              if(event.key==='Escape') { this.onblur = null; window.renderHabits(); }"
-                   onblur="window.saveHabitInlineEdit('${id}', this.value)">
+        item.innerHTML = `
+            <div class="todo-content-wrapper" style="flex:1;">
+                <input type="text" class="inline-habit-text" value="${h.text}" style="width:100%; background:rgba(255,255,255,0.1); border:none; color:white; border-radius:4px;">
+                <div style="display:flex; align-items:center; gap:5px; margin-top:4px;">
+                    <input type="text" class="inline-habit-time" value="${h.time || ''}" placeholder="시간 없음" style="flex:1; font-size:0.75rem; background:transparent; border:none; color:var(--primary-gold);">
+                    <button class="btn-clear-date" onclick="this.previousElementSibling._flatpickr.clear()" title="시간 지우기" 
+                            style="background:none; border:none; color:rgba(255,255,255,0.3); cursor:pointer;">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="todo-actions" style="display:flex; opacity:1;">
+                <button class="btn-todo-action" onclick="window.saveHabitInlineEdit('${id}')"><i class="fas fa-check"></i></button>
+            </div>
         `;
-
-        const input = textSpan.querySelector('input');
-        input.focus();
-        input.select();
+        flatpickr(item.querySelector(".inline-habit-time"), { 
+            enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true, locale: "ko", allowInput: true 
+        });
     }
 
-    saveHabitInlineEdit(id, newText) {
-        const trimmedText = newText.trim();
-        if (!trimmedText) {
-            this.renderHabits(); 
-            return;
-        }
-
-        const index = this.habits.findIndex(h => String(h.id) === String(id));
-        if (index !== -1) {
-            this.habits[index].text = trimmedText;
-            this.renderHabits(); 
+    saveHabitInlineEdit(id) {
+        const item = document.querySelector(`.habit-item[data-id="${id}"]`);
+        const idx = this.habits.findIndex(h => h.id === id);
+        if (idx !== -1 && item) {
+            this.habits[idx].text = item.querySelector('.inline-habit-text').value.trim();
+            this.habits[idx].time = item.querySelector('.inline-habit-time').value;
+            this.renderHabits();
             if (window.saveAllData) window.saveAllData();
-            if (window.showToast) window.showToast("습관이 수정되었습니다.", "success");
         }
     }
 
     deleteHabit(id) {
-        const performDelete = () => {
-            // 🛠️ [수정] splice 사용
-            const index = this.habits.findIndex(h => String(h.id) === String(id));
-            if (index !== -1) {
-                this.habits.splice(index, 1);
-                this.renderHabits();
-                if (window.saveAllData) window.saveAllData();
-            }
-        };
-
-        if (window.showConfirm) {
-            window.showConfirm("습관 파기", "삭제 시 연속 달성 기록이 모두 사라집니다.", performDelete);
-        } else {
-            performDelete();
-        }
+        const idx = this.habits.findIndex(h => h.id === id);
+        if (idx !== -1) { this.habits.splice(idx, 1); this.renderHabits(); if (window.saveAllData) window.saveAllData(); }
     }
 
-    // ============================================================
-    // [3] 드래그 앤 드롭 로직
-    // ============================================================
-
-    handleDragStart(e, index) {
-        this.dragSrcIndex = index;
-        e.dataTransfer.effectAllowed = 'move';
-        e.currentTarget.classList.add('dragging');
-    }
-
-    handleDragOver(e) { 
-        e.preventDefault(); 
-        return false; 
-    }
-
-    handleDragEnter(e) {
-        const item = e.target.closest('.todo-item');
-        if (item && !item.classList.contains('dragging')) {
-            item.classList.add('drag-over');
-        }
-    }
-
-    handleDragLeave(e) {
-        const item = e.target.closest('.todo-item');
-        if (item) item.classList.remove('drag-over');
-    }
-
-    handleDragEnd(e) {
-        e.currentTarget.classList.remove('dragging');
-        document.querySelectorAll('.todo-item').forEach(el => el.classList.remove('drag-over'));
-        this.dragSrcIndex = null;
-    }
-
-    handleDrop(e, targetIndex) {
-        e.preventDefault(); 
-        document.querySelectorAll('.todo-item').forEach(el => el.classList.remove('drag-over', 'dragging'));
-        
-        if (this.dragSrcIndex === null || this.dragSrcIndex === targetIndex) return;
-
+    checkHabitReset() {
         const molipToday = window.getMolipDate();
-        
-        // 정렬 및 필터링된 현재 뷰를 재구성
-        const todayTodos = this.todos.filter(t => t && t.date === molipToday);
-        let currentDisplay = todayTodos;
-
-        if (window.showPastCompleted) {
-            const pastCompleted = this.todos.filter(t => t && t.date !== molipToday && t.completed);
-            currentDisplay = [...currentDisplay, ...pastCompleted];
-        }
-        
-        if (window.hideCompleted) {
-            currentDisplay = currentDisplay.filter(t => !t.completed);
-        }
-
-        currentDisplay.sort((a, b) => {
-            if (a.completed !== b.completed) return a.completed ? 1 : -1;
-            return (a.order || 0) - (b.order || 0);
-        });
-
-        // 항목 이동
-        const [movedItem] = currentDisplay.splice(this.dragSrcIndex, 1);
-        currentDisplay.splice(targetIndex, 0, movedItem);
-
-        // 변경된 순서(order) 부여
-        currentDisplay.forEach((todo, idx) => {
-            todo.order = idx; 
-        });
-
-        this.renderTodos(); 
-        if (window.saveAllData) window.saveAllData(); 
-        
-        if (window.showToast) window.showToast("순서가 변경되었습니다.", "info");
+        this.habits.forEach(h => { if (h.completed && h.lastCompletedDate !== molipToday) { h.completed = false; h.rewarded = false; } });
+        this.renderHabits();
     }
+
+    cleanupOldTasks() {
+        if (!window.autoDeleteOldTasks || !this.todos) return;
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        for (let i = this.todos.length - 1; i >= 0; i--) {
+            if (this.todos[i].completed && new Date(this.todos[i].date) < sevenDaysAgo) { this.todos.splice(i, 1); }
+        }
+        this.renderTodos();
+        if (window.saveAllData) window.saveAllData();
+    }
+
+    handleDragStart(e, index) { this.dragSrcIndex = index; e.dataTransfer.effectAllowed = 'move'; e.currentTarget.classList.add('dragging'); }
+    handleDragOver(e) { e.preventDefault(); return false; }
+    handleDrop(e, targetIndex) {
+        if (this.dragSrcIndex === null || this.dragSrcIndex === targetIndex) return;
+        const [moved] = this.todos.splice(this.dragSrcIndex, 1);
+        this.todos.splice(targetIndex, 0, moved);
+        this.todos.forEach((t, idx) => t.order = idx);
+        this.renderTodos();
+        if (window.saveAllData) window.saveAllData();
+    }
+    handleDragEnd(e) { e.currentTarget.classList.remove('dragging'); }
+    handleDragEnter(e) {} handleDragLeave(e) {}
 }
 
 module.exports = TaskManager;

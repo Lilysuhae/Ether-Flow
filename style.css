@@ -3232,8 +3232,7 @@ header .header-right {
     display: flex;
     align-items: center;
     padding: 12px 15px;
-    border-radius: 12px;
-    margin-bottom: 8px;
+    margin: 1.5em 0;
     transition: all 0.2s;
 }
 
@@ -3254,16 +3253,9 @@ header .header-right {
     border: none;
     border-radius: 8px; /* 둥근 사각형 */
     color: var(--glass-border) !important; /* 아이콘 색상 */
-    background-color: rgba(0, 0, 0, 0);
+    background: transparent !important;
     cursor: pointer;
     transition: all 0.2s;
-}
-
-.btn-todo-action:hover i {
-    color: var(--text-primary);
-}
-.btn-todo-action:hover {
-    background: rgba(255, 255, 255, 0.15);
 }
 
 .btn-trash:hover {
@@ -5745,7 +5737,7 @@ header .header-right {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    color: rgba(255, 255, 255, 0.5);
+    color: #fff !important;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -6141,7 +6133,6 @@ header .header-right {
 .window-controls,
 #main-layout {
     -webkit-app-region: no-drag !important;
-    overflow-y: auto !important; /* 스크롤바 활성화 */
     user-select: auto !important;
 }
 
@@ -6201,4 +6192,424 @@ header .header-right {
     animation: egg-wobble 2.5s infinite ease-in-out;
     /* transform-origin: bottom center; 바닥을 중심으로 움직임 */
     image-rendering: pixelated;
+}
+
+/* --- 투두 리스트 리뉴얼 스타일 --- */
+
+/* 입력 컨테이너 스타일 */
+.todo-input-container {
+    display: flex;
+    gap: 5px;
+    background: var(--glass-surface-light);
+    padding: 0.52em;
+    border-radius: 0.8em;
+}
+
+#todo-priority-select {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    width: 25px; /* 아이콘처럼 작게 표시하거나 조절 */
+    cursor: pointer;
+    -webkit-appearance: none; /* 기본 화살표 숨김 */
+    text-align: center;
+}
+/* 선택된 옵션에 따라 색상 변경은 JS로 처리하거나 간단하게 텍스트로 표시 */
+
+#todo-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 5px;
+}
+#todo-input:focus { outline: none; }
+
+.date-picker-wrapper { position: relative; }
+#todo-deadline-input {
+    position: absolute;
+    visibility: hidden;
+    width: 0;
+}
+#btn-deadline-trigger {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+}
+#btn-deadline-trigger:hover { color:var(--text-primary); }
+
+.btn-todo-add {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* 1. 리스트 아이템 레이아웃 */
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+    position: relative; /* 중요도 점 위치 잡기 위해 */
+}
+
+/* 2. 드래그 핸들 */
+.drag-handle {
+    cursor: grab;
+    color: var(--text-primary) !important;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+/* 3. 체크박스 영역 */
+.todo-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.todo-checkbox i { font-size: 0.7rem; color: var(--text-secondary);}
+
+/* 4. 내용 영역 */
+.todo-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+
+.todo-content-wrapper input,
+.inline-priority-edit {
+    border: none;
+    background-color: var(--game-view-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+.todo-content-wrapper input:focus {
+    outline: none;
+}
+
+.todo-text-main {
+    font-size: 1.1em;
+    color: var(--text-primary) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.completed .todo-text-main {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.todo-deadline-text {
+    font-size: 11px;
+    margin-top: 4px;
+    opacity: 0.6;
+}
+
+/* 5. 중요도 점 (오른쪽 끝) */
+.priority-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.priority-high { background-color: #ff4757; box-shadow: 0 0 4px #ff4757; }
+.priority-mid  { background-color: #ffa502; }
+.priority-low  { background-color: #747d8c; opacity: 0.5; }
+
+/* 6. 액션 버튼 (호버 시 표시) */
+.todo-actions {
+    display: none; /* 기본 숨김 */
+    gap: 5px;
+}
+.todo-item:hover .todo-actions {
+    display: flex;
+}
+.btn-todo-action {
+    width: 16px;
+    height: 16px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+/* --- 인라인 편집창(날짜/시간/입력) 디자인 리뉴얼 --- */
+
+/* Flatpickr 달력 팝업창 커스텀 디자인 */
+.flatpickr-day.selected {
+    background: var(--ios-blue) !important;
+    border-color: var(--ios-blue) !important;
+}
+
+/* --- 투두 리스트 입력창 디자인 보정 --- */
+
+.todo-input-container {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 14px;
+    height: 56px;
+}
+
+/* 1. 중요도 셀렉트: 잘림 현상 해결 */
+#todo-priority-select {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    width: 50px; /* 텍스트가 잘리지 않도록 너비 확보 */
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#todo-priority-select option {
+    background: #2c2c2e; /* 드롭다운 배경색 지정 */
+    color: #fff;
+}
+
+/* 2. 할 일 입력창 */
+#todo-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 0 5px;
+    font-size: 0.85rem;
+    min-width: 0;
+    height: 100%;
+}
+#todo-input:focus { outline: none; }
+
+/* 3. 날짜 및 추가 버튼: 높이 정렬 및 디자인 통일 */
+.date-picker-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+#btn-deadline-trigger, .btn-todo-add {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+}
+
+/* 숨겨진 날짜 입력창 방어 코드 */
+#todo-deadline-input {
+    position: absolute;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+/* --- 습관 상세 설정 스타일 --- */
+.habit-register-box {
+    background: var(--glass-surface-light);
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.habit-input-main {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.habit-options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 요일 버튼 */
+.day-selector {
+    display: flex;
+    gap: 2px;
+}
+
+.day-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+    background: var(--glass-surface-light);
+    border: none;
+    border-radius: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.day-btn.active {
+    background: var(--ios-blue);
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+#habit-input {
+    padding: 9px 0px !important;
+}
+
+/* 시간 입력기 */
+.habit-time-input {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    padding: 2px 4px;
+    outline: none;
+    width: 100%;
+    height: 24px;
+}
+
+/* 리스트 표시 보강 */
+.habit-info-text {
+    font-size: 11px;
+    color: var(--text-primary);
+    margin-top: 4px;
+    opacity: 0.6;
+}
+
+/* style.css 추가 */
+.user-id-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+#user-id-display,
+#gift-code-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 14px 12px;
+    font-size: 0.8rem;
+    outline: none;
+    cursor: default;
+}
+
+.btn-copy-id {
+    background: var(--ios-blue);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    width: 46px;
+    height: 46px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.account-info-box {
+    margin-bottom: 2em;
+}
+
+/* 사운드 제어 행 레이아웃 */
+/* 사운드 행 컨테이너 */
+.sound-control-row {
+    margin-bottom: 15px;
+    padding: 8px 12px;
+    background: var(--glass-surface-light);
+    border-radius: 14px
+}
+
+/* 1층 타이틀 스타일 */
+.sound-label {
+    font-size: 0.75rem; /* 크기를 줄여 미니멀함 강조 */
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+/* 2층 버튼+슬라이더 정렬 */
+.sound-controls-flex {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* 버튼과 슬라이더 사이 간격 */
+}
+
+/* 나팔 버튼 크기 조정 */
+.btn-sound-mute {
+    flex-shrink: 0; /* 버튼 크기 고정 */
+    width: 24px;
+    height: 24px;
+    font-size: 0.9rem;
+    color: var(--primary-gold);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+/* 슬라이더가 나머지 공간을 차지 */
+.sound-slider {
+    flex: 1; 
+    -webkit-appearance: none;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    outline: none;
+}
+
+.sound-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--ios-blue);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(var(--gold-rgb), 0.3);
+}
+
+/* 기본 나팔 아이콘 스타일 */
+.btn-sound-mute {
+    background: none;
+    border: none;
+    color: var(--ios-blue); /* 기본: 황금색 */
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+/* ✨ 소리가 꺼졌을 때(Muted) 스타일 */
+.btn-sound-mute.muted {
+    color: #ff5f5f !important; /* 비활성: 붉은색 계열 */
+    filter: drop-shadow(0 0 5px rgba(255, 95, 95, 0.3));
+}
+
+.btn-sound-mute:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
 }

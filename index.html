@@ -4,11 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self';">
+    <meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; 
+               script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://npmcdn.com https://unpkg.com; 
+               style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://npmcdn.com https://unpkg.com; 
+               font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; 
+               img-src 'self' data:; 
+               connect-src 'self';">
     <title data-i18n="window.title">Ether Flow</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -63,7 +71,7 @@
                         <canvas id="main-canvas"></canvas>
                     </div>
 
-                    <div id="dialogue-bubble" class="speech-bubble">
+                    <div id="dialogue-bubble" class="speech-bubble" onclick="window.closeDialogue()">
                         <p id="dialogue-text"></p>
                     </div>
 
@@ -179,17 +187,33 @@
 
                     <div id="molip-habit-accordion" class="accordion active">
                         <div class="accordion-header" onclick="window.toggleAccordion('molip-habit-accordion')">
-                            <div class="accordion-title-group"> <span class="group-label" data-i18n="sidebar.habit.title">매일의 습관</span>
+                            <div class="accordion-title-group"> 
+                                <span class="group-label" data-i18n="sidebar.habit.title">매일의 습관</span>
                                 <span id="habit-count-badge" class="count-badge">0/0</span>
                             </div>
                             <i class="fas fa-chevron-down accordion-icon"></i>
                         </div>
                         <div class="accordion-content">
-                            <div class="todo-input-group">
-                                <input type="text" id="habit-input" data-i18n="sidebar.habit.placeholder" placeholder="매일 반복할 습관 등록">
-                                <button class="btn-todo-add" onclick="window.addHabit()">
-                                    <i class="fas fa-plus"></i>
-                                </button>
+                            <div class="habit-register-box">
+                                <div class="habit-input-main">
+                                    <input type="text" id="habit-input" data-i18n="sidebar.habit.placeholder" placeholder="습관 이름 입력">
+                                    <button class="btn-todo-add" onclick="window.addHabit()">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="habit-options-row">
+                                    <div id="habit-day-selector" class="day-selector">
+                                        <button type="button" class="day-btn" data-day="1">월</button>
+                                        <button type="button" class="day-btn" data-day="2">화</button>
+                                        <button type="button" class="day-btn" data-day="3">수</button>
+                                        <button type="button" class="day-btn" data-day="4">목</button>
+                                        <button type="button" class="day-btn" data-day="5">금</button>
+                                        <button type="button" class="day-btn" data-day="6">토</button>
+                                        <button type="button" class="day-btn" data-day="0">일</button>
+                                    </div>
+                                    <input type="text" id="habit-time-input" class="habit-time-input" placeholder="시간 선택">
+                                </div>
                             </div>
                             <ul id="habit-list" class="todo-list-container"></ul>
                         </div>
@@ -203,8 +227,22 @@
                             <i class="fas fa-chevron-down accordion-icon"></i>
                         </div>
                         <div class="accordion-content">
-                            <div class="todo-input-group">
+                            <div class="todo-input-container">
+                                <select id="todo-priority-select" title="중요도 설정">
+                                    <option value="low">⚪ 보통</option>
+                                    <option value="mid">🟡 중요</option>
+                                    <option value="high">🔴 긴급</option>
+                                </select>
+
                                 <input type="text" id="todo-input" data-i18n="sidebar.todo.placeholder" placeholder="할 일 등록">
+
+                                <div class="date-picker-wrapper">
+                                    <input type="text" id="todo-deadline-input" placeholder="기한 선택">
+                                    <button id="btn-deadline-trigger" onclick="document.getElementById('todo-deadline-input')._flatpickr.open()">
+                                        <i class="fas fa-clock"></i>
+                                    </button>
+                                </div>
+
                                 <button class="btn-todo-add" onclick="window.addMolipTodo()">
                                     <i class="fas fa-plus"></i>
                                 </button>
@@ -231,6 +269,7 @@
                 <button id="btn-tab-apps" class="tab-btn" onclick="window.switchSettingsTab('apps')"><i class="fa-solid fa-list-check"></i></button>
                 <button id="btn-tab-distract" class="tab-btn" onclick="window.switchSettingsTab('distract')"><i class="fa-solid fa-ghost"></i></button>
                 <button id="btn-tab-monitor" class="tab-btn" onclick="window.switchSettingsTab('monitor')"><i class="fa-solid fa-quote-left"></i></button>
+                <button id="btn-tab-user" class="tab-btn" onclick="window.switchSettingsTab('user')"><i class="fa-solid fa-user"></i></button>
                 <button id="btn-tab-etc" class="tab-btn" onclick="window.switchSettingsTab('etc')"><i class="fa-solid fa-ellipsis"></i></button>
             </div>
             <div class="settings-body">
@@ -291,25 +330,46 @@
                     </div>
                 </div>
                 <div id="tab-content-sound" class="tab-content" style="display: none;">
-                    <!-- <div class="settings-group">
-                        <label class="settings-label">전체 사운드</label>
-                        <div id="master-sound-toggle" class="window-mode-toggle" onclick="window.toggleMasterSound()">
-                            <span>전체 사운드 켜기</span>
+                    <div class="settings-group">
+                        <label class="settings-label">프로그램 실행 시 배경음 자동 재생</label>
+                        <div id="auto-play-toggle" class="window-mode-toggle" onclick="window.toggleAutoPlay('autoPlay')">
+                            <span>자동 재생 켜기</span>
                             <div class="switch-base"><div class="switch-circle"></div></div>
                         </div>
                     </div>
                     <div class="settings-group">
-                        <label class="settings-label">시스템 사운드</label>
-                        <div id="system-sound-toggle" class="window-mode-toggle" onclick="window.toggleSystemSound()">
-                            <span>시스템 사운드 켜기</span>
-                            <div class="switch-base"><div class="switch-circle"></div></div>
+                        <label class="settings-label">소리 크기 조정</label>
+                        <div class="sound-control-row">
+                            <div class="sound-label">버튼 및 상호작용</div>
+                            <div class="sound-controls-flex">
+                                <button id="mute-sfx" class="btn-sound-mute" onclick="window.toggleMute('sfx')">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <input type="range" id="vol-sfx" class="sound-slider" min="0" max="100" value="80" 
+                                    oninput="window.updateVolume('sfx', this.value)">
+                            </div>
                         </div>
-                    </div> -->
-                    <div class="settings-group">
-                        <label class="settings-label">프로그램 실행 시 배경음 자동 재생</label>
-                        <div id="auto-play-toggle" class="window-mode-toggle" onclick="window.toggleAutoPlay()">
-                            <span>자동 재생 켜기</span>
-                            <div class="switch-base"><div class="switch-circle"></div></div>
+
+                        <div class="sound-control-row">
+                            <div class="sound-label">서신 및 시스템 알림</div>
+                            <div class="sound-controls-flex">
+                                <button id="mute-notif" class="btn-sound-mute" onclick="window.toggleMute('notif')">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <input type="range" id="vol-notif" class="sound-slider" min="0" max="100" value="80" 
+                                    oninput="window.updateVolume('notif', this.value)">
+                            </div>
+                        </div>
+
+                        <div class="sound-control-row">
+                            <div class="sound-label">몰입 및 타이머</div>
+                            <div class="sound-controls-flex">
+                                <button id="mute-timer" class="btn-sound-mute" onclick="window.toggleMute('timer')">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <input type="range" id="vol-timer" class="sound-slider" min="0" max="100" value="100" 
+                                    oninput="window.updateVolume('timer', this.value)">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -402,10 +462,39 @@
                         </div>
                     </div>
                 </div>
+                <div id="tab-content-user" class="tab-content" style="display: none;">
+                    <div class="settings-group">
+                        <div class="account-info-box">
+                            <label class="settings-label" for="user-id-display">유저 ID</label>
+                            <div class="user-id-container">
+                                <input type="text" id="user-id-display" readonly value="아이디 생성 중...">
+                                <button class="btn-copy-id" onclick="window.copyUserId()" title="아이디 복사">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <p class="setting-hint">이 코드는 다른 사용자들과 겹치지 않는 고유 식별자입니다.</p>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <label class="settings-label">코드 등록</label>
+                        <div class="gift-code-box">
+                            <div class="user-id-container">
+                                <input type="text" id="gift-code-input" placeholder="코드를 입력하세요">
+                                <button class="btn-copy-id" onclick="window.redeemGiftCode()" title="코드 사용">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-group last">
+                        <label class="settings-label" data-i18n="settings.general.">데이터 초기화</label>
+                        <button class="btn btn-danger" style="width: 100%;" onclick="window.resetAllData()" data-i18n="settings.general.reset_btn">전체 데이터 초기화</button>
+                    </div>
+                </div>
                 <div id="tab-content-etc" class="tab-content" style="display: none;">
                     <div class="settings-section">
                         <label class="settings-label" data-i18n="settings.general.">버전 정보</label>
-                        <p>V 0.5.4</p>
+                        <p>V 0.5.5</p>
                     </div>
                     <div class="settings-section">
                         <label class="settings-label" data-i18n="settings.general.">제작자</label>
@@ -416,21 +505,18 @@
                             </a>
                         </div>
                     </div>
-                    <div class="settings-section">
+                    <div class="settings-section last">
                         <label class="settings-label" data-i18n="settings.general.">감사한 분들</label>
                         <ul>
                             <li>Duraena</li>
                             <li>sheryl</li>
                             <li>Latimeria</li>
+                            <li>GAMANG</li>
                             <li>Hyeon</li>
                             <li>nari</li>
                             <li>Vitte</li>
                             <li>Jelly</li>
                         </ul>
-                    </div>
-                    <div class="settings-section last">
-                        <label class="settings-label" data-i18n="settings.general.">데이터 초기화</label>
-                        <button class="btn btn-danger" style="width: 100%;" onclick="window.resetAllData()" data-i18n="settings.general.reset_btn">전체 데이터 초기화</button>
                     </div>
                 </div>
             </div>
