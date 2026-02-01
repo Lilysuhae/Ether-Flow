@@ -349,7 +349,21 @@ class TaskManager {
                 <div class="habit-content-wrap">
                     <span class="todo-text">${h.text}</span>
                     <div class="habit-info-text">
-                        <i class="fas fa-calendar-alt"></i> ${dayText} ${h.time ? `| <i class="fas fa-clock"></i> ${h.time}` : ''}
+                        <span class="habit-streak ${h.streak > 0 ? 'active' : ''}">
+                            <i class="fas fa-fire"></i> ${h.streak || 0}일째
+                        </span>
+                        
+                        <span class="habit-info-sep">|</span>
+                        
+                        <span class="habit-days">
+                            <i class="fas fa-calendar-alt"></i> ${dayText}
+                        </span>
+
+                        ${h.time ? `
+                        <span class="habit-info-sep">|</span>
+                        <span class="habit-time">
+                            <i class="fas fa-clock"></i> ${h.time}
+                        </span>` : ''}
                     </div>
                 </div>
                 <div class="todo-actions">
@@ -360,14 +374,42 @@ class TaskManager {
         }).join('');
     }
 
+    /**
+     * 습관 달성 토글 (연속 달성 기록 로직 포함)
+     */
     toggleHabit(id) {
         const h = this.habits.find(habit => habit.id === id);
-        if (h) {
-            h.completed = !h.completed;
-            if (h.completed && !h.rewarded) { if (window.collection) window.collection.addPoints(10); h.rewarded = true; }
-            this.renderHabits();
-            if (window.saveAllData) window.saveAllData();
+        if (!h) return;
+
+        const molipToday = window.getMolipDate();
+        // 오늘 이미 달성해서 기록이 남았는지 확인
+        const wasAlreadyDoneToday = (h.lastCompletedDate === molipToday);
+
+        if (!h.completed) {
+            // [체크하기]
+            h.completed = true;
+            if (!wasAlreadyDoneToday) {
+                h.streak = (h.streak || 0) + 1; // 오늘 처음 체크하는 거라면 연속 기록 +1
+                h.lastCompletedDate = molipToday;
+            }
+
+            // 에테르 보상 (최초 1회만)
+            if (!h.rewarded) { 
+                if (window.collection) window.collection.addPoints(10); 
+                h.rewarded = true; 
+                if (window.showToast) window.showToast("습관 달성! 10 Et 획득", "success");
+            }
+        } else {
+            // [체크 해제] 실수로 눌렀을 때를 대비해 연속 기록 복구
+            h.completed = false;
+            if (wasAlreadyDoneToday) {
+                h.streak = Math.max(0, (h.streak || 0) - 1);
+                h.lastCompletedDate = null;
+            }
         }
+
+        this.renderHabits();
+        if (window.saveAllData) window.saveAllData();
     }
 
     /**
@@ -414,9 +456,31 @@ class TaskManager {
         if (idx !== -1) { this.habits.splice(idx, 1); this.renderHabits(); if (window.saveAllData) window.saveAllData(); }
     }
 
+    /**
+     * 날짜 변경 시 습관 상태 초기화 및 연속 기록 검증
+     */
     checkHabitReset() {
         const molipToday = window.getMolipDate();
-        this.habits.forEach(h => { if (h.completed && h.lastCompletedDate !== molipToday) { h.completed = false; h.rewarded = false; } });
+        // renderer.js의 updateLoop가 날짜를 갱신하기 전의 '어제' 날짜를 가져옵니다.
+        const lastDateStr = window.masterData.progress.lastSaveDate;
+        const lastDay = new Date(lastDateStr).getDay();
+
+        this.habits.forEach(h => {
+            const safeDays = Array.isArray(h.days) ? h.days : [];
+            
+            // 1. 연속 달성 파괴 로직: 어제가 실천 요일이었는데 달성하지 않았다면 리셋
+            if (safeDays.includes(lastDay) && !h.completed && h.lastCompletedDate !== molipToday) {
+                h.streak = 0; 
+                console.log(`🔥 [Habit] 연속 기록 파괴: ${h.text}`);
+            }
+
+            // 2. 일일 상태 초기화
+            if (h.completed && h.lastCompletedDate !== molipToday) {
+                h.completed = false;
+                h.rewarded = false;
+            }
+        });
+        
         this.renderHabits();
     }
 
