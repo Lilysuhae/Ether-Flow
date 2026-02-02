@@ -101,7 +101,7 @@ class CodeManager {
             return;
         }
         else if (code === "My_lovely_hedgehog") {
-            this.processEggGift(code, "char_08", 1800);
+            this.processEggGift(code, "char_08", 180);
             inputEl.value = "";
             return;
         }

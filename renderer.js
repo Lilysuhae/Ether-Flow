@@ -2413,7 +2413,8 @@ window.startAbyssCrafting = () => {
         const availablePool = allChars.filter(char => 
             !ownedIds.includes(String(char.id)) && 
             String(char.id) !== activeEggId &&
-            char.isGiftOnly !== true 
+            char.isGiftOnly !== true &&
+            String(char.id) !== 'char_08' //덴데
         );
 
         if (availablePool.length === 0) {
