@@ -12,6 +12,7 @@ const MailboxManager = require(path.join(__dirname, 'src', 'mailboxManager.js'))
 const SoundManager = require(path.join(__dirname, 'src', 'SoundManager.js'));
 const TaskManager = require(path.join(__dirname, 'src', 'TaskManager.js'));
 const LogManager = require(path.join(__dirname, 'src', 'LogManager.js'));
+const CodeManager = require(path.join(__dirname, 'src', 'CodeManager.js'));
 
 /* ============================================================
    [2] 전역 유틸리티 함수 (Localization - UI 렌더링 전 필수)
@@ -77,6 +78,7 @@ let mailbox = null;
 let soundManager = null;
 let taskManager = null;
 let logManager = null;
+let codeManager = null;
 
 /* ============================================================
    [4] 변수 선언: 핵심 상태 (Core State)
@@ -742,20 +744,24 @@ window.performEvolution = async (character) => {
  * 6. 알 부화 연출 엔진 (Egg -> Child)
  */
 window.performHatchSequence = async function(type) {
-    if (window.isHatching) return; // 실행 시점에 잠금
+    if (window.isHatching) return; 
     window.isHatching = true;
+
+    // 1. ✨ [수정] 새로운 파트너 정보를 즉시 찾아서 설정합니다.
+    const targetChar = charData.characters.find(c => c.id === type);
+    if (!targetChar) return;
 
     const mainCanvas = document.getElementById('main-canvas');
     if (mainCanvas) mainCanvas.classList.remove('egg-anim-active');
 
-    // 1. 시각 연출: 화이트 플래시 실행
+    // 2. 시각 연출: 화이트 플래시 실행
     const hatchFlash = document.getElementById('hatch-flash');
     if (hatchFlash) {
         hatchFlash.style.display = 'block';
         hatchFlash.classList.add('flash-trigger');
     }
 
-    // 2. 데이터 전환 (알 제거 및 보유 캐릭터 추가)
+    // 3. ✨ [중요] 알을 제거함과 동시에 파트너와 ID를 즉시 교체합니다.
     if (collection) {
         if (!collection.ownedIds.includes(type)) {
             collection.ownedIds.push(type);
@@ -763,19 +769,20 @@ window.performHatchSequence = async function(type) {
         collection.activeEgg = null;
     }
 
-    // 3. 마스터 데이터 동기화
+    // 전역 변수 즉시 동기화 (0.8초 대기 전에 실행)
+    currentPartner = targetChar;
+    window.currentPartner = targetChar;
+    lastLoadedId = null; // ✨ 강제로 다시 로드하도록 초기화
+
     if (masterData) {
         masterData.collection = collection.getSaveData();
         if (!masterData.character) masterData.character = {};
         masterData.character.selectedPartnerId = type;
     }
 
-    // 4. 연출 대기 및 UI 전환
+    // 4. 연출 대기 후 화면 갱신
     setTimeout(async () => {
-        const targetChar = charData.characters.find(c => c.id === type);
-        currentPartner = targetChar; 
-        
-        // 스프라이트 갱신 (알 이미지가 제거되고 유아기 이미지가 로드됨)
+        // 이미 위에서 파트너를 바꿨으므로 스프라이트만 새로고침합니다.
         await refreshCharacterSprite();
 
         if (hatchFlash) {
@@ -783,18 +790,14 @@ window.performHatchSequence = async function(type) {
             hatchFlash.classList.remove('flash-trigger');
         }
 
-        // 도감 UI 갱신
         window.renderCollection(); 
-
         window.showToast("부화 성공! 새로운 인연이 시작되었습니다.", "success");
         window.updateUI();
 
-        // 부화 성공 후 첫 인사 대사 출력 및 저장
         setTimeout(() => {
             window.isHatching = false; 
             saveAllData(); 
         }, 1000);
-
     }, 800);
 };
 
@@ -2320,6 +2323,9 @@ window.updateAltarStatus = () => {
         const recipeContainer = document.querySelector('.recipe-check');
         if (!recipeContainer) return;
 
+        // ✨ [핵심 추가] 현재 부화 중인 알이 있는지 확인합니다.
+        const isAlreadyHatching = !!collection.activeEgg;
+
         let isReady = true;
         let html = "";
 
@@ -2356,9 +2362,20 @@ window.updateAltarStatus = () => {
         // 버튼 상태 갱신
         const btn = document.getElementById('btn-abyss-craft');
         if (btn) {
-            btn.className = isReady ? "btn-craft-large ready" : "btn-craft-large disabled";
-            btn.innerText = isReady ? "호문클루스 연성하기" : "재료가 부족합니다";
-            btn.disabled = !isReady;
+            if (isAlreadyHatching) {
+                // 알이 이미 있다면 진행 불가
+                btn.className = "btn-craft-large disabled";
+                btn.innerText = "이미 알을 품고 있습니다";
+                btn.disabled = true;
+            } else if (isReady) {
+                btn.className = "btn-craft-large ready";
+                btn.innerText = "호문클루스 연성하기";
+                btn.disabled = false;
+            } else {
+                btn.className = "btn-craft-large disabled";
+                btn.innerText = "재료가 부족합니다";
+                btn.disabled = true;
+            }
         }
     } catch (e) { console.error("UI 업데이트 에러:", e); }
 };
@@ -2368,6 +2385,11 @@ window.updateAltarStatus = () => {
  */
 window.startAbyssCrafting = () => {
     try {
+        if (collection.activeEgg) {
+            window.showToast("부화용 실린더에 알이 들어 있습니다. 부화 후 다시 시도하세요.", "warning");
+            return;
+        }
+
         const cost = window.calculateNextEggCost();
         const inv = masterData.inventory.byproducts || {};
         
@@ -2554,6 +2576,9 @@ window.achievementList = [
     { id: 'cordelia_eternal_ocean', name: '코델리아의 유일한 바다', icon: 'assets/images/achievements/cordelia_eternal_ocean.png', desc: '유리벽이라는 차가운 경계를 녹여내고, 코델리아와 영혼의 가장 깊은 곳까지 함께 유영하게 되었습니다.', hint: '부드러운 파도에 몸을 맡기고 함께 섞여듭니다.' },
     { id: 'homunculus_collector', name: '요람의 대주인', icon: 'assets/images/achievements/homunculus_collector.png', desc: '네 마리의 호문클루스를 모두 거느려 연구실의 생태계를 완성했습니다.', hint: '당신의 요람이 다양한 생명으로 가득 차는 순간을 기다립니다.' },
     { id: 'evolution_master', name: '진화의 마스터', icon: 'assets/images/achievements/evolution_master.png', desc: '모든 피조물을 성공적으로 성체기까지 인도한 육성의 대가입니다.', hint: '모두가 제 본모습을 찾을 때까지 곁을 지킵니다.' },
+    { id: 'linxia_crimson_bond', name: '린시아의 영원한 도반',  icon: 'assets/images/achievements/linxia_crimson_bond.png',  desc: '린시아가 승천을 포기하고 당신의 곁에 영원히 남기를 맹세했습니다.',  hint: '아홉 번째 꼬리가 하늘이 아닌 당신을 향해 펼쳐집니다.' },
+    { id: 'dende_soft_embrace',  name: '덴데의 유일한 안식처',  icon: 'assets/images/achievements/dende_soft_embrace.png',  desc: '덴데가 모든 가시를 거두고 당신의 품을 세상에서 가장 안전한 곳으로 선택했습니다.',  hint: '가장 날카로운 두려움이 가장 부드러운 신뢰로 녹아내립니다.' },
+
 
     // 4. 전문성 및 자산 관련 업적
     { id: 'sage_alchemist_30', name: '대연금술사의 증표', icon: 'assets/images/achievements/sage_alchemist_30.png', desc: '30레벨의 숙련도에 도달하여 연금술의 현자 경지를 증명했습니다.', hint: '현자의 돌에 다가가는 첫 번째 관문을 통과합니다.' },
@@ -2690,6 +2715,18 @@ window.renderLetterReward = (mail) => {
         return;
     }
 
+    if (mail.reward.type === 'update') {
+        rewardZone.innerHTML = `
+            <div class="mail-reward-box reward-reveal" style="text-align: center; margin-top: 25px;">
+                <span class="reward-label">1,000 Et 지원 및 업데이트</span>
+                <button class="btn-claim-reward" onclick="window.claimMailReward('${mail.id}')">
+                    <i class="fa-solid fa-download" style="margin-right: 10px;"></i> 최신 버전 다운로드하기
+                </button>
+            </div>
+        `;
+        return;
+    }
+
     const type = mail.reward.type;
     const val = mail.reward.value || mail.reward.amount || 0;
     const rewardId = mail.reward.id;
@@ -2744,6 +2781,25 @@ window.claimMailReward = (mailId) => {
     const reward = window.mailbox.claimReward(mailId);
     if (reward) {
         let toastMsg = "";
+
+        if (reward.type === 'update') {
+            // 1. 💰 에테르 보상 지급
+            const amount = Number(reward.value || 1000);
+            window.collection.points += amount;
+            
+            // 2. 🌐 브라우저로 다운로드 링크 열기
+            if (reward.downloadUrl) {
+                require('electron').shell.openExternal(reward.downloadUrl);
+            }
+
+            mail.isRewardClaimed = true; // 수령 완료 처리
+            window.showToast(`${amount} Et 수령 및 업데이트 페이지로 이동합니다.`, "success");
+            
+            saveAllData();
+            window.updateUI();
+            window.renderLetterReward(mail);
+            return;
+        }
 
         // 1. 에테르(포인트) 보상
         if (reward.type === 'point' || reward.type === 'ether') {
@@ -3339,16 +3395,9 @@ window.addKeyword = () => {
  */
 async function checkForUpdateMail() {
     try {
-        // 메인 프로세스로부터 버전 정보를 요청합니다.
         const versionInfo = await ipcRenderer.invoke('get-version-update');
-        
-        // [핵심 수정] versionInfo가 null이거나 latest 속성이 없는 경우 즉시 중단하여 에러를 방지합니다.
-        if (!versionInfo || !versionInfo.latest) {
-            console.log("[시스템] 버전 정보를 가져올 수 없거나 이미 최신 버전입니다.");
-            return;
-        }
+        if (!versionInfo || !versionInfo.latest) return;
 
-        // 새 버전이 존재할 경우에만 서신 생성 로직을 실행합니다.
         if (isNewerVersion(versionInfo.current, versionInfo.latest)) {
             const mailId = `update_notice_${versionInfo.latest}`;
             const isAlreadyReceived = mailbox.receivedMails.some(m => m.id === mailId);
@@ -3357,26 +3406,21 @@ async function checkForUpdateMail() {
                 const updateMail = {
                     id: mailId,
                     title: `새로운 연구 소식 (v${versionInfo.latest})`,
-                    sender: "연금술 도우미",
-                    content: `연금술사님, 연구실의 새로운 기능과 안정성이 개선된 v${versionInfo.latest} 버전이 준비되었습니다. 지금 새로운 버전을 확인해 보세요!\n\n` +
-                        `<a href="#" onclick="event.preventDefault(); require('electron').shell.openExternal('${versionInfo.downloadUrl}')" style="color: #a0c4ff; text-decoration: underline; cursor: pointer;">` +
-                        `[확인하기]</a>`,
+                    sender: "연금술 길드장",
+                    content: `연금술사님, 연구실의 새로운 기능과 안정성이 개선된 버전이 준비되었습니다. 아래 버튼을 눌러 최신 버전을 획득하세요!`,
                     receivedDate: new Date().toISOString(),
                     isRead: false,
                     isRewardClaimed: false,
-                    reward: { type: 'point', value: 1000 }
+                    reward: { type: 'update', value: 1000, downloadUrl: versionInfo.downloadUrl }
                 };
 
                 mailbox.receivedMails.unshift(updateMail);
                 window.updateMailNotification(); 
-                window.showToast("학회로부터 중요한 서신이 도착했습니다!", "event");
+                window.showToast("학회로부터 중요한 서신이 도착했습니다!", "info");
                 saveAllData(); 
             }
         }
-    } catch (err) {
-        // 네트워크 오류 등으로 인한 예외 상황을 처리합니다.
-        console.error("[시스템] 업데이트 체크 중 예외 발생:", err);
-    }
+    } catch (err) { console.error("업데이트 체크 실패:", err); }
 }
 
 // 간단한 버전 비교 함수
@@ -4388,12 +4432,14 @@ if (isEngineStarted) return;
         soundManager = new SoundManager();
         taskManager = new TaskManager();
         logManager = new LogManager();
+        codeManager = new CodeManager();
 
         window.progress = progress;
         window.collection = collection;
         window.mailbox = mailbox;
         window.soundManager = soundManager;
         logManager.init();
+        codeManager.init();
 
         // 7. 캐릭터 복구
         const savedId = masterData.character?.selectedPartnerId;
@@ -4427,6 +4473,8 @@ if (isEngineStarted) return;
         taskManager.init();
         taskManager.renderTodos();
         taskManager.renderHabits();
+
+        checkForUpdateMail();
 
         if (window.initAccountInfo) {
             window.initAccountInfo();
@@ -4462,106 +4510,5 @@ if (isEngineStarted) return;
 window.setupEngine = () => {
     if (soundManager) {
         soundManager.setupAudioEngine();
-    }
-};
-
-/**
- * 선물 코드 검증 및 서신 발송 시스템
- */
-window.redeemGiftCode = function() {
-    const inputEl = document.getElementById('gift-code-input');
-    const code = inputEl.value.trim();
-    const currentId = window.molipUserId; // 현재 접속 중인 고유 ID
-
-    if (!code) return;
-
-    // 1. 이미 사용한 코드인지 확인 (masterData에 기록)
-    if (!masterData.usedCodes) masterData.usedCodes = [];
-    if (masterData.usedCodes.includes(code)) {
-        window.showToast("이미 사용된 코드입니다.", "error");
-        return;
-    }
-
-    // 2. 코드 및 대상 유저 ID 검증 (여기에 코드와 대상 ID를 설정하세요)
-    let rewardMail = null;
-
-    // 예시 1: 특정 아이디(7kX9...)를 가진 유저만 쓸 수 있는 웰컴 코드
-    if (code === "WELCOME_MOLIP" && currentId === "7kX9pZ2mN5qL1vR8jW3n") {
-        rewardMail = {
-            id: `gift_${Date.now()}`,
-            title: "🧪 특별 보급품: 연구 지원금",
-            sender: "학회 지부장",
-            content: "연금술사님, 아티스트님의 복귀를 환영하며 특별 연구 지원금을 보냅니다.",
-            receivedDate: new Date().toISOString(),
-            isRead: false,
-            isRewardClaimed: false,
-            reward: { type: 'point', value: 3000 } // 3000 에테르
-        };
-    } 
-    else if (code === "ETHER_BOOST") {
-        rewardMail = {
-            id: `gift_${Date.now()}`,
-            title: "⚡ 긴급 에테르 보급",
-            sender: "에테르 관리국",
-            content: "실린더 농도 유지를 위한 긴급 에테르 보급품입니다.",
-            receivedDate: new Date().toISOString(),
-            isRead: false,
-            isRewardClaimed: false,
-            reward: { type: 'point', value: 500 }
-        };
-    } else if (code === "MY_NEW_FRIEND") {
-        const targetCharId = "char_02"; // 선물할 캐릭터 ID (인디고)
-        const targetChar = charData.characters.find(c => c.id === targetCharId);
-
-        // 🛡️ 안전 검사: 이미 보유 중이거나 부화 중인지 확인
-        const isOwned = collection.ownedIds.includes(targetCharId);
-        const isHatching = collection.activeEgg && collection.activeEgg.type === targetCharId;
-
-        if (isOwned || isHatching) {
-            window.showToast("이미 연구실에 존재하거나 부화 중인 생명입니다.", "warning");
-            return;
-        }
-
-        // 🎁 알 지급 로직
-        collection.activeEgg = {
-            type: targetCharId,
-            progress: 0,
-            target: 1800, // 부화 필요 시간 (초)
-            date: new Date().toISOString()
-        };
-
-        // ✨ [중요] 현재 파트너를 선물 받은 캐릭터로 교체합니다.
-        window.currentPartner = targetChar;
-        currentPartner = targetChar; // 로컬/전역 모두 갱신
-
-        // 데이터 기록 및 저장
-        masterData.usedCodes.push(code);
-        window.saveAllData();
-        
-        // ✨ 연출 실행: 슈퍼노바 효과와 함께 알 등장
-        if (window.triggerSupernovaEffect) {
-            window.triggerSupernovaEffect(targetChar);
-        }
-        
-        window.showToast(`${targetChar.egg_name}을(를) 선물 받았습니다!`, "success");
-        inputEl.value = "";
-        return;
-    }
-
-    // 3. 결과 처리
-    if (rewardMail) {
-        // 서신함에 추가 및 상태 기록
-        window.mailbox.receivedMails.unshift(rewardMail);
-        masterData.usedCodes.push(code);
-        
-        // 저장 및 UI 갱신
-        window.saveAllData(); 
-        window.updateMailNotification();
-        if (window.renderMailList) window.renderMailList();
-        
-        window.showToast("서신함으로 보급품이 도착했습니다!", "success");
-        inputEl.value = ""; // 입력란 초기화
-    } else {
-        window.showToast("유효하지 않은 코드이거나 대상자가 아닙니다.", "error");
     }
 };

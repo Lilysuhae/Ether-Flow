@@ -497,13 +497,56 @@ class TaskManager {
 
     handleDragStart(e, index) { this.dragSrcIndex = index; e.dataTransfer.effectAllowed = 'move'; e.currentTarget.classList.add('dragging'); }
     handleDragOver(e) { e.preventDefault(); return false; }
+    
+    /**
+     * 할 일 드래그 앤 드롭 결과 처리 (순서 및 상태 동기화)
+     */
     handleDrop(e, targetIndex) {
         if (this.dragSrcIndex === null || this.dragSrcIndex === targetIndex) return;
-        const [moved] = this.todos.splice(this.dragSrcIndex, 1);
-        this.todos.splice(targetIndex, 0, moved);
-        this.todos.forEach((t, idx) => t.order = idx);
+
+        // 1. 현재 화면에 표시된 리스트(필터링 및 정렬 완료된 상태)를 동일하게 구성합니다.
+        const molipToday = window.getMolipDate();
+        let displayTodos = this.todos.filter(t => t && (t.date === molipToday || (!t.completed && t.date !== molipToday)));
+
+        // renderTodos와 동일한 정렬 기준으로 정렬된 상태를 가져옵니다.
+        displayTodos.sort((a, b) => {
+            if (a.completed !== b.completed) return a.completed ? 1 : -1;
+            const pA = this.priorityScore[a.priority] || 1;
+            const pB = this.priorityScore[b.priority] || 1;
+            if (pA !== pB) return pB - pA;
+            return (a.order || 0) - (b.order || 0);
+        });
+
+        // 2. 드래그한 아이템과 타겟 아이템을 특정합니다.
+        const movedItem = displayTodos[this.dragSrcIndex];
+        const targetItem = displayTodos[targetIndex];
+
+        if (!movedItem || !targetItem) return;
+
+        // 3. ✨ [핵심 수정] 드래그 위치에 따라 중요도와 완료 상태를 타겟 아이템과 동기화합니다.
+        // 이렇게 해야 정렬 우선순위 때문에 아이템이 제자리로 튕겨 나가는 것을 방지할 수 있습니다.
+        movedItem.priority = targetItem.priority;
+        movedItem.completed = targetItem.completed;
+        movedItem.date = targetItem.date;
+
+        // 4. 전체 리스트에서 드래그한 아이템을 제거하고 새로운 위치(타겟 앞/뒤)에 삽입합니다.
+        const actualSrcIdx = this.todos.indexOf(movedItem);
+        this.todos.splice(actualSrcIdx, 1);
+        
+        const actualTargetIdx = this.todos.indexOf(targetItem);
+        this.todos.splice(actualTargetIdx, 0, movedItem);
+
+        // 5. ✨ [순서 기억] 현재 배열의 물리적 순서를 'order' 속성에 박제합니다.
+        this.todos.forEach((t, idx) => {
+            t.order = idx;
+        });
+
+        // UI 갱신 및 영구 저장
         this.renderTodos();
         if (window.saveAllData) window.saveAllData();
+        
+        // 초기화
+        this.dragSrcIndex = null;
     }
     handleDragEnd(e) { e.currentTarget.classList.remove('dragging'); }
     handleDragEnter(e) {} handleDragLeave(e) {}

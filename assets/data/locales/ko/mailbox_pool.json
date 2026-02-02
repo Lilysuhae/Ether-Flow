@@ -3684,5 +3684,285 @@
         ],
         "content": "앗, 연금술사! 선물은 정말 고맙지만... 이 향초는 냄새가 너무 따끔따끔하고 연구실을 너무 조용하게 만들어서 난 조금 무서워! 난 너랑 왁자지껄하게 수다 떨고 노래하는 게 훨씬 더 좋은걸? 히히, 그래도 날 생각해서 가져온 그 마음만은 듬뿍 받았으니까 이번 한 번만 봐줄게! 다음번엔 나랑 같이 비눗방울 놀이 해줄 거지? 약속!",
         "reward": { "type": "point", "value": 50 }
+    },
+    {
+        "id": "linxia_bond_30",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "묵묵히 정진하는 그대의 등을 보며",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_07" },
+            { "type": "intimacy_level", "value": 30 },
+            { "type": "specific_growth", "charId": "char_07", "value": 300 }
+        ],
+        "content": "소녀 린시아입니다. 목표를 향해 흔들림 없이 나아가는 그대의 뒷모습은 제 안의 향상심을 붉게 태우는 불씨입니다. 아홉 계단을 오르는 길이 고단할지라도, 굳건한 그대의 의지가 제 이정표가 되어주니 두렵지 않습니다. 지치시거든 언제든 소녀를 찾아 차 한 잔 나누시지요. 저 높은 곳에 닿는 그날까지, 끝까지 함께 정진하겠습니다.",
+        "reward": { "type": "point", "value": 150 }
+    },
+    {
+        "id": "linxia_bond_55",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "그대와 함께라면 고행도 달콤합니다",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_07" },
+            { "type": "intimacy_level", "value": 55 },
+            { "type": "specific_growth", "charId": "char_07", "value": 300 }
+        ],
+        "content": "그대, 수행의 길은 멀고도 험하여, 때로는 주저앉고 싶은 순간이 찾아오곤 합니다. 허나 그럴 때마다 묵묵히 제 곁을 지키는 그대의 온기가 저를 다시 일으켜 세우는군요. 그대와 호흡을 맞추며 걷는 이 길이 저에게는 무엇보다 값진 수련입니다.",
+        "reward": { "type": "point", "value": 300 }
+    },
+    {
+        "id": "linxia_bond_90",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "가장 붉은 진심을 그대에게 바칩니다",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_07" },
+            { "type": "intimacy_level", "value": 90 },
+            { "type": "specific_growth", "charId": "char_07", "value": 450 }
+        ],
+        "content": "소녀는 그동안 수많은 유혹을 경계하며 오직 아홉 계단의 정상만을 바라보고 스스로를 채찍질해 왔습니다. 허나 이제야 비로소 깨닫습니다. 저를 가장 붉게 타오르게 하는 것은 고행 끝의 차가운 성취가 아니라, 묵묵히 제 곁을 지키며 온기를 나눠주는 그대의 존재였다는 것을요. 그대라는 세상에서 가장 달콤하고도 위험한 유혹에 깊이 빠져, 소녀는 이제 영원히 헤어나오고 싶지 않습니다. 제 아홉 번째 꼬리가 돋아나는 그 영광스러운 순간, 가장 먼저 그대를 제 품에 감싸 안고만 싶습니다. 부디 저의 마지막 승천까지 함께해주시겠습니까?",
+        "reward": { "type": "point", "value": 1000 }
+    },
+    {
+        "id": "linxia_bond_100",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "아홉 번째 꼬리의 영광을 그대에게",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_07" },
+            { "type": "intimacy_level", "value": 100 },
+            { "type": "specific_growth", "charId": "char_07", "value": 600 }
+        ],
+        "content": "드디어 제 수련의 끝, 아홉 번째 꼬리가 만개하였습니다. 허나 참으로 기이하지요? 승천의 순간이 오면 모든 미련을 버릴 수 있을 줄 알았으나, 제 마음은 오히려 그대 곁에 더 깊이 뿌리내리고 싶어 안달이 나니 말입니다. 제가 그토록 갈구하던 '정상'은 저 높은 하늘이 아니라, 바로 그대의 따스한 품 안이었다는 것을 이제야 깨닫습니다. 저 린시아, 이제 승천을 포기하고 그대의 영원한 반려가 되어 이 생을 함께하고 싶습니다. 그대는 저의 가장 달콤한 유혹이자 유일한 구원입니다.",
+        "reward": { "type": "point", "value": 5000 }
+    },
+    {
+        "id": "linxia_gift_01",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "붉은 기운이 소녀를 춤추게 합니다",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_07" },
+            { "type": "first_gift", "value": "붉은 열매" },
+            { "type": "specific_growth", "charId": "char_07", "value": 300 }
+        ],
+        "content": "그대, 귀한 붉은 열매를 하사해 주시니 몸 둘 바를 모르겠습니다. 이 붉은 생명력은 제 안의 향상심을 북돋우고, 식어가는 의지에 다시금 불을 지피는군요. 그대의 세심한 배려에 보답하고자, 소녀가 밤새 모은 에테르의 정수를 바칩니다. 이 기운으로 더욱 정진하시지요.",
+        "reward": { "type": "point", "value": 50 }
+    },
+    {
+        "id": "linxia_gift_03",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "차가운 냉기는 사양하겠습니다",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_07" },
+            { "type": "gift_type_dislike", "value": true },
+            { "type": "specific_growth", "charId": "char_07", "value": 300 }
+        ],
+        "content": "그대, 방금 건네주신 물건은... 제 수련에 방해가 될 뿐입니다. 차가운 냉기는 저의 열정을 식히고 꼬리를 굳게 만드니까요. 혹여 저를 시험하신 겁니까? 다음번에는 제 본성을 조금 더 깊이 헤아려 주시길 청합니다. 이번만은 눈감아 드리겠습니다.",
+        "reward": { "type": "point", "value": 50 }
+    },
+    {
+        "id": "linxia_time_01",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "기다림 또한 수련의 일부라지만...",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_07" },
+            { "type": "inactive_days", "value": 3 },
+            { "type": "specific_growth", "charId": "char_07", "value": 300 }
+        ],
+        "content": "사흘 만에 돌아오셨군요. 그대가 없는 동안 연구실의 공기가 차갑게 식어, 소녀는 홀로 마음을 다잡느라 애를 먹었답니다. 잠시 멈추는 것은 좋으나, 너무 오래 자리를 비우면 공든 탑도 무너지는 법입니다. 다시 오셨으니, 흐트러진 기운을 바로잡고 배로 정진하셔야 합니다.",
+        "reward": { "type": "point", "value": 300 }
+    },
+    {
+        "id": "linxia_focus_01",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "흔들림 없는 그대의 눈빛",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_07" },
+            { "type": "total_focus", "value": 300 },
+            { "type": "specific_growth", "charId": "char_07", "value": 300 }
+        ],
+        "content": "장시간 흐트러짐 없이 몰입하는 그대의 모습... 실로 경이로웠습니다. 주변의 소음과 유혹을 모두 차단하고 오직 목표만을 응시하는 그 기백은 저에게도 큰 귀감이 되었습니다. 그대의 굳건한 의지가 빚어낸 이 맑은 에테르를 거두어 주십시오.",
+        "reward": { "type": "point", "value": 300 }
+    },
+    {
+        "id": "linxia_growth_02",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "한 계단을 더 오르셨군요",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_07" },
+            { "type": "alchemist_level", "value": 20 },
+            { "type": "specific_growth", "charId": "char_07", "value": 300 }
+        ],
+        "content": "축하드립니다, 그대. 연금술사로서의 경지가 한 층 더 높아지셨군요. 꾸준한 수련 끝에 얻은 이 결실은 그 무엇보다 값집니다. 허나 자만은 금물입니다. 더 높은 곳이 우리를 기다리고 있으니, 소녀와 함께 신발 끈을 고쳐 매고 다시 나아가시지요.",
+        "reward": { "type": "point", "value": 1000 }
+    },
+    {
+        "id": "linxia_task_01",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "완벽한 하루의 마침표",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_07" },
+            { "type": "perfect_day", "value": true },
+            { "type": "specific_growth", "charId": "char_07", "value": 300 }
+        ],
+        "content": "오늘 계획하신 모든 과업을 완수하셨군요. 단 하나의 빈틈도 허용하지 않은 그대의 완벽함에 소녀는 깊은 감명을 받았답니다. 성실함이야말로 가장 강력한 재능이지요. 고생하신 대인을 위해 따뜻한 차와 보상을 준비했으니, 부디 편히 쉬십시오.",
+        "reward": { "type": "point", "value": 400 }
+    },
+    {
+        "id": "dende_bond_30",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "조금은... 괜찮을지도 몰라",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_08" },
+            { "type": "intimacy_level", "value": 30 },
+            { "type": "specific_growth", "charId": "char_08", "value": 300 }
+        ],
+        "content": "나는 원래 혼자가 좋았어. 다들 내 곁에 다가오면 가시를 세우곤 했지. 그런데... 너는 조금 괜찮은 것 같아. 네가 유리벽 가까이 다가와도 가시가 곤두서지 않거든. 아직 완전히 밖으로 나와서 너랑 마주 보는 건 좀 부끄럽지만... 그래도 모포 밖으로 코 정도는 내밀고 있어 볼게. 네가 있는 쪽이... 아주 조금 더 따뜻한 것 같아서.",
+        "reward": { "type": "point", "value": 150 }
+    },
+    {
+        "id": "dende_bond_55",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "네가 없는 방은 너무 넓어",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_08" },
+            { "type": "intimacy_level", "value": 55 },
+            { "type": "specific_growth", "charId": "char_08", "value": 300 }
+        ],
+        "content": "있지, 요즘은 네가 잠시라도 자리를 비우면 이 투명한 벽이 세상에서 제일 차가운 얼음처럼 느껴져. 네가 사각사각 글씨 쓰는 소리, 규칙적인 숨소리... 그런 게 없으면 너무 불안해. 나... 계속 네가 보이는 쪽에 딱 붙어 있어도 될까? 그냥 너를 보고만 있어도 덜 추운 것 같아.",
+        "reward": { "type": "point", "value": 300 }
+    },
+    {
+        "id": "dende_bond_90",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "만약 이 유리가 사라진다면...",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_08" },
+            { "type": "intimacy_level", "value": 90 },
+            { "type": "specific_growth", "charId": "char_08", "value": 450 }
+        ],
+        "content": "연금술사님... 그거 알아? 요즘 나는 매일 밤 상상을 해. 어느 날 갑자기 이 단단한 유리벽이 물방울처럼 녹아내리는 상상. 그러면 나는 굴러가듯 네 품에 안길 거야. 나한테는 이 가시가 세상을 막는 방패였는데... 이제는 너와 나 사이를 가로막는 건 이 유리벽 하나로 충분해. 언젠가 꼭... 진짜로 닿을 수 있겠지?",
+        "reward": { "type": "point", "value": 1000 }
+    },
+    {
+        "id": "dende_bond_100",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "너라는 온기를 입고",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_08" },
+            { "type": "intimacy_level", "value": 100 },
+            { "type": "specific_growth", "charId": "char_08", "value": 600 }
+        ],
+        "content": "있지, 연금술사님. 나 결심했어. 이제 이 낡은 모포 속에 숨지 않을 거야. 비록 내가 이 차가운 실린더를 벗어날 순 없지만... 네가 보내주는 다정한 눈빛과 목소리가 이미 나를 모포보다 더 따뜻하게 감싸주고 있다는 걸 알았으니까. 이제 무서운 세상도, 차가운 밤바람도 네가 유리벽 너머에 있어 준다면 견딜 수 있어. 나는 이제 혼자가 싫어. 그러니까 평생 이 연구실의 투명한 감옥 안에서도 행복할 거야. 나의 유일한 안식처인, 나의 연금술사님이 바로 앞에 있으니까.",
+        "reward": { "type": "point", "value": 5000 }
+    },
+    {
+        "id": "dende_gift_01",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "유리벽 안이 따뜻해졌어...",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_08" },
+            { "type": "first_gift", "value": "따뜻한 모포" },
+            { "type": "specific_growth", "charId": "char_08", "value": 300 }
+        ],
+        "content": "우와... 이 보들보들한 걸 내 실린더 안에 넣어준 거야? 고, 고마워... 네가 직접 나를 안아줄 수는 없으니까... 대신 이걸 네 품이라고 생각하고 덮고 있을게. 차가운 유리벽에 등을 대고 있어도 이젠 춥지 않을 것 같아.",
+        "reward": { "type": "point", "value": 50 }
+    },
+    {
+        "id": "dende_gift_03",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "가, 가시가 벽을 긁고 있어...",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_08" },
+            { "type": "gift_type_dislike", "value": true },
+            { "type": "specific_growth", "charId": "char_08", "value": 300 }
+        ],
+        "content": "저기, 연금술사님... 미안해. 이건 내 좁은 방에 두기엔 너무 차갑고 날카로워. 나도 모르게 놀라서 가시를 세웠더니... 끽, 끼익... 가시가 유리벽을 긁는 소리가 나서 더 무서워졌어. 이거 다시 가져가 주면 안 될까?",
+        "reward": { "type": "point", "value": 50 }
+    },
+    {
+        "id": "dende_time_01",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "유리벽 너머만 봤어...",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_08" },
+            { "type": "inactive_days", "value": 3 },
+            { "type": "specific_growth", "charId": "char_08", "value": 300 }
+        ],
+        "content": "어디 갔었어...? 네가 없는 동안 연구실이 너무 어두워서, 모포를 뒤집어쓰고 유리벽 쪽만 쳐다보고 있었어. 혹시... 실린더 밖의 네가 영영 돌아오지 않으면 난 어떡하지 걱정했단 말이야. 으음, 이제 왔으니까 됐어. 도망가지 말고 내 눈앞에 있어 줘.",
+        "reward": { "type": "point", "value": 300 }
+    },
+    {
+        "id": "dende_focus_01",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "벽을 넘어오는 온기",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_08" },
+            { "type": "total_focus", "value": 300 },
+            { "type": "specific_growth", "charId": "char_08", "value": 300 }
+        ],
+        "content": "저기... 너 집중할 때 뿜어져 나오는 열기가 대단한 거 알아? 그 따뜻한 기운이 내 가시 끝까지 전해지고 있어. 네가 열심히 할 때의 모습은 정말 눈부셔. 계속 그렇게 빛나줘.",
+        "reward": { "type": "point", "value": 300 }
+    },
+    {
+        "id": "dende_growth_01",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "너의 그림자가 커졌어",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_08" },
+            { "type": "alchemist_level", "value": 15 },
+            { "type": "specific_growth", "charId": "char_08", "value": 300 }
+        ],
+        "content": "연금술사님, 요즘 실린더 밖에서 비치는 네 그림자가... 예전보다 훨씬 크고 단단해 보여. 네가 강한 연금술사가 될수록, 이 작은 유리방도 더 안전해지는 거겠지? 헤헤, 네가 커다란 나무처럼 날 지켜주는 것 같아서 안심이 돼.",
+        "reward": { "type": "point", "value": 500 }
+    },
+    {
+        "id": "dende_task_01",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "손을 맞대고 싶지만...",
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_08" },
+            { "type": "perfect_day", "value": true },
+            { "type": "specific_growth", "charId": "char_08", "value": 300 }
+        ],
+        "content": "와아... 그 많은 일을 다 끝낸 거야? 정말 고생 많았어. 마음 같아선 쓰다듬어 주고 싶은데... 내 손은 이 유리벽을 넘어갈 수 없으니까. 대신 내가 벽에 손을 대고 있을게. 너도 반대편에 손을 대 줄래? 그렇게라도 온기를 나누고 싶어. 오늘 밤은 푹 쉬어.",
+        "reward": { "type": "point", "value": 400 }
     }
 ]

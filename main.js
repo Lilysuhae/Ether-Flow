@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, screen, shell, powerMonitor } = require('electron');
+const { app, BrowserWindow, ipcMain, screen, shell, powerMonitor, net } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -212,23 +212,36 @@ ipcMain.on('force-reset-file', (event) => {
 
 
 // 업데이트 서신
-const axios = require('axios'); // 설치 필요: npm install axios
-
 ipcMain.handle('get-version-update', async () => {
     try {
-        // Lilysuhae님의 ether-flow 저장소 최신 릴리스 정보 가져오기
-        const response = await axios.get('https://api.github.com/repos/Lilysuhae/ether-flow/releases/latest', {
-            headers: { 'User-Agent': 'EtherFlow-App' } // GitHub API 필수 헤더
+        const currentVersion = app.getVersion();
+        // ✨ [핵심 수정] 중간의 f5fee... 같은 번호를 뺀 '최신 파일 전용' 주소입니다.
+        const gistUrl = 'https://gist.githubusercontent.com/Lilysuhae/b15200761ed022377dd7d2aae8a206c3/raw/version.json';
+
+        return new Promise((resolve) => {
+            const request = net.request(gistUrl);
+            request.on('response', (response) => {
+                let data = '';
+                response.on('data', (chunk) => { data += chunk; });
+                response.on('end', () => {
+                    try {
+                        // 만약 결과가 HTML(404페이지 등)이면 여기서 에러가 나지만 catch에서 처리됩니다.
+                        const remoteData = JSON.parse(data);
+                        resolve({
+                            current: currentVersion,
+                            latest: remoteData.latest,
+                            downloadUrl: remoteData.downloadUrl
+                        });
+                    } catch (e) { 
+                        console.error("❌ [Update] JSON 파싱 실패 (HTML이 수신되었을 가능성)");
+                        resolve(null); 
+                    }
+                });
+            });
+            request.on('error', () => resolve(null));
+            request.end();
         });
-        
-        const latestVersion = response.data.tag_name.replace('v', '');
-        return {
-            current: app.getVersion(), // 현재 앱 버전 (0.5.0)
-            latest: latestVersion,
-            downloadUrl: response.data.html_url
-        };
-    } catch (error) {
-        console.error("버전 체크 오류:", error.message);
+    } catch (err) {
         return null;
     }
 });
