@@ -369,6 +369,101 @@ window.selectInventoryItem = (id, info) => {
     `;
 };
 
+/**
+ * [UIManager.js] 가방 아이템 사용(선물하기) 처리 함수
+ */
+window.useInventoryItem = async (itemId) => {
+    // 1. 기본 검증 (파트너 존재 여부 및 알 상태 체크)
+    if (!window.currentPartner || window.currentStage === 'egg') {
+        window.showToast("지금은 선물을 줄 수 있는 상태가 아닙니다.", "warning");
+        return;
+    }
+
+    const partner = window.currentPartner;
+    const charId = partner.id;
+    const today = window.getMolipDate(); // renderer.js의 논리적 날짜 함수
+
+    // 2. ✨ 캐릭터별 선물 횟수 제한 체크 (하루 최대 3회)
+    if (!window.dailyGiftCountMap[charId]) {
+        window.dailyGiftCountMap[charId] = { date: today, count: 0 };
+    }
+    
+    const giftData = window.dailyGiftCountMap[charId];
+
+    // 날짜가 바뀌었다면 해당 캐릭터의 카운트 리셋
+    if (giftData.date !== today) {
+        giftData.date = today;
+        giftData.count = 0;
+    }
+
+    if (giftData.count >= 3) {
+        window.showToast(`${partner.name}은(는) 이미 선물을 충분히 받았습니다. (3/3)`, "info");
+        return;
+    }
+
+    // 3. 아이템 정보 확인
+    const itemInfo = window.getShopItems().find(i => i.id === itemId);
+    if (!itemInfo) return;
+
+    // 4. 자산 차감 처리 (통합 거래 모듈 사용)
+    const transaction = { items: { [itemId]: -1 } };
+    const result = await window.processResourceTransaction(transaction);
+
+    if (result.success) {
+        // 5. ✨ 선호도 판별 (favorite / dislike / normal)
+        const prefs = partner.preferences || { favorite: [], dislike: [] };
+        let reactionType = 'normal';
+        let intimacyBoost = 5.0; // 기본 상승량
+        
+        if (prefs.favorite.includes(itemInfo.name)) {
+            reactionType = 'favorite';
+            intimacyBoost = 8.0; // 좋아하는 선물 보너스
+        } else if (prefs.dislike.includes(itemInfo.name)) {
+            reactionType = 'dislike';
+            intimacyBoost = 1.0; // 싫어하는 선물 패널티
+        }
+
+        // 6. ✨ 현재 단계(child/adult)에 맞는 전용 대사 추출
+        const stage = window.currentStage; 
+        const giftResponses = partner.stages[stage].gift_responses;
+        const dialogueText = giftResponses[reactionType];
+
+        // 7. ✨ 호감도 및 기록 업데이트
+        if (!window.charIntimacyMap[charId]) window.charIntimacyMap[charId] = 0;
+        window.charIntimacyMap[charId] = Math.min(100, window.charIntimacyMap[charId] + intimacyBoost);
+
+        giftData.count += 1; // 해당 캐릭터의 선물 횟수 증가
+
+        // 도감 선호도 해금을 위한 기록
+        if (!window.givenGiftsMap[charId]) window.givenGiftsMap[charId] = [];
+        if (!window.givenGiftsMap[charId].includes(itemInfo.name)) {
+            window.givenGiftsMap[charId].push(itemInfo.name);
+        }
+
+        // 8. ✨ [대사 출력] 기존 대사를 밀어내고 즉시 출력
+        if (window.dialogueTimeout) clearTimeout(window.dialogueTimeout); 
+        window.dialogueLockUntil = 0; 
+        if (window.showDialogue) {
+            window.showDialogue(dialogueText, 2); // 우선순위 2로 출력
+        }
+
+        // 9. ✨ [피드백] 조사 체크 토스트 및 모달 닫기
+        const particle = window.getKoreanParticle(itemInfo.name, "을/를"); 
+        window.playSFX('success'); 
+        window.showToast(`${itemInfo.name}${particle} 선물했습니다! (오늘 ${giftData.count}/3)`, "success");
+        
+        if (window.closeInventory) {
+            window.closeInventory(); 
+        }
+
+        // 10. 데이터 영구 저장 및 UI 갱신
+        await window.saveAllData(); 
+        window.updateUI(); 
+        
+    } else {
+        window.showToast("아이템을 사용할 수 없습니다.", "error");
+    }
+};
 
 /* ============================================================
    [📖 도감(Collection) 시스템]
@@ -434,7 +529,7 @@ window.renderCollection = () => {
  * 2. 도감 모달 토글 (열기/닫기)
  */
 window.toggleCollection = (show) => { 
-    // 부화 중에는 도감 열기 차단
+    // 부화 시퀀스(Supernova) 진행 중에는 도감 열기 자체를 차단
     if (show && window.isHatching) {
         window.showToast("지금은 탄생의 순간입니다. 집중하십시오!", "warning");
         return;
@@ -525,7 +620,6 @@ window.showCharDetail = (id) => {
 
     document.getElementById('detail-char-desc').innerText = isActiveEgg ? "당신의 몰입을 기다리고 있는 알입니다." : (char.description || "");
 
-    // 6. 파트너 선택 버튼 로직
     const selectBtn = document.getElementById('detail-select-btn');
     if (currentPartner && currentPartner.id === char.id) { 
         selectBtn.style.display = 'none'; 
@@ -534,17 +628,27 @@ window.showCharDetail = (id) => {
         selectBtn.innerText = isActiveEgg ? "다시 알 품기" : "파트너로 선택하기";
         
         selectBtn.onclick = async () => {
+            // ✨ [추가] 알 부화 중 파트너 변경 차단 체크
+            if (window.collection && window.collection.activeEgg) {
+                // 현재 선택하려는 대상이 실린더에 있는 바로 그 '알'이 아니라면 차단합니다.
+                if (window.collection.activeEgg.type !== char.id) {
+                    window.showToast("알이 부화하기 전에 파트너를 변경할 수 없습니다.", "warning");
+                    return; // 함수 종료
+                }
+            }
+
+            // 선택 로직 실행
             currentPartner = char; 
             window.currentPartner = char;
             if (!masterData.character) masterData.character = {};
             masterData.character.selectedPartnerId = char.id;
 
-            await refreshCharacterSprite(); 
+            if (window.refreshCharacterSprite) await window.refreshCharacterSprite(); 
             window.updateUI(); 
             window.closeCharDetail(); 
             window.toggleCollection(false);
 
-            saveAllData(); 
+            if (window.saveAllData) await window.saveAllData(); 
             window.showToast(`${char.name}와 다시 몰입을 시작합니다.`, "success");
         };
     }
@@ -762,7 +866,11 @@ window.claimMailReward = async (mailId) => {
             break;
         case 'egg':
             isModuleHandled = true;
-            await window.processNewEggAcquisition(reward.id || reward.value, 1800, 'mail');
+            // ✨ [핵심] processNewEggAcquisition의 반환값(성공 여부)을 확인합니다.
+            const eggClaimed = await window.processNewEggAcquisition(reward.id || reward.value, 1800, 'mail');
+            
+            // 알이 이미 있어 거부되었다면 메일을 '수령 완료' 상태로 만들지 않고 종료합니다.
+            if (!eggClaimed) return; 
             break;
         case 'achievement':
             isModuleHandled = true;

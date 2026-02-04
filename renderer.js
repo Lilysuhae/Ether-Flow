@@ -840,6 +840,9 @@ window.buyItem = async (itemId, price) => {
 
     // 3. 결과에 따른 후속 처리
     if (result.success) {
+        if (window.playSFX) {
+            window.playSFX('coin'); 
+        }
         // 아이템 이름을 찾아 성공 알림 출력
         const items = (window.shopItems && window.shopItems.length > 0) ? window.shopItems : window.getShopItems();
         const item = items.find(i => i.id === itemId);
@@ -1702,6 +1705,52 @@ window.applyHorizontalMode = () => {
     }
 };
 
+
+/**
+ * [renderer.js] 새로운 알 획득 및 엔진 동기화 (중복 방지 강화)
+ */
+window.processNewEggAcquisition = async (charId, targetSec = 1800, source = 'system') => {
+    // 1. ✨ [방어] 이미 실린더에 알이 있다면 'false'를 반환하고 즉시 종료
+    if (window.collection && window.collection.activeEgg) {
+        window.showToast("이미 알이 실린더 안에 있어 받을 수 없습니다.", "error");
+        return false; 
+    }
+
+    // 2. 캐릭터 데이터 확인
+    const char = window.charData.characters.find(c => String(c.id) === String(charId));
+    if (!char) return false;
+
+    // 3. ✨ 파트너 정보 및 엔진 상태 동기화 (이름/배경 변경 해결)
+    window.currentPartner = char; 
+    window.masterData.character.selectedPartnerId = char.id; 
+    window.currentStage = 'egg'; 
+
+    // 4. 알 데이터 등록
+    window.collection.activeEgg = {
+        type: char.id,
+        progress: 0,
+        target: targetSec,
+        date: new Date().toISOString()
+    };
+
+    // 5. 그래픽 강제 리프레시
+    if (window.characterManager) {
+        await window.characterManager.refreshSprite(true); 
+    }
+
+    // 6. UI 업데이트 및 저장
+    window.updateUI(); 
+    if (window.saveAllData) await window.saveAllData();
+    
+    // 7. 연출 실행
+    if (window.triggerSupernovaEffect) {
+        window.triggerSupernovaEffect(char);
+    }
+
+    return true; // ✨ 모든 과정이 성공했을 때만 true 반환
+};
+
+
 /**
  * [renderer.js] 메인 UI 통합 갱신 엔진 (이름표 및 데이터 동기화 최종본)
  */
@@ -1880,6 +1929,8 @@ async function updateLoop() {
         updateStatusBadge();
     }
 }
+
+
 /**
  * [추출] 자정 및 날짜 변경 시 '소프트 리셋' 처리 (앱 재시작 없음)
  */
@@ -1951,6 +2002,9 @@ function checkMailAndAchievements(isFocusing, nowMolipDate) {
     
     const newMails = mailbox.checkTriggers(stats);
     if (newMails && newMails.length > 0) {
+        if (window.playSFX) {
+            window.playSFX('letterbox'); 
+        }
         window.showToast("새로운 서신이 도착했습니다.", "info");
         if (window.renderMailList) window.renderMailList();
         window.updateMailNotification();

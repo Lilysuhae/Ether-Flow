@@ -8,9 +8,15 @@ class SoundManager {
             // SFX (버튼 및 상호작용)
             click: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'click.mp3')), type: 'sfx' },
             paper: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'paper.mp3')), type: 'sfx' },
+            check: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'check.mp3')), type: 'sfx' },
+            coin: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'drop-coin.mp3')), type: 'sfx' },
+            pet: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'cotton.mp3')), type: 'sfx' },
+
             // Notification (알림)
-            check: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'check.mp3')), type: 'notif' },
-            send: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'send.mp3')), type: 'notif' },
+            letterbox: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'letterbox.mp3')), type: 'notif' },
+            hatch: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'egg-cracking.mp3')), type: 'notif' },
+            evolve: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'magicwand.mp3')), type: 'notif' },
+
             // // Timer (타이머 전용 소리가 있다면 여기에 추가)
             // timer_end: { audio: new Audio(path.join(__dirname, '..', 'assets', 'sounds', 'timer.mp3')), type: 'timer' }
         };

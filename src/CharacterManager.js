@@ -65,6 +65,10 @@ class CharacterManager {
         if (now - this.lastPetTime < this.PET_COOLDOWN) return;
         this.lastPetTime = now;
 
+        if (window.playSFX && window.currentStage !== 'egg') {
+            window.playSFX('pet'); 
+        }
+
         // 1. ✨ [추가] 쓰다듬기 횟수 추적 및 토스트 알림
         if (window.currentPartner && window.getMolipDate) {
             const date = window.getMolipDate();
@@ -112,6 +116,7 @@ class CharacterManager {
         const hatchStartTime = new Date(col.activeEgg.date).getTime();
         const elapsedSeconds = (Date.now() - hatchStartTime) / 1000;
         if (elapsedSeconds >= (col.activeEgg.target || 1800)) {
+            if (window.playSFX) window.playSFX('hatch');
             if (window.processGrowthTransition) window.processGrowthTransition('hatch', col.activeEgg.type);
         }
     }
@@ -122,6 +127,7 @@ class CharacterManager {
         const growthMap = window.masterData.character.growthMap || {};
         const growthMin = (growthMap[partner.id] || 0) / 60;
         if (growthMin >= (partner.evolution_level || this.EVOLUTION_TARGET_MIN)) {
+            if (window.playSFX) window.playSFX('evolve');
             if (window.processGrowthTransition) window.processGrowthTransition('evolve', partner.id);
         }
     }

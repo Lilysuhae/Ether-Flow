@@ -206,6 +206,9 @@ class TaskManager {
         if (index === -1) return;
         const wasCompleted = this.todos[index].completed;
         this.todos[index].completed = !wasCompleted;
+        if (window.playSFX) {
+            window.playSFX('check'); // 또는 'level_up', 'click' 등 등록된 키워드
+        }
 
         if (this.todos[index].completed && !wasCompleted) {
             const partner = window.currentPartner;
@@ -380,6 +383,10 @@ class TaskManager {
     toggleHabit(id) {
         const h = this.habits.find(habit => habit.id === id);
         if (!h) return;
+
+        if (window.playSFX) {
+            window.playSFX('check'); // 또는 'level_up', 'click' 등 등록된 키워드
+        }
 
         const molipToday = window.getMolipDate();
         // 오늘 이미 달성해서 기록이 남았는지 확인

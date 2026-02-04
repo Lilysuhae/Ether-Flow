@@ -14,8 +14,9 @@ class CodeManager {
 
     /**
      * 입력된 코드를 검증하고 통합 모듈을 통해 보상을 처리합니다.
+     * ✨ [수정] 알 획득 성공 여부를 비동기로 확인하도록 async/await 적용
      */
-    redeemGiftCode() {
+    async redeemGiftCode() {
         const inputEl = document.getElementById('gift-code-input');
         if (!inputEl) return;
 
@@ -40,16 +41,22 @@ class CodeManager {
         };
 
         if (eggCodes[code]) {
-            // 통합 모듈이 백업, 등록, UI 갱신을 모두 처리합니다.
-            window.processNewEggAcquisition(eggCodes[code], 1800, 'code');
-            this._finalizeRedemption(code, inputEl);
+            // ✨ [핵심 수정] 획득 성공 여부를 확인합니다.
+            const success = await window.processNewEggAcquisition(eggCodes[code], 1800, 'code');
+            
+            // 성공했을 때만 사용 처리 및 성공 메시지 출력
+            if (success) {
+                this._finalizeRedemption(code, inputEl);
+            }
             return;
         }
 
-        // 특수 캐릭터 코드 처리
+        // 특수 캐릭터 코드 처리 (ID: char_08 고슴도치 등)
         if (code === "My_lovely_hedgehog") {
-            window.processNewEggAcquisition("char_08", 180, 'code');
-            this._finalizeRedemption(code, inputEl);
+            const success = await window.processNewEggAcquisition("char_08", 180, 'code');
+            if (success) {
+                this._finalizeRedemption(code, inputEl);
+            }
             return;
         }
 
@@ -61,9 +68,14 @@ class CodeManager {
         };
 
         if (etherRewards[code]) {
-            // 통합 모듈이 에테르 가산 및 실시간 UI 반영을 처리합니다.
-            window.processResourceTransaction({ ether: etherRewards[code] });
-            this._finalizeRedemption(code, inputEl, "보급품이 도착했습니다!");
+            // 에테르 지급 성공 여부 확인
+            const result = await window.processResourceTransaction({ ether: etherRewards[code] });
+            
+            if (result && result.success) {
+                this._finalizeRedemption(code, inputEl, "보급품이 도착했습니다!");
+            } else {
+                window.showToast("보상 수령 중 에테르 흐름이 불안정합니다.", "error");
+            }
             return;
         }
 
