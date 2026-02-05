@@ -590,38 +590,50 @@
     <div id="sediment-modal" class="modal-overlay" style="display: none;">
         <div class="modal-window glass">
             <div class="modal-header">
-                <h3 data-i18n="modals.craft.title">연성로</h3>
+                <h3 data-i18n="modals.craft.title">연성 연구실</h3>
                 <div class="header-btns">
                     <button class="win-btn" onclick="window.closeSedimentModal()"><i class="fas fa-times"></i></button>
                 </div>
             </div>
 
+            <div class="shop-tab-bar">
+                <button class="shop-tab-re active" onclick="window.switchAlchemyTab('general', this)">일반 연성</button>
+                <button class="shop-tab-re" onclick="window.switchAlchemyTab('recipe', this)">조합 연성</button>
+            </div>
+
             <div class="modal-body">
-                <div class="saturation-area">
-                    <div class="area-label"><span data-i18n="modals.craft.sat_label">현재 에테르 침전 농도</span> <span id="sat-value">0%</span></div>
-                    <div class="sat-bar-container">
-                        <div id="sat-bar-fill" style="width: 0%;"></div>
+                <div id="alchemy-tab-general" class="alchemy-tab-content active">
+                    <div class="saturation-area">
+                        <div class="area-label"><span data-i18n="modals.craft.sat_label">현재 에테르 침전 농도</span> <span id="sat-value">0%</span></div>
+                        <div class="sat-bar-container"><div id="sat-bar-fill" style="width: 0%;"></div></div>
+                        <p class="sat-guide" data-i18n="modals.craft.sat_hint">할일에 몰입할수록 침전 농도가 오르며,<br>농도가 높을수록 파트너가 희귀한 부산물을 수집합니다.</p>
                     </div>
-                    <p class="sat-guide" data-i18n="modals.craft.sat_hint">할일에 몰입할수록 침전 농도가 오르며,<br>농도가 높을수록 희귀한 부산물을 호문클루스가 수집합니다.</p>
+                    <div class="sediment-inventory">
+                        <label data-i18n="modals.craft.inv_label">건져낸 부산물</label>
+                        <div class="inventory-grid" id="sediment-grid"></div>
+                    </div>
+                    <div class="abyss-altar">
+                        <h4 data-i18n="modals.craft.recipe_title">에테르 정제</h4>
+                        <div class="recipe-check">
+                            <div id="req-ether" class="req-item"><span class="dot"></span> 에테르 : <span class="val">0 / 10,000</span>Et</div>
+                            <div id="req-sludge" class="req-item"><span class="dot"></span> 에테르 슬러지 : <span class="val">0 / 15</span></div>
+                        </div>
+                        <button id="btn-abyss-craft" class="btn-craft-large disabled" onclick="window.startAbyssCrafting()" data-i18n="modals.craft.btn_shortage">재료 부족</button>
+                    </div>
                 </div>
 
-                <div class="sediment-inventory">
-                    <label data-i18n="modals.craft.inv_label">건져낸 부산물</label>
-                    <div class="inventory-grid" id="sediment-grid">
+                <div id="alchemy-tab-recipe" class="alchemy-tab-content">
+                    <div class="recipe-alembic-view">
+                        <p class="recipe-guide">세 가지 재료를 조합하여 특정 동물의 영혼을 연성합니다.</p>
+                        <div class="alembic-slots">
+                            <div class="alembic-slot" id="recipe-slot-0" onclick="window.openIngredientPicker(0)">+</div>
+                            <div class="alembic-slot" id="recipe-slot-1" onclick="window.openIngredientPicker(1)">+</div>
+                            <div class="alembic-slot" id="recipe-slot-2" onclick="window.openIngredientPicker(2)">+</div>
+                        </div>
+                        <button id="btn-recipe-craft" class="btn-craft-large" onclick="window.startRecipeSynthesis()">
+                            조합식 연성 실행
+                        </button>
                     </div>
-                </div>
-
-                <div class="abyss-altar">
-                    <h4 data-i18n="modals.craft.recipe_title">호문클루스 연성 재료</h4>
-                    <p data-i18n="modals.craft.recipe_hint">어떤 생명이 탄생할지 알 수 없습니다.</p>
-                    <div class="recipe-check">
-                        <div id="req-ether" class="req-item"><span class="dot"></span> 에테르 : <span class="val">0 / 10,000</span>Et</div>
-                        <div id="req-sludge" class="req-item"><span class="dot"></span> 에테르 슬러지 : <span class="val">0 / 15</span></div>
-                    </div>
-
-                    <button id="btn-abyss-craft" class="btn-craft-large disabled" onclick="window.startAbyssCrafting()" data-i18n="modals.craft.btn_shortage">
-                        재료가 부족하여 연성할 수 없습니다
-                    </button>
                 </div>
             </div>
         </div>

@@ -79,7 +79,7 @@ const THEMES = {
             "--shadow-deep": "0 20px 60px rgba(0, 0, 0, 0.8), 0 0 20px rgba(155, 89, 182, 0.2)",
             "--game-view-bg": "url('assets/images/bg_alchemy_lab.png')", // 연구실 배경
             "--frame-border": "url('assets/images/border_flask.png')",    // 플라스크 테두리
-            "--panel-bg" : "url('assets/images/btn_game.png')",
+            // "--panel-bg" : "url('assets/images/btn_game.png')",
             "--panel-bg-long" : "url('assets/images/btn_focus.png')"
         }
     }

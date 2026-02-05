@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Basgerd";
-  src: url("assets/fonts/Basgerd.ttf") format("woff2");
+  src: url("assets/fonts/Basgerd.otf") format("otf");
   font-weight: 400;
   font-style: normal;
 }
@@ -244,7 +244,7 @@ body {
 .btn-primary {
   background: var(--primary-gold);
   color: #1d1d1f;
-  box-shadow: 0 4px 12px rgba(255, 108, 142, 0.2);
+  box-shadow: 0 4px 12px rgba(255, 179, 108, 0.2);
 }
 .btn-secondary {
   background: var(--glass-surface-light);
@@ -725,7 +725,7 @@ canvas {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--glass-surface-light);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -978,7 +978,7 @@ canvas {
   padding: 1em;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1em;
   overflow-y: auto;
 }
 
@@ -992,7 +992,7 @@ canvas {
 .detail-img-box {
   width: 158px;
   height: 158px;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--glass-surface-light);
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -1032,7 +1032,7 @@ canvas {
 
 /* 개별 성장 진행도 섹션 */
 .detail-progress-section {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-surface-light);
   padding: 16px;
   border-radius: 18px;
   border: 1px solid var(--glass-border);
@@ -1102,9 +1102,9 @@ canvas {
   filter: grayscale(1);
 }
 
-.detail-footer {
+/* .detail-footer {
   margin-top: 10px;
-}
+} */
 
 /* style.css - 축하 파티클 효과 강화 */
 @keyframes evolution-glow {
@@ -2951,7 +2951,7 @@ header .header-right {
 
 /* [style.css] 도감 상세 설명 섹션 스타일 */
 .detail-desc-section {
-    background: rgba(255, 255, 255, 0.03); /* 은은한 배경 */
+    background: var(--glass-surface-light);
     padding: 16px;
     border-radius: 18px;
     border: 1px solid var(--glass-border); /* 기존 테두리 규격 준수 */
@@ -4122,7 +4122,7 @@ header .header-right {
 
 /* 🔒 비활성화 상태: 이미지(image_dabe2a.png)의 점선 물음표 구현 */
 .achieve-slot.locked {
-    border: 1.5px dashed rgba(255, 255, 255, 0.15); /* 점선 테두리 */
+    border: 1.5px dashed var(--glass-border); /* 점선 테두리 */
     color: rgba(255, 255, 255, 0.15) !important; /* 흐린 회색 물음표 */
     cursor: default;
     opacity: 0.5;
@@ -4233,6 +4233,11 @@ header .header-right {
     gap: 10px;
 }
 
+.empty-inventory-hint {
+    color: var(--text-secondary) !important;
+    text-align: center;
+}
+
 /* 개별 아이템 슬롯 */
 .sediment-slot {
     aspect-ratio: 1/1;
@@ -4287,7 +4292,7 @@ header .header-right {
 
 .req-item {
     font-size: 0.85rem;
-    color: #ccc;
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -4297,7 +4302,7 @@ header .header-right {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #666;
+    background: var(--glass-surface-light);
 }
 
 /* 충족되었을 때의 스타일 */
@@ -4315,8 +4320,7 @@ header .header-right {
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s;
-    background: #444;
-    color: #888;
+    background: var(--primary-gold);
 }
 
 /* 준비 완료 시 활성화 스타일 */
@@ -5043,7 +5047,7 @@ header .header-right {
 /* [style.css] 아이템 상세 설명 영역 */
 .detail-desc-lg {
     white-space: pre-line;
-    line-height: 0.7em;
+    line-height: 1em;
 }
 
 /* ============================================================
@@ -5299,9 +5303,9 @@ header .header-right {
     display: flex;
     align-items: center;
     gap: 4px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 6px 12px;
+    background: var(--glass-surface-light);
+    border: 1px solid var(--glass-border);
+    padding: 6px 12px 8px 10px;
     border-radius: 20px;
     transition: all 0.2s;
 }
@@ -5325,7 +5329,7 @@ header .header-right {
 /* 잠긴 상태: 정보를 가리면서도 존재감 유지 */
 .pref-item.locked {
     opacity: 0.4;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--glass-surface-light);
     border-style: 1px dashed var(--glass-border);
 }
 
@@ -5375,6 +5379,31 @@ header .header-right {
     transition: width 0.3s ease-in-out;
 }
 
+.theme-alchemy-lab .btn-game,
+.theme-alchemy-lab .btn-task {
+    /* 1. 기본 구조 설정 */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* gap: 8px; */
+    padding: 0px 12px;    /* 내부 여백 (글자 길이에 따라 유동적으로 변함) */
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-dark) !important;
+
+    /* 2. ✨ 핵심: 9-슬라이스 테두리 설정 */
+    /* 투명한 테두리를 먼저 확보해야 border-image가 나타납니다. */
+    border: 12px solid transparent; 
+    
+    /* 테두리 이미지 경로와 슬라이스 수치 */
+    /* 12는 이미지의 모서리 크기(px)이며, 'fill'은 내부 배경까지 채우겠다는 의미입니다. */
+    border-image-source: url('assets/images/btn_game.png');
+    border-image-slice: 12 fill; 
+    border-image-repeat: stretch; /* 내부는 늘어나도록 설정 */
+    
+    background: none;      /* border-image가 배경 역할을 하므로 배경은 끕니다 */
+    outline: none;
+}
 
 .theme-alchemy-lab .current-app-box, 
 .theme-alchemy-lab .accordion {
@@ -6904,4 +6933,243 @@ header .header-right {
     font-size: 1.5rem;
     pointer-events: none;
     text-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* 연성 탭 컨텐츠 제어 */
+.alchemy-tab-content {
+    display: none; /* 기본적으로 숨김 */
+}
+
+.alchemy-tab-content.active {
+    display: block; /* active 클래스가 있으면 표시 */
+}
+
+/* 조합 연성 전용 슬롯 디자인 */
+.alembic-slots {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.alembic-slot {
+    width: 64px;
+    height: 64px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.5em;
+    border: 1px dashed var(--primary-gold);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--primary-gold);
+    transition: all 0.2s;
+}
+
+.alembic-slot img {
+    image-rendering: pixelated;
+}
+
+.alembic-slot:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.recipe-guide {
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 1em;
+}
+
+
+/* =========================================
+   🧪 재료 선택 모달 (Ingredient Picker) 디자인
+   ========================================= */
+
+/* 1. 모달 배경 및 컨테이너 */
+.ingredient-picker-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--glass-modal-bg); /* 짙은 어둠 */
+    backdrop-filter: blur(5px);      /* 배경 블러 효과 */
+    z-index: 1000001;                /* 최상단 보장 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.picker-modal-container {
+    width: 90%;
+    max-width: 400px;
+    background: var(--glass-modal-bg);
+    border: 2px solid var(--primary-gold);
+    border-radius: 20px;
+    padding: 1em;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(212, 175, 55, 0.2), /* 은은한 금빛 후광 */
+        inset 0 0 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transform: translateY(20px);
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+/* 2. 헤더 타이틀 */
+.picker-header h4 {
+    color: var(--primary-gold);
+    text-align: center;
+    font-size: 1.4rem;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    padding-bottom: 15px;
+}
+
+/* 3. 재료 그리드 영역 (스크롤 및 반응형) */
+.picker-grid-area {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+    gap: 4px;
+    max-height: 400px; /* 높이 제한 */
+    overflow-y: auto;  /* 스크롤 생성 */
+    padding: 5px;      /* 스크롤바와 간격 확보 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-gold) rgba(0,0,0,0.2);
+}
+
+/* 커스텀 스크롤바 디자인 (Webkit) */
+.picker-grid-area::-webkit-scrollbar {
+    width: 6px;
+}
+.picker-grid-area::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+.picker-grid-area::-webkit-scrollbar-thumb {
+    background: var(--primary-gold);
+    border-radius: 10px;
+}
+
+/* 4. 개별 재료 카드 디자인 */
+.picker-item-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 호버 효과: 떠오르면서 금빛 발광 */
+.picker-item-card:hover {
+    border-color: var(--primary-gold);
+}
+
+.picker-item-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    transition: transform 0.3s;
+    image-rendering: pixelated;
+}
+.picker-item-count {
+    font-size: 0.7rem;
+    color: var(--primary-gold);
+    font-weight: bold;
+    background: rgba(0,0,0,0.4);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.picker-item-name {
+    font-size: 0.75rem;
+    color: #ddd;
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* 닫기 버튼 영역 */
+.picker-footer .btn-game {
+    padding: 12px;
+    font-size: 1.1rem;
+}
+
+.recipe-result-preview {
+    text-align: center;
+    padding: 1em;
+    font-size: 0.8em;
+}
+
+/* 등장 애니메이션 */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* 재료 선택 시 강조 효과 */
+.picker-item-card.selected {
+    border: 2px solid var(--primary-gold) !important;
+    background: rgba(212, 175, 55, 0.2) !important;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+}
+
+/* 선택 순서 표시 배지 */
+.selection-order {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: var(--primary-gold);
+    color: #000;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 하단 확인 버튼 영역 */
+.picker-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+.picker-footer .btn {
+    font-size: 1em;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.picker-footer .btn-close {
+    background: var(--glass-surface-light);
+    flex: 0.25;
+}
+.btn-confirm-selection {
+    flex: 2;
+    background: var(--primary-gold) !important;
+    color: #000 !important;
+    font-weight: bold;
+}
+
+.btn-confirm-selection:disabled {
+    filter: grayscale(1);
+    opacity: 0.5;
+    cursor: not-allowed;
 }
