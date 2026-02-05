@@ -145,3 +145,20 @@ window.getDialoguesFromJSON = (category) => {
         return categoryData[intimacyKey] || categoryData['high'] || [];
     }
 };
+
+window.closeDialogue = () => {
+    const bubble = document.getElementById('dialogue-bubble');
+    if (bubble) {
+        // 대화창 숨기기
+        bubble.style.display = 'none';
+    }
+
+    // 기존에 예약된 대화 자동 닫기 타이머가 있다면 제거
+    if (window.dialogueTimeout) {
+        clearTimeout(window.dialogueTimeout);
+        window.dialogueTimeout = null;
+    }
+
+    // 대화 잠금 상태 해제
+    window.dialogueLockUntil = 0;
+};

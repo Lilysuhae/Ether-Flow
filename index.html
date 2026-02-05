@@ -288,19 +288,14 @@
                     </div>
                     <div class="settings-group">
                         <label class="settings-label" data-i18n="settings.general.font">폰트</label>
-                        <div class="pretty-radio-group">
-                            <label class="pretty-radio">
-                                <input type="radio" name="font-choice" value="paperlogy" onchange="window.changeFont('paperlogy')">
-                                <div class="radio-content"><span>페이퍼로지</span></div>
-                            </label>
-                            <label class="pretty-radio">
-                                <input type="radio" name="font-choice" value="paperlogy" onchange="window.changeFont('Pretendard')">
-                                <div class="radio-content"><span>프리텐다드</span></div>
-                            </label>
-                            <label class="pretty-radio">
-                                <input type="radio" name="font-choice" value="Galmuri11" onchange="window.changeFont('Galmuri11')">
-                                <div class="radio-content"><span>갈무리11</span></div>
-                            </label>
+                        <div class="pretty-select-container">
+                            <select id="font-select" class="pretty-select" onchange="window.changeFont(this.value)">
+                                <option value="paperlogy">페이퍼로지</option>
+                                <option value="Pretendard">프리텐다드</option>
+                                <option value="NanumSquareNeo">나눔스퀘어 네오</option>
+                                <option value="Galmuri11">갈무리9</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow"></i>
                         </div>
                     </div>
                     <div class="settings-group">
@@ -371,6 +366,16 @@
                                     oninput="window.updateVolume('timer', this.value)">
                             </div>
                         </div>
+                    </div>
+                    <div class="settings-group">
+                        <label class="settings-label">연성 알림</label>
+                        <div id="cylinder-toast-toggle" class="window-mode-toggle" onclick="window.toggleCylinderToast()">
+                            <span>부산물 획득 알림 표시</span>
+                            <div class="switch-base">
+                                <div class="switch-circle"></div>
+                            </div>
+                        </div>
+                        <p class="setting-hint">실린더에서 부산물을 건져 올렸을 때 하단에 뜨는 안내 메시지를 설정합니다.</p>
                     </div>
                 </div>
                 <div id="tab-content-apps" class="tab-content" style="display: none;">
@@ -551,6 +556,14 @@
                 <h3 data-i18n="modals.mailbox.title">전해진 서신</h3>
                 <button class="win-btn" onclick="window.toggleMailbox(false)"><i class="fas fa-times"></i></button>
             </div>
+            
+            <div class="shop-tab-bar" style="margin-bottom: 10px;">
+                <button class="shop-tab-re active" onclick="window.switchMailTab('unread', this)">읽지 않음</button>
+                <button class="shop-tab-re" onclick="window.switchMailTab('reward', this)">보상 미수령</button>
+                <button class="shop-tab-re" onclick="window.switchMailTab('read', this)">읽음</button>
+                <button class="shop-tab-re" onclick="window.switchMailTab('archive', this)">보관함</button>
+            </div>
+
             <div id="mail-list" class="mail-list-container"></div>
         </div>
     </div>
@@ -561,6 +574,9 @@
                 <div class="letter-header">
                     <h2 id="letter-detail-title"></h2>
                     <div id="letter-detail-sender"></div>
+                    <button id="btn-mail-archive" class="btn-archive-star" onclick="window.toggleArchive()" title="보관함으로 보내기">
+                        <i class="fa-regular fa-star"></i>
+                    </button>
                 </div>
                 <div id="letter-view-content"></div>
                 <div id="letter-reward-zone"></div>

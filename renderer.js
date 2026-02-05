@@ -21,6 +21,7 @@ const AchievementManager = require(path.join(__dirname, 'src', 'AchievementManag
 require(path.join(__dirname, 'src', 'ModuleManager.js'));
 require(path.join(__dirname, 'src', 'UIManager.js'));
 require(path.join(__dirname, 'src', 'DialogueManager.js'));
+require(path.join(__dirname, 'src', 'NoteManager.js'));
 
 // UI 컴포넌트 라이브러리 설정
 const { defineCustomElements } = require('@duetds/date-picker/dist/loader');
@@ -239,6 +240,12 @@ function syncReferences() {
 
     masterData.dailyAppTimeMap = masterData.dailyAppTimeMap || {};
     window.dailyAppTimeMap = masterData.dailyAppTimeMap;
+
+    // ✨ 메모 데이터 구조 초기화 및 연결
+    if (!masterData.notes) {
+        masterData.notes = { x: 100, y: 100, content: "", isMinimized: false };
+    }
+    window.notes = masterData.notes;
     
     console.log("✅ [System] 데이터 참조 바인딩 완료");
 }
@@ -587,6 +594,49 @@ document.addEventListener('DOMContentLoaded', () => {
     startEngine();
 });
 
+/**
+ * [renderer.js 연동용] 실린더 알림 설정 토글 함수
+ */
+window.toggleCylinderToast = () => {
+    if (!window.masterData.settings) window.masterData.settings = {};
+    
+    // 1. 현재 상태 반전 및 저장
+    const currentStatus = window.masterData.settings.showCylinderToast !== false;
+    const newStatus = !currentStatus;
+    window.masterData.settings.showCylinderToast = newStatus;
+
+    // 2. UI 스위치 동기화
+    const toggle = document.getElementById('cylinder-toast-toggle');
+    if (toggle) {
+        toggle.classList.toggle('active', newStatus);
+    }
+
+    // 3. ✨ [추가] 상태 변경 피드백 토스트 출력
+    if (window.showToast) {
+        const msg = newStatus 
+            ? "부산물 획득 알림을 다시 표시합니다." 
+            : "이제 부산물 획득 알림이 뜨지 않습니다.";
+        window.showToast(msg, newStatus ? "success" : "info");
+    }
+
+    // 4. 데이터 영구 저장 및 효과음
+    if (window.saveAllData) window.saveAllData();
+    if (window.playSFX) window.playSFX('click');
+};
+
+/**
+ * [기존 toggleSettings 보강] 설정창을 열 때 현재 값을 UI에 반영
+ */
+const originalToggleSettings = window.toggleSettings;
+window.toggleSettings = (show) => {
+    if (show) {
+        const showToast = window.masterData.settings?.showCylinderToast !== false;
+        const toggle = document.getElementById('cylinder-toast-toggle');
+        if (toggle) toggle.classList.toggle('active', showToast);
+    }
+    if (originalToggleSettings) originalToggleSettings(show);
+};
+
 // [교정] 수동 호출용 함수도 ID를 'common-tooltip'으로 통일
 window.showTooltip = (e, text) => {
     const tooltip = document.getElementById('common-tooltip');
@@ -694,8 +744,8 @@ window.toggleSettings = (show) => {
         if (langSelect) langSelect.value = s.language || 'ko';
 
         const currentFont = s.font || 'paperlogy';
-        const fontRadio = document.querySelector(`input[name="font-choice"][value="${currentFont}"]`);
-        if (fontRadio) fontRadio.checked = true;
+        const fontSelect = document.getElementById('font-select');
+        if (fontSelect) fontSelect.value = currentFont;
 
         const currentTheme = s.currentTheme || 'DEFAULT_DARK'; 
         const themeRadio = document.querySelector(`input[name="theme-choice"][value="${currentTheme}"]`);
@@ -790,23 +840,23 @@ window.applyAccordionStates = () => {
 window.changeFont = function(fontName, needSave = true) {
     const root = document.documentElement;
     
-    // 폰트 적용
-    if (fontName === 'Pretendard') {
-        root.style.setProperty('--main-font', "'Pretendard', sans-serif");
-    } else if (fontName === 'Galmuri11') {
-        root.style.setProperty('--main-font', "'Galmuri11', sans-serif");
-    } else {
-        root.style.setProperty('--main-font', "'Paperlogy', sans-serif");
-    }
+    // 폰트별 CSS 변수 매핑
+    const fontMapping = {
+        'Pretendard': "'Pretendard', sans-serif",
+        'Galmuri11': "'Galmuri11', sans-serif",
+        'NanumSquareNeo': "'NanumSquareNeo', sans-serif", // ✨ 추가
+        'paperlogy': "'Paperlogy', sans-serif"
+    };
 
-    // 설정 객체 업데이트
+    const selectedFont = fontMapping[fontName] || fontMapping['paperlogy'];
+    root.style.setProperty('--main-font', selectedFont);
+
+    // 설정 데이터 업데이트 및 저장
     if (window.masterData && window.masterData.settings) {
         window.masterData.settings.font = fontName;
-        
-        // [수정] needSave가 true일 때만 파일에 저장합니다. (부팅 시 과부하 방지)
         if (needSave) {
             saveAllData(); 
-            console.log(`[설정] 폰트 변경 및 저장 완료: ${fontName}`);
+            console.log(`[설정] 폰트 변경: ${fontName}`);
         }
     }
 };
@@ -1854,6 +1904,10 @@ window.updateUI = function() {
             }
         }
     }
+
+    if (window.NoteManager) {
+        window.NoteManager.updateTheme();
+    }
 };
 
 /* ============================================================
@@ -1961,54 +2015,75 @@ async function handleMidnightReset(nowMolipDate) {
 }
 
 /**
- * [추출] 서신 및 업적 조건 체크 로직
+ * [renderer.js] 서신 및 업적 조건 체크 함수 전문
+ * @param {boolean} isFocusing - 현재 집중 중인지 여부 (flow_state 판정용)
+ * @param {string} nowMolipDate - 현재 논리적 날짜 (YYYY-MM-DD)
  */
 function checkMailAndAchievements(isFocusing, nowMolipDate) {
-    if (!mailbox) return;
+    // 기초 시스템 로드 확인
+    if (!window.mailbox || !window.progress || !window.collection) return;
 
-    const adultCount = charData.characters.filter(char => {
-        const growthSec = charGrowthMap[char.id] || 0;
+    const currentId = window.currentPartner?.id;
+    const now = new Date();
+
+    // 1. 성체 캐릭터 수 계산
+    const adultCount = (window.charData?.characters || []).filter(char => {
+        const growthSec = window.charGrowthMap[char.id] || 0;
         return (growthSec / 60) >= (char.evolution_level || 300);
     }).length;
 
-    const isPerfectDay = (molipTodos.length > 0 && molipTodos.every(t => t.completed)) && 
-                        (molipHabits.length > 0 && molipHabits.every(h => h.completed));
-    
-    const petKey = `${currentPartner?.id}_${nowMolipDate}`;
-    const lastSaveDateVal = masterData.progress.lastSaveDate ? new Date(masterData.progress.lastSaveDate) : new Date();
-    const daysSinceLastSave = Math.floor((new Date() - lastSaveDateVal) / (1000 * 60 * 60 * 24));
+    // 2. 완벽한 하루(Perfect Day) 판정
+    const hasTasks = window.molipTodos.length > 0 || window.molipHabits.length > 0;
+    const allTodosDone = window.molipTodos.length > 0 ? window.molipTodos.every(t => t.completed) : true;
+    const allHabitsDone = window.molipHabits.length > 0 ? window.molipHabits.every(h => h.completed) : true;
+    const isPerfectDay = hasTasks && allTodosDone && allHabitsDone;
 
+    // 3. 쓰다듬기 횟수 키 생성
+    const petKey = `${currentId}_${nowMolipDate}`;
+
+    // 4. ✨ [핵심 수정] mailboxManager.js가 내부적으로 사용하는 변수명으로 매핑
     const stats = {
-        level: progress.getProgressData().level,
-        points: collection.points,
-        totalTime: progress.totalFocusTime,
-        partnerId: currentPartner?.id,
+        // [식별자 및 단계]
+        partnerId: currentId,
         current_stage: window.currentStage,
-        intimacy_level: charIntimacyMap[currentPartner?.id] || 0,
-        growth_level: charGrowthMap[currentPartner?.id] || 0,
-        adultCount: adultCount,
-        todoCount: molipTodos.filter(t => t.completed).length,
-        habit_master: Math.max(...molipHabits.map(h => h.streak || 0), 0),
-        ownedCount: (collection.ownedIds || []).length,
-        app_juggler: workApps.length,
-        gift_total_count: Object.values(givenGiftsMap || {}).reduce((sum, list) => sum + list.length, 0),
-        isPerfectDay: isPerfectDay,
-        isFlowActive: isFocusing,
-        inactive_days: daysSinceLastSave,
-        daily_pet_limit: dailyPetCountMap[petKey] || 0,
-        currentHour: new Date().getHours(),
-        currentDay: new Date().getDay()
+        
+        // [시간 데이터 - mailboxManager는 내부적으로 totalTime, marathonTime 등을 찾음]
+        totalTime: window.progress.totalFocusTime, // 초 단위로 전달 (매니저가 분으로 변환함)
+        marathonTime: window.molipMonitor?.currentSessionTime || 0,
+        all_growth: window.charGrowthMap || {},   // 덴데 조건(specific_growth) 판정용 객체
+        
+        // [능력치 및 수집]
+        alchemist_level: window.progress.getProgressData().level,
+        intimacy_level: window.charIntimacyMap[currentId] || 0,
+        ownedCount: (window.collection.ownedIds || []).length, // owned_count 트리거 대응
+        todoCount: window.molipTodos.filter(t => t.completed).length, // todo_count 트리거 대응
+        points: window.collection.points, // rich_alchemist 트리거 대응
+        
+        // [활동 기록]
+        habit_master: Math.max(0, ...window.molipHabits.map(h => h.streak || 0)),
+        app_juggler: (window.workApps || []).length,
+        daily_pet_limit: window.dailyPetCountMap ? (window.dailyPetCountMap[petKey] || 0) : 0,
+        
+        // [상태 및 시간대 판정]
+        isFlowActive: isFocusing, // flow_state 트리거 대응
+        isPerfectDay: isPerfectDay, // perfect_day 트리거 대응
+        currentHour: now.getHours(),
+        currentDay: now.getDay()
     };
-    
-    const newMails = mailbox.checkTriggers(stats);
+
+    // 5. 서신 트리거 엔진 실행
+    const newMails = window.mailbox.checkTriggers(stats);
+
+    // 6. 신규 서신 도착 처리
     if (newMails && newMails.length > 0) {
-        if (window.playSFX) {
-            window.playSFX('letterbox'); 
-        }
-        window.showToast("새로운 서신이 도착했습니다.", "info");
+        console.log(`📨 [Note] 덴데의 서신을 포함한 ${newMails.length}통의 서신 도착`);
+        
+        if (window.playSFX) window.playSFX('letterbox'); 
+        if (window.showToast) window.showToast("새로운 서신이 도착했습니다!", "info");
+        
         if (window.renderMailList) window.renderMailList();
-        window.updateMailNotification();
-        saveAllData(); 
+        if (window.updateMailNotification) window.updateMailNotification();
+        if (window.saveAllData) window.saveAllData(); 
     }
 }
 
@@ -2235,6 +2310,10 @@ async function startEngine() {
                 
                 if (currentPartner) await refreshCharacterSprite(); 
             }
+        }
+
+        if (window.NoteManager) {
+            window.NoteManager.init();
         }
 
         // 8. UI 최종 적용

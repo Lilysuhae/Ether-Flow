@@ -4,6 +4,7 @@ class TaskManager {
     constructor() {
         this.editingTodoId = null;
         this.dragSrcIndex = null;
+        this.habitDragSrcIndex = null; // 습관 전용 드래그 인덱스
         this.priorityScore = { 'high': 3, 'mid': 2, 'low': 1 };
     }
 
@@ -11,23 +12,27 @@ class TaskManager {
      * 초기화 및 전역 함수 바인딩
      */
     init() {
+        // 할 일 관련 바인딩
         window.addMolipTodo = this.addMolipTodo.bind(this);
         window.toggleTodo = this.toggleTodo.bind(this);
         window.deleteTodo = this.deleteTodo.bind(this);
         window.editTodo = this.editTodo.bind(this);
         window.saveInlineEdit = this.saveInlineEdit.bind(this);
         
+        // 습관 관련 바인딩
         window.addHabit = this.addHabit.bind(this);
         window.toggleHabit = this.toggleHabit.bind(this);
         window.deleteHabit = this.deleteHabit.bind(this);
         window.editHabit = this.editHabit.bind(this);
         window.saveHabitInlineEdit = this.saveHabitInlineEdit.bind(this);
         
+        // 렌더링 및 유틸리티
         window.renderTodos = this.renderTodos.bind(this);
         window.renderHabits = this.renderHabits.bind(this);
         window.cleanupOldTasks = this.cleanupOldTasks.bind(this);
         window.checkHabitReset = this.checkHabitReset.bind(this);
 
+        // 드래그 앤 드롭 바인딩
         window.handleDragStart = this.handleDragStart.bind(this);
         window.handleDragOver = this.handleDragOver.bind(this);
         window.handleDragEnter = this.handleDragEnter.bind(this);
@@ -35,11 +40,15 @@ class TaskManager {
         window.handleDragEnd = this.handleDragEnd.bind(this);
         window.handleDrop = this.handleDrop.bind(this);
 
+        // 습관 전용 드래그 바인딩 추가
+        window.handleHabitDragStart = this.handleHabitDragStart.bind(this);
+        window.handleHabitDrop = this.handleHabitDrop.bind(this);
+
         this.initMainDatePicker();   
         this.initHabitDatePicker();  
         this.initHabitEvents();      
 
-        console.log("✅ [TaskManager] 시간 비우기 기능이 추가된 시스템 가동");
+        console.log("✅ [TaskManager] 모든 기능이 포함된 시스템 가동");
     }
 
     get todos() { return window.molipTodos || []; }
@@ -57,7 +66,7 @@ class TaskManager {
                 time_24hr: true,
                 locale: locale,
                 disableMobile: true,
-                allowInput: true // ✨ 백스페이스로 지우기 허용
+                allowInput: true 
             });
         }
     }
@@ -75,7 +84,7 @@ class TaskManager {
                 time_24hr: true,
                 locale: locale,
                 disableMobile: true,
-                allowInput: true // ✨ 백스페이스로 지우기 허용
+                allowInput: true 
             });
         }
     }
@@ -111,7 +120,7 @@ class TaskManager {
         });
 
         input.value = ''; 
-        if (deadlineInput && deadlineInput._flatpickr) deadlineInput._flatpickr.clear(); // 등록 후 비우기
+        if (deadlineInput && deadlineInput._flatpickr) deadlineInput._flatpickr.clear(); 
         if (prioritySelect) prioritySelect.value = 'low';
 
         this.renderTodos(); 
@@ -119,15 +128,6 @@ class TaskManager {
         if (window.playSFX) window.playSFX('click');
     }
 
-    formatDeadline(isoString) {
-        if (!isoString) return '';
-        const date = new Date(isoString);
-        return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-    }
-
-    /**
-     * 마감 기한 포맷팅 (월-일 및 시간 분리)
-     */
     formatDeadline(isoString) {
         if (!isoString) return null;
         const date = new Date(isoString);
@@ -142,9 +142,6 @@ class TaskManager {
         };
     }
 
-    /**
-     * 할 일 목록 렌더링 (습관과 동일한 규칙 적용)
-     */
     renderTodos() {
         const list = document.getElementById('todo-list');
         const badge = document.getElementById('todo-count-badge');
@@ -176,7 +173,7 @@ class TaskManager {
         }
 
         list.innerHTML = displayTodos.map((todo, index) => {
-            const deadline = this.formatDeadline(todo.deadline); // ✨ 날짜/시간 객체 수령
+            const deadline = this.formatDeadline(todo.deadline); 
             return `
             <li class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}" draggable="true"
                 ondragstart="window.handleDragStart(event, ${index})" ondragover="window.handleDragOver(event)"
@@ -206,9 +203,7 @@ class TaskManager {
         if (index === -1) return;
         const wasCompleted = this.todos[index].completed;
         this.todos[index].completed = !wasCompleted;
-        if (window.playSFX) {
-            window.playSFX('check'); // 또는 'level_up', 'click' 등 등록된 키워드
-        }
+        if (window.playSFX) window.playSFX('check');
 
         if (this.todos[index].completed && !wasCompleted) {
             const partner = window.currentPartner;
@@ -227,9 +222,6 @@ class TaskManager {
         if (window.saveAllData) window.saveAllData();
     }
 
-    /**
-     * 투두 수정: 지우기 버튼 추가
-     */
     editTodo(id) {
         const todo = this.todos.find(t => String(t.id) === String(id));
         const item = document.querySelector(`.todo-item[data-id="${id}"]`);
@@ -279,7 +271,7 @@ class TaskManager {
     }
 
     // ============================================================
-    // [2] 습관 로직
+    // [2] 습관 리스트 로직 (드래그 정렬 적용)
     // ============================================================
 
     addHabit() {
@@ -297,14 +289,12 @@ class TaskManager {
             streak: 0,
             lastCompletedDate: null,
             days: activeDays.length > 0 ? activeDays : [0,1,2,3,4,5,6],
-            time: timeInput ? timeInput.value : ""
+            time: timeInput ? timeInput.value : "",
+            order: Date.now() // 순서 필드 추가
         });
 
-        // 입력창 및 시간 선택기 초기화
         input.value = '';
         if (timeInput && timeInput._flatpickr) timeInput._flatpickr.clear();
-        
-        // ✨ [수정] 등록 완료 후 모든 요일 버튼을 다시 활성화(active) 상태로 되돌립니다.
         document.querySelectorAll('.day-btn').forEach(btn => btn.classList.add('active'));
 
         this.renderHabits();
@@ -312,9 +302,6 @@ class TaskManager {
         if (window.showToast) window.showToast("새로운 습관을 새겼습니다.", "success");
     }
 
-    /**
-     * 습관 목록 렌더링 (빈 목록 메시지 추가 버전)
-     */
     renderHabits() {
         const list = document.getElementById('habit-list');
         const badge = document.getElementById('habit-count-badge');
@@ -323,29 +310,31 @@ class TaskManager {
         const today = new Date().getDay();
         const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
-        // 1. 뱃지 업데이트
         if (badge) {
             const completedCount = this.habits.filter(h => h.completed).length;
             badge.innerText = `${completedCount}/${this.habits.length}`;
             badge.classList.toggle('all-completed', this.habits.length > 0 && completedCount === this.habits.length);
         }
 
-        // 2. 목록 없음 처리
         if (this.habits.length === 0) {
             list.innerHTML = '<li class="empty-list-msg">등록된 습관이 없습니다.</li>';
             return;
         }
 
-        // 3. 습관 리스트 생성
-        list.innerHTML = this.habits.map(h => {
-            // ✨ [핵심 수정] h.days가 없거나 깨져있을 경우 빈 배열로 처리하여 에러 방지
+        // 저장된 순서(order)에 따라 정렬
+        this.habits.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+        list.innerHTML = this.habits.map((h, index) => {
             const safeDays = Array.isArray(h.days) ? h.days : [];
-            
             const isToday = safeDays.includes(today);
             const dayText = safeDays.length === 7 ? "매일" : safeDays.map(d => dayNames[d]).join(', ');
 
             return `
-            <li class="todo-item habit-item ${h.completed ? 'completed' : ''} ${!isToday ? 'not-today' : ''}" data-id="${h.id}">
+            <li class="todo-item habit-item ${h.completed ? 'completed' : ''} ${!isToday ? 'not-today' : ''}" 
+                data-id="${h.id}" draggable="true"
+                ondragstart="window.handleHabitDragStart(event, ${index})" ondragover="window.handleDragOver(event)"
+                ondrop="window.handleHabitDrop(event, ${index})" ondragend="window.handleDragEnd(event)">
+                <div class="drag-handle"><i class="fas fa-bars"></i></div>
                 <div class="todo-checkbox" onclick="window.toggleHabit('${h.id}')">
                     ${h.completed ? '<i class="fas fa-check"></i>' : ''}
                 </div>
@@ -355,13 +344,10 @@ class TaskManager {
                         <span class="habit-streak ${h.streak > 0 ? 'active' : ''}">
                             <i class="fas fa-fire"></i> ${h.streak || 0}일째
                         </span>
-                        
                         <span class="habit-info-sep">|</span>
-                        
                         <span class="habit-days">
                             <i class="fas fa-calendar-alt"></i> ${dayText}
                         </span>
-
                         ${h.time ? `
                         <span class="habit-info-sep">|</span>
                         <span class="habit-time">
@@ -377,51 +363,36 @@ class TaskManager {
         }).join('');
     }
 
-    /**
-     * 습관 달성 토글 (연속 달성 기록 로직 포함)
-     */
     toggleHabit(id) {
         const h = this.habits.find(habit => habit.id === id);
         if (!h) return;
-
-        if (window.playSFX) {
-            window.playSFX('check'); // 또는 'level_up', 'click' 등 등록된 키워드
-        }
+        if (window.playSFX) window.playSFX('check');
 
         const molipToday = window.getMolipDate();
-        // 오늘 이미 달성해서 기록이 남았는지 확인
         const wasAlreadyDoneToday = (h.lastCompletedDate === molipToday);
 
         if (!h.completed) {
-            // [체크하기]
             h.completed = true;
             if (!wasAlreadyDoneToday) {
-                h.streak = (h.streak || 0) + 1; // 오늘 처음 체크하는 거라면 연속 기록 +1
+                h.streak = (h.streak || 0) + 1;
                 h.lastCompletedDate = molipToday;
             }
-
-            // 에테르 보상 (최초 1회만)
             if (!h.rewarded) { 
                 if (window.collection) window.collection.addPoints(10); 
                 h.rewarded = true; 
                 if (window.showToast) window.showToast("습관 달성! 10 Et 획득", "success");
             }
         } else {
-            // [체크 해제] 실수로 눌렀을 때를 대비해 연속 기록 복구
             h.completed = false;
             if (wasAlreadyDoneToday) {
                 h.streak = Math.max(0, (h.streak || 0) - 1);
                 h.lastCompletedDate = null;
             }
         }
-
         this.renderHabits();
         if (window.saveAllData) window.saveAllData();
     }
 
-    /**
-     * 습관 수정: 지우기 버튼 추가
-     */
     editHabit(id) {
         const h = this.habits.find(habit => habit.id === id);
         const item = document.querySelector(`.habit-item[data-id="${id}"]`);
@@ -463,31 +434,21 @@ class TaskManager {
         if (idx !== -1) { this.habits.splice(idx, 1); this.renderHabits(); if (window.saveAllData) window.saveAllData(); }
     }
 
-    /**
-     * 날짜 변경 시 습관 상태 초기화 및 연속 기록 검증
-     */
     checkHabitReset() {
         const molipToday = window.getMolipDate();
-        // renderer.js의 updateLoop가 날짜를 갱신하기 전의 '어제' 날짜를 가져옵니다.
         const lastDateStr = window.masterData.progress.lastSaveDate;
         const lastDay = new Date(lastDateStr).getDay();
 
         this.habits.forEach(h => {
             const safeDays = Array.isArray(h.days) ? h.days : [];
-            
-            // 1. 연속 달성 파괴 로직: 어제가 실천 요일이었는데 달성하지 않았다면 리셋
             if (safeDays.includes(lastDay) && !h.completed && h.lastCompletedDate !== molipToday) {
                 h.streak = 0; 
-                console.log(`🔥 [Habit] 연속 기록 파괴: ${h.text}`);
             }
-
-            // 2. 일일 상태 초기화
             if (h.completed && h.lastCompletedDate !== molipToday) {
                 h.completed = false;
                 h.rewarded = false;
             }
         });
-        
         this.renderHabits();
     }
 
@@ -502,20 +463,19 @@ class TaskManager {
         if (window.saveAllData) window.saveAllData();
     }
 
+    // ============================================================
+    // [3] 드래그 앤 드롭 공용 및 전용 로직
+    // ============================================================
+
     handleDragStart(e, index) { this.dragSrcIndex = index; e.dataTransfer.effectAllowed = 'move'; e.currentTarget.classList.add('dragging'); }
     handleDragOver(e) { e.preventDefault(); return false; }
-    
-    /**
-     * 할 일 드래그 앤 드롭 결과 처리 (순서 및 상태 동기화)
-     */
+    handleDragEnd(e) { e.currentTarget.classList.remove('dragging'); }
+    handleDragEnter(e) {} handleDragLeave(e) {}
+
     handleDrop(e, targetIndex) {
         if (this.dragSrcIndex === null || this.dragSrcIndex === targetIndex) return;
-
-        // 1. 현재 화면에 표시된 리스트(필터링 및 정렬 완료된 상태)를 동일하게 구성합니다.
         const molipToday = window.getMolipDate();
         let displayTodos = this.todos.filter(t => t && (t.date === molipToday || (!t.completed && t.date !== molipToday)));
-
-        // renderTodos와 동일한 정렬 기준으로 정렬된 상태를 가져옵니다.
         displayTodos.sort((a, b) => {
             if (a.completed !== b.completed) return a.completed ? 1 : -1;
             const pA = this.priorityScore[a.priority] || 1;
@@ -523,40 +483,40 @@ class TaskManager {
             if (pA !== pB) return pB - pA;
             return (a.order || 0) - (b.order || 0);
         });
-
-        // 2. 드래그한 아이템과 타겟 아이템을 특정합니다.
         const movedItem = displayTodos[this.dragSrcIndex];
         const targetItem = displayTodos[targetIndex];
-
         if (!movedItem || !targetItem) return;
-
-        // 3. ✨ [핵심 수정] 드래그 위치에 따라 중요도와 완료 상태를 타겟 아이템과 동기화합니다.
-        // 이렇게 해야 정렬 우선순위 때문에 아이템이 제자리로 튕겨 나가는 것을 방지할 수 있습니다.
         movedItem.priority = targetItem.priority;
         movedItem.completed = targetItem.completed;
         movedItem.date = targetItem.date;
-
-        // 4. 전체 리스트에서 드래그한 아이템을 제거하고 새로운 위치(타겟 앞/뒤)에 삽입합니다.
         const actualSrcIdx = this.todos.indexOf(movedItem);
         this.todos.splice(actualSrcIdx, 1);
-        
         const actualTargetIdx = this.todos.indexOf(targetItem);
         this.todos.splice(actualTargetIdx, 0, movedItem);
-
-        // 5. ✨ [순서 기억] 현재 배열의 물리적 순서를 'order' 속성에 박제합니다.
-        this.todos.forEach((t, idx) => {
-            t.order = idx;
-        });
-
-        // UI 갱신 및 영구 저장
+        this.todos.forEach((t, idx) => { t.order = idx; });
         this.renderTodos();
         if (window.saveAllData) window.saveAllData();
-        
-        // 초기화
         this.dragSrcIndex = null;
     }
-    handleDragEnd(e) { e.currentTarget.classList.remove('dragging'); }
-    handleDragEnter(e) {} handleDragLeave(e) {}
+
+    // ✨ 습관 전용 드래그 로직 (생략 없이 추가)
+    handleHabitDragStart(e, index) {
+        this.habitDragSrcIndex = index;
+        e.dataTransfer.effectAllowed = 'move';
+        e.currentTarget.classList.add('dragging');
+    }
+
+    handleHabitDrop(e, targetIndex) {
+        if (this.habitDragSrcIndex === null || this.habitDragSrcIndex === targetIndex) return;
+        const movedItem = this.habits[this.habitDragSrcIndex];
+        if (!movedItem) return;
+        this.habits.splice(this.habitDragSrcIndex, 1);
+        this.habits.splice(targetIndex, 0, movedItem);
+        this.habits.forEach((h, idx) => { h.order = idx; }); // 순서 고정
+        this.renderHabits();
+        if (window.saveAllData) window.saveAllData();
+        this.habitDragSrcIndex = null;
+    }
 }
 
 module.exports = TaskManager;

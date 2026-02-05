@@ -13,134 +13,51 @@ window.currentShopCategory = 'gift'; // 현재 상점 탭 상태 기억
  * 1. 상점 아이템 기본 데이터 정의
  */
 window.getShopItems = () => [
-    {
-        id: "handwritten_letter",
-        category: "gift",
-        name: window.t('game.items.handwritten_letter_name'),
-        icon: "assets/images/items/handwritten_letter.png",
-        price: 5,
-        desc: window.t('game.items.handwritten_letter_desc')
-    },
-    {
-        id: "red_berry",
-        category: "gift",
-        name: window.t('game.items.red_berry_name'),
-        icon: "assets/images/items/red_berry.png",
-        price: 20,
-        desc: window.t('game.items.red_berry_desc')
-    },
-    {
-        id: "black_extract",
-        category: "gift",
-        name: window.t('game.items.black_extract_name'),
-        icon: "assets/images/items/black_extract.png",
-        price: 30,
-        desc: window.t('game.items.black_extract_desc')
-    },
-    {
-        id: "old_record",
-        category: "gift",
-        name: window.t('game.items.old_record_name'),
-        icon: "assets/images/items/old_record.png",
-        price: 60,
-        desc: window.t('game.items.old_record_desc')
-    },
-    {
-        id: "old_instrument",
-        category: "gift",
-        name: window.t('game.items.old_instrument_name'),
-        icon: "assets/images/items/old_instrument.png",
-        price: 50,
-        desc: window.t('game.items.old_instrument_desc')
-    },
-    {
-        id: "warm_blanket",
-        category: "gift",
-        name: window.t('game.items.warm_blanket_name'),
-        icon: "assets/images/items/warm_blanket.png",
-        price: 60,
-        desc: window.t('game.items.warm_blanket_desc')
-    },
-    {
-        id: "ice_shard",
-        category: "gift",
-        name: window.t('game.items.ice_shard_name'),
-        icon: "assets/images/items/ice_shard.png",
-        price: 30,
-        desc: window.t('game.items.ice_shard_desc')
-    },
-    {
-        id: "gem_shard",
-        category: "gift",
-        name: window.t('game.items.gem_shard_name'),
-        icon: "assets/images/items/gem_shard.png",
-        price: 80,
-        desc: window.t('game.items.gem_shard_desc')
-    },
-    {
-        id: "silent_candle",
-        category: "gift",
-        name: window.t('game.items.silent_candle_name'),
-        icon: "assets/images/items/silent_candle.png",
-        price: 25,
-        desc: window.t('game.items.silent_candle_desc')
-    },
-    {
-        id: "prism_kaleidoscope",
-        category: "gift",
-        name: window.t('game.items.prism_kaleidoscope_name'),
-        icon: "assets/images/items/prism_kaleidoscope.png",
-        price: 70,
-        desc: window.t('game.items.prism_kaleidoscope_desc')
-    },
-    {
-        id: "dried_flower",
-        category: "gift",
-        name: window.t('game.items.dried_flower_name'),
-        icon: "assets/images/items/dried_flower.png",
-        price: 15,
-        desc: window.t('game.items.dried_flower_desc')
-    },
-    {
-        id: "old_parchment",
-        category: "gift",
-        name: window.t('game.items.old_parchment_name'),
-        icon: "assets/images/items/old_parchment.png",
-        price: 5,
-        desc: window.t('game.items.old_parchment_desc')
-    },
-    {
-        id: "abyssal_quill",
-        category: "gift",
-        name: window.t('game.items.abyssal_quill_name'),
-        icon: "assets/images/items/abyssal_quill.png",
-        price: 60,
-        desc: window.t('game.items.abyssal_quill_desc')
-    },
-    {
-        id: "golden_curd",
-        category: "gift",
-        name: window.t('game.items.golden_curd_name'),
-        icon: "assets/images/items/golden_curd.png",
-        price: 25,
-        desc: window.t('game.items.golden_curd_desc')
-    },
-    {
-        id: "resonance_bell",
-        category: "gift",
-        name: window.t('game.items.resonance_bell_name'),
-        icon: "assets/images/items/resonance_bell.png",
-        price: 50,
-        desc: window.t('game.items.resonance_bell_desc')
-    },
-    {
-        id: "music_seashell",
-        category: "special", 
-        name: "음악이 나오는 소라고둥",
-        icon: "assets/images/items/music_seashell.png",
-        price: 0,
-        desc: "소리의 요정이 선물한 신비한 고둥입니다."
-    }
+    /* --- 🎁 선물 아이템 (Gift) --- */
+    { id: "handwritten_letter", category: "gift", name: window.t('game.items.handwritten_letter_name'), icon: "assets/images/items/handwritten_letter.png", price: 5, desc: window.t('game.items.handwritten_letter_desc') },
+    { id: "red_berry", category: "gift", name: window.t('game.items.red_berry_name'), icon: "assets/images/items/red_berry.png", price: 20, desc: window.t('game.items.red_berry_desc') },
+    { id: "black_extract", category: "gift", name: window.t('game.items.black_extract_name'), icon: "assets/images/items/black_extract.png", price: 30, desc: window.t('game.items.black_extract_desc') },
+    { id: "old_record", category: "gift", name: window.t('game.items.old_record_name'), icon: "assets/images/items/old_record.png", price: 60, desc: window.t('game.items.old_record_desc') },
+    { id: "old_instrument", category: "gift", name: window.t('game.items.old_instrument_name'), icon: "assets/images/items/old_instrument.png", price: 50, desc: window.t('game.items.old_instrument_desc') },
+    { id: "warm_blanket", category: "gift", name: window.t('game.items.warm_blanket_name'), icon: "assets/images/items/warm_blanket.png", price: 60, desc: window.t('game.items.warm_blanket_desc') },
+    { id: "ice_shard", category: "gift", name: window.t('game.items.ice_shard_name'), icon: "assets/images/items/ice_shard.png", price: 30, desc: window.t('game.items.ice_shard_desc') },
+    { id: "gem_shard", category: "gift", name: window.t('game.items.gem_shard_name'), icon: "assets/images/items/gem_shard.png", price: 80, desc: window.t('game.items.gem_shard_desc') },
+    { id: "silent_candle", category: "gift", name: window.t('game.items.silent_candle_name'), icon: "assets/images/items/silent_candle.png", price: 25, desc: window.t('game.items.silent_candle_desc') },
+    { id: "prism_kaleidoscope", category: "gift", name: window.t('game.items.prism_kaleidoscope_name'), icon: "assets/images/items/prism_kaleidoscope.png", price: 70, desc: window.t('game.items.prism_kaleidoscope_desc') },
+    { id: "dried_flower", category: "gift", name: window.t('game.items.dried_flower_name'), icon: "assets/images/items/dried_flower.png", price: 15, desc: window.t('game.items.dried_flower_desc') },
+    { id: "old_parchment", category: "gift", name: window.t('game.items.old_parchment_name'), icon: "assets/images/items/old_parchment.png", price: 5, desc: window.t('game.items.old_parchment_desc') },
+    { id: "abyssal_quill", category: "gift", name: window.t('game.items.abyssal_quill_name'), icon: "assets/images/items/abyssal_quill.png", price: 60, desc: window.t('game.items.abyssal_quill_desc') },
+    { id: "golden_curd", category: "gift", name: window.t('game.items.golden_curd_name'), icon: "assets/images/items/golden_curd.png", price: 25, desc: window.t('game.items.golden_curd_desc') },
+    { id: "resonance_bell", category: "gift", name: window.t('game.items.resonance_bell_name'), icon: "assets/images/items/resonance_bell.png", price: 50, desc: window.t('game.items.resonance_bell_desc') },
+
+    /* --- 🧪 기초 연성 재료 (제한 없음) --- */
+    /* --- 기초 생태계 재료 (15 Et) --- */
+    { id: 'soft_down_cotton', category: 'material', minLevel: 0, name: '부드러운 솜털', price: 15, icon: 'assets/images/items/cotton.png', desc: '부드럽고 푹신한 촉감의 솜털입니다. 따뜻한 체온을 가진 생명체를 연성하는 기초 재료가 됩니다.' },
+    { id: 'soft_down_feather', category: 'material', minLevel: 0, name: '부드러운 깃털', icon: 'assets/images/items/feather.png', price: 15, desc: "작은 새의 온기가 느껴지는 깃털입니다. 비행형 호문클루스의 기초 재료가 됩니다." },
+    { id: 'glistening_mucus_bead', category: 'material', minLevel: 0, name: '반짝이는 점액 방울', icon: 'assets/images/items/mucus.png', price: 18, desc: "양서류의 피부에서 추출한 듯한 점액입니다. 습한 환경을 선호하는 생명 연성에 쓰입니다." },
+    { id: 'torn_leather_scrap', category: 'material', minLevel: 0, name: '찢어진 가죽', icon: 'assets/images/items/leather.png', price: 20, desc: "질긴 생명력을 머금은 가죽입니다. 포유류 형태의 골격을 잡는 데 사용됩니다." },
+    { id: 'calcified_shell_fragment', category: 'material', minLevel: 0, name: '석회화된 껍데기', icon: 'assets/images/items/shell.png', price: 25, desc: "작은 조개나 달팽이의 흔적입니다. 호문클루스에게 견고한 외피를 형성해 줍니다." },
+
+    /* --- ⚡ 강화 및 변이 재료 (제한 없음) --- */
+    { id: 'phosphorescent_wing', category: 'material', minLevel: 0, name: '발광하는 날개', icon: 'assets/images/items/insect_wing.png', price: 45, desc: "곤충의 날개처럼 얇고 단단합니다. 에테르에 반응하여 미세하게 떨립니다." },
+    { id: 'chitinous_armor_plate', category: 'material', minLevel: 0, name: '키틴질 갑각 조각', icon: 'assets/images/items/chitin.png', price: 50, desc: "갑각류의 단단한 외피입니다. 외부 충격에 강한 생명력을 부여합니다." },
+    { id: 'sharpened_claw', category: 'material', minLevel: 0, name: '날카로운 발톱', icon: 'assets/images/items/claw.png', price: 60, desc: "포식자의 기운이 서린 발톱입니다. 호문클루스에게 민첩성을 부여합니다." },
+    { id: 'venomous_fang', category: 'material', minLevel: 0, name: '독기 서린 송곳니', icon: 'assets/images/items/fang.png', price: 75, desc: "파충류의 날카로운 송곳니입니다. 치명적인 야성을 심어줄 때 사용합니다." },
+
+    /* --- 💎 희귀 생태 정수 (레벨 15 오픈) --- */
+    { id: 'spectral_fin', category: 'material', minLevel: 15, name: '유령 지느러미', icon: 'assets/images/items/fin.png', price: 120, desc: "형체가 불분명한 지느러미입니다. 수중 생물 연성에 필수적입니다." },
+    { id: 'starlight_antler', category: 'material', minLevel: 15, name: '별빛 뿔', icon: 'assets/images/items/antler.png', price: 150, desc: "은은한 빛을 내뿜는 뿔의 조각입니다. 고결한 숲의 영물을 떠올리게 합니다." },
+    { id: 'vibrant_suction_cup', category: 'material', minLevel: 15, name: '선명한 빨판 조각', icon: 'assets/images/items/suction_cup.png', price: 180, desc: "심해 두족류의 흔적에서 남은 빨판입니다. 에테르를 고정하는 능력이 탁월합니다." },
+    { id: 'cracked_beak', category: 'material', minLevel: 15, name: '금이 간 부리', icon: 'assets/images/items/beak.png', price: 200, desc: "풍파를 견딘 부리입니다. 날카로운 지성을 가진 생명을 빚을 때 쓰입니다." },
+
+    /* --- ✨ 신화적 기원 재료 (레벨 30 오픈) --- */
+    // { id: 'eternal_cocoon_silk', category: 'material', minLevel: 30, name: '영원의 고치 실', icon: 'assets/images/items/silk.png', price: 350, desc: "시간이 멈춘 고치에서 뽑아낸 실입니다. 진화의 가능성을 무한히 확장합니다." },
+    // { id: 'ancient_horn_chip', category: 'material', minLevel: 30, name: '고대 뿔 파편', icon: 'assets/images/items/horn.png', price: 400, desc: "전설 속 영물의 뿔에서 떨어진 조각입니다. 초월적인 힘을 연성하는 데 필수적입니다." },
+    // { id: 'crystallized_heartbeat', category: 'material', minLevel: 30, name: '결정화된 고동', icon: 'assets/images/items/heart.png', price: 450, desc: "생명의 박동이 보석으로 굳어진 것입니다. 호문클루스에게 영혼의 무게를 더합니다." },
+    // { id: 'nebula_mane_strand', category: 'material', minLevel: 30, name: '성운 갈기', icon: 'assets/images/items/mane.png', price: 500, desc: "우주의 빛을 담은 짐승의 갈기입니다. 환상 속 영물을 연성하는 정점의 재료입니다." },
+
+    /* --- ✨ 소중한 물건 --- */
+    { id: "music_seashell", category: "special", name: "음악이 나오는 소라고둥", icon: "assets/images/items/music_seashell.png", price: 0, desc: "소리의 요정이 선물한 신비한 고둥입니다." }
 ];
 
 /**
@@ -169,46 +86,64 @@ window.switchShopTab = (category, btnElement) => {
 /**
  * 3. 아이템 리스트 렌더링
  */
+/**
+ * [UIManager.js] 상점 리스트 렌더링 함수 (레벨 잠금 로직 포함)
+ * @param {string} category - 선택된 상점 카테고리
+ */
 window.renderShopItems = (category) => {
     const grid = document.getElementById('shop-grid'); 
     if (!grid) return;
     grid.innerHTML = ""; 
 
+    // 상단 에테르 보유량 갱신
     const shopEther = document.getElementById('shop-ether-count');
     if (shopEther && window.collection) {
         shopEther.innerText = window.collection.points.toLocaleString();
     }
 
-    if (category === 'material') {
-        grid.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; padding: 60px; color: rgba(255,255,255,0.4);">
-                <i class="fa-solid fa-hammer" style="font-size: 3rem; margin-bottom: 20px; display: block; opacity: 0.3;"></i>
-                <div style="font-size: 1.1rem; font-weight: 600;">연구 재료 준비 중</div>
-                <div style="font-size: 0.75rem; margin-top: 10px; opacity: 0.6; line-height: 1.6;">
-                    새로운 재료들을 가공하고 있습니다.<br>
-                    다음 업데이트를 기대해 주세요.
-                </div>
-            </div>`;
-        return; 
-    }
-
     const items = window.getShopItems();
     const filtered = items.filter(item => item.category === category);
+    
+    // 현재 연금술사 레벨 확인
+    const currentLevel = window.progress ? window.progress.getProgressData().level : 1;
 
     filtered.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'shop-card-glass';
-        card.setAttribute('data-tooltip', item.desc);
-
+        // 1. 레벨 잠금 상태 판정
+        const isLevelLocked = item.minLevel && currentLevel < item.minLevel;
         const canAfford = window.collection ? window.collection.points >= item.price : false;
 
+        const card = document.createElement('div');
+        // 잠금 상태일 경우 'locked' 클래스 추가 (CSS에서 처리)
+        card.className = `shop-card-glass ${isLevelLocked ? 'locked' : ''}`;
+        
+        // 2. 툴팁 텍스트 결정
+        const tooltipText = isLevelLocked 
+            ? `연금술사 레벨 ${item.minLevel}부터 구매 가능합니다.` 
+            : item.desc;
+        card.setAttribute('data-tooltip', tooltipText);
+
+        // 3. 버튼 텍스트 및 상태 설정
+        let buttonText = '구매하기';
+        let isButtonDisabled = false;
+
+        if (isLevelLocked) {
+            buttonText = `Lv.${item.minLevel} 필요`;
+            isButtonDisabled = true;
+        } else if (!canAfford) {
+            buttonText = '잔액 부족';
+            isButtonDisabled = true;
+        }
+
         card.innerHTML = `
-            <div class="shop-card-icon"><img src="${item.icon}" class="shop-img-icon"></div>
+            <div class="shop-card-icon">
+                <img src="${item.icon}" class="shop-img-icon">
+                ${isLevelLocked ? '<div class="shop-lock-overlay"><i class="fa-solid fa-lock"></i></div>' : ''}
+            </div>
             <div class="shop-card-name">${item.name}</div>
             <div class="shop-card-price">${item.price.toLocaleString()} Et</div>
-            <button class="btn-buy-glass" ${canAfford ? '' : 'disabled'} 
+            <button class="btn-buy-glass" ${isButtonDisabled ? 'disabled' : ''} 
                 onclick="window.buyItem('${item.id}', ${item.price})">
-                ${canAfford ? '구매하기' : '잔액 부족'}
+                ${buttonText}
             </button>
         `;
         grid.appendChild(card);
@@ -410,17 +345,17 @@ window.useInventoryItem = async (itemId) => {
     const result = await window.processResourceTransaction(transaction);
 
     if (result.success) {
-        // 5. ✨ 선호도 판별 (favorite / dislike / normal)
+        // 5. ✨ [수정] 선호도 판별 및 수치 적용 (Favorite: 5 / Normal: 2.5 / Dislike: 1)
         const prefs = partner.preferences || { favorite: [], dislike: [] };
         let reactionType = 'normal';
-        let intimacyBoost = 5.0; // 기본 상승량
+        let intimacyBoost = 2.5;
         
         if (prefs.favorite.includes(itemInfo.name)) {
             reactionType = 'favorite';
-            intimacyBoost = 8.0; // 좋아하는 선물 보너스
+            intimacyBoost = 5.0;
         } else if (prefs.dislike.includes(itemInfo.name)) {
             reactionType = 'dislike';
-            intimacyBoost = 1.0; // 싫어하는 선물 패널티
+            intimacyBoost = 1.0;
         }
 
         // 6. ✨ 현재 단계(child/adult)에 맞는 전용 대사 추출
@@ -671,9 +606,6 @@ window.mailTypeTimer = null; // 타이핑 효과 제어용 변수
 const sessionUnlockedAchievements = new Set(); // 세션 내 중복 알림 방지
 
 /**
- * 1. 서신 알림 뱃지 갱신
- */
-/**
  * 1. 서신 알림 뱃지 갱신 (방어 로직 강화)
  */
 window.updateMailNotification = () => {
@@ -706,40 +638,71 @@ window.updateMailNotification = () => {
 /**
  * 2. 서신 목록 렌더링 (무한 스크롤 지원)
  */
-window.renderMailList = () => {
-    const mb = window.mailbox;
-    if (!mb) return;
+/**
+ * [MailboxManager 확장] 탭별 필터링 로직
+ */
+window.currentMailTab = 'unread'; // 기본 탭 설정
 
-    const listContainer = document.getElementById('mail-list'); //
-    if (!listContainer) return;
+window.switchMailTab = function(tab, btn) {
+    window.currentMailTab = tab;
 
-    // 1. ✨ [수정] 전역 변수 참조 에러 방지 (기본값 10 설정)
-    const limit = window.mailDisplayLimit || 10; 
-    const displayMails = mb.receivedMails.slice(0, limit);
+    // 버튼 활성화 상태 변경
+    document.querySelectorAll('#mailbox-modal .shop-tab-re').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
 
-    // 2. 목록 생성
-    if (displayMails.length === 0) {
-        listContainer.innerHTML = '<div class="empty-mail-msg">수신된 서신이 없습니다.</div>';
-    } else {
-        listContainer.innerHTML = displayMails.map(mail => `
-            <div class="mail-item ${mail.isRead ? 'read' : 'unread'}" onclick="window.openLetter('${mail.id}')">
+    // 리스트 갱신
+    window.renderMailList();
+    if (window.playSFX) window.playSFX('click'); //
+};
+
+/**
+ * [UIManager.js] 서신 리스트 렌더링 (클릭 함수명 수정 완료)
+ */
+window.renderMailList = function() {
+    const listContainer = document.getElementById('mail-list');
+    if (!listContainer || !window.mailbox) return;
+
+    const allMails = window.mailbox.receivedMails || [];
+    let filteredMails = [];
+
+    // 1. 현재 선택된 탭에 따른 필터링
+    switch (window.currentMailTab) {
+        case 'unread': // 읽지 않음
+            filteredMails = allMails.filter(m => !m.isRead && !m.isArchived);
+            break;
+        case 'reward': // 보상 미수령 (읽었지만 보상이 남은 것)
+            filteredMails = allMails.filter(m => m.isRead && m.reward && !m.isRewardClaimed && !m.isArchived);
+            break;
+        case 'read': // 일반 읽음 (보상까지 받았거나 보상이 없는 것)
+            filteredMails = allMails.filter(m => m.isRead && (!m.reward || m.isRewardClaimed) && !m.isArchived);
+            break;
+        case 'archive': // 보관함
+            filteredMails = allMails.filter(m => m.isArchived);
+            break;
+    }
+
+    if (filteredMails.length === 0) {
+        listContainer.innerHTML = `<div class="empty-msg" style="text-align:center; padding:40px; opacity:0.3;">해당하는 서신이 없습니다.</div>`;
+        return;
+    }
+
+    // 2. ✨ [핵심 수정] onclick="window.openMail"을 "window.openLetter"로 변경
+    listContainer.innerHTML = filteredMails.map(mail => {
+        return `
+            <div class="mail-item ${mail.isRead ? 'read' : 'unread'}" 
+                 onclick="window.openLetter('${mail.id}')"> 
                 <div class="mail-icon">
                     <i class="fas ${mail.isRead ? 'fa-envelope-open' : 'fa-envelope'}"></i>
                 </div>
                 <div class="mail-info">
                     <div class="mail-title">${mail.title}</div>
-                    <div class="mail-sender">${mail.sender || '알 수 없는 발신자'}</div>
+                    <div class="mail-sender">${mail.sender}</div>
                 </div>
-                ${!mail.isRead ? '<div class="unread-dot"></div>' : ''}
+                ${mail.reward && !mail.isRewardClaimed ? '<div class="reward-badge"><i class="fas fa-gift"></i></div>' : ''}
                 <div class="mail-date">${new Date(mail.receivedDate).toLocaleDateString()}</div>
             </div>
-        `).join('');
-    }
-
-    // 3. ✨ [누락 방지] 리스트를 그릴 때 뱃지도 함께 갱신하여 카운트를 맞춥니다.
-    if (window.updateMailNotification) {
-        window.updateMailNotification();
-    }
+        `;
+    }).join('');
 };
 
 /**
@@ -769,20 +732,68 @@ window.loadMoreMails = () => {
 };
 
 /**
+ * [src/UIManager.js] 서신 보관 시스템 보강
+ */
+
+// 현재 상세 보기에서 열린 서신 ID 추적
+window.currentOpeningMailId = null;
+
+/**
+ * ✨ 서신 보관 상태 토글 (버그 수정본)
+ */
+window.toggleArchive = async function(mailId) {
+    // 1. 대상 ID 파악 (인자가 없으면 현재 열린 서신 사용)
+    const id = mailId || window.currentOpeningMailId;
+    if (!id || !window.mailbox) return;
+
+    // 2. 전체 서신함에서 해당 서신 객체 찾기
+    const mails = window.mailbox.receivedMails || [];
+    const mail = mails.find(m => String(m.id) === String(id));
+    if (!mail) return;
+
+    // 3. 상태 반전 및 효과음
+    mail.isArchived = !mail.isArchived;
+    if (window.playSFX) window.playSFX('click');
+
+    // 4. ✨ UI 즉시 갱신 (상세 보기 창의 별 아이콘)
+    const archiveBtn = document.getElementById('btn-mail-archive');
+    if (archiveBtn && String(id) === String(window.currentOpeningMailId)) {
+        archiveBtn.innerHTML = mail.isArchived ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+        archiveBtn.classList.toggle('is-archived', mail.isArchived);
+    }
+
+    // 5. 데이터 영구 저장 (await로 저장 완료 보장)
+    if (window.saveAllData) await window.saveAllData();
+
+    // 6. 목록 갱신 (보관됨에 따라 현재 탭에서 사라지거나 나타남)
+    window.renderMailList();
+    
+    // 7. 토스트 알림
+    const msg = mail.isArchived ? "중요 서신으로 보관했습니다." : "보관을 해제했습니다.";
+    if (window.showToast) window.showToast(msg, mail.isArchived ? "success" : "info");
+};
+
+/**
  * 4. 서신 읽기 (타이핑 연출 및 스킵 기능 복구)
  */
+
+window.currentOpeningMailId = null;
+
 window.openLetter = (mailId) => {
     const mb = window.mailbox || mailbox;
     if (!mb) return;
+
+    const mail = window.mailbox.receivedMails.find(m => String(m.id) === String(mailId));
+    if (!mail) return;
+    
+    // ✨ [핵심 수정] 현재 열린 서신의 ID를 반드시 기록해야 보관 토글이 작동합니다.
+    window.currentOpeningMailId = mailId;
     
     if (window.mailTypeTimer) { 
         clearInterval(window.mailTypeTimer); 
         window.mailTypeTimer = null; 
     }
     window.playSFX('paper');
-
-    const mail = mb.receivedMails.find(m => String(m.id) === String(mailId));
-    if (!mail) return;
 
     const modal = document.getElementById('letter-view-modal');
     const titleEl = document.getElementById('letter-detail-title');
@@ -819,6 +830,12 @@ window.openLetter = (mailId) => {
 
     mail.isRead = true;
 
+    const archiveBtn = document.getElementById('btn-mail-archive');
+    if (archiveBtn) {
+        archiveBtn.innerHTML = mail.isArchived ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+        archiveBtn.classList.toggle('is-archived', !!mail.isArchived);
+    }
+
     if (contentEl) {
         window.startTypewriter(formattedContent, contentEl, () => {
             window.renderLetterReward(mail);
@@ -837,8 +854,17 @@ window.openLetter = (mailId) => {
  */
 window.claimMailReward = async (mailId) => {
     if (!window.mailbox || !window.collection) return;
-    
+    window.currentOpeningMailId = mailId; // 현재 열린 ID 기록
+
     const mail = window.mailbox.receivedMails.find(m => String(m.id) === String(mailId));
+
+    // ✨ 보관 버튼 상태 초기화
+    const archiveBtn = document.getElementById('btn-mail-archive');
+    if (archiveBtn && mail) {
+        archiveBtn.innerHTML = mail.isArchived ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+        archiveBtn.classList.toggle('is-archived', mail.isArchived);
+    }
+    
     if (!mail || mail.isRewardClaimed) return;
 
     const reward = window.mailbox.claimReward(mailId);
@@ -907,12 +933,20 @@ window.startTypewriter = (text, element, onComplete) => {
 /**
  * 5. 보상 버튼 렌더링
  */
+/**
+ * [src/UIManager.js] 서신 보상 버튼 렌더링 (업적/알 텍스트 추가)
+ */
 window.renderLetterReward = (mail) => {
     const rewardZone = document.getElementById('letter-reward-zone');
     if (!rewardZone || !mail.reward) return;
 
     if (mail.isRewardClaimed) {
-        rewardZone.innerHTML = `<div class="mail-reward-box claimed"><button class="btn-claim-reward" disabled><i class="fa-solid fa-check"></i> 이미 보상을 수령했습니다</button></div>`;
+        rewardZone.innerHTML = `
+            <div class="mail-reward-box claimed">
+                <button class="btn-claim-reward" disabled>
+                    <i class="fa-solid fa-check"></i> 이미 보상을 수령했습니다
+                </button>
+            </div>`;
         return;
     }
 
@@ -921,20 +955,34 @@ window.renderLetterReward = (mail) => {
     
     let faIcon = "fa-gift", displayName = "보상", buttonText = "";
 
+    // ✨ 보상 타입에 따른 아이콘 및 텍스트 분기
     if (type === 'point' || type === 'ether') {
-        faIcon = "fa-coins"; displayName = "에테르"; buttonText = `${val.toLocaleString()} Et 수령하기`;
+        faIcon = "fa-coins"; 
+        displayName = "에테르"; 
+        buttonText = `${val.toLocaleString()} Et 수령하기`;
     } else if (type === 'item') {
         faIcon = "fa-box-open"; 
         displayName = (window.inventory && window.inventory.getItemName) ? window.inventory.getItemName(rewardId) : "연구 재료";
         buttonText = `${val}개 수령하기`;
+    } else if (type === 'achievement') {
+        // ✨ [추가] 업적 보상 텍스트 표시
+        faIcon = "fa-medal"; 
+        displayName = "특별 업적"; 
+        buttonText = "업적 기록하기";
+    } else if (type === 'egg') {
+        // ✨ [추가] 알 보상 텍스트 표시
+        faIcon = "fa-egg"; 
+        displayName = "새로운 생명"; 
+        buttonText = "알 수령하기";
     } else if (type === 'update') {
-        faIcon = "fa-download"; displayName = "업데이트 지원"; buttonText = "최신 버전 다운로드하기";
+        faIcon = "fa-download"; 
+        displayName = "업데이트 지원"; 
+        buttonText = "최신 버전 다운로드하기";
     }
 
     rewardZone.innerHTML = `
         <div class="mail-reward-box reward-reveal">
-            <span class="reward-label">${displayName} 지원</span>
-            <button class="btn-claim-reward" onclick="window.claimMailReward('${mail.id}')">
+            <span class="reward-label">${displayName}</span> <button class="btn-claim-reward" onclick="window.claimMailReward('${mail.id}')">
                 <i class="fa-solid ${faIcon}"></i> ${buttonText}
             </button>
         </div>`;
@@ -1039,6 +1087,15 @@ window.byproductTable = [
     { id: 'floating_eye', category: 'material', name: '부유하는 안구', icon: 'assets/images/items/eye.png', rarity: 'rare', minSat: 80, chance: 0.03 },
     { id: 'abyssal_dregs', category: 'material', name: '심연의 침전물', icon: 'assets/images/items/dregs.png', rarity: 'epic', minSat: 90, chance: 0.015 },
     { id: 'incomplete_fetus', category: 'material', name: '지성이 남은 결정', icon: 'assets/images/items/fetus.png', rarity: 'epic', minSat: 95, chance: 0.01 }
+];
+
+// 실패한 연성물
+const failedProducts = [
+    { id: 'smoldering_ash', category: 'material', name: '그을린 재', icon: 'assets/images/items/ash.png', price: 5, desc: "연성 과정에서 에테르가 과하게 충돌하여 타버린 잔해입니다. 고온의 성질이 남아있어 화염 계열 생명체의 연성을 보조하는 재료로 활용될 수 있습니다." },
+    { id: 'distorted_slime', category: 'material', name: '일그러진 슬라임', icon: 'assets/images/items/slime.png', price: 8, desc: "형체를 유지하지 못하고 무너져 내린 생명의 원형질입니다. 유연한 조직을 가진 수중 생물이나 연체 동물 연성 시 기초 틀로 재사용하기에 적합합니다." },
+    { id: 'petrified_residue', category: 'material', name: '석화된 찌꺼기', icon: 'assets/images/items/residue.png', price: 10, desc: "에테르가 급격히 식으며 돌처럼 굳어버린 찌꺼기입니다. 매우 단단한 성질을 가지고 있어, 갑각류나 단단한 외피를 가진 호문클루스의 방어력을 높이는 보조재로 쓰입니다." },
+    { id: 'unstable_fragment', category: 'material', name: '불안정한 에테르 조각', icon: 'assets/images/items/fragment.png', price: 12, desc: "결합에 실패하여 파편화된 에테르 덩어리입니다. 불안정하지만 순수한 에너지를 품고 있어, 다음 연성 시 전체적인 성공률을 미세하게 높이는 촉매제로 활용 가능합니다." },
+    { id: 'glowing_dust', category: 'material', name: '희미하게 빛나는 가루', icon: 'assets/images/items/dust.png', price: 15, desc: "연성이 흩어지며 남긴 빛의 가루입니다. 환상적인 기운을 머금고 있어, 신비로운 특징을 가진 조류나 환상종의 색채를 선명하게 만드는 데 도움을 줍니다." }
 ];
 
 /**
@@ -1151,6 +1208,27 @@ window.getKoreanParticle = (word, type) => {
     const lastChar = word.charCodeAt(word.length - 1);
     const hasBatchim = (lastChar - 0xAC00) % 28 > 0;
     return hasBatchim ? type.split('/')[0] : type.split('/')[1];
+};
+
+window.processSedimentation = () => {
+    if (collection.activeEgg) return;
+    const item = window.getSedimentDrop(); 
+    if (!item) return;
+
+    masterData.inventory.byproducts[item.id] = (masterData.inventory.byproducts[item.id] || 0) + 1;
+    saveAllData();
+
+    // ✨ [수정] 설정 모달의 알림 활성화 여부 확인 (기본값 true)
+    const settings = window.masterData.settings || {};
+    const showToastSetting = settings.showCylinderToast !== false;
+
+    if (showToastSetting) {
+        const charName = currentPartner ? currentPartner.name : "호문클루스";
+        const particle = window.getKoreanParticle(charName, "이/가");
+        window.showToast(`${charName}${particle} 실린더에서 '${item.name}'을 건져 올렸습니다!`, "info");
+    }
+
+    window.refreshSedimentUI();
 };
 
 /**

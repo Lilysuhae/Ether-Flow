@@ -313,7 +313,14 @@ class LogManager {
         if (receiptNo) receiptNo.innerText = `#${Math.floor(Math.random() * 9000) + 1000}`;
         
         // 영수증 날짜 표시
-        if (receiptDate) receiptDate.innerText = targetDate.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '.').replace('.', '');
+        if (receiptDate) {
+            const y = targetDate.getFullYear();
+            const m = String(targetDate.getMonth() + 1).padStart(2, '0');
+            const d = String(targetDate.getDate()).padStart(2, '0');
+            
+            // 결과 예시: "2026. 02. 05" (연도와 월 사이 점 포함)
+            receiptDate.innerText = `${y}. ${m}. ${d}`; 
+        }
         
         // 파트너 이름 표시
         if (receiptChar) {

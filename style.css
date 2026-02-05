@@ -1,5 +1,13 @@
 /* [1] 폰트 설정 */
-/* 1. Regular (기본 두께) */
+
+@font-face {
+  font-family: "Basgerd";
+  src: url("assets/fonts/Basgerd.ttf") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* 1. 페이퍼로지 */
 @font-face {
   font-family: "Paperlogy";
   src: url("assets/fonts/Paperlogy-4Regular.ttf") format("truetype");
@@ -54,6 +62,26 @@
   font-weight: 700;
 }
 
+/* 나눔스퀘어 네오 */
+@font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('assets/fonts/NanumSquareNeo-bRg.ttf') format('truetype');
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('assets/fonts/NanumSquareNeo-cBd.ttf') format('truetype');
+    font-weight: 500;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('assets/fonts/NanumSquareNeo-dEb.ttf') format('truetype');
+    font-weight: 700;
+    font-display: swap;
+}
+
 :root {
   --main-font: "Paperlogy";
 
@@ -104,6 +132,7 @@
 body.font-paperlogy { --main-font: "Paperlogy"; }
 body.font-Galmuri11 { --main-font: "Galmuri11"; font-size: 12px !important; }
 body.font-Pretendard { --main-font: "Pretendard"; }
+body.font-NanumSquareNeo { --main-font: "NanumSquareNeo"; }
 
 input,
 textarea {
@@ -256,9 +285,13 @@ header {
 }
 .header-left h2 {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--text-primary);
+    font-family: 'Basgerd' !important;
+    font-size: 1.7em !important;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 0 !important;
+    margin: 0 !important;
+    font-style: italic;
 }
 
 /* --- [상태 배지 디자인: 흰색 글자 및 흐르는 그라데이션] --- */
@@ -2878,10 +2911,8 @@ header {
 
 /* 1. "Ether Flow" 타이틀 */
 .header-left h2 {
-    font-size: 1.25rem !important;
+    font-size: 1.7em !important;
     line-height: 1 !important;
-    margin: 0 !important;
-    /* 기준점으로 삼습니다. 움직이지 마세요. */
 }
 
 /* 2. "1,031 Et" 수치 정렬 (이미지에서 너무 높음) */
@@ -3154,13 +3185,6 @@ header .header-right {
     pointer-events: auto !important;
 }
 
-
-/* [style.css] 타이틀 내부 그라데이션 및 흐르는 빛 효과 */
-.ether-glow-title {
-    text-shadow: 0 0 10px rgba(216, 166, 116, 0.8) !important; 
-  }
-
-
 /* [style.css] 편지함 알림 뱃지 스타일 */
 #mail-badge {
     position: absolute;
@@ -3175,7 +3199,6 @@ header .header-right {
     align-items: center;
     justify-content: center;
     font-weight: 800;
-    border: 2px solid rgba(30, 30, 32, 1); /* 배경과 구분되도록 테두리 추가 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -6509,7 +6532,7 @@ header .header-right {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-primary);
     padding: 14px 12px;
     font-size: 0.8rem;
     outline: none;
@@ -6573,7 +6596,7 @@ header .header-right {
     flex: 1; 
     -webkit-appearance: none;
     height: 3px;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--glass-border);
     border-radius: 2px;
     outline: none;
 }
@@ -6612,4 +6635,273 @@ header .header-right {
 .btn-sound-mute:hover {
     transform: scale(1.1);
     opacity: 0.8;
+}
+
+/* ============================================================
+   [떠다니는 연구 메모 (Floating Notes)]
+   ============================================================ */
+
+/* 1. 메모장 기본 본체 (다중 메모를 위해 클래스로 관리) */
+.floating-note {
+    position: fixed;
+    min-width: 200px;  /* 최소 너비 */
+    max-width: 360px;  /* 최대 너비 */
+    min-height: 150px; /* 최소 높이 */
+    max-height: 600px; /* 최대 높이 */
+    padding: 10px;
+    background-color: #fff9c4; /* 기본 크림색 */
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    z-index: 1000; /* 캐릭터 위, 모달 아래 */
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    cursor: default;
+    /* ✨ 일렉트론 창 드래그와 포스트잇 드래그 분리 */
+    -webkit-app-region: no-drag; 
+}
+
+/* ✨ 크기 조절 핸들 (우측 하단) */
+.note-resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize; /* 대각선 커서 */
+    background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50%);
+    border-radius: 0 0 4px 0;
+    z-index: 10;
+}
+
+/* 최소화 상태에서는 크기 조절 핸들 숨김 */
+.floating-note.minimized .note-resize-handle {
+    display: none !important;
+}
+
+/* 본문 영역이 가변 높이에 적응하도록 수정 */
+.note-body {
+    flex: 1; /* 헤더를 제외한 나머지 공간을 꽉 채움 */
+    width: 100%;
+    height: auto !important; 
+}
+
+/* 2. 드래그 중인 상태 */
+.floating-note.dragging {
+    opacity: 0.8;
+    transform: scale(1.02);
+    cursor: grabbing;
+    z-index: 1002; /* 드래그 시 가장 위로 */
+}
+
+/* 3. 메모 상단바 (드래그 핸들 영역) */
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 8px;
+    cursor: grab;
+    user-select: none;
+    color: #333;
+}
+
+.note-header:active {
+    cursor: grabbing;
+}
+
+.note-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: rgba(0,0,0,0.5);
+    color: #333 !important;
+    pointer-events: none; /* 텍스트가 드래그를 방해하지 않게 설정 */
+}
+
+/* 4. 우측 상단 컨트롤 버튼 (최소화/닫기) */
+.note-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.note-controls button {
+    width: 1em;
+    height: 1em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    transition: color 0.2s, transform 0.1s;
+    color: #333 !important;
+}
+
+/* 5. 텍스트 입력 영역 */
+.note-body {
+    width: 100%;
+    height: 120px;
+    background: transparent;
+    border: none;
+    resize: none;
+    font-family: inherit;
+    font-size: 13px;      /* 가독성을 위해 크기를 살짝 키웠습니다. */
+    line-height: 1.6;
+    outline: none;
+    
+    /* ✨ 글자 색상을 선명한 검정색으로 변경 */
+    color: #333 !important; 
+    font-weight: 500;       /* 글자를 조금 더 또렷하게 만듭니다. */
+}
+
+/* 6. ✨ 최소화(접힘) 상태 (우선순위 보장을 위해 !important 사용) */
+.floating-note.minimized {
+    min-height: 40px !important;
+    height: 40px !important;
+    width: 160px !important;
+    overflow: hidden;
+}
+
+.floating-note.minimized .note-body {
+    display: none !important; /* 접혔을 때 내용 숨김 */
+}
+
+/* ============================================================
+   [새 메모 추가 버튼 (Floating Action Button)]
+   ============================================================ */
+#add-note-btn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px; /* 에테르 포인트 UI 위쪽 배치 */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--ios-blue);
+    border: 1px solid rgba(0,0,0,0.1);
+    font-size: 1em;
+    color: var(--text-primary);
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s, background-color 0.2s;
+    
+    /* 일렉트론 창 드래그 제외 */
+    -webkit-app-region: no-drag;
+}
+
+#add-note-btn:hover {
+    transform: scale(1.1) rotate(90deg);
+}
+
+/* [style.css] 메모 타이틀 줄바꿈 및 자동 확장 스타일 */
+.note-title-area {
+    background: transparent;
+    border: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: #333 !important;
+    width: calc(100% - 45px); /* 버튼 영역 제외 너비 */
+    outline: none;
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-family: inherit;
+    resize: none;             /* 수동 크기 조절 방지 */
+    overflow: hidden;         /* 스크롤바 숨김 */
+    white-space: pre-wrap;    /* 줄바꿈 허용 */
+    word-break: break-all;    /* 단어 단위 끊기 허용 */
+    line-height: 1.2;
+    min-height: 16px;
+    display: block;
+    cursor: text;
+}
+
+.note-title-area:focus {
+    background: rgba(255, 255, 255, 0.3);
+    color: #000;
+}
+
+/* 최소화 상태에서는 제목 높이 제한 */
+.floating-note.minimized .note-title-area {
+    max-height: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 포커스 시 시각적 피드백 */
+.note-title-input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    color: #000;
+}
+
+/* 드래그 핸들 영역 내의 입력창 예외 처리 */
+.note-header .note-title-input {
+    cursor: text;
+    color: #333;
+}
+
+.confirm-content #confirm-title {
+    color: var(--text-primary) !important;
+}
+
+.confirm-content #confirm-message {
+    color: var(--text-secondary) !important;
+}
+
+.mail-paper-wrap {
+    position: relative;
+}
+
+/* [style.css] 서신 보관 별표 버튼 스타일 */
+.btn-archive-star, .list-archive-btn {
+    position: absolute;
+    top: 1.5em;
+    right: 1.5em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    color: var(--primary-gold) !important;
+    transition: all 0.2s, transform 0.1s;
+    outline: none;
+    opacity: 0.5;
+}
+
+/* ✨ 보관됨 상태: 골드 색상 적용 */
+.btn-archive-star.is-archived, 
+.list-archive-btn.is-archived {
+    color: var(--primary-gold, #ffd700) !important;
+    opacity: 1;
+}
+
+.btn-archive-star:hover, 
+.list-archive-btn:hover {
+    color: var(--primary-gold, #ffd700);
+    transform: scale(1.05);
+    opacity: 1;
+}
+
+/* 잠긴 상점 카드의 시각적 효과 */
+.shop-card-glass.locked {
+    opacity: 0.6;
+    filter: grayscale(0.8);
+    cursor: not-allowed;
+}
+
+.shop-card-glass.locked .shop-img-icon {
+    filter: blur(1px);
+}
+
+/* 아이콘 위 잠금 표시 오버레이 */
+.shop-lock-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--primary-gold);
+    font-size: 1.5rem;
+    pointer-events: none;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
