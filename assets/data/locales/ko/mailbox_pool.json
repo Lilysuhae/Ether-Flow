@@ -4457,135 +4457,116 @@
         "sender": "벨린다",
         "charId": "char_09",
         "title": "건의 사항",
-        "trigger": {
-            "type": "first_gift",
-            "value": "낡은 양피지"
-        },
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_09" },
+            { "type": "first_gift", "value": "낡은 양피지" }
+        ],
         "content": "당신이 준 양피지, 맛이 훌륭하더군요. 늘 실패한 연구가 적힌 구겨진 것만 먹다가 이런 등급의 새 양피지를 먹으니 입맛이 도는 기분이었습니다. 실패작은 그만 만들 때도 됐으니 이제 이걸 제게 정기적으로 제공할 생각은 없습니까?",
-        "reward": {
-            "type": "point",
-            "value": 50
-        }
+        "reward": { "type": "point", "value": 50 }
     },
     {
         "id": "belinda_gift_streak",
         "sender": "벨린다",
         "charId": "char_09",
         "title": "괜찮은 파트너",
-        "trigger": {
-            "type": "gift_connoisseur",
-            "value": 3
-        },
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_09" },
+            { "type": "gift_connoisseur", "value": 3 }
+        ],
         "content": "당신, 생각보다 말이 통하는군요. 풋내기라고 얕봤더니 실패작 양피지의 장수가 확연히 줄었어요. 제게는 좋은 일이죠, 그 대신 상등급 양피지를 제공받고 있으니. 이 상태를 유지하도록 하세요.",
-        "reward": {
-            "type": "point",
-            "value": 300
-        }
+        "reward": { "type": "point", "value": 300 }
     },
     {
         "id": "belinda_gift_dislike",
         "sender": "벨린다",
         "charId": "char_09",
         "title": "선악과",
-        "trigger": {
-            "type": "gift_type_dislike",
-            "value": true
-        },
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_09" },
+            { "type": "gift_type_dislike", "value": true }
+        ],
         "content": "이따위 걸로 환심을 사려 하다니 어리석기 짝이 없군요. 붉은 과실에 유혹당한 건 당신들 인류의 멍청한 조상입니다. 잊지 마시길. 자, 쓸데없는 환심을 살 생각에 집중이나 하시죠. 아니면 그 쓰레기 같은 메모라도 제게 주시든가요.",
-        "reward": {
-            "type": "point",
-            "value": 50
-        }
+        "reward": { "type": "point", "value": 50 }
     },
     {
         "id": "belinda_owned_6",
         "sender": "벨린다",
         "charId": "char_09",
         "title": "악마의 숫자",
-        "trigger": {
-            "type": "owned_count",
-            "value": 6
-        },
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_09" },
+            { "type": "owned_count", "value": 6 }
+        ],
         "content": "이제야 좀 연금술사라는 말에 걸맞은 수의 호문클루스를 연성해냈군요. 그러나 이는 시작일 뿐, 모두를 보다 완전한 존재로 만들 책임이 더욱 무거워졌다는 걸 느끼길 바랍니다. 제가 옆에서 도와드리죠. 어디까지나 집사니까요.",
-        "reward": {
-            "type": "point",
-            "value": 666
-        }
+        "reward": { "type": "point", "value": 666 }
     },
     {
         "id": "belinda_perfect_day",
         "sender": "벨린다",
         "charId": "char_09",
         "title": "값비싼 인정",
-        "trigger": {
-            "type": "perfect_day",
-            "value": true
-        },
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_09" },
+            { "type": "perfect_day", "value": true }
+        ],
         "content": "목표한 것과 습관까지 전부 완수하셨군요. 오늘만큼은 인정해드리겠습니다.",
-        "reward": {
-            "type": "point",
-            "value": 400
-        }
+        "reward": { "type": "point", "value": 400 }
     },
     {
         "id": "belinda_night_owl",
         "sender": "벨린다",
         "charId": "char_09",
         "title": "젖은 양피지",
-        "trigger": {
-            "type": "night_owl",
-            "value": true
-        },
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_09" },
+            { "type": "night_owl", "value": true }
+        ],
         "content": "야심한 시각에 연구하는 모습은 보기 좋지만, 제때 잠드는 걸 잊지 마십시오. 엎드려서 자다가 침이 흐른 양피지는 먹지도 못하고 버려야 하니까요.",
-        "reward": {
-            "type": "point",
-            "value": 150
-        }
+        "reward": { "type": "point", "value": 150 }
     },
     {
         "id": "belinda_early_bird",
         "sender": "벨린다",
         "charId": "char_09",
         "title": "모닝 티",
-        "trigger": {
-            "type": "early_bird",
-            "value": true
-        },
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_09" },
+            { "type": "early_bird", "value": true }
+        ],
         "content": "웬일로 일찍 기상하셨군요. 아침을 깨우는 차를 준비하겠습니다. 그사이 도로 잠들어버리면 이 뿔에 새로운 용도가 추가될 테니 명심하십시오.",
-        "reward": {
-            "type": "point",
-            "value": 150
-        }
+        "reward": { "type": "point", "value": 150 }
     },
     {
         "id": "belinda_focus_30",
         "sender": "벨린다",
         "charId": "char_09",
         "title": "반 시간의 몰입",
-        "trigger": {
-            "type": "marathon_focus",
-            "value": 30
-        },
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_09" },
+            { "type": "marathon_focus", "value": 30 }
+        ],
         "content": "당신 같은 풋내기에게 반 시간 집중도 쉽지 않았군요. 다음 목표는 한 시간 집중입니다. 할 수 있겠습니까?",
-        "reward": {
-            "type": "point",
-            "value": 200
-        }
+        "reward": { "type": "point", "value": 200 }
     },
     {
         "id": "belinda_flow_state",
         "sender": "벨린다",
         "charId": "char_09",
         "title": "깜짝 선물",
-        "trigger": {
-            "type": "flow_state",
-            "value": true
-        },
-        "content": "약속대로 한 시간 집중에 성공했군요. 어떻습니까, 달라진 에테르의 흐름은 잘 느끼셨인지요? 앞으로도 끊기지 않는 집중을 기대하죠.",
-        "reward": {
-            "type": "point",
-            "value": 500
-        }
+        "logic": "AND",
+        "triggers": [
+            { "type": "partnerId", "value": "char_09" },
+            { "type": "flow_state", "value": true }
+        ],
+        "content": "약속대로 한 시간 집중에 성공했군요. 어떻습니까, 달라진 에테르의 흐름은 잘 느끼셨는지요? 앞으로도 끊기지 않는 집중을 기대하죠.",
+        "reward": { "type": "point", "value": 500 }
     }
-
 ]
