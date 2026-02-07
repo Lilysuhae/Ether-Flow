@@ -40,13 +40,14 @@ class SoundManager {
             ],
             music: [
                 { name: 'Whispers in the Lab', file: 'Whispers in the Lab.mp3' },
-                { name: 'theme_mabel', file: 'theme_mabel.mp3' },
+                { name: 'theme_Maybelle', file: 'theme_mabel.mp3' },
                 { name: 'theme_indigo', file: 'theme_indigo.mp3' },
                 { name: 'theme_morgana', file: 'theme_morgana.mp3' },
                 { name: 'theme_aurelia', file: 'theme_aurelia.mp3' },
                 { name: 'theme_cordelia', file: 'theme_cordelia.mp3' },
                 { name: 'theme_linxia', file: 'theme_linxia.mp3' },
-                { name: 'theme_dende', file: 'theme_dende.mp3' }
+                { name: 'theme_dende', file: 'theme_dende.mp3' },
+                { name: 'theme_belinda', file: 'theme_belinda.mp3' }
             ]
         };
 

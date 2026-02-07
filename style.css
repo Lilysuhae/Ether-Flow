@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Basgerd";
-  src: url("assets/fonts/Basgerd.otf") format("otf");
+  src: url("assets/fonts/Basgerd.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
 }
@@ -4964,10 +4964,13 @@ header .header-right {
 .slot-icon { font-size: 1.5rem;}
 .slot-count {
     position: absolute;
-    bottom: 8px;
-    right: 10px;
-    font-size: 0.75rem;
-    color: var(--primary-gold);
+    bottom: 4px;
+    right: 4px;
+    font-size: 0.7rem;
+    color: #fff !important;
+    background: #00000077;
+    padding: 2px 4px;
+    border-radius: 1em;
     font-weight: 800;
 }
 
@@ -6955,7 +6958,7 @@ header .header-right {
 .alembic-slot {
     width: 64px;
     height: 64px;
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--glass-surface-light);
     padding: 0.5em;
     border: 1px dashed var(--primary-gold);
     border-radius: 12px;
@@ -7008,13 +7011,9 @@ header .header-right {
     width: 90%;
     max-width: 400px;
     background: var(--glass-modal-bg);
-    border: 2px solid var(--primary-gold);
+    border: 1px solid var(--glass-border);
     border-radius: 20px;
     padding: 1em;
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.8),
-        0 0 20px rgba(212, 175, 55, 0.2), /* 은은한 금빛 후광 */
-        inset 0 0 30px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -7026,10 +7025,9 @@ header .header-right {
 .picker-header h4 {
     color: var(--primary-gold);
     text-align: center;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     margin: 0;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    border-bottom: 1px solid var(--glass-border);
     padding-bottom: 15px;
 }
 
@@ -7083,22 +7081,21 @@ header .header-right {
     width: 32px;
     height: 32px;
     object-fit: contain;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
     transition: transform 0.3s;
     image-rendering: pixelated;
 }
 .picker-item-count {
     font-size: 0.7rem;
-    color: var(--primary-gold);
     font-weight: bold;
-    background: rgba(0,0,0,0.4);
+    background: var(--glass-surface-light);
     padding: 2px 8px;
     border-radius: 10px;
 }
 
 .picker-item-name {
-    font-size: 0.75rem;
-    color: #ddd;
+    font-size: 0.7rem;
+    color: var(--text-primary);
     text-align: center;
     width: 100%;
     white-space: nowrap;
@@ -7123,7 +7120,7 @@ header .header-right {
 
 /* 재료 선택 시 강조 효과 */
 .picker-item-card.selected {
-    border: 2px solid var(--primary-gold) !important;
+    border: 1px solid var(--primary-gold) !important;
     background: rgba(212, 175, 55, 0.2) !important;
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
 }
@@ -7172,4 +7169,21 @@ header .header-right {
     filter: grayscale(1);
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.picker-header p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 1em;
+    text-align: center;
+}
+
+.picker-item-card .req-label {
+   position: absolute;
+    bottom: 43%;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #cb0000;
+    font-weight: 700; 
 }

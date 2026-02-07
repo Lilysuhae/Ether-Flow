@@ -206,29 +206,16 @@ window.renderInventory = () => {
     if (!grid) return;
 
     grid.innerHTML = "";
-    if (detailArea) detailArea.innerHTML = `<div class="empty-bag-msg">아이템을 선택해 주세요.</div>`;
-
-    // 마스터 데이터에서 수량 정보 가져오기
     const invItems = (window.masterData && window.masterData.inventory?.items) || {};
     const invByproducts = (window.masterData && window.masterData.inventory?.byproducts) || {};
     
-    const allItemIds = [...Object.keys(invItems), ...Object.keys(invByproducts)];
-    const uniqueIds = [...new Set(allItemIds)];
-
-    // ✨ 통합 아이템 데이터베이스 (조회용)
-    const itemDB = [
-        ...(window.byproductTable || []), 
-        ...window.getShopItems(), 
-        ...(window.failedProducts || []) // window 객체에 등록된 실패물 참조
-    ];
+    const uniqueIds = [...new Set([...Object.keys(invItems), ...Object.keys(invByproducts)])];
+    const itemDB = [...(window.byproductTable || []), ...window.getShopItems(), ...(window.failedProducts || [])];
 
     const filteredItems = uniqueIds.filter(id => {
         const count = (invItems[id] || 0) + (invByproducts[id] || 0);
-        if (count <= 0) return false;
-
         const info = itemDB.find(i => i.id === id);
-        // 현재 선택된 탭(gift, material, special)과 일치하는지 확인
-        return info && info.category === window.currentInventoryTab;
+        return count > 0 && info && info.category === window.currentInventoryTab;
     });
 
     if (filteredItems.length === 0) {
@@ -242,10 +229,9 @@ window.renderInventory = () => {
 
         const slot = document.createElement('div');
         slot.className = 'inventory-slot-glass';
+        slot.id = `inv-slot-${id}`; // ✨ 추적을 위한 ID 부여
         slot.innerHTML = `
-            <div class="slot-icon">
-                <img src="${info.icon}" class="inventory-img-icon" onerror="this.src='assets/images/items/default.png'">
-            </div>
+            <div class="slot-icon"><img src="${info.icon}" class="inventory-img-icon" onerror="this.src='assets/images/items/default.png'"></div>
             <div class="slot-count">${count}</div>
         `;
         slot.onclick = () => window.selectInventoryItem(id, info);
@@ -254,36 +240,56 @@ window.renderInventory = () => {
 };
 
 /**
+ * [UIManager.js] 인벤토리 아이템 차감 및 UI 갱신 (누락 복구)
+ * @param {string} itemId - 차감할 아이템 ID
+ * @param {number} count - 차감할 수량
+ */
+window.removeItemFromInventory = (itemId, count) => {
+    if (!window.masterData || !window.masterData.inventory) return;
+    
+    const inv = window.masterData.inventory;
+    
+    // 부산물(byproducts) 혹은 일반 아이템(items) 양쪽에서 확인하여 차감
+    if (inv.byproducts && inv.byproducts[itemId] !== undefined) {
+        inv.byproducts[itemId] = Math.max(0, inv.byproducts[itemId] - count);
+    } else if (inv.items && inv.items[itemId] !== undefined) {
+        inv.items[itemId] = Math.max(0, inv.items[itemId] - count);
+    }
+    
+    // UI 즉시 갱신 및 데이터 영구 저장
+    if (window.renderInventory) window.renderInventory();
+    if (window.saveAllData) window.saveAllData();
+};
+
+/**
  * 5. 아이템 선택 시 상세 정보 표시
  */
 window.selectInventoryItem = (id, info) => {
-    // 이전 선택 표시 제거 및 현재 선택 표시 추가
+    // 1. 시각적 포커스 유지
     document.querySelectorAll('.inventory-slot-glass').forEach(s => s.classList.remove('active'));
-    if (event && event.currentTarget) event.currentTarget.classList.add('active');
+    const targetSlot = document.getElementById(`inv-slot-${id}`);
+    if (targetSlot) targetSlot.classList.add('active');
 
     const detailArea = document.getElementById('inventory-detail');
     if (!detailArea) return;
 
-    // 설명문 줄바꿈 처리
+    // 2. 현재 보유량 및 분해 가능 여부 판별
+    const inv = window.masterData.inventory;
+    const currentCount = (inv.byproducts[id] || 0) + (inv.items[id] || 0);
+    const isDecomposable = (window.failedProducts && window.failedProducts.some(p => p.id === id)) || 
+                           (window.byproductTable && window.byproductTable.some(p => p.id === id));
+
+    const isGift = info.category === 'gift';
+    const sellPrice = info.price || 0;
+    const totalSellPrice = sellPrice * currentCount;
     const rawDesc = info.desc || info.description || '';
     const formattedDesc = rawDesc.replace(/\. /g, '.\n').replace(/\./g, '.\n');
 
-    // 카테고리별 안내 문구
-    let tabDetailDesc = ""; 
-    switch (window.currentInventoryTab) {
-        case 'gift': tabDetailDesc = "호문클루스에게 마음을 전할 수 있는 소중한 선물입니다."; break;
-        case 'material': tabDetailDesc = "연성재료로 분류되어 연성로에서 사용 가능합니다."; break;
-        case 'special': tabDetailDesc = "소중한 추억이나 특별한 힘이 깃든 비매품입니다."; break;
-        default: tabDetailDesc = "가방에 보관 중인 소중한 물품입니다.";
-    }
-
-    const isGift = info.category === 'gift';
+    // ✨ [복구] 오늘 남은 선물 횟수 계산 로직
     let remainingText = '';
-    
-    // 선물 가능 횟수 표시
-    if (isGift && currentPartner) {
-        const molipToday = window.getMolipDate(); 
-        const giftData = dailyGiftCountMap[currentPartner.id];
+    if (isGift && window.currentPartner) {
+        const molipToday = window.getMolipDate();
+        const giftData = window.dailyGiftCountMap[window.currentPartner.id];
         const usedToday = (giftData?.date === molipToday) ? giftData.count : 0;
         remainingText = `<div style="font-size:0.75rem; color:var(--primary-gold); margin-bottom:10px;">오늘 남은 선물 횟수: ${3 - usedToday} / 3</div>`;
     }
@@ -295,17 +301,74 @@ window.selectInventoryItem = (id, info) => {
             </div>
             <div class="detail-name-lg">${info.name}</div>
             <div class="detail-desc-lg">${formattedDesc}</div>
+            
             <div class="detail-tab-hint" style="font-size: 0.8rem; color: var(--text-secondary); margin: 10px 0;">
-                ${tabDetailDesc}
+                ${isDecomposable ? `연성 잔해입니다. 분해하여 에테르를 추출할 수 있습니다.` : `가방에 보관 중인 물품입니다.`}
             </div>
-            ${remainingText}
-            ${isGift ? `
-                <button class="btn-inventory-action" onclick="window.useInventoryItem('${id}')">
-                    호문클루스에게 선물하기
-                </button>
-            ` : ``}
+
+            ${remainingText} <div class="inventory-action-group" style="display:flex; flex-direction:column; gap:8px; margin-top:5px;">
+                ${isGift ? `
+                    <button class="btn-inventory-action" onclick="window.useInventoryItem('${id}')">호문클루스에게 선물하기</button>
+                ` : ''}
+
+                ${isDecomposable && currentCount > 0 ? `
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-inventory-action btn-sell" 
+                                style="flex:1; background:rgba(255,107,107,0.1); color:#ff6b6b; border:1px solid rgba(255,107,107,0.3);" 
+                                onclick="window.sellInventoryItem('${id}', 1)">
+                            낱개 분해 (+${sellPrice}Et)
+                        </button>
+                        <button class="btn-inventory-action btn-sell-all" 
+                                style="flex:1.2; background:rgba(255,107,107,0.2); color:#ff6b6b; border:1px solid rgba(255,107,107,0.5); font-weight:bold;" 
+                                onclick="window.sellInventoryItem('${id}', ${currentCount})">
+                            일괄 분해 (+${totalSellPrice}Et)
+                        </button>
+                    </div>
+                ` : ''}
+            </div>
         </div>
     `;
+};
+
+
+/**
+ * [UIManager.js] 아이템 판매(분해) 처리 (수량 지정 가능)
+ * @param {string} itemId - 아이템 ID
+ * @param {number} count - 분해할 수량
+ */
+/**
+ * [UIManager.js] 아이템 분해 및 포커스 유지 로직
+ */
+window.sellInventoryItem = async (itemId, count) => {
+    const itemDB = [...(window.byproductTable || []), ...(window.failedProducts || [])];
+    const item = itemDB.find(p => p.id === itemId);
+    if (!item) return;
+
+    const transaction = { ether: item.price * count, items: { [itemId]: -count } };
+    const result = await window.processResourceTransaction(transaction);
+
+    if (result.success) {
+        if (window.playSFX) window.playSFX('coin');
+        
+        // 1. 리스트를 먼저 다시 그립니다.
+        window.renderInventory();
+
+        // 2. 남은 수량 확인
+        const inv = window.masterData.inventory;
+        const remainingCount = (inv.byproducts[itemId] || 0) + (inv.items[itemId] || 0);
+
+        if (remainingCount > 0) {
+            // ✨ 수량이 남았다면 포커싱 유지 (상세창 자동 갱신)
+            window.selectInventoryItem(itemId, item);
+        } else {
+            // 수량이 0이면 상세창 초기화
+            const detailArea = document.getElementById('inventory-detail');
+            if (detailArea) detailArea.innerHTML = `<div class="empty-bag-msg">아이템을 선택해 주세요.</div>`;
+        }
+
+        const particle = window.getKoreanParticle(item.name, "을/를");
+        window.showToast(`${item.name}${particle} 분해하여 에테르를 획득했습니다.`, "success");
+    }
 };
 
 /**
@@ -1085,608 +1148,4 @@ window.unlockAchievement = (achievementId) => {
 window.closeLetterView = () => {
     if (window.mailTypeTimer) { clearInterval(window.mailTypeTimer); window.mailTypeTimer = null; }
     document.getElementById('letter-view-modal').style.display = 'none';
-};
-
-
-
-/* ============================================================
-   [⚗️ 연금술 시스템: 농도, 침전물, 연성]
-   ============================================================ */
-
-// [상태 변수 초기화]
-window.cylinderSaturation = window.cylinderSaturation || 0; 
-window.lastSedimentTick = Date.now();
-
-// [데이터] 침전물(부산물) 테이블
-window.byproductTable = [
-    { id: 'ether_sludge', category: 'material', name: '에테르 슬러지', icon: 'assets/images/items/sludge.png', rarity: 'common', minSat: 50, chance: 0.12 },
-    { id: 'bleached_scales', category: 'material', name: '탈색된 비늘', icon: 'assets/images/items/scales.png', rarity: 'common', minSat: 50, chance: 0.10 },
-    { id: 'petrified_memory', category: 'material', name: '석화된 기억', icon: 'assets/images/items/memory.png', rarity: 'uncommon', minSat: 65, chance: 0.08 },
-    { id: 'transparent_husk', category: 'material', name: '투명한 허물', icon: 'assets/images/items/husk.png', rarity: 'uncommon', minSat: 65, chance: 0.06 },
-    { id: 'pulsing_crystal', category: 'material', name: '박동하는 결정', icon: 'assets/images/items/crystal.png', rarity: 'rare', minSat: 80, chance: 0.04 },
-    { id: 'floating_eye', category: 'material', name: '부유하는 안구', icon: 'assets/images/items/eye.png', rarity: 'rare', minSat: 80, chance: 0.03 },
-    { id: 'abyssal_dregs', category: 'material', name: '심연의 침전물', icon: 'assets/images/items/dregs.png', rarity: 'epic', minSat: 90, chance: 0.015 },
-    { id: 'incomplete_fetus', category: 'material', name: '지성이 남은 결정', icon: 'assets/images/items/fetus.png', rarity: 'epic', minSat: 95, chance: 0.01 }
-];
-
-// 실패한 연성물
-window.failedProducts = [
-    { id: 'smoldering_ash', category: 'material', name: '그을린 재', icon: 'assets/images/items/ash.png', price: 5, desc: "연성 과정에서 에테르가 과하게 충돌하여 타버린 잔해입니다. 고온의 성질이 남아있어 화염 계열 생명체의 연성을 보조하는 재료로 활용될 수 있습니다." },
-    { id: 'distorted_slime', category: 'material', name: '일그러진 슬라임', icon: 'assets/images/items/slime.png', price: 8, desc: "형체를 유지하지 못하고 무너져 내린 생명의 원형질입니다. 유연한 조직을 가진 수중 생물이나 연체 동물 연성 시 기초 틀로 재사용하기에 적합합니다." },
-    { id: 'petrified_residue', category: 'material', name: '석화된 찌꺼기', icon: 'assets/images/items/residue.png', price: 10, desc: "에테르가 급격히 식으며 돌처럼 굳어버린 찌꺼기입니다. 매우 단단한 성질을 가지고 있습니다." },
-    { id: 'unstable_fragment', category: 'material', name: '불안정한 에테르 조각', icon: 'assets/images/items/fragment.png', price: 12, desc: "결합에 실패하여 파편화된 에테르 덩어리입니다. 불안정하지만 순수한 에너지를 품고 있습니다." },
-    { id: 'glowing_dust', category: 'material', name: '희미하게 빛나는 가루', icon: 'assets/images/items/dust.png', price: 15, desc: "연성이 흩어지며 남긴 빛의 가루입니다. 환상적인 기운을 머금고 있어, 신비로운 특징을 가진 조류나 환상종의 색채를 선명하게 만드는 데 도움을 줍니다." }
-];
-
-const getItemDB = () => [
-    ...(window.byproductTable || []), 
-    ...window.getShopItems(), 
-    ...(window.failedProducts || []) // 아티스트님이 선언한 배열을 여기에 포함시킵니다.
-];
-
-/**
- * 1. 연성소 모달 제어
- */
-window.openSedimentModal = () => {
-    const modal = document.getElementById('sediment-modal');
-    if (modal) {
-        window.refreshSedimentUI(); 
-        modal.style.display = 'flex';
-    }
-};
-
-window.closeSedimentModal = () => {
-    document.getElementById('sediment-modal').style.display = 'none';
-};
-
-window.switchAlchemyTab = (tabId, btn) => {
-    // 모든 탭 컨텐츠 숨기기
-    document.querySelectorAll('.alchemy-tab-content').forEach(tab => {
-        tab.classList.remove('active');
-    });
-
-    // 모든 탭 버튼 활성화 해제
-    const tabButtons = btn.parentElement.querySelectorAll('.shop-tab-re');
-    tabButtons.forEach(b => b.classList.remove('active'));
-
-    // 선택한 탭과 버튼 활성화
-    document.getElementById(`alchemy-tab-${tabId}`).classList.add('active');
-    btn.classList.add('active');
-    
-    // 효과음 재생 (선택 사항)
-    if (window.playSfx) window.playSfx('click');
-};
-
-/**
- * 2. 연성소 UI 갱신 (농도 및 재료 인벤토리)
- */
-window.refreshSedimentUI = () => {
-    if (!masterData.inventory) masterData.inventory = { byproducts: {} };
-    const inventory = masterData.inventory.byproducts || {};
-    
-    const satValue = Math.floor(window.cylinderSaturation || 0); 
-    const satValEl = document.getElementById('sat-value');
-    const satBarEl = document.getElementById('sat-bar-fill');
-    if (satValEl) satValEl.innerText = `${satValue}%`;
-    if (satBarEl) satBarEl.style.width = `${satValue}%`;
-    
-    const grid = document.getElementById('sediment-grid');
-    if (grid) {
-        grid.innerHTML = window.byproductTable.map(item => {
-            const count = inventory[item.id] || 0;
-            const hasItem = count > 0;
-            return `
-                <div class="sediment-slot ${hasItem ? 'has-item' : ''}">
-                    <div class="sediment-icon">
-                        ${hasItem ? `<img src="${item.icon}" class="sediment-img">` : '<i class="fas fa-question"></i>'}
-                    </div>
-                    <div class="sediment-name">${hasItem ? item.name : '???'}</div>
-                    <div class="sediment-count">${hasItem ? 'x' + count : ''}</div>
-                </div>`;
-        }).join('');
-    }
-    if (window.updateAltarStatus) window.updateAltarStatus(); 
-};
-
-/**
- * 3. 실린더 시스템 업데이트 (매 초 호출)
- */
-window.updateCylinderSystem = () => {
-    // 농도 변화 계산: 집중 중이면 +0.15, 아니면 -0.07
-    if (isActuallyWorking && !isIdle && !isDistraction) {
-        window.cylinderSaturation = Math.min(100, window.cylinderSaturation + 0.15);
-    } else {
-        window.cylinderSaturation = Math.max(0, window.cylinderSaturation - 0.07);
-    }
-
-    masterData.cylinderSaturation = window.cylinderSaturation;
-
-    const satValEl = document.getElementById('sat-value');
-    const satBarEl = document.getElementById('sat-bar-fill');
-    if (satValEl && satBarEl) {
-        satValEl.innerText = `${Math.floor(window.cylinderSaturation)}%`;
-        satBarEl.style.width = `${window.cylinderSaturation}%`;
-    }
-
-    const now = Date.now();
-    if (now - window.lastSedimentTick >= 60000) {
-        window.lastSedimentTick = now;
-        if (window.cylinderSaturation >= 50 && !collection.activeEgg) {
-            window.processSedimentation();
-        }
-    }
-};
-
-/**
- * 4. 침전물 발생 로직
- */
-window.processSedimentation = () => {
-    if (collection.activeEgg) return;
-    const item = window.getSedimentDrop(); 
-    if (!item) return;
-
-    masterData.inventory.byproducts[item.id] = (masterData.inventory.byproducts[item.id] || 0) + 1;
-    saveAllData();
-
-    const charName = currentPartner ? currentPartner.name : "호문클루스";
-    const particle = window.getKoreanParticle(charName, "이/가");
-    window.showToast(`${charName}${particle} 실린더에서 '${item.name}'을 건져 올렸습니다!`, "info");
-
-    window.refreshSedimentUI();
-};
-
-window.getSedimentDrop = () => {
-    const currentSat = window.cylinderSaturation;
-    const possibleItems = window.byproductTable.filter(item => currentSat >= item.minSat);
-    if (possibleItems.length === 0) return null;
-
-    const sortedPool = [...possibleItems].sort((a, b) => a.chance - b.chance);
-    for (const item of sortedPool) {
-        if (Math.random() < item.chance) return item;
-    }
-    return null;
-};
-
-window.getKoreanParticle = (word, type) => {
-    if (!word) return type;
-    const lastChar = word.charCodeAt(word.length - 1);
-    const hasBatchim = (lastChar - 0xAC00) % 28 > 0;
-    return hasBatchim ? type.split('/')[0] : type.split('/')[1];
-};
-
-window.processSedimentation = () => {
-    if (collection.activeEgg) return;
-    const item = window.getSedimentDrop(); 
-    if (!item) return;
-
-    masterData.inventory.byproducts[item.id] = (masterData.inventory.byproducts[item.id] || 0) + 1;
-    saveAllData();
-
-    // ✨ [수정] 설정 모달의 알림 활성화 여부 확인 (기본값 true)
-    const settings = window.masterData.settings || {};
-    const showToastSetting = settings.showCylinderToast !== false;
-
-    if (showToastSetting) {
-        const charName = currentPartner ? currentPartner.name : "호문클루스";
-        const particle = window.getKoreanParticle(charName, "이/가");
-        window.showToast(`${charName}${particle} 실린더에서 '${item.name}'을 건져 올렸습니다!`, "info");
-    }
-
-    window.refreshSedimentUI();
-};
-
-/**
- * 5. 연성 비용 계산 및 제단 UI
- */
-window.calculateNextEggCost = () => {
-    const count = masterData.hatchCount || 1;
-    // 공식: $5000 \times 4^{(count - 1)}$
-    return {
-        ether: 5000 * Math.pow(4, count - 1),
-        materials: {
-            'ether_sludge': 10 * count,
-            'petrified_memory': count > 1 ? 5 * (count - 1) : 0,
-            'pulsing_crystal': count > 2 ? 2 * (count - 2) : 0
-        }
-    };
-};
-
-/**
- * 1. 연성소 버튼 상태 제어 (UI 차단)
- */
-window.updateAltarStatus = () => {
-    const cost = window.calculateNextEggCost();
-    const inv = window.masterData.inventory.byproducts || {};
-    const recipeContainer = document.querySelector('.recipe-check');
-    if (!recipeContainer) return;
-
-    // ✨ [방어 1] 현재 알이 있거나 부화 연출 중인지 판정
-    const hasEgg = !!window.collection.activeEgg;
-    const isLocked = hasEgg || window.isHatching; 
-
-    let isReady = true;
-    let html = "";
-
-    const currentEther = window.collection.points;
-    const etherMet = currentEther >= cost.ether;
-    if (!etherMet) isReady = false;
-
-    html += `<div class="req-item ${etherMet ? 'met' : ''}"><span class="dot"></span> 에테르: <span class="val">${currentEther.toLocaleString()} / ${cost.ether.toLocaleString()} Et</span></div>`;
-
-    for (const [id, amount] of Object.entries(cost.materials)) {
-        if (amount <= 0) continue;
-        const has = inv[id] || 0;
-        const isMet = has >= amount;
-        if (!isMet) isReady = false;
-        const itemInfo = window.byproductTable.find(t => t.id === id);
-        html += `<div class="req-item ${isMet ? 'met' : ''}"><span class="dot"></span> ${itemInfo ? itemInfo.name : id}: <span class="val">${has} / ${amount}</span></div>`;
-    }
-
-    recipeContainer.innerHTML = html;
-    
-    const btn = document.getElementById('btn-abyss-craft'); //
-    if (btn) {
-        // ✨ [방어 2] 이미 알이 있으면 아예 버튼을 비활성화하고 문구 변경
-        btn.disabled = isLocked || !isReady;
-        
-        if (hasEgg) {
-            btn.innerText = "이미 알이 실린더에 있습니다";
-            btn.className = "btn-craft-large disabled";
-        } else if (window.isHatching) {
-            btn.innerText = "연성 중...";
-            btn.className = "btn-craft-large disabled";
-        } else {
-            btn.innerText = isReady ? "호문클루스 연성하기" : "재료가 부족합니다";
-            btn.className = `btn-craft-large ${isReady ? 'ready' : 'disabled'}`;
-        }
-    }
-};
-
-/**
- * [수정본] 실제로 호문클루스 연성을 실행하는 함수입니다.
- * 현재 파트너 및 이미 보유한 캐릭터가 중복으로 연성되지 않도록 필터링 로직이 추가되었습니다.
- */
-window.startAbyssCrafting = async () => {
-    // 1. ✨ [방어] 실행 직전 최종 논리 체크 (중복 클릭 및 중복 생성 원천 차단)
-    if (window.collection.activeEgg || window.isHatching) {
-        console.warn("🚫 [Alchemy] 이미 연성 중이거나 알이 존재합니다.");
-        return;
-    }
-
-    // 2. 비용 및 재료 검증
-    const cost = window.calculateNextEggCost();
-    const inv = window.masterData.inventory.byproducts || {};
-    
-    if (window.collection.points < cost.ether) {
-        window.showToast("에테르가 부족합니다.", "error");
-        return;
-    }
-
-    // 3. 연성 시작과 동시에 '연성 중' 플래그 가동 및 UI 잠금
-    window.isHatching = true; 
-    window.updateAltarStatus(); // 버튼 즉시 비활성화
-
-    // 4. 거래 데이터 구성 (에테르 및 부산물 차감)
-    const transaction = { ether: -cost.ether, items: {} };
-    for (const [id, amount] of Object.entries(cost.materials)) {
-        transaction.items[id] = -amount;
-    }
-
-    // 5. 통합 거래 모듈 호출
-    const result = await window.processResourceTransaction(transaction);
-
-    if (result.success) {
-        // 6. 연성 횟수 증가 및 저장
-        window.masterData.hatchCount = (window.masterData.hatchCount || 0) + 1;
-        await window.saveAllData();
-
-        // 7. ✨ [핵심 수정] 중복 당첨 방지 필터링 로직
-        const allChars = window.charData.characters;
-        const ownedIds = window.collection.ownedIds || [];
-        const currentPartnerId = window.currentPartner?.id;
-
-        // 후보군 생성: 전체 캐릭터 중 (이미 보유한 ID 제외) AND (현재 파트너 ID 제외)
-        const candidateChars = allChars.filter(c => 
-            !ownedIds.includes(c.id) && c.id !== currentPartnerId
-        );
-
-        // 만약 모든 캐릭터를 수집했다면 전체에서 랜덤, 남은 캐릭터가 있다면 후보군에서 랜덤 선택
-        const pool = candidateChars.length > 0 ? candidateChars : allChars;
-        const randomChar = pool[Math.floor(Math.random() * pool.length)];
-
-        console.log(`⚗️ [Alchemy] 새 생명 연성 성공: ${randomChar.id} (${randomChar.name})`);
-
-        // 8. 새 알 데이터 등록 및 연출 실행
-        await window.processNewEggAcquisition(randomChar.id, 1800, 'alchemy'); 
-
-        if (window.triggerSupernovaEffect) {
-            window.triggerSupernovaEffect(randomChar);
-        }
-        
-        window.closeSedimentModal();
-    } else {
-        // 9. 실패 시 복구 로직
-        window.isHatching = false; 
-        window.updateAltarStatus();
-        window.showToast("연성 과정 중 에테르 흐름이 불안정해 실패했습니다.", "error");
-    }
-};
-
-/**
- * 6. 연성 애니메이션 (슈퍼노바)
- */
-window.triggerSupernovaEffect = (newChar) => {
-    let overlay = document.getElementById('supernova-overlay') || document.createElement('div');
-    if (!overlay.id) { overlay.id = 'supernova-overlay'; document.body.appendChild(overlay); }
-    overlay.style.background = '#000'; overlay.style.opacity = '1'; overlay.classList.add('active');
-
-    setTimeout(async () => {
-        overlay.style.background = '#fff';
-        window.currentStage = 'egg';
-        if (window.renderer && newChar.stages?.egg) {
-            window.renderer.expressions = {}; 
-            await window.renderer.loadCharacter(newChar.stages.egg);
-            window.renderer.currentState = "egg";
-        }
-        window.updateUI(); 
-
-        overlay.innerHTML = `
-            <div class="reveal-container" style="text-align:center;">
-                <div class="new-egg-name" style="color:#000; font-weight:800; font-size:2.5rem; margin-bottom:20px;">${newChar.egg_name || "알"}</div>
-                <img src="${newChar.stages.egg.sprite}" id="reveal-img" class="new-egg-reveal" style="width:280px; opacity:0; transform:scale(0.7);">
-            </div>`;
-        
-        const revealImg = document.getElementById('reveal-img');
-        if (revealImg) { setTimeout(() => { revealImg.style.transform = 'scale(1.1)'; revealImg.style.opacity = '1'; }, 100); }
-
-        setTimeout(() => {
-            overlay.style.opacity = '0';
-            setTimeout(() => { overlay.classList.remove('active'); overlay.innerHTML = ""; window.isHatching = false; }, 2000);
-        }, 3500);
-    }, 800);
-};
-
-// [UIManager.js] 조합 연성 상태 관리 변수
-window.selectedIngredients = [null, null, null]; // 3개의 슬롯 상태
-
-/**
- * 1. 재료 선택 팝업 (z-index 수정 및 마스터 데이터 참조)
- */
-window.tempSelectedIngredients = [];
-
-/**
- * 1. 일괄 재료 선택 팝업 열기
- */
-/**
- * [UIManager.js] 일괄 재료 선택 팝업 (텍스트 수정 완료)
- */
-window.openIngredientPicker = () => {
-    // ... (데이터 확보 로직은 이전과 동일)
-    const invItems = (window.masterData && window.masterData.inventory?.items) || {};
-    const invByproducts = (window.masterData && window.masterData.inventory?.byproducts) || {};
-    const itemDB = [...(window.byproductTable || []), ...window.getShopItems()];
-    const allOwnedIds = [...new Set([...Object.keys(invItems), ...Object.keys(invByproducts)])];
-
-    const materials = allOwnedIds.map(id => {
-        const count = (invItems[id] || 0) + (invByproducts[id] || 0);
-        const info = itemDB.find(dbItem => dbItem.id === id);
-        return { ...info, count: count };
-    }).filter(item => item && item.category === 'material' && item.count > 0);
-    
-    if (materials.length === 0) {
-        window.showToast("연성에 사용할 수 있는 재료가 가방에 없습니다.", "error");
-        return;
-    }
-
-    window.tempSelectedIngredients = [];
-
-    const pickerOverlay = document.createElement('div');
-    pickerOverlay.className = 'ingredient-picker-overlay';
-    pickerOverlay.id = 'bulk-picker-overlay';
-    pickerOverlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000001; display:flex; align-items:center; justify-content:center;';
-    
-    pickerOverlay.innerHTML = `
-        <div class="picker-modal-container" onclick="event.stopPropagation()">
-            <div class="picker-header">
-                <h4>조합 재료 선택 (<span id="pick-count">0</span>/3)</h4>
-            </div>
-            <div class="picker-grid-area" id="bulk-picker-grid">
-                ${materials.map(item => `
-                    <div class="picker-item-card" id="picker-item-${item.id}" onclick="window.toggleIngredientSelection('${item.id}')">
-                        <div class="picker-item-icon"><img src="${item.icon}"></div>
-                        <div class="picker-item-count">x${item.count}</div>
-                        <div class="picker-item-name">${item.name}</div>
-                        <div class="selection-order" style="display:none;"></div>
-                    </div>
-                `).join('')}
-            </div>
-            <div class="picker-footer">
-                <button class="btn btn-close" onclick="this.closest('.ingredient-picker-overlay').remove()">취소</button>
-                <button id="btn-confirm-recipe" class="btn btn-confirm-selection" disabled onclick="window.confirmIngredientSelection()">재료 넣기</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(pickerOverlay);
-};
-
-/**
- * 2. 아이템 선택 토글 처리
- */
-window.toggleIngredientSelection = (itemId) => {
-    const idx = window.tempSelectedIngredients.indexOf(itemId);
-    const card = document.getElementById(`picker-item-${itemId}`);
-    
-    if (idx > -1) {
-        // 이미 선택된 경우 제거
-        window.tempSelectedIngredients.splice(idx, 1);
-        card.classList.remove('selected');
-        card.querySelector('.selection-order').style.display = 'none';
-    } else {
-        // 새로 선택하는 경우 (최대 3개 제한)
-        if (window.tempSelectedIngredients.length >= 3) {
-            window.showToast("최대 3개까지만 선택 가능합니다.", "warning");
-            return;
-        }
-        window.tempSelectedIngredients.push(itemId);
-        card.classList.add('selected');
-    }
-
-    // 선택 순서 배지 업데이트
-    window.tempSelectedIngredients.forEach((id, i) => {
-        const orderBadge = document.getElementById(`picker-item-${id}`).querySelector('.selection-order');
-        orderBadge.innerText = i + 1;
-        orderBadge.style.display = 'flex';
-    });
-
-    // 카운트 및 확인 버튼 상태 갱신
-    const count = window.tempSelectedIngredients.length;
-    document.getElementById('pick-count').innerText = count;
-    document.getElementById('btn-confirm-recipe').disabled = (count === 0);
-    if (window.playSfx) window.playSfx('click');
-};
-
-/**
- * 3. 최종 선택 확정 및 슬롯 반영
- */
-window.confirmIngredientSelection = () => {
-    // 전역 선택 배열에 복사
-    window.selectedIngredients = [null, null, null];
-    const itemDB = [...(window.byproductTable || []), ...window.getShopItems()];
-
-    window.tempSelectedIngredients.forEach((id, i) => {
-        window.selectedIngredients[i] = id;
-        const item = itemDB.find(d => d.id === id);
-        const slot = document.getElementById(`recipe-slot-${i}`);
-        if (slot && item) {
-            slot.innerHTML = `<img src="${item.icon}" style="width:100%; height:100%; object-fit:contain;">`;
-            slot.style.borderStyle = 'solid';
-        }
-    });
-
-    // 팝업 제거
-    document.getElementById('bulk-picker-overlay').remove();
-    window.showToast(`${window.tempSelectedIngredients.length}개의 재료를 투입했습니다.`, "success");
-};
-
-/**
- * 2. 아이템 차감 함수 (masterData 구조 대응)
- */
-window.removeItemFromInventory = (itemId, count) => {
-    if (!window.masterData || !window.masterData.inventory) return;
-    
-    const inv = window.masterData.inventory;
-    // 부산물(byproducts) 혹은 일반 아이템(items) 양쪽에서 확인하여 차감합니다.
-    if (inv.byproducts && inv.byproducts[itemId] !== undefined) {
-        inv.byproducts[itemId] = Math.max(0, inv.byproducts[itemId] - count);
-    } else if (inv.items && inv.items[itemId] !== undefined) {
-        inv.items[itemId] = Math.max(0, inv.items[itemId] - count);
-    }
-    
-    // UI 갱신 및 데이터 저장
-    if (window.renderInventory) window.renderInventory();
-    if (window.saveAllData) window.saveAllData();
-};
-
-/**
- * 재료 선택 처리 함수
- */
-window.selectIngredientForSlot = (slotIndex, itemId) => {
-    const item = byproductTable.find(i => i.id === itemId) || window.getShopItems().find(i => i.id === itemId);
-    if (!item) return;
-
-    // 상태 저장 및 UI 업데이트
-    window.selectedIngredients[slotIndex] = itemId;
-    const slotElement = document.getElementById(`recipe-slot-${slotIndex}`);
-    slotElement.innerHTML = `<img src="${item.icon}" style="width:100%; height:100%; object-fit:contain;">`;
-    slotElement.style.borderStyle = 'solid';
-
-    // 팝업 닫기
-    document.querySelector('.ingredient-picker-overlay').remove();
-    if (window.playSfx) window.playSfx('click');
-};
-
-/**
- * 2. 비밀 조합 실행 (연성 판정)
- */
-
-/**
- * [UIManager.js] 비밀 조합 실행 (기존 failedProducts 배열 활용 버전)
- */
-window.startRecipeSynthesis = async () => {
-    const slots = window.selectedIngredients;
-    if (!slots || slots.every(s => s === null)) {
-        window.showToast("조합할 재료가 선택되지 않았습니다.", "warning");
-        return;
-    }
-    if (window.collection.activeEgg || window.isHatching) {
-        window.showToast("이미 연성 중입니다.", "warning");
-        return;
-    }
-
-    const currentInput = [...slots].filter(s => s !== null).sort();
-    const recipes = {
-        'char_01': ['ether_sludge', 'soft_down_cotton', 'torn_leather_scrap'].sort(),
-        'char_02': ['petrified_memory', 'sharpened_claw', 'soft_down_cotton'].sort(),
-        'char_04': ['bleached_scales', 'transparent_husk', 'venomous_fang'].sort(),
-        'char_05': ['soft_down_cotton', 'cracked_beak', 'glistening_mucus_bead'].sort(),
-        'char_06': ['pulsing_crystal', 'spectral_fin', 'glistening_mucus_bead'].sort(),
-        'char_07': ['floating_eye', 'torn_leather_scrap', 'sharpened_claw'].sort(),
-        // 'char_07': ['calcified_shell_fragment', 'starlight_antler', 'ether_sludge'].sort(),
-        // 'char_08': ['floating_eye', 'soft_down_cotton', 'cracked_beak'].sort(),
-        // 'char_09': ['starlight_antler', 'torn_leather_scrap', 'petrified_memory'].sort(),
-        // 'char_10': ['ether_sludge', 'torn_leather_scrap', 'calcified_shell_fragment'].sort(),
-        // 'char_11': ['phosphorescent_wing', 'chitinous_armor_plate', 'transparent_husk'].sort(),
-        // 'char_12': ['vibrant_suction_cup', 'spectral_fin', 'floating_eye'].sort(),
-        // 'char_13': ['petrified_memory', 'cracked_beak', 'soft_down_cotton'].sort()
-    };
-
-    let resultCharId = null;
-    for (const [id, ingredients] of Object.entries(recipes)) {
-        if (JSON.stringify(currentInput) === JSON.stringify(ingredients)) {
-            resultCharId = id;
-            break;
-        }
-    }
-
-    window.isHatching = true;
-
-    if (resultCharId) {
-        // --- 성공 로직 ---
-        const targetChar = window.charData.characters.find(c => c.id === resultCharId);
-        if (targetChar) {
-            slots.forEach(id => { if(id) window.removeItemFromInventory(id, 1); });
-            window.charGrowthMap[resultCharId] = window.charGrowthMap[resultCharId] || 0;
-            window.currentPartner = targetChar;
-            window.masterData.character.selectedPartnerId = resultCharId;
-            await window.processNewEggAcquisition(resultCharId, 1800, 'recipe'); 
-            if (window.triggerSupernovaEffect) window.triggerSupernovaEffect(targetChar);
-            window.closeSedimentModal();
-            window.showToast(`${targetChar.egg_name || '알'} 연성 성공!`, "success");
-            if (window.saveAllData) await window.saveAllData();
-        }
-    } else {
-        // --- ✨ 실패 로직 (기존 failedProducts 배열 연동) ---
-        // 아티스트님이 선언한 failedProducts 배열에서 무작위 객체 하나를 선택합니다.
-        const randomProduct = failedProducts[Math.floor(Math.random() * failedProducts.length)];
-        const resultId = randomProduct.id;
-
-        window.isHatching = false;
-        slots.forEach(id => { if(id) window.removeItemFromInventory(id, 1); });
-
-        // 인벤토리(byproducts)에 결과물 ID로 개수 추가
-        const inv = window.masterData.inventory.byproducts;
-        inv[resultId] = (inv[resultId] || 0) + 1;
-
-        window.showToast(`조합 실패... '${randomProduct.name}'을(를) 획득했습니다.`, "info");
-        
-        if (window.saveAllData) await window.saveAllData();
-        if (window.renderInventory) window.renderInventory(); // 가방 즉시 갱신
-    }
-
-    // 슬롯 초기화
-    window.selectedIngredients = [null, null, null];
-    for (let i = 0; i < 3; i++) {
-        const slot = document.getElementById(`recipe-slot-${i}`);
-        if (slot) { slot.innerHTML = '+'; slot.style.borderStyle = 'dashed'; }
-    }
 };

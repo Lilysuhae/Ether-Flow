@@ -22,6 +22,7 @@ require(path.join(__dirname, 'src', 'ModuleManager.js'));
 require(path.join(__dirname, 'src', 'UIManager.js'));
 require(path.join(__dirname, 'src', 'DialogueManager.js'));
 require(path.join(__dirname, 'src', 'NoteManager.js'));
+require(path.join(__dirname, 'src', 'AlchemyManager.js'));
 
 // UI 컴포넌트 라이브러리 설정
 const { defineCustomElements } = require('@duetds/date-picker/dist/loader');
@@ -30,6 +31,22 @@ defineCustomElements(window);
 /* ============================================================
    [2] 전역 유틸리티 함수 (Localization)
    ============================================================ */
+   /**
+ * [renderer.js] 한국어 조사(이/가, 을/를) 자동 선택 유틸리티
+ * @param {string} word - 조사가 붙을 단어
+ * @param {string} type - 선택할 조사 쌍 (예: "이/가", "을/를")
+ */
+window.getKoreanParticle = (word, type) => {
+    if (!word) return type;
+    const lastChar = word.charCodeAt(word.length - 1);
+    
+    // 한글 유니코드 연산을 통해 받침 존재 여부 확인
+    const hasBatchim = (lastChar - 0xAC00) % 28 > 0;
+    
+    // 받침이 있으면 앞의 조사(을/이), 없으면 뒤의 조사(를/가) 반환
+    return hasBatchim ? type.split('/')[0] : type.split('/')[1];
+};
+
 // 다국어 번역 텍스트 반환
 window.t = (key) => {
     if (!window.uiData) return key;
