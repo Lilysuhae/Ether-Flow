@@ -578,7 +578,7 @@ window.startRecipeSynthesis = async () => {
     window.isHatching = true;
 
     /**
-     * [내부 로직] 재료 차감 (부산물 20개 / 상점 재료 1개 차등 적용)  
+     * [내부 로직] 재료 차감 (부산물 20개 / 상점 재료 1개 차등 적용)
      */
     const consumeIngredients = () => {
         slots.forEach(id => {
