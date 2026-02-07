@@ -593,7 +593,7 @@ window.startRecipeSynthesis = async () => {
         // --- [성공 판정] ---
         const targetChar = window.charData.characters.find(c => c.id === resultCharId);
         if (targetChar) {
-            // 중복 연성 방지: 이미 도감에 등록된 캐릭터인지 확인
+            // 중복 연성 방지: 이미 도감에 등록된 캐릭터인지 확인 
             const isAlreadyOwned = window.collection.ownedIds.includes(resultCharId);
             if (isAlreadyOwned) {
                 window.showToast(`이미 연성해본 경험이 있는 '${targetChar.egg_name || '알'}'의 연성식입니다.`, "info");
