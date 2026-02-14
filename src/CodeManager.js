@@ -58,13 +58,23 @@ class CodeManager {
                 this._finalizeRedemption(code, inputEl);
             }
             return;
+        }else if (code === "MY_NEW_FRIEND_KKKota") {
+            const success = await window.processNewEggAcquisition("char_10", 180, 'code');
+            if (success) {
+                this._finalizeRedemption(code, inputEl);
+            }
+            return;
         }
 
         // 3. ✨ [자산 보상 코드] 통합 자산 거래 모듈 호출
         const etherRewards = {
             "WELCOME_MOLIP": 3000,
             "ETHER_BOOST": 500,
-            "TO_FRIEND": 5000
+            "TO_FRIEND": 5000,
+            "reward_for_inviting_destiny": 10000,
+            "reward_for_inviting_inception": 20000,
+            "reward_for_inviting_igotoyou": 30000,
+            "reward_for_inviting_umma": 50000
         };
 
         if (etherRewards[code]) {

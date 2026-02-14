@@ -425,7 +425,7 @@ window.openIngredientPicker = () => {
         <div class="picker-modal-container" onclick="event.stopPropagation()">
             <div class="picker-header">
                 <h4 style="margin-bottom:5px;">조합 재료 선택 (<span id="pick-count">0</span>/3)</h4>
-                <p>부산물은 20개, 상점 재료는 1개가 투입됩니다.</p>
+                <p>부산물은 20개, 상점 재료는 1개가 투입됩니다.<br><b>호문클루스 연성에는 부산물 1칸, 상점 재료 2칸</b>이 투입됩니다.</p>
             </div>
             <div class="picker-grid-area" id="bulk-picker-grid">
                 ${materials.map(item => {

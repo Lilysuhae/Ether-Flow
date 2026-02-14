@@ -4458,12 +4458,20 @@
         "charId": "char_09",
         "title": "건의 사항",
         "logic": "AND",
-        "triggers": [
-            { "type": "partnerId", "value": "char_09" },
-            { "type": "first_gift", "value": "낡은 양피지" }
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_09"
+            },
+            {
+                "type": "first_gift",
+                "value": "낡은 양피지"
+            }
         ],
         "content": "당신이 준 양피지, 맛이 훌륭하더군요. 늘 실패한 연구가 적힌 구겨진 것만 먹다가 이런 등급의 새 양피지를 먹으니 입맛이 도는 기분이었습니다. 실패작은 그만 만들 때도 됐으니 이제 이걸 제게 정기적으로 제공할 생각은 없습니까?",
-        "reward": { "type": "point", "value": 50 }
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
     },
     {
         "id": "belinda_gift_streak",
@@ -4471,12 +4479,20 @@
         "charId": "char_09",
         "title": "괜찮은 파트너",
         "logic": "AND",
-        "triggers": [
-            { "type": "partnerId", "value": "char_09" },
-            { "type": "gift_connoisseur", "value": 3 }
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_09"
+            },
+            {
+                "type": "gift_connoisseur",
+                "value": 3
+            }
         ],
         "content": "당신, 생각보다 말이 통하는군요. 풋내기라고 얕봤더니 실패작 양피지의 장수가 확연히 줄었어요. 제게는 좋은 일이죠, 그 대신 상등급 양피지를 제공받고 있으니. 이 상태를 유지하도록 하세요.",
-        "reward": { "type": "point", "value": 300 }
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
     },
     {
         "id": "belinda_gift_dislike",
@@ -4484,12 +4500,20 @@
         "charId": "char_09",
         "title": "선악과",
         "logic": "AND",
-        "triggers": [
-            { "type": "partnerId", "value": "char_09" },
-            { "type": "gift_type_dislike", "value": true }
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_09"
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            }
         ],
         "content": "이따위 걸로 환심을 사려 하다니 어리석기 짝이 없군요. 붉은 과실에 유혹당한 건 당신들 인류의 멍청한 조상입니다. 잊지 마시길. 자, 쓸데없는 환심을 살 생각에 집중이나 하시죠. 아니면 그 쓰레기 같은 메모라도 제게 주시든가요.",
-        "reward": { "type": "point", "value": 50 }
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
     },
     {
         "id": "belinda_owned_6",
@@ -4497,12 +4521,20 @@
         "charId": "char_09",
         "title": "악마의 숫자",
         "logic": "AND",
-        "triggers": [
-            { "type": "partnerId", "value": "char_09" },
-            { "type": "owned_count", "value": 6 }
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_09"
+            },
+            {
+                "type": "owned_count",
+                "value": 6
+            }
         ],
         "content": "이제야 좀 연금술사라는 말에 걸맞은 수의 호문클루스를 연성해냈군요. 그러나 이는 시작일 뿐, 모두를 보다 완전한 존재로 만들 책임이 더욱 무거워졌다는 걸 느끼길 바랍니다. 제가 옆에서 도와드리죠. 어디까지나 집사니까요.",
-        "reward": { "type": "point", "value": 666 }
+        "reward": {
+            "type": "point",
+            "value": 666
+        }
     },
     {
         "id": "belinda_perfect_day",
@@ -4510,12 +4542,20 @@
         "charId": "char_09",
         "title": "값비싼 인정",
         "logic": "AND",
-        "triggers": [
-            { "type": "partnerId", "value": "char_09" },
-            { "type": "perfect_day", "value": true }
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_09"
+            },
+            {
+                "type": "perfect_day",
+                "value": true
+            }
         ],
         "content": "목표한 것과 습관까지 전부 완수하셨군요. 오늘만큼은 인정해드리겠습니다.",
-        "reward": { "type": "point", "value": 400 }
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
     },
     {
         "id": "belinda_night_owl",
@@ -4523,12 +4563,20 @@
         "charId": "char_09",
         "title": "젖은 양피지",
         "logic": "AND",
-        "triggers": [
-            { "type": "partnerId", "value": "char_09" },
-            { "type": "night_owl", "value": true }
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_09"
+            },
+            {
+                "type": "night_owl",
+                "value": true
+            }
         ],
         "content": "야심한 시각에 연구하는 모습은 보기 좋지만, 제때 잠드는 걸 잊지 마십시오. 엎드려서 자다가 침이 흐른 양피지는 먹지도 못하고 버려야 하니까요.",
-        "reward": { "type": "point", "value": 150 }
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
     },
     {
         "id": "belinda_early_bird",
@@ -4536,12 +4584,20 @@
         "charId": "char_09",
         "title": "모닝 티",
         "logic": "AND",
-        "triggers": [
-            { "type": "partnerId", "value": "char_09" },
-            { "type": "early_bird", "value": true }
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_09"
+            },
+            {
+                "type": "early_bird",
+                "value": true
+            }
         ],
         "content": "웬일로 일찍 기상하셨군요. 아침을 깨우는 차를 준비하겠습니다. 그사이 도로 잠들어버리면 이 뿔에 새로운 용도가 추가될 테니 명심하십시오.",
-        "reward": { "type": "point", "value": 150 }
+        "reward": {
+            "type": "point",
+            "value": 150
+        }
     },
     {
         "id": "belinda_focus_30",
@@ -4549,12 +4605,20 @@
         "charId": "char_09",
         "title": "반 시간의 몰입",
         "logic": "AND",
-        "triggers": [
-            { "type": "partnerId", "value": "char_09" },
-            { "type": "marathon_focus", "value": 30 }
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_09"
+            },
+            {
+                "type": "marathon_focus",
+                "value": 30
+            }
         ],
         "content": "당신 같은 풋내기에게 반 시간 집중도 쉽지 않았군요. 다음 목표는 한 시간 집중입니다. 할 수 있겠습니까?",
-        "reward": { "type": "point", "value": 200 }
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
     },
     {
         "id": "belinda_flow_state",
@@ -4562,11 +4626,372 @@
         "charId": "char_09",
         "title": "깜짝 선물",
         "logic": "AND",
-        "triggers": [
-            { "type": "partnerId", "value": "char_09" },
-            { "type": "flow_state", "value": true }
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_09"
+            },
+            {
+                "type": "flow_state",
+                "value": true
+            }
         ],
         "content": "약속대로 한 시간 집중에 성공했군요. 어떻습니까, 달라진 에테르의 흐름은 잘 느끼셨는지요? 앞으로도 끊기지 않는 집중을 기대하죠.",
-        "reward": { "type": "point", "value": 500 }
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "kota_bond_early",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "넌 참 신기한 인간이네",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 20
+            }
+        ],
+        "content": "넌 참 신기한 인간이네. 지켜보고 있으면 냄새가 시시각각으로 변해. 뭐 때문일까? 뜨거운 집중의 냄새도 나면서, 외로운 냄새도 나. 가끔 꾀를 부리는 냄새도 나고 말이지! 혹시 연구할 때 힘들면 내 플라스크 곁이라도 올래? 난 항상 널 보고 있거든. 냄새가 신경 쓰여서 나도 모르게 보게 돼. 싫음 말구~",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "kota_bond_55",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "인간 연구가 코타",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 300
+            }
+        ],
+        "content": "인간, 나도 사실 요즘 연구를 시작했어. 의외지? 놀랐지? 무슨 연구냐면 바로~ 인간, 너에 대한 연구야! 하하, 속았지! 그치만 인간을 지켜보고 뭔갈 알아낸 건 진짜야! 인간, 내가 응원해주면 집중도 잘하고 에테르 냄새도 좋아지는 것 같아. 연구하다 말고 내 머리 쓰다듬고 갔을 때도 엄청 열정적인 에테르 냄새 났었고 말이야~ 내가 인간의 연구에 도움이 되는 것 같으니까, 앞으로도 도와줘 볼게! 감사 인사는 됐으니까 맛있는 거 줄래? 아니면 신나게 놀자!",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "kota_bond_90",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "멍킷리스트",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 450
+            }
+        ],
+        "content": "나 요즘 인간이랑 같이 하고 싶은 게 많아졌어. 인간이 연구할 때 옆에 달라붙어 앉아있고도 싶고, 같이 손잡고 산책도 하고 싶어, 산책하면서 맛있는 거 먹는 건 당연한 거고! 그 외에도 여기저기 놀러 가고 싶은 곳이 많아. 물론 호문클루스는 밖에 못 나가는 거, 나도 알고 있지만~ 생각은 자유잖아, 그렇지? 그냥 언젠간 가능해지면 좋지 않을까, 하고. …너무 신경 쓰지 마! 그냥 가볍게 생각하는 거니까……진짜야.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "kota_bond_100",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "즐거운 기다림",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 600
+            }
+        ],
+        "content": "요즘 내가 제일 좋아하는 게 뭔 줄 알아? 인간이 장갑 끼고 나 쓰다듬어 주는 거랑 유리 벽 너머로 나랑 손 맞대주는 거! 온전히는 아니어도 이걸로나마 온기를 느낄 수 있다는 게 참 신기하고 소중한 것 같아. 예전엔 어떻게든 인간과 맞잡은 손의 온기를 느끼고 싶다 생각했는데, 지금은 인간을 만난 것 그 자체로 기뻐. 왜냐고 물어봐도…… 나는 인간을 좋아하는 이유 같은 건 생각해본 적 없어서 잘 모르겠지만. 자연스럽게 믿게 된다고 해야 하나? 그래서 언젠간 인간이 열심히 연구해서 나를 완전한 존재로 만들어줄 거라 믿고 있어. 플라스크 바깥에서도 있을 수 있도록. 그때까지 이 자리에서 기다릴게, 내 최고의 친구!",
+        "reward": {
+            "type": "achievement",
+            "value": "kota_best_friend",
+            "name": "코타의 최고의 친구"
+        }
+    },
+    {
+        "id": "kota_gift_fav_first",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "꼬리가 멈추지 않는 탓일까",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "first_gift",
+                "value": "황금 커드"
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 15
+            }
+        ],
+        "content": "지금까지 코타가 가져본 것 중에 제일 좋은 냄새가 났다! 너무 기분이 좋아서 꼬리가 멈추지 않는데 어쩌면 좋냐!",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "kota_gift_fav_repeat",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "센스있는 선물",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 2
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 15
+            }
+        ],
+        "content": "이럴 수가! 코타가 좋아한다고 한 걸 기억해 준 건가! 인간 똑똑하다! 좋다!",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "kota_gift_dislike_first",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "마비",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 15
+            }
+        ],
+        "content": "인간, 코타 갑자기 냄새를 못 맡겠다……. 코가 너무 얼얼하다! 이 초 때문 같아! 앞으론 이렇게 냄새가 너무 강한 건 안 주면 안 되냐? 코타 코 아프다!",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "kota_pet_10_child",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "헝클어진 헤어스타일",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "daily_pet_limit",
+                "value": 10
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 0
+            }
+        ],
+        "content": "와, 인간! 코타 털이 무지무지 헝클어졌다! 싫은 거 아니다! 마구마구 쓰다듬어주는 거 너무 좋다! 뭐 하면 또 쓰다듬어줄 거냐?",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "kota_pet_20_adult",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "너에게 닿기를",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "daily_pet_limit",
+                "value": 20
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 300
+            }
+        ],
+        "content": "강아지 때나 지금이나 인간이 쓰다듬는 건 너무 기분 좋아. 맨손이 아닌 건 큰 문제가 아니라구! 날 쓰다듬어주는 게 중요한걸. 그치만 궁금하네. 언젠간 인간이 맨손으로 날 쓰다듬어 주는 날이 올까?",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "kota_owned_8",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "친구가 북적북적",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "owned_count",
+                "value": 8
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 15
+            }
+        ],
+        "content": "우와! 북적북적! 친구가 이렇게 많아지다니 너무 좋아! 인간이 나 불러주기 전엔 나도 언니오빠랑 영혼들이랑 같이 있었던 것 같아. 지금은 희미하지만! 이제 플라스크 너머로 친구들이랑 인사하고 온기 느낄 수 있어서 그런가 봐. 친구 더 많아지면 좋겠다!",
+        "reward": {
+            "type": "point",
+            "value": 500
+        }
+    },
+    {
+        "id": "kota_gift_collection_8",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "소중한 컬렉션",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "gift_connoisseur",
+                "value": 8
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 15
+            }
+        ],
+        "content": "이거 봐! 인간이 준 선물들, 벌써 8종류나 돼. 아직 간직하고 있어서 놀랐어? 그야, 서로 다른 냄새가 나는 게 신기하고 재밌잖아! 물론 인간한테 받은 선물이라 소중하게 여기는 것도 있지만! 인간, 항상 고마워!",
+        "reward": {
+            "type": "point",
+            "value": 400
+        }
+    },
+    {
+        "id": "kota_juggler_4",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "도구의 마술사",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "app_juggler",
+                "value": 4
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 15
+            }
+        ],
+        "content": "우와, 인간! 손은 두 개인데 작업 도구를 4개나 쓴 거야? 대단해! 나도 장난감 여러 개 갖고 놀아봐야지!",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "kota_weekend",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "착한 아이",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_10"
+            },
+            {
+                "type": "weekend_alchemist",
+                "value": true
+            },
+            {
+                "type": "specific_growth",
+                "charId": "char_10",
+                "value": 15
+            }
+        ],
+        "content": "쉬는 날인데도 날 보러왔어? 인간 기특해! 착한 인간한테는 상 줘야지!",
+        "reward": {
+            "type": "point",
+            "value": 200
+        }
+    },
+    {
+        "id": "achieve_bond_kota_100",
+        "sender": "코타",
+        "charId": "char_10",
+        "title": "[업적] 무조건적인 지지와 성원",
+        "triggers": [{
+            "type": "partnerId",
+            "value": "char_10"
+        }, {
+            "type": "intimacy_level",
+            "value": 100
+        }],
+        "content": "세상에는 좋은 게 너무너무 많지만, 역시 인간이 나한테 제일 소중해! 나랑 앞으로도 계속 친구 해 줄 거지? 자, 여기 내가 주는 우정의 증표야! 소중히 간직해야 해!",
+        "reward": {
+            "type": "achievement",
+            "value": "Kota_best_friend",
+            "name": "코타의 가장 소중한 친구"
+        }
     }
 ]
