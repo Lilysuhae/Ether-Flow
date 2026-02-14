@@ -4823,7 +4823,7 @@
         "id": "kota_pet_10_child",
         "sender": "코타",
         "charId": "char_10",
-        "title": "헝클어진 헤어스타일",
+        "title": "손이 가요 손이 가",
         "logic": "AND",
         "triggers": [{
                 "type": "partnerId",

@@ -121,11 +121,14 @@ window.isHatching = false;
 ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(eventName => {
     window.addEventListener(eventName, () => { 
         lastInputTime = Date.now(); 
-        // 0.1초라도 움직임이 감지되면 즉시 부재중 해제 (반응성 최우선)
+
+        // ✨ window.isIdle이 true(부재중)일 때 움직임이 감지되면 실행
         if (window.isIdle) {
-            isIdle = false;
-            window.isIdle = false;
-            if (typeof updateStatusBadge === 'function') updateStatusBadge();
+            window.isIdle = false; 
+            console.log("👋 [System] 사용자 복귀 - 배지 상태 복구");
+            if (typeof updateStatusBadge === 'function') {
+                updateStatusBadge(); // 즉시 UI를 '집중' 또는 '딴짓'으로 갱신
+            }
         }
     }, { passive: true });
 });
@@ -1942,89 +1945,88 @@ window.updateUI = function() {
 async function updateLoop() {
     if (!masterData || window.isResetting) return;
 
-    // 1. ✨ [핵심] 시스템 부재중 체크 (10분) 및 상태 동기화
-    try {
-        const systemIdleSeconds = await ipcRenderer.invoke('get-idle-time');
-        const isIdleNow = systemIdleSeconds >= 600;
-
-        if (isIdleNow !== window.isIdle) {
-            isIdle = isIdleNow; 
-            window.isIdle = isIdleNow; 
-            if (typeof updateStatusBadge === 'function') updateStatusBadge();
-        }
-    } catch (err) { console.error("⚠️ [System] 부재중 체크 실패:", err); }
-
     const nowMolipDate = window.getMolipDate();
 
-    // 2. 날짜 변경 감지 (자정 리셋)
+    // 1. ✨ 시스템 전체 유휴 시간(초 단위) 가져오기
+    const systemIdleTime = await ipcRenderer.invoke('get-idle-time'); 
+    const IDLE_THRESHOLD = 300; // 5분 기준
+
+    // 2. 부재중 로직 판정
+    if (!window.isIdle && systemIdleTime >= IDLE_THRESHOLD) {
+        window.isIdle = true;
+        console.log(`💤 [System] 시스템 유휴 ${systemIdleTime}초 경과 - 부재 중 전환`);
+        if (typeof updateStatusBadge === 'function') updateStatusBadge();
+    } 
+    // 3. 복귀 로직 판정 (유휴 시간이 기준치 미만으로 떨어지면 즉시 복귀)
+    else if (window.isIdle && systemIdleTime < IDLE_THRESHOLD) {
+        window.isIdle = false;
+        console.log("👋 [System] 사용자 활동 감지 - 배지 상태 복구");
+        if (typeof updateStatusBadge === 'function') updateStatusBadge();
+    }
+
+    // 1. 날짜 변경 감지 (자정/초기화 시각 리셋)
     if (masterData.progress && masterData.progress.lastSaveDate !== nowMolipDate) {
         await handleMidnightReset(nowMolipDate);
         return;
     }
 
-    // 3. ✨ [수정] 모니터링 분석 및 집중 판정 (부재중일 땐 무조건 false)
+    // 2. 모니터링 분석 (독립 실행)
     let isFocusing = false;
     try {
         if (window.molipMonitor) {
-            // 먼저 앱 분석을 수행합니다.
-            const analyzedFocus = await window.molipMonitor.analyze(lastActiveWin); 
-            
-            // 🔥 [통계 방어] 부재중(isIdle)이라면 분석 결과와 상관없이 집중 중이 아닌 것으로 간주합니다.
-            isFocusing = analyzedFocus && !window.isIdle; 
-            
-            // 모든 매니저가 참조하는 전역 변수 업데이트
-            isActuallyWorking = isFocusing;
-            window.isActuallyWorking = isFocusing;
-            
-            // 딴짓 판정도 부재중일 때는 무시합니다.
-            isDistraction = !window.isIdle && window.molipMonitor.isDistraction;
-            window.isDistraction = isDistraction;
+            isFocusing = await window.molipMonitor.analyze(lastActiveWin);
         }
     } catch (e) { console.error("⚠️ [Monitor] 분석 에러:", e); }
 
-    // 4. 서신/업적/성장 체크 (보정된 isFocusing 전달)
+    // 3. 서신/업적/성장 체크 (독립 실행)
     try {
         checkMailAndAchievements(isFocusing, nowMolipDate);
     } catch (e) { console.error("⚠️ [System] 조건 체크 에러:", e); }
 
     try {
         if (window.characterManager) {
-            window.characterManager.checkHatching();
-            window.characterManager.checkEvolution();
+            window.characterManager.checkHatching();   
+            window.characterManager.checkEvolution();  
         }
     } catch (e) { console.error("⚠️ [Manager] 성장 로직 에러:", e); }
 
-    // 5. 작업 기록 모달 실시간 갱신
+    // 4. ✨ [작업 기록 모달 실시간 갱신]
     try {
-        const logModal = document.getElementById('daily-log-modal');
+        const logModal = document.getElementById('daily-log-modal'); // ID 수정됨
+        
+        // 모달이 열려있는지 확인
         if (logModal && (logModal.style.display === 'flex' || logModal.style.display === 'block')) {
+            
+            // 1순위: 렌더링 함수가 있으면 호출
             if (typeof window.renderWorkLog === 'function') {
-                window.renderWorkLog();
-            } else if (window.logManager) {
+                window.renderWorkLog(); 
+            } 
+            // 2순위: 연결이 끊겼다면 LogManager를 통해 즉시 복구 및 호출
+            else if (window.logManager) {
                 window.renderWorkLog = window.logManager.renderDailyLogContent.bind(window.logManager);
                 window.renderWorkLog();
             }
         }
-    } catch (e) { }
+    } catch (e) { 
+        // 에러 무시 (루프 중단 방지)
+    }
 
-    // 6. UI 및 시스템 최종 갱신
+    // 5. UI 및 실린더 시스템 갱신
     try {
-        // updateCylinderSystem은 내부적으로 window.isActuallyWorking을 참조하므로 
-        // 위에서 보정한 값이 그대로 반영되어 부재중엔 농도가 오르지 않습니다.
-        if (window.updateCylinderSystem) window.updateCylinderSystem();
-        window.updateUI();
+        if (window.updateCylinderSystem) window.updateCylinderSystem(); 
+        window.updateUI(); // 이름표, 에테르 등 갱신
         
-        if (typeof updateStatusBadge === 'function') {
-            updateStatusBadge();
-        }
-
-        // 알 흔들림 연출 (실제로 집중 중일 때만)
+        // 알 흔들림 연출 제어
         const mainCanvas = document.getElementById('main-canvas');
         if (mainCanvas) {
             const shouldAnimate = window.collection.activeEgg && isFocusing && !window.isHatching;
             mainCanvas.classList.toggle('egg-anim-active', shouldAnimate);
         }
     } catch (e) { console.error("⚠️ [UI] 최종 갱신 에러:", e); }
+
+    if (typeof updateStatusBadge === 'function') {
+        updateStatusBadge();
+    }
 }
 
 
