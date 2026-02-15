@@ -74,6 +74,7 @@ class CodeManager {
             "reward_for_inviting_destiny": 10000,
             "reward_for_inviting_inception": 20000,
             "reward_for_inviting_igotoyou": 30000,
+            "reward_for_inviting_hugupjigup": 40000,
             "reward_for_inviting_umma": 50000
         };
 

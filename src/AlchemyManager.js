@@ -286,65 +286,63 @@ window.updateAltarStatus = () => {
  * 7. 실제로 호문클루스 연성을 실행하는 함수
  */
 window.startAbyssCrafting = async () => {
-    // 최종 논리 체크 (중복 클릭 차단)
-    if (window.collection.activeEgg || window.isHatching) {
-        console.warn("🚫 [Alchemy] 이미 연성 중이거나 알이 존재합니다.");
+    // 1. 비용 계산 및 기본 검증
+    const cost = window.calculateAbyssCost ? window.calculateAbyssCost() : 3000; 
+    
+    if (window.collection.points < cost) {
+        window.showToast(window.t ? window.t('game.ui.ether_shortage') : "에테르가 부족합니다.", "error");
         return;
     }
 
-    const cost = window.calculateNextEggCost();
-    if (window.collection.points < cost.ether) {
-        window.showToast("에테르가 부족합니다.", "error");
+    if (window.collection.activeEgg) {
+        window.showToast("이미 실린더에 부화 중인 알이 있습니다.", "error");
         return;
     }
 
-    // 연성 시작 플래그 가동 및 UI 잠금
-    window.isHatching = true; 
-    window.updateAltarStatus();
+    // 2. 연성 가능한 후보군 필터링 (핵심 로직)
+    const excludedIds = [...window.collection.ownedIds];
+    const availableCharacters = window.charData.characters.filter(c => {
+        // 소유 중인 캐릭터 제외
+        if (excludedIds.includes(c.id)) return false;
 
-    // 거래 데이터 구성
-    const transaction = { ether: -cost.ether, items: {} };
-    for (const [id, amount] of Object.entries(cost.materials)) {
-        transaction.items[id] = -amount;
-    }
-
-    // 통합 거래 모듈 호출
-    const result = await window.processResourceTransaction(transaction);
-
-    if (result.success) {
-        // 연성 횟수 증가 및 저장
-        window.masterData.hatchCount = (window.masterData.hatchCount || 0) + 1;
-        await window.saveAllData();
-
-        // 중복 당첨 방지 필터링 로직
-        const allChars = window.charData.characters;
-        const ownedIds = window.collection.ownedIds || [];
-        const currentPartnerId = window.currentPartner?.id;
-
-        // 후보군: (이미 보유 제외) AND (현재 파트너 제외)
-        const candidateChars = allChars.filter(c => 
-            !ownedIds.includes(c.id) && c.id !== currentPartnerId
-        );
-
-        // 전체 수집 시 전체에서 랜덤, 아니면 후보군에서 선택
-        const pool = candidateChars.length > 0 ? candidateChars : allChars;
-        const randomChar = pool[Math.floor(Math.random() * pool.length)];
-
-        console.log(`⚗️ [Alchemy] 새 생명 연성 성공: ${randomChar.id} (${randomChar.name})`);
-
-        // 새 알 데이터 등록 및 연출 실행
-        await window.processNewEggAcquisition(randomChar.id, 1800, 'alchemy'); 
-
-        if (window.triggerSupernovaEffect) {
-            window.triggerSupernovaEffect(randomChar);
-        }
+        // obtainMethod가 배열이면 includes로 확인, 문자열이면 직접 비교 (방어 코드)
+        const methods = Array.isArray(c.obtainMethod) ? c.obtainMethod : [c.obtainMethod];
         
-        window.closeSedimentModal();
+        // "random" 키워드가 포함되어 있는지 확인 (랜덤+레시피 중복 허용)
+        return methods.includes("random");
+    });
+
+    // 3. 후보군 존재 여부 체크
+    if (availableCharacters.length === 0) {
+        window.showToast("현재 일반 연성으로 발견할 수 있는 새로운 생명이 없습니다.", "info");
+        return;
+    }
+
+    // 4. 랜덤 선택 및 자산 차감
+    const randomChar = availableCharacters[Math.floor(Math.random() * availableCharacters.length)];
+
+    // processResourceTransaction를 통해 안전하게 에테르 차감
+    const result = await window.processResourceTransaction({ ether: -cost });
+
+    if (result && result.success) {
+        // 5. 알 획득 및 연출 실행
+        // 일반 연성의 기본 부화 시간은 1800초(30분)로 설정
+        const success = await window.processNewEggAcquisition(randomChar.id, 1800, 'abyss');
+        
+        if (success) {
+            // 슈퍼노바 이펙트 트리거
+            if (window.triggerSupernovaEffect) {
+                window.triggerSupernovaEffect(randomChar);
+            }
+            
+            // UI 갱신 (비용 증가 반영 등)
+            if (window.updateUI) window.updateUI();
+            
+            const particle = window.getKoreanParticle ? window.getKoreanParticle(randomChar.egg_name, "을/를") : "을";
+            window.showToast(`심연에서 '${randomChar.egg_name}'${particle} 건져 올렸습니다!`, "success");
+        }
     } else {
-        // 실패 시 복구
-        window.isHatching = false; 
-        window.updateAltarStatus();
-        window.showToast("연성 과정 중 에테르 흐름이 불안정해 실패했습니다.", "error");
+        window.showToast("연성 에너지가 불안정합니다. 다시 시도해 주세요.", "error");
     }
 };
 
@@ -578,7 +576,7 @@ window.startRecipeSynthesis = async () => {
     // 4. [매칭] 레시피 데이터베이스 대조 (재료 정렬 후 비교)
     const currentInput = [...slots].filter(s => s !== null).sort();
     const recipes = {
-        'char_09': ['calcified_shell_fragment', 'starlight_antler', 'ether_sludge'].sort(),// 염소
+        'char_09': ['calcified_shell_fragment', 'starlight_antler', 'ether_sludge'].sort(),// 벨린다
     };
 
     let resultCharId = null;
