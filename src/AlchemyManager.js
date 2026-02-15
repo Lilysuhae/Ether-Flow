@@ -202,14 +202,29 @@ window.getKoreanParticle = (word, type) => {
  * 5. 연성 비용 계산
  */
 window.calculateNextEggCost = () => {
+    // 10회차 이후로는 10으로 고정하여 요구사항 유지
     const count = masterData.hatchCount || 1;
-    // 공식: 5,000 * 4^(횟수 - 1)
+    const c = Math.min(count, 10); 
+
+    // 💰 에테르 비용: 1회(5천), 2회(2만), 3회(8만) 이후 8만 고정
+    const etherCost = c <= 3 ? 5000 * Math.pow(4, c - 1) : 80000;
+
+    // ⚗️ 재료 비용: c(최대 10) 값에 따라 모든 부산물 요구량 산출
     return {
-        ether: 5000 * Math.pow(4, count - 1),
+        ether: etherCost,
         materials: {
-            'ether_sludge': 10 * count,
-            'petrified_memory': count > 1 ? 5 * (count - 1) : 0,
-            'pulsing_crystal': count > 2 ? 2 * (count - 2) : 0
+            // [Common]
+            'ether_sludge': 10 * c,                               // 최대 100개
+            'bleached_scales': c > 3 ? 10 * (c - 3) : 0,          // 최대 70개
+            // [Uncommon]
+            'petrified_memory': c > 1 ? 5 * (c - 1) : 0,          // 최대 45개
+            'transparent_husk': c > 4 ? 5 * (c - 4) : 0,          // 최대 30개
+            // [Rare]
+            'pulsing_crystal': c > 2 ? 2 * (c - 2) : 0,           // 최대 16개
+            'floating_eye': c > 5 ? 2 * (c - 5) : 0,              // 최대 10개
+            // [Epic]
+            'abyssal_dregs': c > 7 ? 1 * (c - 7) : 0,             // 최대 3개
+            'incomplete_fetus': c > 9 ? 1 : 0                     // 최대 1개
         }
     };
 };

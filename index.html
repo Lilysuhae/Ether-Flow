@@ -323,6 +323,14 @@
                             <button id="btn-layout-mini" onclick="window.changeWindowMode('mini')">미니</button>
                         </div>
                     </div>
+                    <div class="settings-group">
+                        <label class="settings-label">시스템 시작 시 자동 실행</label>
+                        <div id="auto-start-toggle" class="window-mode-toggle" onclick="window.toggleAutoStart()">
+                            <span>자동 실행 켜기</span>
+                            <div class="switch-base"><div class="switch-circle"></div></div>
+                        </div>
+                        <p class="setting-hint">컴퓨터를 켰을 때 연구실을 자동으로 활성화합니다.</p>
+                    </div>
                 </div>
                 <div id="tab-content-sound" class="tab-content" style="display: none;">
                     <div class="settings-group">
@@ -605,7 +613,7 @@
             </div>
 
             <div class="shop-tab-bar">
-                <button class="shop-tab-re active" onclick="window.switchAlchemyTab('general', this)">일반 연성</button>
+                <button class="shop-tab-re active" onclick="window.switchAlchemyTab('general', this)">랜덤 연성</button>
                 <button class="shop-tab-re" onclick="window.switchAlchemyTab('recipe', this)">조합 연성</button>
             </div>
 

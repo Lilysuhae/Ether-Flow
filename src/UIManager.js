@@ -163,16 +163,22 @@ window.currentInventoryTab = 'gift'; // 가방 초기 탭 설정
 window.openInventory = () => {
     const modal = document.getElementById('inventory-modal');
     if (modal) {
+        // 1. 인벤토리 목록 렌더링
+        window.renderInventory();
+        
+        // ✨ 2. 추가: 아이템 상세 정보 영역 초기화
+        const detailArea = document.getElementById('inventory-detail');
+        if (detailArea) {
+            // 상세 창을 비우거나 기본 안내 문구를 출력합니다.
+            detailArea.innerHTML = `
+                <div class="empty-detail-msg" style="text-align:center; padding:40px; color:rgba(255,255,255,0.2); font-size:0.8rem;">
+                    <i class="fas fa-hand-pointer" style="display:block; font-size:1.5rem; margin-bottom:10px;"></i>
+                    조사할 아이템을 선택하세요.
+                </div>`;
+        }
+        
+        // 3. 모달 표시
         modal.style.display = 'flex';
-        
-        // 열 때 항상 '선물' 탭이 활성화되도록 UI 초기화
-        const tabs = modal.querySelectorAll('.shop-tab-re');
-        tabs.forEach((btn, idx) => {
-            btn.classList.toggle('active', idx === 0);
-        });
-        
-        window.currentInventoryTab = 'gift'; 
-        window.renderInventory(); // 목록 렌더링 시작
     }
 };
 

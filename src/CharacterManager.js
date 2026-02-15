@@ -58,37 +58,43 @@ class CharacterManager {
     }
 
     /**
-     * ✨ [수정] 캐릭터 쓰다듬기 처리 및 10회 카운트 알림 로직
+     * [CharacterManager.js]
+     * 캐릭터 이름과 조사를 포함한 토스트 알림 로직
      */
     pet(event) {
         const now = Date.now();
         if (now - this.lastPetTime < this.PET_COOLDOWN) return;
         this.lastPetTime = now;
 
-        if (window.playSFX && window.currentStage !== 'egg') {
-            window.playSFX('pet'); 
-        }
-
-        // 1. ✨ [추가] 쓰다듬기 횟수 추적 및 토스트 알림
         if (window.currentPartner && window.getMolipDate) {
             const date = window.getMolipDate();
             const charId = window.currentPartner.id;
+            const charName = window.currentPartner.name; // ✨ 캐릭터 이름 획득
             const petKey = `${charId}_${date}`;
 
-            // 횟수 증가
             if (!window.dailyPetCountMap) window.dailyPetCountMap = {};
-            window.dailyPetCountMap[petKey] = (window.dailyPetCountMap[petKey] || 0) + 1;
-
-            const currentCount = window.dailyPetCountMap[petKey];
             
-            // 10회 달성 시 토스트 출력
-            if (currentCount === 10) {
-                window.showToast(`${window.currentPartner.name}이(가) 당신의 애정을 듬뿍 느끼고 있습니다! (10회 완료)`, "success");
-            }
-        }
+            const PET_LIMIT = 5; 
+            const currentCount = window.dailyPetCountMap[petKey] || 0;
 
-        if (window.processInteraction) {
-            window.processInteraction('pet', { event: event });
+            if (currentCount >= PET_LIMIT) {
+                if (window.showToast) {
+                    // ✨ [조사 판별] 이름의 받침 유무에 따라 '을' 또는 '를' 선택
+                    const particle = window.getKoreanParticle(charName, "을/를");
+                    window.showToast(`오늘은 ${charName}${particle} 충분히 쓰다듬어주었습니다.`, "info");
+                }
+                return; 
+            }
+
+            window.dailyPetCountMap[petKey] = currentCount + 1;
+
+            if (window.playSFX && window.currentStage !== 'egg') {
+                window.playSFX('pet'); 
+            }
+
+            if (window.processInteraction) {
+                window.processInteraction('pet', { event: event });
+            }
         }
     }
 

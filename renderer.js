@@ -652,19 +652,6 @@ window.toggleCylinderToast = () => {
     if (window.playSFX) window.playSFX('click');
 };
 
-/**
- * [기존 toggleSettings 보강] 설정창을 열 때 현재 값을 UI에 반영
- */
-const originalToggleSettings = window.toggleSettings;
-window.toggleSettings = (show) => {
-    if (show) {
-        const showToast = window.masterData.settings?.showCylinderToast !== false;
-        const toggle = document.getElementById('cylinder-toast-toggle');
-        if (toggle) toggle.classList.toggle('active', showToast);
-    }
-    if (originalToggleSettings) originalToggleSettings(show);
-};
-
 // [교정] 수동 호출용 함수도 ID를 'common-tooltip'으로 통일
 window.showTooltip = (e, text) => {
     const tooltip = document.getElementById('common-tooltip');
@@ -758,6 +745,9 @@ window.setLayoutMode = (isHorizontal) => {
 /**
  * 설정 모달 토글 및 내부 데이터 동기화
  */
+/**
+ * [renderer.js] 설정 모달 토글 및 모든 설정값 UI 동기화
+ */
 window.toggleSettings = (show) => {
     const modal = document.getElementById('settings-modal');
     if (!modal) return;
@@ -768,46 +758,41 @@ window.toggleSettings = (show) => {
         const s = masterData.settings || {};
 
         // 1. 일반 설정 동기화 (언어, 폰트, 테마)
-        const langSelect = document.getElementById('language-select');
-        if (langSelect) langSelect.value = s.language || 'ko';
-
-        const currentFont = s.font || 'paperlogy';
-        const fontSelect = document.getElementById('font-select');
-        if (fontSelect) fontSelect.value = currentFont;
-
+        if (document.getElementById('language-select')) document.getElementById('language-select').value = s.language || 'ko';
+        if (document.getElementById('font-select')) document.getElementById('font-select').value = s.font || 'paperlogy';
+        
         const currentTheme = s.currentTheme || 'DEFAULT_DARK'; 
         const themeRadio = document.querySelector(`input[name="theme-choice"][value="${currentTheme}"]`);
         if (themeRadio) themeRadio.checked = true;
 
-        // 2. 레이아웃 모드 버튼 동기화
+        // 2. ✨ [핵심 수정] 자동 시작 및 기타 토글 스위치 상태 복구
+        const autoStartToggle = document.getElementById('auto-start-toggle');
+        if (autoStartToggle) {
+            // 저장된 autoStart 값이 true면 'active' 클래스 추가, 아니면 제거
+            autoStartToggle.classList.toggle('active', !!s.autoStart);
+        }
+
+        const cylinderToggle = document.getElementById('cylinder-toast-toggle');
+        if (cylinderToggle) {
+            cylinderToggle.classList.toggle('active', s.showCylinderToast !== false);
+        }
+
+        // 3. 레이아웃 모드 버튼 동기화
         const currentMode = s.windowMode || 'horizontal';
         const btnGroup = document.querySelector('.window-mode-btns');
         if (btnGroup) {
             btnGroup.querySelectorAll('button').forEach(btn => {
-                const onClickAttr = btn.getAttribute('onclick') || "";
-                const isActive = onClickAttr.includes(`'${currentMode}'`);
+                const isActive = btn.getAttribute('onclick').includes(`'${currentMode}'`);
                 btn.classList.toggle('active', isActive);
             });
         }
 
-        // 3. [할 일 관리] 탭 데이터 동기화 ✨
-        const resetSelect = document.getElementById('reset-hour-select');
-        if (resetSelect) resetSelect.value = window.resetHour;
-
-        const hideToggle = document.getElementById('hide-completed-toggle');
-        if (hideToggle) hideToggle.classList.toggle('active', !!window.hideCompleted);
-
-        const showPastToggle = document.getElementById('show-past-toggle');
-        if (showPastToggle) showPastToggle.classList.toggle('active', !!window.showPastCompleted);
-
-        const autoDeleteToggle = document.getElementById('auto-delete-toggle');
-        if (autoDeleteToggle) autoDeleteToggle.classList.toggle('active', !!window.autoDeleteOldTasks);
-
-        // 4. 사운드 및 기타 UI 상태 갱신
+        // 4. 할 일 관리 및 사운드 UI 동기화
+        if (document.getElementById('reset-hour-select')) document.getElementById('reset-hour-select').value = window.resetHour || 0;
         window.updateSoundUI();
-        window.updatePastItemsUI(); // 배지 상태 등 추가 갱신
+        window.updatePastItemsUI();
 
-        // 기본 탭으로 시작 (필요 시 'monitor'나 'general'로 변경 가능)
+        // 기본 탭으로 시작
         window.switchSettingsTab('general'); 
     }
 };
@@ -1947,30 +1932,33 @@ async function updateLoop() {
 
     const nowMolipDate = window.getMolipDate();
 
-    // 1. ✨ 시스템 전체 유휴 시간(초 단위) 가져오기
-    const systemIdleTime = await ipcRenderer.invoke('get-idle-time'); 
-    const IDLE_THRESHOLD = 300; // 5분 기준
+    // 🕒 1. [부재중 판정] 실제 PC 유휴 시간 가져오기 (15초 기준)
+    const systemIdleSeconds = await ipcRenderer.invoke('get-idle-time'); 
+    const isNowIdle = (systemIdleSeconds >= 300); // 아티스트님이 원하시는 15초로 수정
 
-    // 2. 부재중 로직 판정
-    if (!window.isIdle && systemIdleTime >= IDLE_THRESHOLD) {
-        window.isIdle = true;
-        console.log(`💤 [System] 시스템 유휴 ${systemIdleTime}초 경과 - 부재 중 전환`);
-        if (typeof updateStatusBadge === 'function') updateStatusBadge();
-    } 
-    // 3. 복귀 로직 판정 (유휴 시간이 기준치 미만으로 떨어지면 즉시 복귀)
-    else if (window.isIdle && systemIdleTime < IDLE_THRESHOLD) {
-        window.isIdle = false;
-        console.log("👋 [System] 사용자 활동 감지 - 배지 상태 복구");
-        if (typeof updateStatusBadge === 'function') updateStatusBadge();
+    // ✨ 2. [상태 변화 트리거] 부재 상태가 변하는 순간 캐릭터 반응
+    if (window.isIdle !== isNowIdle) {
+        window.isIdle = isNowIdle;
+        isIdle = isNowIdle;
+
+        if (window.isIdle) {
+            if (window.renderer) window.renderer.setExpression('away');
+            awayStartTime = Date.now();
+        } else {
+            if (typeof window.showRandomDialogue === 'function') {
+                window.showRandomDialogue('return'); 
+            }
+            if (window.characterManager) window.characterManager.refreshSprite(); 
+        }
     }
 
-    // 1. 날짜 변경 감지 (자정/초기화 시각 리셋)
+    // 📅 3. 날짜 변경 감지 (기존 로직 유지)
     if (masterData.progress && masterData.progress.lastSaveDate !== nowMolipDate) {
         await handleMidnightReset(nowMolipDate);
         return;
     }
 
-    // 2. 모니터링 분석 (독립 실행)
+    // 🔍 4. [모니터링 분석] 집중/딴짓/대기 판별
     let isFocusing = false;
     try {
         if (window.molipMonitor) {
@@ -1978,9 +1966,24 @@ async function updateLoop() {
         }
     } catch (e) { console.error("⚠️ [Monitor] 분석 에러:", e); }
 
-    // 3. 서신/업적/성장 체크 (독립 실행)
+    // 💡 5. [전역 상태 동기화] 뱃지 UI와 애니메이션이 참조할 핵심 변수 갱신
+    if (window.isIdle) {
+        window.isActuallyWorking = false;
+        window.isDistraction = false;
+    } else {
+        // 집중 앱이면 집중, 딴짓 앱이면 딴짓, 둘 다 아니면 대기(false) 처리
+        const appName = window.cleanAppName(lastActiveWin?.owner);
+        const winTitle = (lastActiveWin?.title || "").toLowerCase();
+        const distractKeywords = masterData.settings.monitor?.distractKeywords || [];
+        const isKnownDist = distractionApps.includes(appName) || distractKeywords.some(k => winTitle.includes(k.toLowerCase()));
+
+        window.isActuallyWorking = isFocusing; 
+        window.isDistraction = !isFocusing && isKnownDist;
+    }
+
+    // ✉️ 6. 서신/업적/성장 체크
     try {
-        checkMailAndAchievements(isFocusing, nowMolipDate);
+        checkMailAndAchievements(window.isActuallyWorking, nowMolipDate);
     } catch (e) { console.error("⚠️ [System] 조건 체크 에러:", e); }
 
     try {
@@ -1990,43 +1993,23 @@ async function updateLoop() {
         }
     } catch (e) { console.error("⚠️ [Manager] 성장 로직 에러:", e); }
 
-    // 4. ✨ [작업 기록 모달 실시간 갱신]
-    try {
-        const logModal = document.getElementById('daily-log-modal'); // ID 수정됨
-        
-        // 모달이 열려있는지 확인
-        if (logModal && (logModal.style.display === 'flex' || logModal.style.display === 'block')) {
-            
-            // 1순위: 렌더링 함수가 있으면 호출
-            if (typeof window.renderWorkLog === 'function') {
-                window.renderWorkLog(); 
-            } 
-            // 2순위: 연결이 끊겼다면 LogManager를 통해 즉시 복구 및 호출
-            else if (window.logManager) {
-                window.renderWorkLog = window.logManager.renderDailyLogContent.bind(window.logManager);
-                window.renderWorkLog();
-            }
-        }
-    } catch (e) { 
-        // 에러 무시 (루프 중단 방지)
-    }
-
-    // 5. UI 및 실린더 시스템 갱신
+    // 🖥️ 7. UI 및 애니메이션 최종 갱신
     try {
         if (window.updateCylinderSystem) window.updateCylinderSystem(); 
-        window.updateUI(); // 이름표, 에테르 등 갱신
+        window.updateUI(); 
         
-        // 알 흔들림 연출 제어
+        // ✨ [알 흔들림 연출] '집중 중'일 때만 egg-anim-active 클래스를 활성화합니다.
         const mainCanvas = document.getElementById('main-canvas');
         if (mainCanvas) {
-            const shouldAnimate = window.collection.activeEgg && isFocusing && !window.isHatching;
+            const shouldAnimate = window.collection.activeEgg && window.isActuallyWorking && !window.isHatching;
             mainCanvas.classList.toggle('egg-anim-active', shouldAnimate);
         }
-    } catch (e) { console.error("⚠️ [UI] 최종 갱신 에러:", e); }
 
-    if (typeof updateStatusBadge === 'function') {
-        updateStatusBadge();
-    }
+        // 상태 뱃지 업데이트 (window.isActuallyWorking 등을 참조함)
+        if (typeof updateStatusBadge === 'function') {
+            updateStatusBadge();
+        }
+    } catch (e) { console.error("⚠️ [UI] 최종 갱신 에러:", e); }
 }
 
 
@@ -2301,6 +2284,10 @@ async function startEngine() {
             renderer = window.renderer; 
         }
 
+        if (masterData.settings && masterData.settings.autoStart !== undefined) {
+            ipcRenderer.send('set-auto-start', masterData.settings.autoStart);
+        }
+
         // 6. 매니저 초기화 (misplaced 코드들을 여기서 수행)
         const mailHistory = masterData.mailbox?.mailHistory || [];
         mailbox = new MailboxManager(mailHistory, mailPoolData);
@@ -2380,6 +2367,10 @@ async function startEngine() {
 
         checkForUpdateMail();
 
+        const isAutoStart = !!(masterData.settings && masterData.settings.autoStart);
+        ipcRenderer.send('set-auto-start', isAutoStart); 
+        console.log(`📡 [System] 자동 시작 설정 복구: ${isAutoStart}`);
+
         if (window.initAccountInfo) {
             window.initAccountInfo();
             console.log("🆔 유저 아이디 시스템 가동");
@@ -2415,4 +2406,91 @@ window.setupEngine = () => {
     if (soundManager) {
         soundManager.setupAudioEngine();
     }
+};
+
+/**
+ * [renderer.js] 사운드 개별 음소거 토글 함수
+ * @param {string} type - 'sfx', 'notif', 'timer' 중 하나
+ */
+window.toggleMute = (type) => {
+    if (!masterData.settings.sound) {
+        window.updateSoundUI(); // 데이터가 없으면 초기화 실행
+    }
+    
+    const s = masterData.settings.sound;
+    const muteKey = `${type}Mute`;
+    
+    // 1. 음소거 상태 반전
+    s[muteKey] = !s[muteKey];
+
+    // 2. ✨ [추가] 음소거 해제 시 볼륨이 0이라면 최소 볼륨(10)으로 복구
+    if (!s[muteKey] && s[`${type}Vol`] === 0) {
+        s[`${type}Vol`] = 10;
+    }
+
+    // 3. 실제 오디오 엔진에 변경사항 적용
+    if (window.soundManager) {
+        window.soundManager.applyVolumeSettings();
+    }
+    
+    // 4. UI 갱신 및 데이터 저장
+    window.updateSoundUI(); 
+    saveAllData();
+    window.playSFX('click');
+    
+    const statusMsg = s[muteKey] ? "음소거됨" : "소리 켬";
+    console.log(`🔊 [Sound] ${type} 상태 변경: ${statusMsg}`);
+};
+
+/**
+ * [renderer.js] 자동 실행 설정 토글
+ */
+window.toggleAutoStart = () => {
+    if (!masterData.settings) masterData.settings = {};
+    
+    const newStatus = !masterData.settings.autoStart;
+    masterData.settings.autoStart = newStatus;
+
+    // UI 즉시 반영
+    const toggle = document.getElementById('auto-start-toggle');
+    if (toggle) toggle.classList.toggle('active', newStatus);
+
+    // 시스템 및 파일 저장
+    ipcRenderer.send('set-auto-start', newStatus);
+    saveAllData(); 
+    window.playSFX('click');
+    window.showToast(newStatus ? "자동 실행이 켜졌습니다." : "자동 실행이 꺼졌습니다.", "info");
+};
+
+/**
+ * [renderer.js] 새로운 알 탄생 시 슈퍼노바(Supernova) 연출
+ * @param {object} char - 탄생한 캐릭터 데이터
+ */
+window.triggerSupernovaEffect = (char) => {
+    const effectLayer = document.getElementById('effect-layer');
+    if (!effectLayer) return;
+
+    // 1. 화이트 플래시 효과 시작
+    effectLayer.classList.add('supernova-active');
+    
+    // 2. 강렬한 연성 성공 효과음 재생
+    if (window.playSFX) {
+        window.playSFX('hatch'); // 혹은 'upgrade' 등의 효과음
+    }
+
+    // 3. 연출 중 캐릭터 캔버스 흔들림 및 강조
+    const mainCanvas = document.getElementById('main-canvas');
+    if (mainCanvas) {
+        mainCanvas.style.filter = 'brightness(2) contrast(1.2) drop-shadow(0 0 20px gold)';
+        mainCanvas.style.transform = 'scale(1.1)';
+    }
+
+    // 4. 일정 시간 후 연출 제거 및 복구
+    setTimeout(() => {
+        effectLayer.classList.remove('supernova-active');
+        if (mainCanvas) {
+            mainCanvas.style.filter = '';
+            mainCanvas.style.transform = '';
+        }
+    }, 2000); // 2초간 지속
 };
