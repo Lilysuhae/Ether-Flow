@@ -623,7 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * [renderer.js 연동용] 실린더 알림 설정 토글 함수
+ * [renderer.js 연동용] 플라스크 알림 설정 토글 함수
  */
 window.toggleCylinderToast = () => {
     if (!window.masterData.settings) window.masterData.settings = {};
@@ -858,7 +858,8 @@ window.changeFont = function(fontName, needSave = true) {
         'Pretendard': "'Pretendard', sans-serif",
         'Galmuri11': "'Galmuri11', sans-serif",
         'NanumSquareNeo': "'NanumSquareNeo', sans-serif", // ✨ 추가
-        'paperlogy': "'Paperlogy', sans-serif"
+        'paperlogy': "'Paperlogy', sans-serif",
+        'NeoHyundai': "'NeoHyundai', sans-serif",
     };
 
     const selectedFont = fontMapping[fontName] || fontMapping['paperlogy'];
@@ -1773,9 +1774,9 @@ window.applyHorizontalMode = () => {
  * [renderer.js] 새로운 알 획득 및 엔진 동기화 (중복 방지 강화)
  */
 window.processNewEggAcquisition = async (charId, targetSec = 1800, source = 'system') => {
-    // 1. ✨ [방어] 이미 실린더에 알이 있다면 'false'를 반환하고 즉시 종료
+    // 1. ✨ [방어] 이미 플라스크에 알이 있다면 'false'를 반환하고 즉시 종료
     if (window.collection && window.collection.activeEgg) {
-        window.showToast("이미 알이 실린더 안에 있어 받을 수 없습니다.", "error");
+        window.showToast("이미 알이 플라스크 안에 있어 받을 수 없습니다.", "error");
         return false; 
     }
 
@@ -2074,6 +2075,7 @@ function checkMailAndAchievements(isFocusing, nowMolipDate) {
         // [식별자 및 단계]
         partnerId: currentId,
         current_stage: window.currentStage,
+        isEggStage: (window.currentStage === 'egg'),
         
         // [시간 데이터 - mailboxManager는 내부적으로 totalTime, marathonTime 등을 찾음]
         totalTime: window.progress.totalFocusTime, // 초 단위로 전달 (매니저가 분으로 변환함)
@@ -2169,7 +2171,7 @@ window.finalizeContract = async (char) => {
     // 2. 컬렉션 매니저 초기화
     if (!collection) collection = new CollectionManager({});
     
-    // 3. ✨ [알 상태 등록] 보유 목록(ownedIds)에 넣지 않고 실린더(activeEgg)에만 등록합니다.
+    // 3. ✨ [알 상태 등록] 보유 목록(ownedIds)에 넣지 않고 플라스크(activeEgg)에만 등록합니다.
     // 이렇게 해야 도감에서 "태어난 상태"가 아닌 "부화 중"으로 정확히 표시됩니다.
     collection.activeEgg = {
         type: char.id,

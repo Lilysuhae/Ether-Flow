@@ -1,11 +1,11 @@
 /* ============================================================
-   [⚗️ 일반 연성 및 실린더 시스템]
+   [⚗️ 일반 연성 및 플라스크 시스템]
    ============================================================ */
 
 /**
  * [상태 변수 초기화]
  */
-window.cylinderSaturation = window.cylinderSaturation || 0; // 실린더 에테르 농도
+window.cylinderSaturation = window.cylinderSaturation || 0; // 플라스크 에테르 농도
 window.lastSedimentTick = Date.now();                        // 마지막 침전물 체크 시간
 
 /**
@@ -117,7 +117,7 @@ window.refreshSedimentUI = () => {
 };
 
 /**
- * 3. 실린더 시스템 업데이트 (매 초 루프에서 호출)
+ * 3. 플라스크 시스템 업데이트 (매 초 루프에서 호출)
  */
 window.updateCylinderSystem = () => {
     // 농도 변화 계산: 집중 중이면 +0.15, 아니면 -0.07
@@ -164,7 +164,7 @@ window.processSedimentation = () => {
     if (showToastSetting) {
         const charName = currentPartner ? currentPartner.name : "호문클루스";
         const particle = window.getKoreanParticle(charName, "이/가");
-        window.showToast(`${charName}${particle} 실린더에서 '${item.name}'을 건져 올렸습니다!`, "info");
+        window.showToast(`${charName}${particle} 플라스크에서 '${item.name}'을 건져 올렸습니다!`, "info");
     }
 
     window.refreshSedimentUI();
@@ -270,7 +270,7 @@ window.updateAltarStatus = () => {
         btn.disabled = isLocked || !isReady;
         
         if (hasEgg) {
-            btn.innerText = "이미 알이 실린더에 있습니다";
+            btn.innerText = "이미 알이 플라스크에 있습니다";
             btn.className = "btn-craft-large disabled";
         } else if (window.isHatching) {
             btn.innerText = "연성 중...";
@@ -295,7 +295,7 @@ window.startAbyssCrafting = async () => {
     }
 
     if (window.collection.activeEgg) {
-        window.showToast("이미 실린더에 부화 중인 알이 있습니다.", "error");
+        window.showToast("이미 플라스크에 부화 중인 알이 있습니다.", "error");
         return;
     }
 
@@ -401,7 +401,7 @@ window.triggerSupernovaEffect = (newChar) => {
    ============================================================ */
 
 /**
- * [도움 함수] 해당 아이템이 '실린더 부산물'인지 판별합니다.
+ * [도움 함수] 해당 아이템이 '플라스크 부산물'인지 판별합니다.
  */
 window.isByproductItem = (id) => {
     return window.byproductTable && window.byproductTable.some(p => p.id === id);
@@ -567,9 +567,9 @@ window.startRecipeSynthesis = async () => {
         return;
     }
 
-    // 3. [상태] 현재 실린더 가동 가능 여부 체크
+    // 3. [상태] 현재 플라스크 가동 가능 여부 체크
     if (window.collection.activeEgg || window.isHatching) {
-        window.showToast("이미 실린더에 고동치는 생명이 있습니다.", "warning");
+        window.showToast("이미 플라스크에 고동치는 생명이 있습니다.", "warning");
         return;
     }
 

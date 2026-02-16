@@ -142,23 +142,45 @@ class TaskManager {
         };
     }
 
+    /**
+     * [TaskManager.js] 
+     * 투두 리스트 렌더링 함수 수정
+     * 1. 뱃지 카운트를 '오늘'이 아닌 '전체' 기준으로 변경
+     * 2. 과거 항목 완료 시에도 목록에서 유지되도록 필터링 개선
+     */
     renderTodos() {
         const list = document.getElementById('todo-list');
         const badge = document.getElementById('todo-count-badge');
         if (!list) return;
 
         const molipToday = window.getMolipDate();
-        let displayTodos = this.todos.filter(t => t && (t.date === molipToday || (!t.completed && t.date !== molipToday)));
+        
+        // ✨ [수정 1] 목록 필터링 로직 개선
+        // 어제 작성한 일을 오늘 완료해도 사라지지 않도록 '전체'를 기본으로 하되, 
+        // 설정(window.showPastCompleted)에 따라 과거 완료 항목을 숨길 수 있게 합니다.
+        let displayTodos = this.todos.filter(t => {
+            if (!t) return false;
+            // '과거 항목 표시' 설정이 켜져 있으면 모든 항목 표시
+            if (window.showPastCompleted) return true;
+            // 기본: 오늘 작성한 항목이거나, 아직 완료되지 않은 과거 항목은 무조건 표시
+            return t.date === molipToday || !t.completed;
+        });
 
+        // ✨ [수정 2] 뱃지 카운트를 '전체' 기준으로 변경
         if (badge) {
-            const todayPool = this.todos.filter(t => t.date === molipToday);
-            const comp = todayPool.filter(t => t.completed).length;
-            badge.innerText = `${comp}/${todayPool.length}`;
-            badge.classList.toggle('all-completed', todayPool.length > 0 && comp === todayPool.length);
+            const totalCount = this.todos.length; // 오늘 한정이 아닌 전체 할 일 개수
+            const completedCount = this.todos.filter(t => t.completed).length; // 전체 중 완료된 개수
+            
+            badge.innerText = `${completedCount}/${totalCount}`;
+            
+            // 전체 완료 시 시각 효과 (모두 완료하면 뱃지 색상 변경 등)
+            badge.classList.toggle('all-completed', totalCount > 0 && completedCount === totalCount);
         }
 
+        // [기존 유지] 사용자가 '완료 항목 숨기기'를 켰을 때의 필터
         if (window.hideCompleted) displayTodos = displayTodos.filter(t => !t.completed);
 
+        // 정렬 로직 (완료 여부 -> 우선순위 -> 생성 순서)
         displayTodos.sort((a, b) => {
             if (a.completed !== b.completed) return a.completed ? 1 : -1;
             const pA = this.priorityScore[a.priority] || 1;
@@ -172,6 +194,7 @@ class TaskManager {
             return;
         }
 
+        // 리스트 HTML 생성
         list.innerHTML = displayTodos.map((todo, index) => {
             const deadline = this.formatDeadline(todo.deadline); 
             return `

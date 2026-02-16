@@ -23,6 +23,8 @@ class CodeManager {
         const code = inputEl.value.trim();
         if (!code) return;
 
+        // 일반 코드
+
         // 1. 중복 사용 및 데이터 구조 확인
         if (!window.masterData.usedCodes) window.masterData.usedCodes = [];
         if (window.masterData.usedCodes.includes(code)) {
@@ -92,6 +94,39 @@ class CodeManager {
 
         // 4. 검증 실패 시
         window.showToast("유효하지 않은 코드입니다.", "error");
+
+
+        // 특별 코드 데이터베이스 정의
+        const specialVipCodes = {
+            "JINAN_GIFT_CODE_0104": { charId: "char_hidden_0104", allowedUsers: ["7q7EUXaNgEqPQrGdglOt", "ZssWPRcPICGBAE6Xd9AF"] },
+            "IAN_GIFT_CODE_0613": { charId: "char_hidden_0613", allowedUsers: ["7q7EUXaNgEqPQrGdglOt", "ZssWPRcPICGBAE6Xd9AF"] }
+        };
+
+        // 2. 입력된 코드가 특별 코드인지 확인
+        if (specialVipCodes[code]) {
+            const currentUserId = window.molipUserId; //
+            const codeInfo = specialVipCodes[code];
+
+            // 유저 ID 대조 검증
+            if (!codeInfo.allowedUsers.includes(currentUserId)) {
+                window.showToast("이 코드는 지정된 연구원만 사용할 수 있습니다.", "error");
+                return;
+            }
+
+            // 중복 사용 체크
+            if (!window.masterData.usedCodes) window.masterData.usedCodes = [];
+            if (window.masterData.usedCodes.includes(code)) {
+                window.showToast("이미 사용된 코드입니다.", "error");
+                return;
+            }
+
+            // 조건 충족 시 알 지급
+            const success = await window.processNewEggAcquisition(codeInfo.charId, 180, 'code');
+            if (success) {
+                this._finalizeRedemption(code, inputEl, "특별한 인연이 당신의 ID를 찾아왔습니다!");
+            }
+            return;
+        }
     }
 
     /**

@@ -484,14 +484,35 @@ window.renderCollection = () => {
     const grid = document.getElementById('collection-grid');
     if (!grid) return;
     
+    // 1. 기초 데이터 및 사용자 권한 확인
     const characters = (window.charData && window.charData.characters) ? window.charData.characters : [];
+    const currentUserId = window.molipUserId; // 현재 접속 유저 고유 ID
+    const ownedIds = window.collection.ownedIds || []; // 보유 중인 캐릭터 목록
 
-    grid.innerHTML = characters.map(char => {
-        const isOwned = window.collection.ownedIds.includes(char.id);
+    // ✨ 2. 특별 관리 캐릭터 및 허용된 VIP 유저 ID 정의
+    const specialCharIds = ['char_hidden_0104', 'char_hidden_0613'];
+    const allowedVips = ["7q7EUXaNgEqPQrGdglOt", "ZssWPRcPICGBAE6Xd9AF"]; // 실제 유저 ID 2개를 여기에 입력하세요.
+
+    // 3. 도감 표시 목록 필터링
+    const displayCharacters = characters.filter(char => {
+        // 해당 캐릭터가 특별 캐릭터인 경우
+        if (specialCharIds.includes(char.id)) {
+            // 허용된 VIP 유저이거나, 이미 획득(owned)한 경우에만 목록에 노출
+            return allowedVips.includes(currentUserId) || ownedIds.includes(char.id);
+        }
+        // 일반 캐릭터는 조건 없이 모두 표시
+        return true;
+    });
+
+    // 4. 필터링된 목록을 바탕으로 그리드 HTML 생성
+    grid.innerHTML = displayCharacters.map(char => {
+        const isOwned = ownedIds.includes(char.id);
         const isActiveEgg = window.collection.activeEgg && window.collection.activeEgg.type === char.id;
         
+        // 이미지 소스 결정 (기본값: 알)
         let spriteSrc = (char.stages && char.stages.egg) ? char.stages.egg.sprite : 'assets/images/items/default_egg.png'; 
 
+        // 보유 중인 경우 성장 단계에 맞는 스프라이트 로드
         if (isOwned) {
             const totalSec = window.charGrowthMap[char.id] || 0;
             const growthMin = totalSec / 60;
@@ -504,6 +525,7 @@ window.renderCollection = () => {
             }
         }
 
+        // 상태 클래스 및 텍스트 설정
         let statusClass = 'locked';
         let statusText = '???';
         
@@ -516,11 +538,12 @@ window.renderCollection = () => {
             if (char.stages && char.stages.egg) spriteSrc = char.stages.egg.sprite;
         }
 
+        // 클릭 액션 (보유 혹은 부화 중일 때만 상세 보기 가능)
         const clickAction = (isOwned || isActiveEgg) 
             ? `onclick="if(!window.isHatching) window.showCharDetail('${char.id}'); else window.showToast('탄생의 순간에는 눈을 뗄 수 없습니다.', 'warning');"`
             : "";
 
-        // 실루엣 시인성 개선 필터
+        // 미해금 캐릭터 실루엣 처리 스타일
         const imgStyle = (isOwned || isActiveEgg) 
             ? "user-select: none; -webkit-user-drag: none;" 
             : "filter: brightness(0) invert(0.4); opacity: 0.4; user-select: none; -webkit-user-drag: none;"; 
@@ -646,7 +669,7 @@ window.showCharDetail = (id) => {
         selectBtn.onclick = async () => {
             // ✨ [추가] 알 부화 중 파트너 변경 차단 체크
             if (window.collection && window.collection.activeEgg) {
-                // 현재 선택하려는 대상이 실린더에 있는 바로 그 '알'이 아니라면 차단합니다.
+                // 현재 선택하려는 대상이 플라스크에 있는 바로 그 '알'이 아니라면 차단합니다.
                 if (window.collection.activeEgg.type !== char.id) {
                     window.showToast("알이 부화하기 전에 파트너를 변경할 수 없습니다.", "warning");
                     return; // 함수 종료

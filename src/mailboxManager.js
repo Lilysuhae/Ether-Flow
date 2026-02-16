@@ -32,6 +32,17 @@ class MailboxManager {
 
         availablePool.forEach(mail => {
             const triggerList = Array.isArray(mail.triggers) ? mail.triggers : (mail.trigger ? [mail.trigger] : []);
+
+            // 1. 캐릭터 전용 ID가 지정되어 있거나, 트리거 조건 중 '특정 캐릭터' 혹은 '성장도'를 체크하는지 확인합니다.
+            const isCharacterRelated = mail.charId || triggerList.some(t => 
+                t.type === 'partnerId' || t.type === 'specific_growth'
+            );
+
+            // 2. 만약 현재 알 상태(isEggStage)이고 캐릭터 관련 편지라면, 조건 검사를 하지 않고 건너뜁니다.
+            if (stats.isEggStage && isCharacterRelated) {
+                return; 
+            }
+
             if (triggerList.length === 0) return;
 
             const logic = mail.logic || "AND"; // 기본값은 모든 조건 충족(AND)

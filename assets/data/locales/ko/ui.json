@@ -199,7 +199,7 @@
             "recipe_hint": "어떤 생명이 탄생할지 알 수 없습니다.",
             "btn_craft": "호문클루스 연성하기",
             "btn_shortage": "재료가 부족합니다",
-            "reveal_desc": "새로운 생명의 씨앗이 실린더에 안착했습니다."
+            "reveal_desc": "새로운 생명의 씨앗이 플라스크에 안착했습니다."
         },
         "log": {
             "title": "작업기록",
@@ -258,7 +258,7 @@
         "hide_on": "완료된 항목을 숨깁니다.",
         "hide_off": "모든 항목을 표시합니다.",
         "reset_hour_set": "이제 일과가 오전 {h}시에 초기화됩니다.",
-        "item_found": "{charName}이(가) 실린더 속에서 '{itemName}'을(를) 건져 올렸습니다!",
+        "item_found": "{charName}이(가) 플라스크 속에서 '{itemName}'을(를) 건져 올렸습니다!",
         "craft_all_complete": "연성 가능한 모든 생명을 연성했습니다!",
         "achieve_unlock_msg": "업적 달성: {name}"
     },
