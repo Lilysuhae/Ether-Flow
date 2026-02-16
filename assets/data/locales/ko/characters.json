@@ -1960,7 +1960,7 @@
             "origin": "부정적인 생각이 앞설 때, 괴로운 무력감과 포기하고 싶은 갈등이 술사를 짓누를 때. 끝내 모든 것을 놓지 못하도록 하던 마음이 응축되어 몸 속을 흐르는 피와 꼭 같은 색의 알로 현현했습니다.",
             "egg_name": "핏빛 알",
             "description": "술사가 가장 무력하여 괴로울 때 태어난 존재로 때로는 어리석음이라는 이름이, 때로는 희망이란 이름이 붙기도 하는 것. 당신이 부르는 이름은 무엇인가요?",
-            "evolution_level": 300,
+            "evolution_level": 600,
             "background": "assets/bg/ian_room.png",
             "preferences": {
                 "favorite": ["공명 방울"],
@@ -2181,7 +2181,7 @@
             "origin": "두려움과 공포, 외로움을 의지와 끈기, 포기하지 않는 마음으로 바꾸고자하는 마음이 모여 가장 어두운 곳에서 흑청색 알로 현현했습니다.",
             "egg_name": "흑청빛 알",
             "description": "술사의 포기하지 않으려는 의지에서 태어난 존재로, 행동할 이유를 잃었을 때 손을 잡아 나아가야 할 길로 이끌어 줍니다.",
-            "evolution_level": 300,
+            "evolution_level": 600,
             "background": "assets/bg/jinan_room.png",
             "preferences": {
                 "favorite": ["원석 조각"],
