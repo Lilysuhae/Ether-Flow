@@ -31,6 +31,13 @@ window.getShopItems = () => [
     { id: "resonance_bell", rarity: "common", category: "gift", name: "공명 방울", icon: "assets/images/items/resonance_bell.png", price: 50, desc: "연금술사의 영혼과 공명하여 잡음을 지우는 맑은 방울입니다." },
 
     /* --- 🧪 기초 연성 재료 (제한 없음) --- */
+    /* --- 기초 생태계 재료 (15 Et) --- */
+    { id: 'soft_down_cotton', rarity: 'common', category: 'material', minLevel: 0, name: '부드러운 솜털', price: 15, icon: 'assets/images/items/cotton.png', desc: '부드럽고 푹신한 촉감의 솜털입니다. 따뜻한 체온을 가진 생명체를 연성하는 기초 재료가 됩니다.' },
+    { id: 'soft_down_feather', rarity: 'common', category: 'material', minLevel: 0, name: '부드러운 깃털', icon: 'assets/images/items/feather.png', price: 15, desc: "작은 새의 온기가 느껴지는 깃털입니다. 비행형 호문클루스의 기초 재료가 됩니다." },
+    { id: 'glistening_mucus_bead', rarity: 'common', category: 'material', minLevel: 0, name: '반짝이는 점액 방울', icon: 'assets/images/items/mucus.png', price: 18, desc: "양서류의 피부에서 추출한 듯한 점액입니다. 습한 환경을 선호하는 생명 연성에 쓰입니다." },
+    { id: 'torn_leather_scrap', rarity: 'common', category: 'material', minLevel: 0, name: '찢어진 가죽', icon: 'assets/images/items/leather.png', price: 20, desc: "질긴 생명력을 머금은 가죽입니다. 포유류 형태의 골격을 잡는 데 사용됩니다." },
+    { id: 'calcified_shell_fragment', rarity: 'common', category: 'material', minLevel: 0, name: '석회화된 껍데기', icon: 'assets/images/items/shell.png', price: 25, desc: "작은 조개나 달팽이의 흔적입니다. 호문클루스에게 견고한 외피를 형성해 줍니다." },
+
     /* --- ⚡ 강화 및 변이 재료 --- */
     { id: 'phosphorescent_wing', rarity: 'uncommon', category: 'material', minLevel: 0, name: '발광하는 날개', icon: 'assets/images/items/insect_wing.png', price: 45, desc: "에테르에 반응하여 미세하게 떨리는 날개입니다." },
     { id: 'chitinous_armor_plate', rarity: 'uncommon', category: 'material', minLevel: 0, name: '키틴질 갑각 조각', icon: 'assets/images/items/chitin.png', price: 50, desc: "외부 충격에 강한 생명력을 부여합니다." },
