@@ -14,41 +14,34 @@ window.currentShopCategory = 'gift'; // 현재 상점 탭 상태 기억
  */
 window.getShopItems = () => [
     /* --- 🎁 선물 아이템 (Gift) --- */
-    { id: "handwritten_letter", category: "gift", name: window.t('game.items.handwritten_letter_name'), icon: "assets/images/items/handwritten_letter.png", price: 5, desc: window.t('game.items.handwritten_letter_desc') },
-    { id: "red_berry", category: "gift", name: window.t('game.items.red_berry_name'), icon: "assets/images/items/red_berry.png", price: 20, desc: window.t('game.items.red_berry_desc') },
-    { id: "black_extract", category: "gift", name: window.t('game.items.black_extract_name'), icon: "assets/images/items/black_extract.png", price: 30, desc: window.t('game.items.black_extract_desc') },
-    { id: "old_record", category: "gift", name: window.t('game.items.old_record_name'), icon: "assets/images/items/old_record.png", price: 60, desc: window.t('game.items.old_record_desc') },
-    { id: "old_instrument", category: "gift", name: window.t('game.items.old_instrument_name'), icon: "assets/images/items/old_instrument.png", price: 50, desc: window.t('game.items.old_instrument_desc') },
-    { id: "warm_blanket", category: "gift", name: window.t('game.items.warm_blanket_name'), icon: "assets/images/items/warm_blanket.png", price: 60, desc: window.t('game.items.warm_blanket_desc') },
-    { id: "ice_shard", category: "gift", name: window.t('game.items.ice_shard_name'), icon: "assets/images/items/ice_shard.png", price: 30, desc: window.t('game.items.ice_shard_desc') },
-    { id: "gem_shard", category: "gift", name: window.t('game.items.gem_shard_name'), icon: "assets/images/items/gem_shard.png", price: 80, desc: window.t('game.items.gem_shard_desc') },
-    { id: "silent_candle", category: "gift", name: window.t('game.items.silent_candle_name'), icon: "assets/images/items/silent_candle.png", price: 25, desc: window.t('game.items.silent_candle_desc') },
-    { id: "prism_kaleidoscope", category: "gift", name: window.t('game.items.prism_kaleidoscope_name'), icon: "assets/images/items/prism_kaleidoscope.png", price: 70, desc: window.t('game.items.prism_kaleidoscope_desc') },
-    { id: "dried_flower", category: "gift", name: window.t('game.items.dried_flower_name'), icon: "assets/images/items/dried_flower.png", price: 15, desc: window.t('game.items.dried_flower_desc') },
-    { id: "old_parchment", category: "gift", name: window.t('game.items.old_parchment_name'), icon: "assets/images/items/old_parchment.png", price: 5, desc: window.t('game.items.old_parchment_desc') },
-    { id: "abyssal_quill", category: "gift", name: window.t('game.items.abyssal_quill_name'), icon: "assets/images/items/abyssal_quill.png", price: 60, desc: window.t('game.items.abyssal_quill_desc') },
-    { id: "golden_curd", category: "gift", name: window.t('game.items.golden_curd_name'), icon: "assets/images/items/golden_curd.png", price: 25, desc: window.t('game.items.golden_curd_desc') },
-    { id: "resonance_bell", category: "gift", name: window.t('game.items.resonance_bell_name'), icon: "assets/images/items/resonance_bell.png", price: 50, desc: window.t('game.items.resonance_bell_desc') },
+    { id: "handwritten_letter", rarity: "common", category: "gift", name: "손편지", icon: "assets/images/items/handwritten_letter.png", price: 5, desc: "종이 위에 꾹꾹 눌러 담은 마음이 느껴지는 편지입니다." },
+    { id: "red_berry", rarity: "common", category: "gift", name: "붉은 열매", icon: "assets/images/items/red_berry.png", price: 20, desc: "잘 익은 열매에서 은은한 생명력이 느껴집니다." },
+    { id: "black_extract", rarity: "common", category: "gift", name: "검은 추출액", icon: "assets/images/items/black_extract.png", price: 30, desc: "쓴맛 뒤에 정신이 맑아지는 기운이 감도는 액체입니다." },
+    { id: "old_record", rarity: "common", category: "gift", name: "낡은 기록서", icon: "assets/images/items/old_record.png", price: 60, desc: "누군가의 탐구 흔적이 가득한 오래된 책입니다." },
+    { id: "old_instrument", rarity: "common", category: "gift", name: "낡은 악기", icon: "assets/images/items/old_instrument.png", price: 50, desc: "오랜 세월을 견뎠지만, 맑은 소리를 내는 악기입니다." },
+    { id: "warm_blanket", rarity: "common", category: "gift", name: "따뜻한 모포", icon: "assets/images/items/warm_blanket.png", price: 60, desc: "결이 곱게 가공된 직물입니다." },
+    { id: "ice_shard", rarity: "common", category: "gift", name: "빙결 조각", icon: "assets/images/items/ice_shard.png", price: 30, desc: "과열된 연성로의 열기를 식힐 냉기를 머금은 조각입니다." },
+    { id: "gem_shard", rarity: "common", category: "gift", name: "원석 조각", icon: "assets/images/items/gem_shard.png", price: 80, desc: "가공되지 않은 순수한 마력의 결정체입니다." },
+    { id: "silent_candle", rarity: "common", category: "gift", name: "침묵의 향초", icon: "assets/images/items/silent_candle.png", price: 25, desc: "타오를수록 주변의 잡음을 지우고 깊은 정적을 불러오는 향입니다." },
+    { id: "prism_kaleidoscope", rarity: "common", category: "gift", name: "프리즘 만화경", icon: "assets/images/items/prism_kaleidoscope.png", price: 70, desc: "빛을 산란시켜 평범한 풍경을 수만 갈래의 환상적 색채로 보여주는 도구입니다." },
+    { id: "dried_flower", rarity: "common", category: "gift", name: "마른 안개꽃", icon: "assets/images/items/dried_flower.png", price: 15, desc: "화려하진 않지만 책상 위에서 묵묵히 자리를 지킵니다." },
+    { id: "old_parchment", rarity: "common", category: "gift", name: "낡은 양피지", icon: "assets/images/items/old_parchment.png", price: 5, desc: "연구 기록을 휘갈기기 좋은 종이입니다." },
+    { id: "abyssal_quill", rarity: "common", category: "gift", name: "흑로 깃펜", icon: "assets/images/items/abyssal_quill.png", price: 60, desc: "흑화의 재 속에서 피어오른 깃털로 만든, 날카로운 필기도구입니다." },
+    { id: "golden_curd", rarity: "common", category: "gift", name: "황금 커드", icon: "assets/images/items/golden_curd.png", price: 25, desc: "시간의 온기를 담아낸 달콤한 영양 덩어리입니다." },
+    { id: "resonance_bell", rarity: "common", category: "gift", name: "공명 방울", icon: "assets/images/items/resonance_bell.png", price: 50, desc: "연금술사의 영혼과 공명하여 잡음을 지우는 맑은 방울입니다." },
 
     /* --- 🧪 기초 연성 재료 (제한 없음) --- */
-    /* --- 기초 생태계 재료 (15 Et) --- */
-    { id: 'soft_down_cotton', category: 'material', minLevel: 0, name: '부드러운 솜털', price: 15, icon: 'assets/images/items/cotton.png', desc: '부드럽고 푹신한 촉감의 솜털입니다. 따뜻한 체온을 가진 생명체를 연성하는 기초 재료가 됩니다.' },
-    { id: 'soft_down_feather', category: 'material', minLevel: 0, name: '부드러운 깃털', icon: 'assets/images/items/feather.png', price: 15, desc: "작은 새의 온기가 느껴지는 깃털입니다. 비행형 호문클루스의 기초 재료가 됩니다." },
-    { id: 'glistening_mucus_bead', category: 'material', minLevel: 0, name: '반짝이는 점액 방울', icon: 'assets/images/items/mucus.png', price: 18, desc: "양서류의 피부에서 추출한 듯한 점액입니다. 습한 환경을 선호하는 생명 연성에 쓰입니다." },
-    { id: 'torn_leather_scrap', category: 'material', minLevel: 0, name: '찢어진 가죽', icon: 'assets/images/items/leather.png', price: 20, desc: "질긴 생명력을 머금은 가죽입니다. 포유류 형태의 골격을 잡는 데 사용됩니다." },
-    { id: 'calcified_shell_fragment', category: 'material', minLevel: 0, name: '석회화된 껍데기', icon: 'assets/images/items/shell.png', price: 25, desc: "작은 조개나 달팽이의 흔적입니다. 호문클루스에게 견고한 외피를 형성해 줍니다." },
+    /* --- ⚡ 강화 및 변이 재료 --- */
+    { id: 'phosphorescent_wing', rarity: 'uncommon', category: 'material', minLevel: 0, name: '발광하는 날개', icon: 'assets/images/items/insect_wing.png', price: 45, desc: "에테르에 반응하여 미세하게 떨리는 날개입니다." },
+    { id: 'chitinous_armor_plate', rarity: 'uncommon', category: 'material', minLevel: 0, name: '키틴질 갑각 조각', icon: 'assets/images/items/chitin.png', price: 50, desc: "외부 충격에 강한 생명력을 부여합니다." },
+    { id: 'sharpened_claw', rarity: 'uncommon', category: 'material', minLevel: 0, name: '날카로운 발톱', icon: 'assets/images/items/claw.png', price: 60, desc: "호문클루스에게 민첩성과 야성을 부여합니다." },
+    { id: 'venomous_fang', rarity: 'uncommon', category: 'material', minLevel: 0, name: '독기 서린 송곳니', icon: 'assets/images/items/fang.png', price: 75, desc: "치명적인 야성을 심어줄 때 사용합니다." },
 
-    /* --- ⚡ 강화 및 변이 재료 (제한 없음) --- */
-    { id: 'phosphorescent_wing', category: 'material', minLevel: 0, name: '발광하는 날개', icon: 'assets/images/items/insect_wing.png', price: 45, desc: "곤충의 날개처럼 얇고 단단합니다. 에테르에 반응하여 미세하게 떨립니다." },
-    { id: 'chitinous_armor_plate', category: 'material', minLevel: 0, name: '키틴질 갑각 조각', icon: 'assets/images/items/chitin.png', price: 50, desc: "갑각류의 단단한 외피입니다. 외부 충격에 강한 생명력을 부여합니다." },
-    { id: 'sharpened_claw', category: 'material', minLevel: 0, name: '날카로운 발톱', icon: 'assets/images/items/claw.png', price: 60, desc: "포식자의 기운이 서린 발톱입니다. 호문클루스에게 민첩성을 부여합니다." },
-    { id: 'venomous_fang', category: 'material', minLevel: 0, name: '독기 서린 송곳니', icon: 'assets/images/items/fang.png', price: 75, desc: "파충류의 날카로운 송곳니입니다. 치명적인 야성을 심어줄 때 사용합니다." },
-
-    /* --- 💎 희귀 생태 정수 (레벨 15 오픈) --- */
-    { id: 'spectral_fin', category: 'material', minLevel: 15, name: '유령 지느러미', icon: 'assets/images/items/fin.png', price: 120, desc: "형체가 불분명한 지느러미입니다. 수중 생물 연성에 필수적입니다." },
-    { id: 'starlight_antler', category: 'material', minLevel: 15, name: '별빛 뿔', icon: 'assets/images/items/antler.png', price: 150, desc: "은은한 빛을 내뿜는 뿔의 조각입니다. 고결한 숲의 영물을 떠올리게 합니다." },
-    { id: 'vibrant_suction_cup', category: 'material', minLevel: 15, name: '선명한 빨판 조각', icon: 'assets/images/items/suction_cup.png', price: 180, desc: "심해 두족류의 흔적에서 남은 빨판입니다. 에테르를 고정하는 능력이 탁월합니다." },
-    { id: 'cracked_beak', category: 'material', minLevel: 15, name: '금이 간 부리', icon: 'assets/images/items/beak.png', price: 200, desc: "풍파를 견딘 부리입니다. 날카로운 지성을 가진 생명을 빚을 때 쓰입니다." },
+    /* --- 💎 희귀 생태 정수 --- */
+    { id: 'spectral_fin', rarity: 'rare', category: 'material', minLevel: 15, name: '유령 지느러미', icon: 'assets/images/items/fin.png', price: 120, desc: "수중 생물 연성에 필수적인 형체가 불분명한 지느러미입니다." },
+    { id: 'starlight_antler', rarity: 'rare', category: 'material', minLevel: 15, name: '별빛 뿔', icon: 'assets/images/items/antler.png', price: 150, desc: "은은한 빛을 내뿜는 뿔의 조각입니다." },
+    { id: 'vibrant_suction_cup', rarity: 'rare', category: 'material', minLevel: 15, name: '선명한 빨판 조각', icon: 'assets/images/items/suction_cup.png', price: 180, desc: "에테르를 고정하는 능력이 탁월합니다." },
+    { id: 'cracked_beak', rarity: 'rare', category: 'material', minLevel: 15, name: '금이 간 부리', icon: 'assets/images/items/beak.png', price: 200, desc: "날카로운 지성을 가진 생명을 빚을 때 쓰입니다." },
 
     /* --- ✨ 신화적 기원 재료 (레벨 30 오픈) --- */
     // { id: 'eternal_cocoon_silk', category: 'material', minLevel: 30, name: '영원의 고치 실', icon: 'assets/images/items/silk.png', price: 350, desc: "시간이 멈춘 고치에서 뽑아낸 실입니다. 진화의 가능성을 무한히 확장합니다." },

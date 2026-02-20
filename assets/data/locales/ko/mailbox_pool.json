@@ -1,48 +1,71 @@
-[
-    {
+[{
         "id": "achieve_adult_expert",
         "sender": "연금술 길드",
         "title": "[업적] 생명의 육성가",
-        "triggers": [
-            {
-                "type": "adultCount",
-                "value": 4
-            }
-        ],
-        "content": "모든 피조물을 성공적으로 성체기까지 진화시킨 귀하의 정성은 연금술 역사의 한 페이지를 장식할 것입니다.",
+        "triggers": [{
+            "type": "adultCount",
+            "value": 4
+        }],
+        "content": "네 피조물을 성공적으로 성체기까지 진화시킨 귀하의 정성은 연금술 역사의 한 페이지를 장식할 것입니다.",
         "reward": {
             "type": "achievement",
             "value": "evolution_master",
-            "name": "진화의 마스터"
+            "name": "진화의 입문자"
+        }
+    },
+    {
+        "id": "achieve_adult_expert2",
+        "sender": "연금술 길드",
+        "title": "[업적] 생명의 육성가",
+        "triggers": [{
+            "type": "adultCount",
+            "value": 8
+        }],
+        "content": "여덟 피조물을 성공적으로 성체기까지 진화시킨 귀하의 정성은 연금술 역사의 한 페이지를 장식할 것입니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "evolution_master2",
+            "name": "진화의 전문가"
         }
     },
     {
         "id": "achieve_collector_all",
         "sender": "연금술 길드",
         "title": "[업적] 사대 원소의 수집가",
-        "triggers": [
-            {
-                "type": "owned_count",
-                "value": 4
-            }
-        ],
-        "content": "네 마리의 호문클루스를 모두 거느리며 연구실의 생태계를 완성하셨군요. 조화와 균형을 상징하는 무지갯빛 메달을 수여합니다.",
+        "triggers": [{
+            "type": "owned_count",
+            "value": 4
+        }],
+        "content": "네 마리의 호문클루스를 거느리며 연구실의 생태계를 완성하셨군요. 조화와 균형을 상징하는 철제 메달을 수여합니다.",
         "reward": {
             "type": "achievement",
             "value": "homunculus_collector",
-            "name": "요람의 대주인"
+            "name": "요람의 주인"
+        }
+    },
+    {
+        "id": "achieve_collector_all2",
+        "sender": "연금술 길드",
+        "title": "[업적] 사대 원소의 수집가",
+        "triggers": [{
+            "type": "owned_count",
+            "value": 8
+        }],
+        "content": "여덟 마리의 호문클루스를 거느리며 연구실의 생태계를 완성하셨군요. 조화와 균형을 상징하는 황동 메달을 수여합니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "homunculus_collector2",
+            "name": "군집의 주인"
         }
     },
     {
         "id": "achieve_juggler_master",
         "sender": "연금술 길드",
         "title": "[업적] 도구의 지휘자",
-        "triggers": [
-            {
-                "type": "app_juggler",
-                "value": 7
-            }
-        ],
+        "triggers": [{
+            "type": "app_juggler",
+            "value": 7
+        }],
         "content": "일곱 개의 도구를 자유자재로 다루며 업무의 파도를 넘는 귀하의 기술은 가히 지휘자의 몸짓과 같습니다.",
         "reward": {
             "type": "achievement",
@@ -54,12 +77,10 @@
         "id": "achieve_level_1",
         "sender": "연금술 길드",
         "title": "[업적] 연금술의 첫걸음",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 1
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 1
+        }],
         "content": "연금술의 세계에 발을 들인 것을 환영합니다. 비록 지금은 서툰 시작일지라도, 당신의 열정은 머지않아 위대한 금빛 결실을 맺을 것입니다.",
         "reward": {
             "type": "achievement",
@@ -71,12 +92,10 @@
         "id": "achieve_level_10",
         "sender": "연금술 길드",
         "title": "[업적] 숙련의 궤적",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 10
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 10
+        }],
         "content": "이제 도구를 다루는 손길에서 제법 능숙한 에테르의 흐름이 느껴집니다. 정식 연금술사로서 길드의 과업을 수행할 자격을 부여합니다.",
         "reward": {
             "type": "achievement",
@@ -88,12 +107,10 @@
         "id": "achieve_level_15",
         "sender": "연금술 길드",
         "title": "[업적] 전문적 지성의 발현",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 15
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 15
+        }],
         "content": "귀하는 15레벨의 고도화된 숙련도에 도달하여 전문 연금술사의 영역에 진입했습니다. 지혜의 깊이가 남다름을 확인했습니다.",
         "reward": {
             "type": "achievement",
@@ -105,12 +122,10 @@
         "id": "achieve_level_20",
         "sender": "연금술 길드",
         "title": "[업적] 상급 연금술사의 위엄",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 20
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 20
+        }],
         "content": "상급 연금술사 자격을 인증합니다. 이제 당신의 이름은 길드 내에서도 존경의 대상이 될 것입니다.",
         "reward": {
             "type": "achievement",
@@ -122,12 +137,10 @@
         "id": "achieve_level_25",
         "sender": "연금술 길드",
         "title": "[업적] 노련한 탐구자",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 25
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 25
+        }],
         "content": "수많은 시행착오와 정제 과정을 거쳐 노련한 경지에 도달하셨군요. 당신의 경험은 길드의 소중한 자산입니다.",
         "reward": {
             "type": "achievement",
@@ -139,12 +152,10 @@
         "id": "achieve_level_30",
         "sender": "연금술 길드",
         "title": "[업적] 명장의 반열",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 30
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 30
+        }],
         "content": "30레벨... 현자의 경지에 한 걸음 더 다가섰습니다. 당신이 빚어내는 에테르는 이제 예술의 영역입니다.",
         "reward": {
             "type": "achievement",
@@ -156,12 +167,10 @@
         "id": "achieve_level_35",
         "sender": "연금술 길드",
         "title": "[업적] 원소의 조율자",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 35
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 35
+        }],
         "content": "사대 원소를 자유자재로 조율하는 능력을 증명하셨습니다. 세상의 질서를 재배열하는 자로서 메달을 수여합니다.",
         "reward": {
             "type": "achievement",
@@ -173,12 +182,10 @@
         "id": "achieve_level_40",
         "sender": "연금술 길드",
         "title": "[업적] 지혜의 파수꾼",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 40
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 40
+        }],
         "content": "금기된 지식조차 다스릴 수 있는 강인한 정신력을 지니셨군요. 길드의 비전을 수호하는 파수꾼으로 임명합니다.",
         "reward": {
             "type": "achievement",
@@ -190,12 +197,10 @@
         "id": "achieve_level_45",
         "sender": "연금술 길드",
         "title": "[업적] 비전의 해석자",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 45
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 45
+        }],
         "content": "잊힌 고대 문자와 복잡한 에테르 수식을 완벽히 해석해냈습니다. 당신의 통찰력은 길드의 보물입니다.",
         "reward": {
             "type": "achievement",
@@ -207,12 +212,10 @@
         "id": "achieve_level_5",
         "sender": "연금술 길드",
         "title": "[업적] 수습의 단계를 넘어",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 5
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 5
+        }],
         "content": "기초적인 연성법을 익히고 수습 연금술사로서의 자질을 증명하셨군요. 길드는 당신의 가능성을 공식적으로 인정합니다.",
         "reward": {
             "type": "achievement",
@@ -224,12 +227,10 @@
         "id": "achieve_level_50",
         "sender": "연금술 길드",
         "title": "[업적] 진리의 도달자",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 50
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 50
+        }],
         "content": "50레벨의 고지에 도달했습니다. 이제 인간의 한계를 넘어 진리의 문턱을 두드리는 당신에게 경의를 표합니다.",
         "reward": {
             "type": "achievement",
@@ -241,12 +242,10 @@
         "id": "achieve_level_55",
         "sender": "연금술 길드",
         "title": "[업적] 에테르의 군주",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 55
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 55
+        }],
         "content": "온 세상의 에테르가 당신의 의지대로 움직입니다. 진정한 힘과 지혜를 겸비한 군주로서 이 메달을 새깁니다.",
         "reward": {
             "type": "achievement",
@@ -258,12 +257,10 @@
         "id": "achieve_level_60",
         "sender": "연금술 길드",
         "title": "[업적] 전설의 연금술사",
-        "triggers": [
-            {
-                "type": "alchemist_level",
-                "value": 60
-            }
-        ],
+        "triggers": [{
+            "type": "alchemist_level",
+            "value": 60
+        }],
         "content": "60레벨... 마침내 전설이 되셨군요. 당신의 이름은 이제 영원히 지워지지 않는 황금빛 인장으로 역사에 기록될 것입니다.",
         "reward": {
             "type": "achievement",
@@ -272,15 +269,193 @@
         }
     },
     {
+        "id": "achieve_guild_focus_20h",
+        "sender": "연금술 길드",
+        "title": "[업적] 몰입의 싹",
+        "logic": "AND",
+        "triggers": [
+        {
+            "type": "total_focus",
+            "value": 1200
+        }
+        ],
+        "content": "누적 몰입 시간 20시간을 달성하셨군요. 이제 갓 피어난 몰입의 싹이 앞으로 얼마나 거대한 나무로 자라날지 길드에서도 기대하고 있습니다.",
+        "reward": {
+        "type": "achievement",
+        "value": "guild_focus_20h",
+        "name": "몰입의 싹"
+        }
+    },
+    {
+        "id": "achieve_guild_focus_40h",
+        "sender": "연금술 길드",
+        "title": "[업적] 고요한 습관",
+        "logic": "AND",
+        "triggers": [
+        {
+            "type": "total_focus",
+            "value": 2400
+        }
+        ],
+        "content": "40시간 동안 연성로를 지키며 고요한 몰입을 하나의 습관으로 만들어낸 귀하의 끈기에 길드가 박수를 보냅니다.",
+        "reward": {
+        "type": "achievement",
+        "value": "guild_focus_40h",
+        "name": "고요한 습관"
+        }
+    },
+    {
+        "id": "achieve_guild_focus_60h",
+        "sender": "연금술 길드",
+        "title": "[업적] 단단한 토대",
+        "logic": "AND",
+        "triggers": [
+        {
+            "type": "total_focus",
+            "value": 3600
+        }
+        ],
+        "content": "누적 60시간의 연구는 훗날 위대한 연금술사가 되기 위한 단단한 토대가 될 것입니다. 기초를 다지는 일의 가치를 아는 당신을 응원합니다.",
+        "reward": {
+        "type": "achievement",
+        "value": "guild_focus_60h",
+        "name": "단단한 토대"
+        }
+    },
+    {
+        "id": "achieve_guild_focus_80h",
+        "sender": "연금술 길드",
+        "title": "[업적] 궤도에 오른 자",
+        "logic": "AND",
+        "triggers": [
+        {
+            "type": "total_focus",
+            "value": 4800
+        }
+        ],
+        "content": "80시간의 몰입을 통해 귀하의 연구가 안정적인 궤도에 진입했음을 확인했습니다. 흔들림 없는 집중력에 찬사를 보냅니다.",
+        "reward": {
+        "type": "achievement",
+        "value": "guild_focus_80h",
+        "name": "궤도에 오른 자"
+        }
+    },
+    {
+        "id": "achieve_guild_focus_100h",
+        "sender": "연금술 길드",
+        "title": "[업적] 백 시간의 증명",
+        "logic": "AND",
+        "triggers": [
+        {
+            "type": "total_focus",
+            "value": 6000
+        }
+        ],
+        "content": "마침내 누적 100시간을 돌파하셨군요! 길드는 귀하가 지닌 열정이 일시적인 호기심이 아님을 공식적으로 인증합니다.",
+        "reward": {
+        "type": "achievement",
+        "value": "guild_focus_100h",
+        "name": "백 시간의 증명"
+        }
+    },
+    {
+        "id": "achieve_guild_focus_120h",
+        "sender": "연금술 길드",
+        "title": "[업적] 숙련된 집중",
+        "logic": "AND",
+        "triggers": [
+        {
+            "type": "total_focus",
+            "value": 7200
+        }
+        ],
+        "content": "120시간의 헌신적인 연구로 귀하의 몰입은 한층 더 능숙해졌습니다. 더 높은 곳을 향해 차근차근 나아가십시오.",
+        "reward": {
+        "type": "achievement",
+        "value": "guild_focus_120h",
+        "name": "숙련된 집중"
+        }
+    },
+    {
+        "id": "achieve_guild_focus_140h",
+        "sender": "연금술 길드",
+        "title": "[업적] 식지 않는 열기",
+        "logic": "AND",
+        "triggers": [
+        {
+            "type": "total_focus",
+            "value": 8400
+        }
+        ],
+        "content": "140시간을 연성로에 바친 귀하의 열기는 식을 줄을 모르는군요. 이 꾸준함이야말로 연금술에서 가장 강력한 무기입니다.",
+        "reward": {
+        "type": "achievement",
+        "value": "guild_focus_140h",
+        "name": "식지 않는 열기"
+        }
+    },
+    {
+        "id": "achieve_guild_focus_160h",
+        "sender": "연금술 길드",
+        "title": "[업적] 인내의 가치",
+        "logic": "AND",
+        "triggers": [
+        {
+            "type": "total_focus",
+            "value": 9600
+        }
+        ],
+        "content": "160시간의 고독한 사투를 이겨낸 당신은 인내의 진정한 가치를 증명했습니다. 길드는 귀하의 묵묵한 성실함을 높이 평가합니다.",
+        "reward": {
+        "type": "achievement",
+        "value": "guild_focus_160h",
+        "name": "인내의 가치"
+        }
+    },
+    {
+        "id": "achieve_guild_focus_180h",
+        "sender": "연금술 길드",
+        "title": "[업적] 심화된 탐구",
+        "logic": "AND",
+        "triggers": [
+        {
+            "type": "total_focus",
+            "value": 10800
+        }
+        ],
+        "content": "180시간 동안의 몰입... 이제 귀하의 탐구는 초보적인 단계를 벗어나 본격적으로 짙은 에테르를 뿜어내기 시작했습니다.",
+        "reward": {
+        "type": "achievement",
+        "value": "guild_focus_180h",
+        "name": "심화된 탐구"
+        }
+    },
+    {
+        "id": "achieve_guild_focus_200h",
+        "sender": "연금술 길드",
+        "title": "[업적] 길드의 유망주",
+        "logic": "AND",
+        "triggers": [
+        {
+            "type": "total_focus",
+            "value": 12000
+        }
+        ],
+        "content": "200시간의 값진 헌신! 귀하는 이제 연금술 길드가 가장 주목하는 뛰어난 유망주로 성장했습니다. 훗날 위대한 현자가 되는 그날까지 흔들림 없이 정진하십시오.",
+        "reward": {
+        "type": "achievement",
+        "value": "guild_focus_200h",
+        "name": "길드의 유망주"
+        }
+    },
+    {
         "id": "achieve_task_100",
         "sender": "연금술 길드",
         "title": "[업적] 백 번의 성취",
-        "triggers": [
-            {
-                "type": "todo_count",
-                "value": 100
-            }
-        ],
+        "triggers": [{
+            "type": "todo_count",
+            "value": 100
+        }],
         "content": "차곡차곡 쌓아 올린 100개의 과업이 비로소 위대한 업적의 기초가 되었습니다. 당신의 성실함이 빚어낸 백색의 인장을 받으십시오.",
         "reward": {
             "type": "achievement",
@@ -292,12 +467,10 @@
         "id": "achieve_task_1000",
         "sender": "연금술 길드",
         "title": "[업적] 성취의 거장",
-        "triggers": [
-            {
-                "type": "todo_count",
-                "value": 1000
-            }
-        ],
+        "triggers": [{
+            "type": "todo_count",
+            "value": 1000
+        }],
         "content": "1,000번의 마침표를 찍으며 세상을 바꾼 귀하의 집념에 경의를 표합니다. 이제 당신은 연금술의 정점에 선 거장 중 한 명입니다.",
         "reward": {
             "type": "achievement",
@@ -366,8 +539,7 @@
         "sender": "연금술 길드",
         "title": "[인증] 전문 연금술사 자격",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "alchemist_level",
                 "value": 15
             },
@@ -387,8 +559,7 @@
         "title": "상급 연금술사 자격 인증",
         "sender": "연금술 길드",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "alchemist_level",
                 "value": 20
             },
@@ -561,12 +732,10 @@
         "id": "achieve_failed_resilience",
         "sender": "이름 모를 연금술사",
         "title": "[업적] 꺾이지 않는 마음",
-        "triggers": [
-            {
-                "type": "failed_attempt_count",
-                "value": 10
-            }
-        ],
+        "triggers": [{
+            "type": "failed_attempt_count",
+            "value": 10
+        }],
         "content": "열 번의 실패조차 자네를 멈추지 못했군. 실패를 정제하여 승리로 바꾼 자네의 투지에 이 강철 메달을 수여하네.",
         "reward": {
             "type": "achievement",
@@ -578,12 +747,10 @@
         "id": "achieve_habit_100",
         "sender": "이름 모를 연금술사",
         "title": "[업적] 영혼에 새겨진 궤적",
-        "triggers": [
-            {
-                "type": "habit_master",
-                "value": 100
-            }
-        ],
+        "triggers": [{
+            "type": "habit_master",
+            "value": 100
+        }],
         "content": "100일... 이제 습관은 자네의 의지가 아니라 영혼의 일부가 되었군. 자네의 본질이 바뀌었음을 증명하는 금빛 메달일세.",
         "reward": {
             "type": "achievement",
@@ -666,8 +833,7 @@
         "sender": "이름 모를 연금술사",
         "title": "심연을 들여다보는 자",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "night_owl",
                 "value": true
             },
@@ -814,12 +980,10 @@
         "id": "achieve_gift_master_50",
         "sender": "수상한 그림자",
         "title": "[업적] 다정한 창조주",
-        "triggers": [
-            {
-                "type": "gift_total_count",
-                "value": 50
-            }
-        ],
+        "triggers": [{
+            "type": "gift_total_count",
+            "value": 50
+        }],
         "content": "아이들에게 50번이나 마음을 전했구나. 물건이 아닌 네 진심이 그들에게 닿았음을 증명하는 따뜻한 인장이야.",
         "reward": {
             "type": "achievement",
@@ -903,8 +1067,7 @@
         "sender": "수상한 그림자",
         "title": "끊어지지 않는 현은 없지",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "marathon_focus",
                 "value": 120
             },
@@ -967,8 +1130,7 @@
         "sender": "수상한 그림자",
         "title": "끊어진 선을 다시 잇는 용기",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "habit_master",
                 "value": 1
             },
@@ -988,8 +1150,7 @@
         "sender": "수상한 그림자",
         "title": "남들이 잠든 시간의 고요",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "weekend_alchemist",
                 "value": true
             },
@@ -1009,8 +1170,7 @@
         "sender": "수상한 그림자",
         "title": "심야의 정적은 독이 된다네",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "night_owl",
                 "value": true
             },
@@ -1100,8 +1260,7 @@
         "sender": "사념의 기록관",
         "title": "[업적] 절대적 질서의 화신",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "habit_master",
                 "value": 30
             },
@@ -1121,12 +1280,10 @@
         "id": "achieve_perfect_week",
         "sender": "사념의 기록관",
         "title": "[업적] 완전무결한 일주일",
-        "triggers": [
-            {
-                "type": "habit_master",
-                "value": 7
-            }
-        ],
+        "triggers": [{
+            "type": "habit_master",
+            "value": 7
+        }],
         "content": "오차 없는 일주일간의 데이터가 기록되었습니다. 단 하나의 결점도 허용하지 않은 당신의 완벽함을 아카이브에 박제합니다.",
         "reward": {
             "type": "achievement",
@@ -1238,8 +1395,7 @@
         "sender": "메이벨",
         "charId": "char_01",
         "title": "[업적] 사색의 동반자",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1261,8 +1417,7 @@
         "charId": "char_01",
         "title": "당신과 나의 계절",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1288,8 +1443,7 @@
         "charId": "char_01",
         "title": "당신에게 스며든 작은 온기",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1315,8 +1469,7 @@
         "charId": "char_01",
         "title": "함께 빚어내는 사색의 색깔",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1342,8 +1495,7 @@
         "charId": "char_01",
         "title": "유리벽에 닿지 못한 나의 온기",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1369,8 +1521,7 @@
         "charId": "char_01",
         "title": "당신이라는 다정한 우주를 유영하며",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1396,8 +1547,7 @@
         "charId": "char_01",
         "title": "침묵 속의 대화",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1423,8 +1573,7 @@
         "charId": "char_01",
         "title": "흐트러진 사색도 당신의 일부예요",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1451,8 +1600,7 @@
         "charId": "char_01",
         "title": "당신의 마음이 닿은 양피지",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1478,8 +1626,7 @@
         "charId": "char_01",
         "title": "겹겹이 쌓이는 당신의 배려",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1505,8 +1652,7 @@
         "charId": "char_01",
         "title": "서로를 알아가는 과정일 뿐이에요",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1532,8 +1678,7 @@
         "charId": "char_01",
         "title": "꽃피는 연금술의 재능",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1559,8 +1704,7 @@
         "charId": "char_01",
         "title": "정돈된 하루의 온기",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1586,8 +1730,7 @@
         "charId": "char_01",
         "title": "열흘간의 다정한 발걸음",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1613,8 +1756,7 @@
         "charId": "char_01",
         "title": "밤이 깊었어요, 연금술사님",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_01"
             },
@@ -1643,8 +1785,7 @@
         "sender": "인디고",
         "charId": "char_02",
         "title": "[업적] 정적의 공유자",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1666,8 +1807,7 @@
         "charId": "char_02",
         "title": "거슬리지 않는 온도",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1693,8 +1833,7 @@
         "charId": "char_02",
         "title": "거슬리던 소음이 리듬이 되기까지",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1720,8 +1859,7 @@
         "charId": "char_02",
         "title": "소란스러운 정적",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1747,8 +1885,7 @@
         "charId": "char_02",
         "title": "이 정적을 깨고 너에게 닿고 싶어",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1774,8 +1911,7 @@
         "charId": "char_02",
         "title": "너라서 좋아",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1801,8 +1937,7 @@
         "charId": "char_02",
         "title": "완벽한 정적의 증명",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1828,8 +1963,7 @@
         "charId": "char_02",
         "title": "아름다운 선율",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1855,8 +1989,7 @@
         "charId": "char_02",
         "title": "데이터가 증명하는 유대",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1882,8 +2015,7 @@
         "charId": "char_02",
         "title": "오차 범위 밖의 선택",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1909,8 +2041,7 @@
         "charId": "char_02",
         "title": "심연의 인정",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1936,8 +2067,7 @@
         "charId": "char_02",
         "title": "군더더기 없는 속도",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1967,8 +2097,7 @@
         "charId": "char_02",
         "title": "최적화된 사고 회로",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -1994,8 +2123,7 @@
         "charId": "char_02",
         "title": "새벽의 규칙성",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -2025,8 +2153,7 @@
         "charId": "char_02",
         "title": "먼지 쌓인 연구실의 정적",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_02"
             },
@@ -2051,8 +2178,7 @@
         "sender": "모르가나",
         "charId": "char_04",
         "title": "[업적] 심연의 반려",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2074,8 +2200,7 @@
         "charId": "char_04",
         "title": "낯선 손길에 대하여",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2105,8 +2230,7 @@
         "charId": "char_04",
         "title": "지식의 허물 너머, 당신이라는 진실",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2132,8 +2256,7 @@
         "charId": "char_04",
         "title": "에테르의 소용돌이",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2159,8 +2282,7 @@
         "charId": "char_04",
         "title": "심연의 안내자가 아닌, 당신의 연인이 되고 싶은 밤",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2186,8 +2308,7 @@
         "charId": "char_04",
         "title": "당신이라는 진리",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2213,8 +2334,7 @@
         "charId": "char_04",
         "title": "무의식의 속삭임",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2240,8 +2360,7 @@
         "charId": "char_04",
         "title": "심연을 깨우는 쓴맛",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2267,8 +2386,7 @@
         "charId": "char_04",
         "title": "갈증을 채우는 단비",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2294,8 +2412,7 @@
         "charId": "char_04",
         "title": "어울리지 않는 선율",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2321,8 +2438,7 @@
         "charId": "char_04",
         "title": "지혜로 물든 비늘",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2348,8 +2464,7 @@
         "charId": "char_04",
         "title": "껍질을 벗긴 성취",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2375,8 +2490,7 @@
         "charId": "char_04",
         "title": "반복 속에 숨겨진 진리",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2402,8 +2516,7 @@
         "charId": "char_04",
         "title": "심연이 깊어지는 시각",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_04"
             },
@@ -2428,8 +2541,7 @@
         "sender": "아우렐리아",
         "charId": "char_05",
         "title": "[업적] 황금빛 영광의 주역",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2451,8 +2563,7 @@
         "charId": "char_05",
         "title": "곁을 허락한 영광",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2478,8 +2589,7 @@
         "charId": "char_05",
         "title": "황금빛 가호를 받을 자격",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2505,8 +2615,7 @@
         "charId": "char_05",
         "title": "요람의 여주인",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2532,8 +2641,7 @@
         "charId": "char_05",
         "title": "금빛 날개를 꺾고 당신의 대지 위로",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2559,8 +2667,7 @@
         "charId": "char_05",
         "title": "찬란한 마음을 내어준다면",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2586,8 +2693,7 @@
         "charId": "char_05",
         "title": "타오르는 의지의 불꽃",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2613,8 +2719,7 @@
         "charId": "char_05",
         "title": "고결한 광채에 대한 응답",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2640,8 +2745,7 @@
         "charId": "char_05",
         "title": "정점에 어울리는 조공",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2667,8 +2771,7 @@
         "charId": "char_05",
         "title": "품격에 어긋나는 결례",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2694,8 +2797,7 @@
         "charId": "char_05",
         "title": "정점의 파트너",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2721,8 +2823,7 @@
         "charId": "char_05",
         "title": "격조 높은 하루의 완성",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2748,8 +2849,7 @@
         "charId": "char_05",
         "title": "시간으로 빚은 황금 왕관",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2775,8 +2875,7 @@
         "charId": "char_05",
         "title": "정상을 향한 아침",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_05"
             },
@@ -2797,13 +2896,33 @@
         }
     },
     {
+        "id": "achieve_cordelia_bond_100",
+        "sender": "코델리아",
+        "charId": "char_06",
+        "title": "[업적] 나의 바다에게, 작은 물결이",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_06"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            }
+        ],
+        "content": "이건 비밀인데, 사실은 네가 날 위해 만들어준 플라스크 속 바다도 너무너무 사랑하고 있어. 이렇게 예쁜 조개껍데기도 주울 수 있는걸. 자, 선물이야. 꼭 지니고 다녀. 이걸로 우린 같은 바다로 연결된 거야.",
+        "reward": {
+            "type": "achievement",
+            "value": "cordelia_eternal_ocean",
+            "name": "코델리아의 유일한 바다"
+        }
+    },
+    {
         "id": "cordelia_bond_100",
         "sender": "코델리아",
         "charId": "char_06",
         "title": "유리벽 너머의 너에게, 내 영혼까지 다 녹여 보낼게♡",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -2830,8 +2949,7 @@
         "charId": "char_06",
         "title": "네 손길은 정말 몽글몽글해! ٩(ˊᗜˋ*)و",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -2857,8 +2975,7 @@
         "charId": "char_06",
         "title": "연금술사! 내가 꽉~ 안아줄게! (•ө•)♡",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -2884,8 +3001,7 @@
         "charId": "char_06",
         "title": "너는 내 바다이자 단 하나뿐인 기적이야!",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -2911,8 +3027,7 @@
         "charId": "char_06",
         "title": "네 집중력이 파도처럼 넘실거려!",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -2938,8 +3053,7 @@
         "charId": "char_06",
         "title": "네 진심이 담긴 종이... 내 보물 1호야! ♡",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -2965,8 +3079,7 @@
         "charId": "char_06",
         "title": "으으... 이건 너무 조용하고 따끔거려! ( •́ ̯•̀ )",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -2992,8 +3105,7 @@
         "charId": "char_06",
         "title": "네 실력이 쑥쑥! 내가 다 뿌듯해! (๑˃̵ᴗ˂̵)و",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -3019,8 +3131,7 @@
         "charId": "char_06",
         "title": "와아! 오늘 하루 백 점 만점에 천 점이야! ♡",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -3046,8 +3157,7 @@
         "charId": "char_06",
         "title": "스무 개의 보석 같은 성취! 정말 멋져!",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -3073,8 +3183,7 @@
         "charId": "char_06",
         "title": "보고 싶어서 거품만 불고 있었단 말이야!",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -3100,8 +3209,7 @@
         "charId": "char_06",
         "title": "주말에도 나랑 같이 열공하는구나! 히히!",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_06"
             },
@@ -3122,13 +3230,33 @@
         }
     },
     {
+        "id": "achieve_linxia_bond_100",
+        "sender": "린시아",
+        "charId": "char_07",
+        "title": "[업적] 마음 가는 곳",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_07"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            }
+        ],
+        "content": "어머나, 대인. 어찌 그리 놀라시나요. 소녀도 수행을 통해 어른이 되지 않았습니까? 마음 가는 곳을 판단할 수 있게 되었다는 것이지요. 그러하니 앞으로의 수행도 잘 부탁드릴게요? 이것은 소녀가 드리는 작은 선물이랍니다.",
+        "reward": {
+            "type": "achievement",
+            "value": "linxia_crimson_bond",
+            "name": "린시아의 영원한 도반"
+        }
+    },
+    {
         "id": "linxia_bond_100",
         "sender": "린시아",
         "charId": "char_07",
         "title": "아홉 번째 꼬리의 영광을 그대에게",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_07"
             },
@@ -3154,8 +3282,7 @@
         "charId": "char_07",
         "title": "묵묵히 정진하는 그대의 등을 보며",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_07"
             },
@@ -3181,8 +3308,7 @@
         "charId": "char_07",
         "title": "그대와 함께라면 고행도 달콤합니다",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_07"
             },
@@ -3208,8 +3334,7 @@
         "charId": "char_07",
         "title": "가장 붉은 진심을 그대에게 바칩니다",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_07"
             },
@@ -3235,8 +3360,7 @@
         "charId": "char_07",
         "title": "흔들림 없는 그대의 눈빛",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_07"
             },
@@ -3262,8 +3386,7 @@
         "charId": "char_07",
         "title": "붉은 기운이 소녀를 춤추게 합니다",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_07"
             },
@@ -3289,8 +3412,7 @@
         "charId": "char_07",
         "title": "차가운 냉기는 사양하겠습니다",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_07"
             },
@@ -3316,8 +3438,7 @@
         "charId": "char_07",
         "title": "한 계단을 더 오르셨군요",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_07"
             },
@@ -3343,8 +3464,7 @@
         "charId": "char_07",
         "title": "완벽한 하루의 마침표",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_07"
             },
@@ -3370,8 +3490,7 @@
         "charId": "char_07",
         "title": "기다림 또한 수련의 일부라지만...",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_07"
             },
@@ -3392,13 +3511,33 @@
         }
     },
     {
+        "id": "achieve_dende_bond_100",
+        "sender": "덴데",
+        "charId": "char_08",
+        "title": "[업적] 포근한 자리",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_08"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            }
+        ],
+        "content": "연금술사님. 너는 네가... 내게 얼마나 큰 안식처가 되어 주는지 모르겠지. 그저... 네가 지금처럼 부드러운 눈길로 나를 바라봐 준다면, 나를 불러준다면... 기나긴 밤이 외롭지 않도록 늘 곁에 있어줄게. 고마워.",
+        "reward": {
+            "type": "achievement",
+            "value": "dende_soft_embrace",
+            "name": "덴데의 유일한 안식처"
+        }
+    },
+    {
         "id": "dende_bond_100",
         "sender": "덴데",
         "charId": "char_08",
         "title": "너라는 온기를 입고",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_08"
             },
@@ -3424,8 +3563,7 @@
         "charId": "char_08",
         "title": "조금은... 괜찮을지도 몰라",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_08"
             },
@@ -3451,8 +3589,7 @@
         "charId": "char_08",
         "title": "네가 없는 방은 너무 넓어",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_08"
             },
@@ -3478,8 +3615,7 @@
         "charId": "char_08",
         "title": "만약 이 유리가 사라진다면...",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_08"
             },
@@ -3505,8 +3641,7 @@
         "charId": "char_08",
         "title": "벽을 넘어오는 온기",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_08"
             },
@@ -3532,8 +3667,7 @@
         "charId": "char_08",
         "title": "유리벽 안이 따뜻해졌어...",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_08"
             },
@@ -3559,8 +3693,7 @@
         "charId": "char_08",
         "title": "가, 가시가 벽을 긁고 있어...",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_08"
             },
@@ -3586,8 +3719,7 @@
         "charId": "char_08",
         "title": "너의 그림자가 커졌어",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_08"
             },
@@ -3613,8 +3745,7 @@
         "charId": "char_08",
         "title": "손을 맞대고 싶지만...",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_08"
             },
@@ -3640,8 +3771,7 @@
         "charId": "char_08",
         "title": "유리벽 너머만 봤어...",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_08"
             },
@@ -3666,8 +3796,7 @@
         "sender": "벨린다",
         "charId": "char_09",
         "title": "풋내기의 잠재력",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3693,8 +3822,7 @@
         "charId": "char_09",
         "title": "집사의 보람",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3715,13 +3843,33 @@
         }
     },
     {
+        "id": "achieve_belinda_bond_100",
+        "sender": "벨린다",
+        "charId": "char_09",
+        "title": "[업적] 티타임의 종신 계약",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_09"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            }
+        ],
+        "content": "본 계약은 사용인 '벨린다'(이하 갑)와 고용인 '연금술사'(이하 을) 간의 계약 조건 및 의무를 명시한다. 을은 지속적이고 품격 있는 연구로 갑을 만족시킬 의무를 이행하여야 하며, 갑은 이에 상응하는 을의 일상 관리를 제공하여야 한다. 계약 기간은 영구적이며 효력은 서명이 완료된 순간부터 발생한다.",
+        "reward": {
+            "type": "achievement",
+            "value": "belinda_eternal_steward",
+            "name": "벨린다의 영원한 계약자"
+        }
+    },
+    {
         "id": "belinda_bond_100",
         "sender": "벨린다",
         "charId": "char_09",
         "title": "티타임에 초대합니다",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3747,8 +3895,7 @@
         "charId": "char_09",
         "title": "필요한 것",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3774,8 +3921,7 @@
         "charId": "char_09",
         "title": "모닝 티",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3796,8 +3942,7 @@
         "charId": "char_09",
         "title": "깜짝 선물",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3818,8 +3963,7 @@
         "charId": "char_09",
         "title": "반 시간의 몰입",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3840,8 +3984,7 @@
         "charId": "char_09",
         "title": "선악과",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3862,8 +4005,7 @@
         "charId": "char_09",
         "title": "건의 사항",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3884,8 +4026,7 @@
         "charId": "char_09",
         "title": "괜찮은 파트너",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3906,8 +4047,7 @@
         "charId": "char_09",
         "title": "젖은 양피지",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3928,8 +4068,7 @@
         "charId": "char_09",
         "title": "악마의 숫자",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3950,8 +4089,7 @@
         "charId": "char_09",
         "title": "값비싼 인정",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_09"
             },
@@ -3971,8 +4109,7 @@
         "sender": "코타",
         "charId": "char_10",
         "title": "[업적] 무조건적인 지지와 성원",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -3994,8 +4131,7 @@
         "charId": "char_10",
         "title": "즐거운 기다림",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4011,9 +4147,8 @@
         ],
         "content": "요즘 내가 제일 좋아하는 게 뭔 줄 알아? 인간이 장갑 끼고 나 쓰다듬어 주는 거랑 유리 벽 너머로 나랑 손 맞대주는 거! 온전히는 아니어도 이걸로나마 온기를 느낄 수 있다는 게 참 신기하고 소중한 것 같아. 예전엔 어떻게든 인간과 맞잡은 손의 온기를 느끼고 싶다 생각했는데, 지금은 인간을 만난 것 그 자체로 기뻐. 왜냐고 물어봐도…… 나는 인간을 좋아하는 이유 같은 건 생각해본 적 없어서 잘 모르겠지만. 자연스럽게 믿게 된다고 해야 하나? 그래서 언젠간 인간이 열심히 연구해서 나를 완전한 존재로 만들어줄 거라 믿고 있어. 플라스크 바깥에서도 있을 수 있도록. 그때까지 이 자리에서 기다릴게, 내 최고의 친구!",
         "reward": {
-            "type": "achievement",
-            "value": "kota_best_friend",
-            "name": "코타의 최고의 친구"
+            "type": "point",
+            "value": "5000"
         }
     },
     {
@@ -4022,8 +4157,7 @@
         "charId": "char_10",
         "title": "인간 연구가 코타",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4049,8 +4183,7 @@
         "charId": "char_10",
         "title": "멍킷리스트",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4076,8 +4209,7 @@
         "charId": "char_10",
         "title": "넌 참 신기한 인간이네",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4098,8 +4230,7 @@
         "charId": "char_10",
         "title": "소중한 컬렉션",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4125,8 +4256,7 @@
         "charId": "char_10",
         "title": "마비",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4152,8 +4282,7 @@
         "charId": "char_10",
         "title": "꼬리가 멈추지 않는 탓일까",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4179,8 +4308,7 @@
         "charId": "char_10",
         "title": "센스있는 선물",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4206,8 +4334,7 @@
         "charId": "char_10",
         "title": "도구의 마술사",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4233,8 +4360,7 @@
         "charId": "char_10",
         "title": "친구가 북적북적",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4260,8 +4386,7 @@
         "charId": "char_10",
         "title": "손이 가요 손이 가",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4287,8 +4412,7 @@
         "charId": "char_10",
         "title": "너에게 닿기를",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4314,8 +4438,7 @@
         "charId": "char_10",
         "title": "착한 아이",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "partnerId",
                 "value": "char_10"
             },
@@ -4336,15 +4459,253 @@
         }
     },
     {
+        "id": "char_hidden_0613_bond_55",
+        "sender": "이안",
+        "charId": "char_hidden_0613",
+        "title": "오늘을 살아줘서 고마워",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_hidden_0613"
+            },
+            {
+                "type": "specific_growth",
+                "value": 300
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            }
+        ],
+        "content": "가끔 그런 거 있잖아. 여기서 때려치우면, 그러면 편할텐데. 하는 순간들. 때려치우지 못한 일들 때문에 턱 끝까지 숨이 차오르면서도 도저히 손에서 놓지 못할 때.\n누군가는 그걸 미련이라고 하고, 누군가는 어리석다 하고, 누군가는 욕심이라고들 하지.\n하지만 나는 그걸 삶이라고 부르고 싶더라.\n힘들어서 울고, 화가 나서 울고, 지쳐서 울고…. 그럼에도 그렇게 눈물 흘리며 오늘을, 지금을 살아내는 모습이 서럽게 아름다워서.\n주인을 보면서 그렇게 생각했어.\n\n오늘을 살아줘서 고마워.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "char_hidden_0613_bond_90",
+        "sender": "이안",
+        "charId": "char_hidden_0613",
+        "title": "웃어줘서 고마워",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_hidden_0613"
+            },
+            {
+                "type": "specific_growth",
+                "value": 300
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            }
+        ],
+        "content": "있잖아, 주인님.\n사실은 어제가, 그리고 오늘이, 또 내일이 엄청나게 특별하고 행복한 하루가 되는 날은 잘 없을거야.\n그래도 나는 딱 내일을 기대할 수 있을 만큼의 즐거움과 소소한 행복이 주인님의 오늘에 존재하기를 바라.\n그리고, 내 주인님은 그걸 놓치지 않고 찾아낼 수 있는 사람이라 믿어.\n\n오늘도 정말 고생 많았어.\n웃어줘서 고마워.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "char_hidden_0613_bond_100",
+        "sender": "이안",
+        "charId": "char_hidden_0613",
+        "title": "주인의 모든 순간에 함께할게",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_hidden_0613"
+            },
+            {
+                "type": "specific_growth",
+                "value": 300
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            }
+        ],
+        "content": "주인, 그거 알아? 사실 나는 시야가 엄청 좁아.\n뭔가 하나에 꽂히면 그것만 보고, 상황을 고려할 줄 몰라서 미련하게 붙잡고 늘어지거든.\n모두가 포기하라고 할 때도 포기하지 못하고, 외면하고 싶어도 붙들려서 매일 정도로.\n그래서 가끔, 아니. 사실 자주 두려워. 나 때문에 주인님도 그렇게 된 건 아닐까 해서.\n끝내 포기라는 안식을 찾지 못한 주인의 괴로움이, 고통이 나로 비롯된 건 아닐까 해서.\n\n그래도 나는, 주인이 나를 꿈이라고 여겨주면 좋겠어.\n빌어먹을 꿈이라고 해도 좋아. 미련한 꿈이라고 해도 괜찮아.\n그렇게라도 항상 꿈을 꾸는 사람이 되어주면 기쁠 것 같아.\n꿈을 잃지 않는 사람은, 항상 희망의 기쁨을 맛보고 도전의 두근거림을 잊지 않으니까.\n그렇게 삶의 다채로움을 맛보며 살아가니까.\n\n행복도, 고통도, 괴로움도, 절망도, 기쁨도…\n주인의 그 모든 순간에 함께할게.",
+        "reward": {
+            "type": "achievement",
+            "value": "char_hidden_0613_eternal_dream",
+            "name": "미련한 꿈의 반려"
+        }
+    },
+    {
+        "id": "char_hidden_0613_gift_fav_01",
+        "sender": "이안",
+        "charId": "char_hidden_0613",
+        "title": "소중하게 간직할게",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_hidden_0613"
+            },
+            {
+                "type": "specific_growth",
+                "value": 300
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 1
+            }
+        ],
+        "content": "… …맘에 들어. 정말로. 소중하게 간직할게.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "char_hidden_0613_gift_dis_01",
+        "sender": "이안",
+        "charId": "char_hidden_0613",
+        "title": "미안, 나 이거 안 좋아해",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_hidden_0613"
+            },
+            {
+                "type": "specific_growth",
+                "value": 300
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            }
+        ],
+        "content": "아……미안, 주인. 나 이거 안 좋아해. 그래도 고맙게 받을게.",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
+        "id": "char_hidden_0104_bond_55",
+        "sender": "진안",
+        "charId": "char_hidden_0104",
+        "title": "외로움의 무게를 나누며",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_hidden_0104"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 55
+            }
+        ],
+        "content": "외로움은 함께 있으면 덜어지는 게 아니라고들 해요. 외로운 사람이 둘이 될 뿐이라고도 하지요. 나는 그 말을 철썩같이 믿고 있었는데… 당신을 보고 있으면 꼭 그렇지만도 않은 것 같아요.\n당신과 나 사이에 충분한 교감이 있었기 때문일까요?\n나의 존재로 당신이 외로움을 덜 수 있길 바라요. 내가 당신의 의지가 될 수 있길.",
+        "reward": {
+            "type": "point",
+            "value": 300
+        }
+    },
+    {
+        "id": "char_hidden_0104_bond_90",
+        "sender": "진안",
+        "charId": "char_hidden_0104",
+        "title": "가장 아름다운 것을 보는 기분",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_hidden_0104"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 90
+            }
+        ],
+        "content": "언제부터였을까요? 당신을 보고 있으면 그 어떤 반짝이는 것도 눈에 들어오지 않게 된 게….\n내가 가장 좋아하는 게 바뀐 모양이에요. 당신과 눈이 마주치면 보석을 보는 것보다 아름다운 것을 보는 기분이 들거든요.\n늘 열심히 하는 당신이 좋아요. 내가 당신께 어떤 도움이 될 수 있을지는 모르겠지만, 곁에 있는 것만으로도 당신이 평온해질 수 있다면… 조금 더 힘을 낼 수 있다면, 언제나 당신의 곁에 있을게요.\n앞으로도 내게 아름다운 것들을 많이 보여줘요.",
+        "reward": {
+            "type": "point",
+            "value": 1000
+        }
+    },
+    {
+        "id": "char_hidden_0104_bond_100",
+        "sender": "진안",
+        "charId": "char_hidden_0104",
+        "title": "나의 별에게",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_hidden_0104"
+            },
+            {
+                "type": "intimacy_level",
+                "value": 100
+            }
+        ],
+        "content": "나의 별에게.\n나는 처음부터 두려운 게 많았어요. 그래서인지 더 뾰족하게 굴게 되더군요. 경계가 심해 지나칠 정도로 예의바르게 굴기도 하고…. …알고 있어요, 낯부끄러운 행동이었죠. 지금은 안 그러니까 됐잖아요? …하여튼요. 당신의 다정함과 끈기는 나의 마음을 평안하게 만들어 줬죠. 늘 감사하고 있어요. 나를 부끄럽게도 하고, 기쁘게도 하고, 외롭게도, 행복하게도 만들어주는 분. 당신에게 도움이 될 수 있게 노력할게요. 당신의 곁에 함께 할 수 없어도 좋아요. 그저 내가 볼 수 있는 곳에 있으면 돼요. 당신은 그 자리에서 한결같이 반짝여줘요. 나의 영원을 담아, 진안.",
+        "reward": {
+            "type": "achievement",
+            "value": "char_hidden_0104_eternal_star",
+            "name": "진안의 영원한 별"
+        }
+    },
+    {
+        "id": "char_hidden_0104_gift_fav_01",
+        "sender": "진안",
+        "charId": "char_hidden_0104",
+        "title": "반짝이는 선물",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_hidden_0104"
+            },
+            {
+                "type": "growth_level",
+                "value": 300
+            },
+            {
+                "type": "gift_count_favorite",
+                "value": 1
+            }
+        ],
+        "content": "마치 당신처럼 반짝거리네요.",
+        "reward": {
+            "type": "point",
+            "value": 100
+        }
+    },
+    {
+        "id": "char_hidden_0104_gift_dis_01",
+        "sender": "진안",
+        "charId": "char_hidden_0104",
+        "title": "조금 짓궂은 선택",
+        "logic": "AND",
+        "triggers": [{
+                "type": "partnerId",
+                "value": "char_hidden_0104"
+            },
+            {
+                "type": "growth_level",
+                "value": 300
+            },
+            {
+                "type": "gift_type_dislike",
+                "value": true
+            }
+        ],
+        "content": "…날 괴롭히는 건가요?",
+        "reward": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    {
         "id": "achieve_wealth_10000",
         "sender": "방랑하는 상인",
         "title": "[업적] 황금의 손",
-        "triggers": [
-            {
-                "type": "rich_alchemist",
-                "value": 10000
-            }
-        ],
+        "triggers": [{
+            "type": "rich_alchemist",
+            "value": 10000
+        }],
         "content": "허허, 자산 10,000 에테르라니! 자네의 연구실은 이제 황금빛으로 가득하구만. 재물운이 깃든 풍요의 메달을 두고 가겠네.",
         "reward": {
             "type": "achievement",
@@ -4372,8 +4733,7 @@
         "sender": "물의 정령",
         "title": "주말의 교감",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "weekend_alchemist",
                 "value": true
             },
@@ -4393,8 +4753,7 @@
         "sender": "물의 정령",
         "title": "가장 맑은 요람의 조화",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "intimacy_level",
                 "value": 80
             },
@@ -4432,8 +4791,7 @@
         "sender": "에테르 나비",
         "title": "두 생명 사이의 환상적인 날갯짓",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "flow_state",
                 "value": true
             },
@@ -4453,8 +4811,7 @@
         "sender": "에테르 나비",
         "title": "진화의 순간을 축복하는 날갯짓",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "flow_state",
                 "value": true
             },
@@ -4492,8 +4849,7 @@
         "sender": "그림자 고양이",
         "title": "그림자 끝까지 닿은 다정한 손길",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "intimacy_level",
                 "value": 70
             },
@@ -4513,8 +4869,7 @@
         "sender": "그림자 고양이",
         "title": "그림자조차 다정함에 녹아버린 날",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "daily_pet_limit",
                 "value": 15
             },
@@ -4538,8 +4893,7 @@
         "sender": "태엽 장치 정령",
         "title": "톱니바퀴의 완벽한 맞물림",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "habit_master",
                 "value": 10
             },
@@ -4573,8 +4927,7 @@
         "sender": "흐르는 구름의 사념",
         "title": "구름을 걷어내고 맞이한 찬란한 복귀",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "inactive_days",
                 "value": 2
             },
@@ -4608,8 +4961,7 @@
         "sender": "별먼지 요정",
         "title": "별먼지가 축복하는 완벽한 성취",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "perfect_day",
                 "value": true
             },
@@ -4629,8 +4981,7 @@
         "sender": "별먼지 요정",
         "title": "성공의 먼지가 빚은 보석함",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "todo_count",
                 "value": 50
             },
@@ -4654,8 +5005,7 @@
         "sender": "침묵의 메아리",
         "title": "오랜 기다림 끝의 울림",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "total_focus",
                 "value": 600
             },
@@ -4675,8 +5025,7 @@
         "sender": "에테르 불가사리",
         "title": "심해에서 올라온 반짝임",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "rich_alchemist",
                 "value": 5000
             },
@@ -4710,8 +5059,7 @@
         "sender": "달빛 여우",
         "title": "달빛 아래 쌓이는 금빛 에테르",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "night_owl",
                 "value": true
             },
@@ -4731,8 +5079,7 @@
         "sender": "달빛 여우",
         "title": "심야의 정점에서 만난 기적",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "night_owl",
                 "value": true
             },
@@ -4756,8 +5103,7 @@
         "sender": "황금 풍뎅이",
         "title": "풍요로운 날의 행운",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "rich_alchemist",
                 "value": 10000
             },
@@ -4791,8 +5137,7 @@
         "sender": "불의 정령",
         "title": "꺼지지 않는 연성로의 불길",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "todo_count",
                 "value": 75
             },
@@ -4812,8 +5157,7 @@
         "sender": "불의 정령",
         "title": "용광로보다 뜨거운 성취의 열기",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "marathon_focus",
                 "value": 7200
             },
@@ -4837,8 +5181,7 @@
         "sender": "고대 도서관의 유령",
         "title": "먼지 쌓인 지혜의 조각",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "alchemist_level",
                 "value": 15
             },
@@ -4872,8 +5215,7 @@
         "sender": "방랑하는 상인",
         "title": "황금빛 주말의 대박 행운",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "rich_alchemist",
                 "value": 10000
             },
@@ -4897,8 +5239,7 @@
         "sender": "안개 속의 방랑자",
         "title": "다시 밝아지는 등불",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "inactive_days",
                 "value": 5
             },
@@ -4918,8 +5259,7 @@
         "sender": "무지개 도롱뇽",
         "title": "다정한 공명의 무지개",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "owned_count",
                 "value": 3
             },
@@ -4953,8 +5293,7 @@
         "sender": "오래된 연구실의 사념",
         "title": "20시간의 침묵과 도달한 정점",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "total_focus",
                 "value": 600
             },
@@ -4974,8 +5313,7 @@
         "sender": "오래된 연구실의 사념",
         "title": "진정한 계승자의 증명",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "alchemist_level",
                 "value": 25
             },
@@ -4999,8 +5337,7 @@
         "sender": "설원 요정",
         "title": "심야의 고요 속에 피어난 결정",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "night_owl",
                 "value": true
             },
@@ -5034,8 +5371,7 @@
         "sender": "바람의 정령",
         "title": "새벽 공기를 가르는 민첩함",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "early_bird",
                 "value": true
             },
@@ -5055,8 +5391,7 @@
         "sender": "바람의 정령",
         "title": "새벽을 가로지르는 불굴의 날개",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "early_bird",
                 "value": true
             },
@@ -5094,8 +5429,7 @@
         "sender": "대지의 정령",
         "title": "한 달의 인내가 빚은 단단한 뿌리",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "habit_master",
                 "value": 28
             },
@@ -5115,8 +5449,7 @@
         "sender": "대지의 정령",
         "title": "지각을 뚫고 내린 거대한 뿌리",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "habit_master",
                 "value": 50
             },
@@ -5140,8 +5473,7 @@
         "sender": "공허의 관찰자",
         "title": "심연의 끝에서 건넨 이정표",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "marathon_focus",
                 "value": 10800
             },
@@ -5161,8 +5493,7 @@
         "sender": "바람의 휘파람",
         "title": "빠른 바람의 축복",
         "logic": "AND",
-        "triggers": [
-            {
+        "triggers": [{
                 "type": "app_juggler",
                 "value": 5
             },
@@ -5194,7 +5525,7 @@
     {
         "id": "sound_fairy_gift",
         "trigger": {
-            "type": "level",
+            "type": "alchemist_level",
             "value": 3
         },
         "title": "소리를 머금은 선물",

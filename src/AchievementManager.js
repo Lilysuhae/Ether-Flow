@@ -27,6 +27,17 @@ class AchievementManager {
             { id: 'rank_legend_60', name: '전설의 연금술사', icon: 'assets/images/achievements/achievement_alchemy.png', desc: '연금술 역사에 영원히 기록될 신화적인 존재가 되었습니다.', hint: '역사가 당신의 이름을 기록하는 방식을 지켜봅니다.' },
 
             // 1. 몰입 및 시간 관련 업적
+            { id: 'guild_focus_20h', name: '몰입의 싹', icon: 'assets/images/achievements/achievement_focus.png', desc: '누적 20시간의 몰입을 달성하여 새로운 가능성의 싹을 틔웠습니다.', hint: '갓 피어난 몰입의 싹이 거대한 나무가 되기를 기대합니다.' },
+            { id: 'guild_focus_40h', name: '고요한 습관', icon: 'assets/images/achievements/achievement_focus.png', desc: '누적 40시간의 몰입을 달성하여 고요한 집중을 흔들림 없는 습관으로 만들었습니다.', hint: '연성로 앞을 지키는 고요한 시간이 습관으로 자리 잡았습니다.' },
+            { id: 'guild_focus_60h', name: '단단한 토대', icon: 'assets/images/achievements/achievement_focus.png', desc: '누적 60시간의 몰입을 달성하여 위대한 연금술사가 되기 위한 굳건한 토대를 다졌습니다.', hint: '흔들리지 않는 단단한 토대 위에 위대한 성취가 쌓입니다.' },
+            { id: 'guild_focus_80h', name: '궤도에 오른 자', icon: 'assets/images/achievements/achievement_focus.png', desc: '누적 80시간의 몰입을 달성하여 연구를 가장 안정적인 궤도에 올려놓았습니다.', hint: '흔들림 없는 집중력이 당신을 안정적인 궤도로 이끌었습니다.' },
+            { id: 'guild_focus_100h', name: '백 시간의 증명', icon: 'assets/images/achievements/achievement_focus.png', desc: '누적 100시간의 몰입을 달성하여 연금술을 향한 꺼지지 않는 열정을 공식적으로 증명했습니다.', hint: '백 시간의 땀방울이 당신의 진정한 열정을 증명합니다.' },
+            { id: 'guild_focus_120h', name: '숙련된 집중', icon: 'assets/images/achievements/achievement_focus.png', desc: '누적 120시간의 몰입을 달성하여 한층 더 능숙하고 깊이 있는 집중력을 보여주었습니다.', hint: '반복된 헌신이 당신의 집중을 한 차원 더 능숙하게 만들었습니다.' },
+            { id: 'guild_focus_140h', name: '식지 않는 열기', icon: 'assets/images/achievements/achievement_focus.png', desc: '누적 140시간의 몰입을 달성하여 연성로 앞에서의 멈추지 않는 꾸준함을 보여주었습니다.', hint: '연성로의 불꽃보다 뜨거운 당신의 꾸준함을 응원합니다.' },
+            { id: 'guild_focus_160h', name: '인내의 가치', icon: 'assets/images/achievements/achievement_focus.png', desc: '누적 160시간의 몰입을 달성하여 고독한 사투 끝에 인내의 진정한 가치를 깨달았습니다.', hint: '고독을 견뎌낸 자만이 인내의 진정한 가치를 알 수 있습니다.' },
+            { id: 'guild_focus_180h', name: '심화된 탐구', icon: 'assets/images/achievements/achievement_focus.png', desc: '누적 180시간의 몰입을 달성하여 초보적인 단계를 벗어나 본격적이고 심화된 탐구에 접어들었습니다.', hint: '깊이를 더해가는 탐구가 짙은 에테르를 뿜어냅니다.' },
+            { id: 'guild_focus_200h', name: '길드의 유망주', icon: 'assets/images/achievements/achievement_focus.png', desc: '누적 200시간의 몰입을 달성하여 연금술 길드가 가장 주목하는 최고의 유망주로 성장했습니다.', hint: '위대한 현자가 되기 위한 당신의 여정을 길드가 주목하고 있습니다.' },
+
             { id: 'focus_depth_5000', name: '몰입의 심연', icon: 'assets/images/achievements/achievement_task.png', desc: '누적 5,000분의 몰입을 달성하여 심연의 끝에 도달했습니다.', hint: '침묵 속에서 쌓인 시간의 힘을 믿습니다.' },
             { id: 'marathon_king_180', name: '불굴의 집중력', icon: 'assets/images/achievements/achievement_task.png', desc: '한 번의 흐트러짐 없이 180분간 연성로의 불꽃을 지켜냈습니다.', hint: '눈 한번 깜빡이지 않고 진리를 쫓는 인내를 보입니다.' },
             { id: 'night_monarch', name: '심야의 수호자', icon: 'assets/images/achievements/achievement_task.png', desc: '모두가 잠든 밤, 고요한 정적 속에서 가장 찬란한 진리를 일깨웠습니다.', hint: '달빛만이 연성로를 비추는 고요한 시간을 보냅니다.' },
@@ -39,18 +50,20 @@ class AchievementManager {
             { id: 'perfect_rhythm_7', name: '완전무결한 리듬', icon: 'assets/images/achievements/achievement_task.png', desc: '일주일간 단 하나의 결점도 없는 완벽한 생활 리듬을 유지했습니다.', hint: '일주일간 완벽한 박자로 춤추듯 생활합니다.' },
 
             // 3. 유대 및 캐릭터 관련 업적
+            { id: 'homunculus_collector', name: '요람의 주인', icon: 'assets/images/achievements/homunculus_collector.png', desc: '네 마리의 호문클루스를 거느려 연구실의 생태계를 완성했습니다.', hint: '당신의 요람이 다양한 생명으로 가득 차는 순간을 기다립니다.' },
+            { id: 'homunculus_collector2', name: '군집의 주인', icon: 'assets/images/achievements/homunculus_collector2.png', desc: '여덟 마리의 호문클루스를 거느려 연구실의 생태계를 진화시켰습니다.', hint: '당신의 요람이 다양한 생명으로 가득 차는 순간을 기다립니다.' },
+            { id: 'evolution_master', name: '진화의 입문자', icon: 'assets/images/achievements/evolution_master.png', desc: '네 마리의 피조물을 성공적으로 성체기까지 인도한 육성의 대가입니다.', hint: '호문클루스들이 제 본모습을 찾을 때까지 곁을 지킵니다.' },
+            { id: 'evolution_master2', name: '진화의 전문가', icon: 'assets/images/achievements/evolution_master2.png', desc: '여덟 마리의 피조물을 성공적으로 성체기까지 인도한 육성의 대가입니다.', hint: '호문클루스들이 제 본모습을 찾을 때까지 곁을 지킵니다.' },
             { id: 'mabel_eternal_partner', name: '메이벨의 유일한 이해자', icon: 'assets/images/achievements/mabel_eternal_partner.png', desc: '메이벨과 영혼의 무게를 나누는 절대적인 신뢰 관계가 되었습니다.', hint: '부드러운 온기가 영원한 약속으로 변하는 과정을 지켜봅니다.' },
             { id: 'indigo_shadow_bond', name: '인디고의 그림자 동반자', icon: 'assets/images/achievements/indigo_shadow_bond.png', desc: '인디고의 정적 속에 머물며 완벽한 그림자 우대를 공유하게 되었습니다.', hint: '말하지 않아도 전해지는 그림자 같은 침묵을 나눕니다.' },
             { id: 'morgana_abyss_lover', name: '모르가나의 진실한 반려', icon: 'assets/images/achievements/morgana_abyss_lover.png', desc: '모르가나와 함께 심연의 끝에서 가장 은밀한 진실을 마주했습니다.', hint: '심연보다 깊은 곳에서 함께 허물을 벗어 던집니다.' },
             { id: 'aurelia_golden_glory', name: '아우렐리아의 황금빛 파트너', icon: 'assets/images/achievements/aurelia_golden_glory.png', desc: '아우렐리아로부터 정점의 가호를 받는 고결한 동반자로 인정받았습니다.', hint: '가장 높은 곳에서 빛나는 태양의 가호를 받을 자격을 증명합니다.' },
             { id: 'cordelia_eternal_ocean', name: '코델리아의 유일한 바다', icon: 'assets/images/achievements/cordelia_eternal_ocean.png', desc: '유리벽이라는 차가운 경계를 녹여내고, 코델리아와 영혼의 가장 깊은 곳까지 함께 유영하게 되었습니다.', hint: '부드러운 파도에 몸을 맡기고 함께 섞여듭니다.' },
-            { id: 'homunculus_collector', name: '요람의 대주인', icon: 'assets/images/achievements/homunculus_collector.png', desc: '네 마리의 호문클루스를 모두 거느려 연구실의 생태계를 완성했습니다.', hint: '당신의 요람이 다양한 생명으로 가득 차는 순간을 기다립니다.' },
-            { id: 'evolution_master', name: '진화의 마스터', icon: 'assets/images/achievements/evolution_master.png', desc: '모든 피조물을 성공적으로 성체기까지 인도한 육성의 대가입니다.', hint: '모두가 제 본모습을 찾을 때까지 곁을 지킵니다.' },
             { id: 'linxia_crimson_bond', name: '린시아의 영원한 도반',  icon: 'assets/images/achievements/linxia_crimson_bond.png',  desc: '린시아가 승천을 포기하고 당신의 곁에 영원히 남기를 맹세했습니다.',  hint: '아홉 번째 꼬리가 하늘이 아닌 당신을 향해 펼쳐집니다.' },
             { id: 'dende_soft_embrace',  name: '덴데의 유일한 안식처',  icon: 'assets/images/achievements/dende_soft_embrace.png',  desc: '덴데가 모든 가시를 거두고 당신의 품을 세상에서 가장 안전한 곳으로 선택했습니다.',  hint: '가장 날카로운 두려움이 가장 부드러운 신뢰로 녹아내립니다.' },
             { id: 'belinda_eternal_steward', name: '벨린다의 영원한 계약자', icon: 'assets/images/achievements/belinda_eternal_steward.png', desc: '당신의 한심함마저 품격 있게 관리하기로 맹세한 집사와 함께, 실패와 성공을 모두 초월한 절대적인 계약 관계에 들어섰습니다.', hint: '독설로 용해된 마음 끝에 남은, 가장 고귀하고 단단한 유대를 마주합니다.' },
             { id: 'Kota_best_friend', name: '코타의 가장 소중한 친구', icon: 'assets/images/achievements/Kota_best_friend.png', desc: '코타는 당신의 가장 소중한 친구가 되었습니다.', hint: '당신의 외로운 여정을 조건 없이 지지해주는 친밀한 벗이 생깁니다.' },
-
+            
             // 4. 전문성 및 자산 관련 업적
             { id: 'sage_alchemist_30', name: '대연금술사의 증표', icon: 'assets/images/achievements/sage_alchemist_30.png', desc: '30레벨의 숙련도에 도달하여 연금술의 현자 경지를 증명했습니다.', hint: '현자의 돌에 다가가는 첫 번째 관문을 통과합니다.' },
             { id: 'midas_hand_10000', name: '황금의 손', icon: 'assets/images/achievements/midas_hand_10000.png', desc: '10,000 에테르를 모아 연구실을 황금빛 풍요로 가득 채웠습니다.', hint: '손이 닿는 모든 곳이 황금으로 빛나는 풍요를 누립니다.' },

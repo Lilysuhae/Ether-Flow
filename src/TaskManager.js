@@ -458,16 +458,21 @@ class TaskManager {
     }
 
     checkHabitReset() {
-        const molipToday = window.getMolipDate();
+        const molipToday = window.getMolipDate(); // 설정 시간이 반영된 오늘 (YYYY-MM-DD)
         const lastDateStr = window.masterData.progress.lastSaveDate;
-        const lastDay = new Date(lastDateStr).getDay();
+        
+        // ✨ 핵심 수정: 실제 Date 객체가 아닌, 몰입 날짜 문자열을 Date로 변환하여 요일 계산
+        const lastMolipDate = new Date(lastDateStr);
+        const lastDay = lastMolipDate.getDay(); 
 
         this.habits.forEach(h => {
             const safeDays = Array.isArray(h.days) ? h.days : [];
+            // 오늘이 해당 습관을 수행하는 날인데, 몰입 날짜가 바뀌었음에도 완료하지 않았다면 스트릭 초기화
             if (safeDays.includes(lastDay) && !h.completed && h.lastCompletedDate !== molipToday) {
                 h.streak = 0; 
             }
-            if (h.completed && h.lastCompletedDate !== molipToday) {
+            // 날짜가 바뀌었으므로 모든 습관의 완료 상태를 리셋
+            if (h.lastCompletedDate !== molipToday) {
                 h.completed = false;
                 h.rewarded = false;
             }
@@ -477,13 +482,20 @@ class TaskManager {
 
     cleanupOldTasks() {
         if (!window.autoDeleteOldTasks || !this.todos) return;
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        
+        const molipToday = window.getMolipDate();
+        const todayDate = new Date(molipToday);
+        
         for (let i = this.todos.length - 1; i >= 0; i--) {
-            if (this.todos[i].completed && new Date(this.todos[i].date) < sevenDaysAgo) { this.todos.splice(i, 1); }
+            const taskDate = new Date(this.todos[i].date);
+            const diffTime = Math.abs(todayDate - taskDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (this.todos[i].completed && diffDays >= 7) {
+                this.todos.splice(i, 1);
+            }
         }
         this.renderTodos();
-        if (window.saveAllData) window.saveAllData();
     }
 
     // ============================================================

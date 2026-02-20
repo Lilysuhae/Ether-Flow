@@ -1477,13 +1477,13 @@ ipcRenderer.on('user-idle-state', (event, state) => {
  * 1. 설정된 초기화 시간을 반영한 '게임 내 오늘 날짜'를 반환합니다.
  */
 window.getMolipDate = () => {
+    const resetHour = window.masterData.settings.resetHour || 0; // 유저 설정값 (0, 4, 5, 6)
     const now = new Date();
-    // 설정된 초기화 시간(resetHour) 반영
-    if (now.getHours() < (window.resetHour || 0)) {
-        now.setDate(now.getDate() - 1);
-    }
     
-    // YYYY-MM-DD 형식으로 직접 포맷팅 (포맷 불일치 방지)
+    // 현재 시간에서 설정된 초기화 시간을 뺍니다.
+    // 예: 새벽 2시인데 초기화가 4시라면, 결과는 전날 밤 22시가 되어 날짜가 '어제'로 유지됨.
+    now.setHours(now.getHours() - resetHour);
+    
     const y = now.getFullYear();
     const m = String(now.getMonth() + 1).padStart(2, '0');
     const d = String(now.getDate()).padStart(2, '0');

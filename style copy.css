@@ -1,0 +1,7264 @@
+/* [1] 폰트 설정 */
+
+@font-face {
+  font-family: "Basgerd";
+  src: url("assets/fonts/Basgerd.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* 1. 페이퍼로지 */
+@font-face {
+  font-family: "Paperlogy";
+  src: url("assets/fonts/Paperlogy-4Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Paperlogy";
+  src: url("assets/fonts/Paperlogy-5Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Paperlogy";
+  src: url("assets/fonts/Paperlogy-6SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Paperlogy";
+  src: url("assets/fonts/Paperlogy-7Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* 갈무리 */
+@font-face {
+  font-family: "Galmuri11";
+  src: url("assets/fonts/Galmuri9.woff2") format("woff2");
+  font-weight: 400;
+}
+
+/* 프리텐다드 */
+@font-face {
+  font-family: "Pretendard";
+  src: url("assets/fonts/Pretendard-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("assets/fonts/Pretendard-Medium.woff2") format("woff2");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("assets/fonts/Pretendard-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("assets/fonts/Pretendard-bold.woff2") format("woff2");
+  font-weight: 700;
+}
+
+/* 나눔스퀘어 네오 */
+@font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('assets/fonts/NanumSquareNeo-bRg.ttf') format('truetype');
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('assets/fonts/NanumSquareNeo-cBd.ttf') format('truetype');
+    font-weight: 500;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('assets/fonts/NanumSquareNeo-dEb.ttf') format('truetype');
+    font-weight: 700;
+    font-display: swap;
+}
+
+/* 네오현대 */
+@font-face {
+    font-family: 'NeoHyundai';
+    src: url('assets/fonts/NeoHyundai\ L.ttf') format('truetype');
+    font-weight: 300;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'NeoHyundai';
+    src: url('assets/fonts/NeoHyundai\ R.ttf') format('truetype');
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'NeoHyundai';
+    src: url('assets/fonts/NeoHyundai\ EB.ttf') format('truetype');
+    font-weight: 700;
+    font-display: swap;
+}
+
+/* [style.css] 모든 텍스트에 부드러운 렌더링 적용 */
+* {
+    /* 1. 안티앨리어싱 활성화 (macOS 및 고해상도 디스플레이) */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* 2. 가독성 및 렌더링 최적화 */
+    text-rendering: optimizeLegibility;
+
+    /* 3. 자간 및 행간 미세 조정 (선택 사항) */
+    letter-spacing: -0.01em; 
+}
+
+body {
+    /* 4. Chromium 기반(Electron) 폰트 번짐 및 자릴 깨짐 방지 팁 */
+    /* 미세한 회전을 주어 GPU가 텍스트를 더 부드럽게 그리도록 유도합니다. */
+    transform: perspective(1px) translateZ(0);
+    backface-visibility: hidden;
+}
+
+
+:root {
+  --main-font: "Paperlogy";
+
+  /* --- 다크 모드 컬러 팔레트 --- */
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --text-dark: #1d1d1f;
+  --ios-blue: #4d7398;
+  --ios-gray: #98989d;
+  --danger-red: #ff453a;
+  --primary-gold: #bd8f62;
+
+  /* --- 다크 글래스모피즘 변수 --- */
+  --glass-bg: rgba(30, 30, 32, 0.975);
+  --glass-surface-light: rgba(255, 255, 255, 0.1);
+  --glass-modal-bg: rgba(40, 40, 45, 0.98);
+  --glass-border: rgba(255, 255, 255, 0.15);
+
+  --radius-main: 1em;
+  --radius-modal: 0.9em;
+  --shadow-blue: 0 0 10px rgba(10, 132, 255, 0.3);
+  --shadow-gold: 0 0 15px rgba(212, 175, 55, 0.2);
+  --shadow-deep: 
+    0 20px 50px rgba(0, 0, 0, 0.7),   /* 아주 깊고 넓은 그림자 */
+    0 0 15px rgba(255, 255, 255, 0.05); /* 미세한 외곽 광택 (림 라이트) */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* style.css 내 전역 설정 수정 */
+*:not(i):not([class*="fa-"]) {
+  font-family: var(--main-font), sans-serif !important;
+  letter-spacing: -0.02em; /* 아티스트님의 자간 가이드 유지 */
+  color: var(--text-primary);
+
+  /* --- [추가] 텍스트 선택 및 드래그 방지 --- */
+  user-select: none; /* 표준 속성: 텍스트 선택 방지 */
+  -webkit-user-select: none; /* 웹킷(Electron) 전용 선택 방지 */
+  /* -webkit-user-drag: none; */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.font-paperlogy { --main-font: "Paperlogy"; }
+body.font-Galmuri11 { --main-font: "Galmuri11"; font-size: 12px !important; }
+body.font-Pretendard { --main-font: "Pretendard"; }
+body.font-NanumSquareNeo { --main-font: "NanumSquareNeo"; }
+body.font-NEXONLv1Gothic { --main-font: "NEXONLv1Gothic"; }
+
+input,
+textarea {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  cursor: text;
+}
+
+select option {
+    background-color: #2c2c2e;
+    color: #ffffff;
+    padding: 10px;
+}
+
+/* 제목 등 강조하고 싶은 부분은 굵은 폰트(Bold)가 자동 적용되게 합니다. */
+h2,
+h3,
+h4,
+h5 b,
+strong {
+  font-weight: 700; /* 위에서 등록한 Paperlogy-7Bold.ttf가 호출됩니다. */
+  margin: 1em 0 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#app {
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-radius: var(--radius-main) 0 0 0;
+  border-left: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  padding: 50px 24px 40px 24px !important;
+  height: 100vh;
+  gap: 12px;
+  position: relative; /* 오버레이의 기준점이 됨 */
+  overflow: hidden !important; /* 자식 요소가 테두리 밖으로 나가는 것을 차단 */
+}
+
+/* --- 창 제어 버튼: 0.7rem 복구 --- */
+.window-controls {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  display: flex;
+  gap: 8px;
+  z-index: 10000;
+}
+.win-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  color: var(--text-secondary);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  transition: all 0.2s;
+}
+.win-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+}
+.win-btn.close:hover {
+  background: var(--danger-red);
+  color: white;
+}
+
+#drag-header {
+  -webkit-app-region: no-drag;
+}
+
+/* --- 버튼 시스템: 0.85rem 복구 --- */
+.btn {
+  border: none;
+  outline: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border-radius: 16px;
+  padding: 12px;
+}
+.btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.btn:active {
+  transform: scale(0.93) translateY(1px) !important;
+  filter: brightness(0.9);
+}
+
+.btn-primary {
+  background: var(--primary-gold);
+  color: #1d1d1f;
+  box-shadow: 0 4px 12px rgba(255, 179, 108, 0.2);
+}
+.btn-secondary {
+  background: var(--glass-surface-light);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+}
+
+/* 프로그램 등록 버튼: 0.75rem 복구 */
+.btn-action {
+  background: #007aff !important;
+  color: white !important;
+  padding: 8px 16px;
+  font-size: 0.75rem;
+  box-shadow: 0 4px 8px rgba(0, 122, 255, 0.3);
+}
+
+.btn-danger {
+  background: var(--danger-red);
+  color: white;
+}
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--glass-surface-light);
+  color: var(--text-secondary);
+  padding: 0;
+  border: none;
+}
+
+/* --- 상단 헤더: 1.25rem 복구 --- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  margin-bottom: 5px;
+}
+.header-left h2 {
+  margin: 0;
+    font-family: 'Basgerd' !important;
+    font-size: 1.7em !important;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 0 !important;
+    margin: 0 !important;
+    font-style: italic;
+}
+
+/* --- [상태 배지 디자인: 흰색 글자 및 흐르는 그라데이션] --- */
+#status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff !important;
+  border: 1px solid var(--glass-border);
+  transition: all 0.4s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes status-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* 부재 중: 네온 블루 글로우 */
+#status-badge.away {
+  background: rgba(10, 132, 255, 0.8) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(10, 132, 255, 1);
+  box-shadow: 0 0 12px rgba(10, 132, 255, 0.4);
+}
+
+/* 대기 중: 반투명 글래스 */
+#status-badge.waiting {
+  background: var(--ios-gray);
+  color: #ffffff !important;
+}
+
+#work-points {
+  font-weight: 700;
+  padding-right: 0.5em;
+}
+
+/* --- 게임 뷰 스테이지 --- */
+#game-view {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(to bottom, #1c1c1e, #2c2c2e);
+  image-rendering: pixelated;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-modal);
+  border: 2px solid var(--glass-border);
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#character-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+canvas {
+    width: 158px;
+    height: 158px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.3));
+  cursor: pointer;
+  transform: scale(2.0);
+}
+
+#hatch-section {
+  display: none;
+}
+
+/* --- 이름표 및 호감도 UI: 하트 두근거림 애니메이션 --- */
+#intimacy-display {
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 10px 14px;
+  border-radius: 0.8em;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.5s ease;
+}
+#intimacy-display.wait {
+  opacity: 0.5;
+  filter: grayscale(0.5);
+}
+.intimacy-info-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+#char-name-tag {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+#intimacy-stat {
+  font-size: 0.75rem;
+  color: #ff416c;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 호감도 하트 애니메이션 */
+#intimacy-stat i {
+  display: inline-block;
+  animation: intimacy-heart-beat 1.5s infinite ease-in-out;
+}
+
+@keyframes intimacy-heart-beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+    filter: brightness(1.2);
+  }
+}
+
+.intimacy-container {
+  height: 4px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+#intimacy-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #cf0000, #ff416c);
+  transition: width 0.3s ease;
+}
+
+/* --- 스탯 및 시간 --- */
+#stats-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px 18px;
+  z-index: 10; /* ★ 50에서 1로 수정하여 말풍선 아래로 보냄 */
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.progress-container {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+#exp-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ffcc00, #ff9500);
+  transition: width 0.5s ease;
+}
+.time-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 10px;
+}
+
+.speech-bubble {
+  position: absolute;
+  top: 0.5em; /* 레벨 바 위로 띄움 */
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  width: 94%; /* 요청하신 '조금 넓은' 형태 */
+  min-height: 60px;
+  background: rgba(15, 15, 17, 0.75) !important; /* 반투명 설정 */
+  backdrop-filter: blur(12px) !important; /* 뒤 배경 블러 효과 */
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1em;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 20px;
+  z-index: 9999 !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ★ 추가: 말풍선 꼬리 디자인 */
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(15, 15, 17, 0.96);
+}
+
+.speech-bubble.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateX(-50%) translateY(0) !important; /* ★ 중앙 정렬 유지 */
+}
+
+/* style.css - 대사 텍스트 영역 */
+#dialogue-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff !important;
+  line-height: 1.6;
+  text-align: center;
+
+  /* ★ 핵심 추가: 공백과 줄바꿈을 있는 그대로 표시 */
+  white-space: pre-wrap;
+  /* 단어 단위로 줄바꿈을 해서 한글 읽기 편하게 설정 */
+  word-break: keep-all;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* --- 모달 및 알림창 시스템 --- */
+.modal-overlay,
+.alert-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  
+  /* [핵심 1] inherit 대신 변수를 직접 써서 곡률을 강제로 일치시킵니다 */
+  border-radius: var(--radius-main) !important; 
+  
+  /* [핵심 2] 혹시 모를 1px의 오차도 허용하지 않도록 미세하게 안쪽으로 가둡니다 */
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.alert-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(15px);
+  z-index: 100001;
+}
+
+.modal-window,
+.alert-window {
+  width: 90%;
+  max-width: 320px;
+  background: var(--glass-modal-bg);
+  border-radius: var(--radius-modal);
+  padding: 0;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--glass-border);
+}
+
+.alert-content {
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.modal-window h3,
+.alert-content h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-top: 0 !important;
+  margin-bottom: 10px;
+}
+
+.alert-content p {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.settings-body {
+  padding: 1.5em;
+  overflow: visible;
+}
+.settings-group {
+  margin-bottom: 1.7em;
+}
+.settings-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.settings-select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+.settings-select:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.settings-select::after {
+  content: "\f078";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.custom-options-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  background: #2c2c2e;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  list-style: none;
+  overflow: hidden;
+  z-index: 100001;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  display: none;
+}
+
+.custom-option-item {
+  padding: 14px 18px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.custom-option-item:last-child {
+  border-bottom: none;
+}
+.custom-option-item:hover {
+  background: var(--ios-blue);
+  color: white;
+}
+.custom-option-item.selected {
+  background: rgba(10, 132, 255, 0.2);
+  color: var(--ios-blue);
+  font-weight: 700;
+}
+
+/* 도감 그리드 및 슬롯 */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5em;
+  overflow-y: auto;
+  max-height: 400px;
+  padding: 1em;
+}
+.char-slot {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 0.5em;
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.char-slot:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.15);
+}
+.char-slot span {
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-top: 5px;
+}
+
+.char-img-box {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--glass-surface-light);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.char-img-box img {
+  height: 100%;
+  width: auto;
+  /* image-rendering: pixelated; */
+}
+
+/* 확인 및 분양 버튼 마감 */
+.confirm-content {
+  padding: 40px 24px;
+  text-align: center;
+}
+.confirm-content p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.confirm-actions {
+  display: flex;
+  border-top: 1px solid var(--glass-border);
+  width: 100%;
+  border-radius: 0 0 30px 30px;
+  overflow: hidden;
+}
+.confirm-actions .btn {
+  flex: 1;
+  border-radius: 0;
+  padding: 18px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  font-size: 0.95rem;
+}
+.btn-modal-cancel {
+  color: var(--text-secondary) !important;
+  border-right: 1px solid var(--glass-border) !important;
+}
+.btn-modal-confirm {
+  color: var(--ios-blue) !important;
+  font-weight: 800 !important;
+}
+
+/* --- 하단 컨트롤 섹션 --- */
+#controls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+.action-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+.action-row .btn {
+  flex: 1;
+  min-width: 0;
+  padding: 18px 0;
+}
+
+.current-focus-glass {
+  background: var(--glass-surface-light);
+  border-radius: 20px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+  border: 1px solid var(--glass-border);
+}
+.current-focus-glass p {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.work-apps-list h4 {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 1.25em 0 10px 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+#work-app-list {
+  list-style: none;
+}
+.work-app-item {
+  border-radius: 12px;
+  padding: 8px 13px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  gap: 10px;
+}
+.work-app-item span {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+.work-app-item i {
+  flex-shrink: 0;
+}
+
+/* --- 효과 및 애니메이션 레이어 --- */
+#effect-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  pointer-events: none;
+}
+.floating-heart {
+  position: absolute;
+  color: #ff416c;
+  font-size: 1.2rem;
+  pointer-events: none;
+  animation: float-up 0.8s ease-out forwards;
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* 스크롤바 디자인 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+/* [상태 배지 업데이트] */
+#status-badge.away {
+  background: rgba(10, 132, 255, 0.8) !important;
+  color: #ffffff !important;
+}
+
+@keyframes status-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* [호감도 하트 애니메이션] */
+#intimacy-stat i {
+  display: inline-block;
+  animation: intimacy-heart-beat 1.5s infinite ease-in-out;
+}
+
+@keyframes intimacy-heart-beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  } /* 숫자를 키우면 더 크게 뜁니다 */
+}
+
+/* [버튼 디자인 통일: 모든 버튼을 세련된 다크 글래스로] */
+#controls .action-row .btn {
+  flex: 1;
+  height: 54px;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important; /* 은은한 테두리 */
+  background: rgba(255, 255, 255, 0.1) !important; /* 반투명 배경 */
+  color: #fff; /* 밝은 텍스트 */
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 호버 시: 약간 더 밝아짐 */
+#controls .action-row .btn:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px);
+}
+
+/* 클릭 시: 쫀득한 반응 */
+#controls .action-row .btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* 아이콘 색상 포인트 (선택 사항) */
+#controls .action-row .btn i {
+  color: var(--primary-gold); /* 아이콘에만 포인트를 줌 */
+  font-size: 1rem;
+}
+
+/* 기존 개별 색상 클래스 무력화 (이 부분을 삭제하거나 주석 처리하세요) */
+.btn-primary,
+.btn-secondary,
+.btn-shop {
+  background: transparent !important; /* 위에서 설정한 배경을 따르도록 강제 */
+  border: none !important;
+}
+
+/* 파일 맨 아래에 추가해 주세요 */
+#game-view:has(.speech-bubble.active) #intimacy-display {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* === 🔍 캐릭터 상세 정보 모달 스타일 === */
+
+/* 상세 창 전용 윈도우 설정 */
+.detail-window {
+  width: 90%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.detail-body {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  overflow-y: auto;
+}
+
+/* 상단 섹션: 이미지 + 주요 수치 */
+.detail-top-section {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.detail-img-box {
+  width: 158px;
+  height: 158px;
+  background: var(--glass-surface-light);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+}
+
+.detail-img-box img {
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated; /* 아티스트님의 도트 감성 유지 */
+}
+
+.detail-main-stats {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-stat-item label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.detail-stat-item span {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* 개별 성장 진행도 섹션 */
+.detail-progress-section {
+  background: var(--glass-surface-light);
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--glass-border);
+}
+
+.detail-label-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.detail-label-row label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+#detail-growth-text {
+  font-size: 0.75rem;
+  color: var(--primary-gold);
+  font-weight: 700;
+}
+
+/* 상세 페이지 전용 핑크빛 성장 바 */
+#detail-growth-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #dba671, #ffd78e);
+  border-radius: 5px;
+  transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* 선물 힌트 그리드 (4열 구성) */
+.detail-pref-section label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+
+.pref-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.pref-hint-item {
+  aspect-ratio: 1 / 1;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+/* 선호도에 따른 테두리 강조 효과 */
+.pref-hint-item.favorite {
+  border-color: var(--primary-gold);
+  background: rgba(255, 108, 142, 0.1);
+}
+.pref-hint-item.dislike {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+/* .detail-footer {
+  margin-top: 10px;
+} */
+
+/* style.css - 축하 파티클 효과 강화 */
+@keyframes evolution-glow {
+  0% {
+    filter: drop-shadow(0 0 5px #fff);
+  }
+  50% {
+    filter: drop-shadow(0 0 25px var(--primary-gold));
+    transform: scale(2.1);
+  }
+  100% {
+    filter: drop-shadow(0 0 5px #fff);
+  }
+}
+
+.evolving {
+  animation: evolution-glow 1.5s ease-in-out infinite; /* 진화 중인 캐릭터 강조 */
+}
+
+/* 하트 파티클 색상 다양화 */
+.floating-heart {
+  z-index: 9999;
+  text-shadow: 0 0 10px rgba(255, 108, 142, 0.8);
+}
+
+/* style.css 하단 추가 */
+.first-choice-window {
+  width: 95%;
+  max-width: 360px;
+  background: var(--glass-modal-bg); /* */
+}
+
+.choice-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.choice-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+/* 선택 카드 강조 애니메이션 */
+.first-choice-grid .char-slot {
+  border: 2px solid transparent;
+}
+
+.first-choice-grid .char-slot:hover {
+  border-color: var(--primary-gold); /* */
+  background: rgba(255, 108, 142, 0.1);
+}
+
+/* style.css 하단 추가 */
+
+/* 1. 둠칫둠칫 흔들리는 알 애니메이션 */
+@keyframes egg-groove {
+  0%,
+  100% {
+    transform: scale(2) translateY(0) rotate(0);
+  }
+  25% {
+    transform: scale(2.1) translateY(-5px) rotate(-3deg);
+  }
+  75% {
+    transform: scale(2.1) translateY(-5px) rotate(3deg);
+  }
+}
+
+.egg-focus-bounce {
+  animation: egg-groove 0.8s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+/* 2. 부화 시 화이트 플래시 레이어 */
+.hatch-flash-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+@keyframes flash-active {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.flash-trigger {
+  animation: flash-active 0.8s ease-out;
+}
+
+/* 오늘의 로그 리스트 스타일 */
+#daily-log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0 !important;
+}
+
+.log-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.log-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.log-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 여기도 말줄임표 적용! */
+}
+
+.log-time {
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+/* [추가] 컨트롤 그룹 및 라벨 스타일 */
+.control-group {
+  /* margin-bottom: 15px; */
+}
+
+.control-group.game {
+  margin: 1em 0;
+}
+.control-group.focus {
+  margin-bottom: 1em;
+}
+
+.group-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  padding-left: 4px;
+  opacity: 0.7;
+}
+
+/* [수정] 버튼 라인 스타일 통합 */
+.action-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+/* 게임 라인 아이콘: 골드 */
+.btn-game i {
+  color: var(--primary-gold) !important;
+}
+
+/* 태스크 라인 아이콘: 블루 */
+.btn-task i {
+  color: var(--ios-blue) !important;
+}
+
+/* 아코디언 컨테이너 설정 */
+.accordion {
+  border-radius: 18px;
+  background: var(--glass-surface-light);
+  transition: max-height 0.3s ease-in-out, height 0.3s ease,  background-color 0.3s ease, padding 0.3s ease;
+  margin-bottom: 0.5em;
+  padding: 0 10px;
+}
+
+/* 아코디언 헤더 (클릭 영역) */
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 4px;
+  cursor: pointer;
+}
+
+.accordion-header .group-label {
+  margin-bottom: 0; /* 헤더 안에서는 마진 제거 */
+  pointer-events: none; /* 라벨 클릭 방해 금지 */
+}
+
+/* 아이콘 회전 효과 */
+.accordion-icon {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  transition: transform 0.3s ease;
+}
+
+/* 접히는 본문 영역 */
+.accordion-content {
+  max-height: 0; /* 기본적으로 닫힘 */
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, height 0.3s ease;
+}
+
+/* 활성화 상태 (열렸을 때) */
+.accordion.active {
+  background: var(--shadow-soft);
+  border: 1px solid var(--glass-border);
+  padding: 0 10px 0 10px; /* 열렸을 때 안쪽 여백 추가 */
+}
+
+.accordion.active .accordion-content {
+    max-height: 3000px !important; /* 기존 500px 제한 해제 */
+    overflow-y: visible !important; /* 내부 스크롤바 제거 */
+}
+
+.accordion.active .accordion-icon {
+  transform: rotate(180deg); /* 아이콘 뒤집기 */
+  color: var(--ios-blue);
+}
+
+.work-app-item .btn-delete {
+  font-size: 0.65em;
+  width: 24px;
+  height: 24px;
+}
+
+/* [그래프 모드] 로그 아이템 컨테이너 */
+.log-graph-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 상단 정보 (이름 & 퍼센트) */
+.log-graph-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.log-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.log-percentage {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--ios-blue);
+}
+
+/* 그래프 바 본체 */
+.log-bar-container {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* 애니메이션이 들어간 바 채우기 */
+.log-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* 퍼센트 텍스트 강조 */
+.log-percentage {
+  font-size: 0.8rem;
+  font-weight: 800;
+  /* color: ... 제거 (JS에서 직접 지정) */
+}
+
+/* 하단 시간 텍스트 */
+.log-time-footer {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+/* 날짜 네비게이션 컨테이너 */
+.log-date-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+#log-date-display {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--ios-blue);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: transform 0.2s;
+}
+
+.nav-btn:hover {
+  transform: scale(1.2);
+}
+.nav-btn:active {
+  opacity: 0.5;
+}
+/* 비활성화된 네비게이션 버튼 스타일 */
+.nav-btn:disabled {
+  color: var(--ios-gray) !important;
+  transform: none !important; /* 호버 애니메이션 작동 방지 */
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* style.css - #receipt-wrapper 수정 */
+#receipt-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100% !important; 
+    height: 100% !important;
+    background: #ffffff !important; /* 뒤에 배경이 비치지 않게 순백색 고정 */
+    
+    /* [수정] 중앙 정렬 대신, 좌측 상단(0,0)에 영수증을 밀착시킵니다. */
+    display: none; 
+    flex-direction: column;
+    align-items: flex-start; /* 왼쪽 정렬 */
+    justify-content: flex-start; /* 상단 정렬 */
+    
+    z-index: 200000;
+}
+
+/* [수정] 영수증 본체 */
+#focus-receipt {
+    width: 320px !important; /* 실제 인화될 너비 고정 */
+    background: #ffffff !important;
+    padding: 30px 20px; /* 적절한 내부 여백 */
+    box-shadow: none !important;
+    margin: 0 !important; /* 여백 제거하여 (0,0)에 밀착 */
+}
+
+/* 상단 지그재그 절취선 */
+#focus-receipt::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: linear-gradient(45deg, transparent 5px, #ffffff 0),
+    linear-gradient(-45deg, transparent 5px, #ffffff 0);
+  background-size: 10px 20px;
+}
+
+/* 하단 지그재그 절취선 */
+#focus-receipt::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: linear-gradient(45deg, #ffffff 5px, transparent 0),
+    linear-gradient(-45deg, #ffffff 5px, transparent 0);
+  background-size: 10px 20px;
+}
+
+#focus-receipt * {
+  color: #000000 !important;
+  border-color: #000000 !important;
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.receipt-header h2 {
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  padding: 10px 0;
+  margin-bottom: 12px;
+}
+
+.receipt-info {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+/* 아이템 리스트 정렬 (점선 개선) */
+.receipt-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+}
+
+.receipt-item .name {
+  flex-shrink: 0;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 세련된 점선: 너무 굵지 않게 1px로 조정 */
+.receipt-item .dots {
+  flex: 1;
+  border-bottom: 1px dotted #aaaaaa; /* 검은색보다 살짝 흐리게 */
+  margin: 0 8px 4px 8px;
+}
+
+.receipt-item .time {
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.receipt-divider {
+  border-top: 1.5px dashed #000;
+  margin: 20px 0;
+}
+
+.receipt-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  font-weight: 900;
+  padding: 5px 0;
+}
+
+.barcode {
+  width: 100%;
+  height: 35px;
+  margin: 30px 0 20px 0;
+  background: repeating-linear-gradient(
+    90deg,
+    #000,
+    #000 1px,
+    #fff 1px,
+    #fff 4px,
+    #000 4px,
+    #000 5px
+  ) !important;
+  opacity: 0.8;
+}
+
+.receipt-footer {
+  text-align: center;
+  font-size: 0.75rem;
+}
+.thanks {
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+.signature {
+  margin-top: 8px;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+/* [추가] 할 일 목록 스타일 */
+.todo-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+#todo-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.btn-todo-add {
+  background: var(--ios-blue);
+  border: none;
+  border-radius: 10px;
+  width: 36px;
+  color: white;
+  cursor: pointer;
+}
+
+.todo-list-container {
+    max-height: none !important; /* 기존 320px 제한 해제 */
+    overflow-y: visible !important; /* 내부 스크롤바 제거 */
+    max-height: none !important; /* 기존 320px 제한 해제 */
+    overflow-y: visible !important; /* 내부 스크롤바 제거 */
+    overflow-x: hidden !important; /* ★ 가로 스크롤 발생을 원천 차단 */
+    width: 100%;
+    padding: 2px; /* scale 효과를 위한 미세 여백 */
+}
+
+/* [수정] 투두 아이템: 너비 고정 및 오버플로 방지 */
+.todo-item {
+    -webkit-app-region: no-drag !important;
+    cursor: grab !important;
+    user-select: none !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 !important;
+    border-radius: 14px !important;
+    margin-bottom: 8px;
+    
+    /* ★ 너비 고정 설정 */
+    width: 100% !important;
+    box-sizing: border-box !important; 
+}
+
+.todo-item.completed {
+  opacity: 0.5;
+}
+
+.todo-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--ios-blue);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.todo-item.completed .todo-checkbox {
+  background: var(--ios-blue);
+}
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+#detail-select-btn {
+  background-color: var(--primary-gold) !important;
+}
+
+/* [통합] 리스트 항목 공통 스타일 */
+.current-app-box,
+.work-app-item,
+.todo-item {
+  border: var(--glass-border);
+  border-radius: 14px !important; /* 곡률 통일 */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.current-app-box {
+  padding: 20px 26px !important; /* 내부 여백 통일 */
+  background-color: var(--glass-surface-light);
+}
+
+.work-app-item,
+.todo-item {
+  padding: 0 12px !important; /* 내부 여백 통일 */
+  font-size: 12px !important;
+}
+
+/* 텍스트 스타일 통일 */
+.current-app-box span,
+.work-app-item span,
+.todo-text {
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: var(--text-primary) !important;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 아이콘 스타일 통일 */
+.current-app-box i,
+.work-app-item i:first-child,
+.todo-checkbox {
+  color: var(--ios-blue); /* 포인트 컬러 통일 */
+  font-size: 1rem;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.current-app-box i {
+  display: contents;
+}
+
+.todo-checkbox {
+  color: var(--ios-blue) !important;
+}
+
+/* 입력창 디자인을 리스트 항목과 일치시킴 */
+.todo-input-group {
+  border: 1px dashed var(--glass-border);
+  border-radius: 14px;
+  padding: 8px 8px 8px 0;
+  display: flex;
+  gap: 4px;
+  margin: 0 6px 8px 6px;
+}
+
+#todo-input,
+#habit-input {
+  background: transparent !important;
+  border: none !important;
+  padding: 9px 12px !important;
+  flex: 1;
+  color: var(--text-primary);
+  outline: none;
+}
+
+/* [교정] 체크박스 디자인 디테일 */
+.todo-checkbox {
+  width: 20px !important; /* 크기 살짝 키움 */
+  height: 20px !important;
+  border: 2px solid var(--ios-blue) !important;
+  border-radius: 50% !important;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+/* 체크 아이콘 스타일 */
+.todo-checkbox i {
+  font-size: 10px !important;
+  color: white !important;
+  display: none; /* 기본 숨김 */
+}
+
+/* 완료 상태일 때 */
+.todo-item.completed {
+  opacity: 0.6; /* 전체적으로 살짝 흐리게 */
+}
+
+.todo-item.completed .todo-checkbox {
+  background: var(--ios-blue) !important; /* 배경색 채움 */
+  border-color: var(--ios-blue) !important;
+}
+
+.todo-item.completed .todo-checkbox i {
+  display: block !important; /* 체크 아이콘 보임 */
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through; /* 취소선 추가 */
+  color: var(--text-secondary) !important;
+}
+
+/* 버튼 디자인 통일 (Plus & Trash) */
+.btn-todo-add,
+.btn-add-current {
+  background: var(--ios-blue) !important;
+  border-radius: 10px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border: none;
+  color: white !important;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-todo-add,
+.btn-add-current i {
+  color: white !important;
+}
+
+.btn-delete,
+.fa-trash-can {
+  color: rgba(255, 255, 255, 0.3) !important;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.btn-delete:hover,
+.fa-trash-can:hover {
+  color: var(--primary-gold) !important;
+}
+
+/* [교정] 휴지통 버튼 통합 디자인 */
+.btn-trash {
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none;
+  border-radius: 10px !important;
+  background: rgba(0, 0, 0, 0);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0; /* 버튼 찌그러짐 방지 */
+}
+
+/* 아이콘 기본 상태 */
+.btn-trash i {
+  font-size: 0.85rem !important;
+  color: var(--glass-border) !important;
+  pointer-events: none;
+}
+
+/* 마우스 올렸을 때 (호버 효과) */
+.btn-trash:hover {
+  background: rgba(255, 69, 58, 0.15) !important; /* 은은한 레드 배경 */
+  border-color: rgba(255, 69, 58, 0.3) !important;
+}
+
+.btn-trash:hover i {
+  color: #ff453a !important; /* 아이콘 레드 강조 */
+}
+
+/* 기존에 방해되던 스타일 제거 */
+.btn-delete,
+.work-app-item .btn-delete {
+  background: none !important;
+  border: none !important;
+}
+
+/* [교정] 사용 중인 프로그램 이름 3줄 제한 및 말줄임표 */
+.current-app-box span {
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    color: var(--text-primary) !important;
+    flex: 1;
+    
+    /* 멀티라인 말줄임표 설정 */
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 4 !important; /* 최대 3줄로 제한 */
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: normal !important; /* 줄바꿈 허용 */
+    line-height: 1.4 !important;    /* 가독성을 위한 적절한 행간 */
+}
+
+/* 아이콘과 버튼이 3줄 높이에서도 중앙에 오도록 조정 */
+.current-app-box {
+    display: flex !important;
+    align-items: center !important; /* 세로 중앙 정렬 유지 */
+    min-height: 50px; /* 기본 높이 확보 */
+}
+
+/* [추가] 윈도우 모드 시 앱 레이아웃 변화 */
+#app.window-mode {
+    border-radius: var(--radius-main) !important; /* 모든 모서리를 둥글게 */
+    border: 1px solid var(--glass-border);
+}
+
+/* 토글 스위치 스타일 */
+.window-mode-toggle {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 14px; background: var(--glass-surface-light);
+    border-radius: 12px; cursor: pointer;
+    font-size: 0.85em;
+}
+
+.switch-base {
+    width: 44px; height: 24px; background: var(--text-secondary);
+    border-radius: 12px; position: relative; transition: 0.3s;
+}
+
+.switch-circle {
+    width: 20px; height: 20px; background: white; border-radius: 50%;
+    position: absolute; top: 2px; left: 2px; transition: 0.3s;
+}
+
+/* 스위치 활성화 상태 */
+.window-mode-toggle.active .switch-base { background: var(--ios-blue); }
+.window-mode-toggle.active .switch-circle { transform: translateX(20px); }
+
+/* [추가] 자유 이동 모드에서의 드래그 이동 설정 */
+
+/* 1. 앱 전체를 드래그 가능 영역으로 설정 (윈도우 모드일 때만) */
+#app.window-mode {
+    -webkit-app-region: drag !important;
+}
+
+/* 2. 클릭이나 상호작용이 필요한 요소들은 드래그에서 제외 (매우 중요) */
+#app.window-mode .window-controls,
+#app.window-mode button,
+#app.window-mode input,
+#app.window-mode .accordion-header,
+#app.window-mode canvas,
+#app.window-mode .todo-checkbox,
+#app.window-mode .btn-trash,
+#app.window-mode .item-slot,
+#app.window-mode .nav-btn,
+#app.window-mode .settings-select {
+    -webkit-app-region: no-drag !important; /* 이 요소들은 드래그되지 않고 클릭됨 */
+}
+
+/* 3. 드래그 중인 느낌을 주기 위해 커서 모양 변경 (선택 사항) */
+#app.window-mode:active {
+    cursor: grabbing;
+}
+
+/* [교정] 모달창이 드래그 영역에 먹히지 않도록 설정 */
+
+.modal-overlay, 
+.alert-overlay,
+.modal-window,
+.alert-window {
+    -webkit-app-region: no-drag !important; /* 모달 영역은 절대 드래그되지 않고 클릭되게 함 */
+    pointer-events: auto !important; /* 클릭 이벤트 강제 활성화 */
+}
+
+
+
+/* 겹침 방지: 영수증보다 모달이 더 위에 오도록 z-index 미세 조정 */
+.modal-overlay { z-index: 100020 !important; }
+.alert-overlay { z-index: 100030 !important; }
+
+/* 영수증 캡처용 레이어는 모달보다 아래로 내림 */
+#receipt-wrapper { z-index: 100010 !important; }
+
+/* [교정] 윈도우 모드에서 스크롤 기능을 복구합니다 */
+
+#app.window-mode #controls,           /* 메인 컨트롤 영역 */
+#app.window-mode .todo-list-container, /* 투두 리스트 */
+#app.window-mode .work-app-container,  /* 작업 도구 리스트 */
+#app.window-mode .settings-body,       /* 설정창 본문 */
+#app.window-mode .grid-container,      /* 도감/상점 그리드 */
+#app.window-mode #daily-log-list {     /* 로그 그래프 리스트 */
+    -webkit-app-region: no-drag !important; /* 드래그 대신 스크롤/클릭 허용 */
+}
+
+/* 스크롤바 자체를 클릭하거나 잡을 수 있도록 보장 */
+::-webkit-scrollbar {
+    -webkit-app-region: no-drag !important;
+}
+
+/* 드래그를 위한 '손잡이' 영역 명확화 (선택 사항) */
+/* 리스트 사이의 빈 공간이나 헤더를 잡고 옮기시면 됩니다. */
+
+#app {
+    /* 고정 모드일 때도 사방 35px 곡률 적용 */
+    border-radius: var(--radius-main) !important; 
+    border: 1px solid var(--glass-border) !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* 부드러운 위치 이동 느낌 반영 */
+
+    /* 브라우저에게 이 요소의 자식들을 GPU로 정밀하게 깎으라고 명령합니다 */
+    transform: translateZ(0); 
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+
+    /* [추가] 외부 그림자와 안쪽 미세 테두리를 동시에 적용합니다 */
+  box-shadow: var(--shadow-deep) !important;
+  
+  /* 테두리를 조금 더 밝게 하여 어두운 배경에서도 잘 보이게 합니다 */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 자유 이동 모드일 때의 추가 설정 */
+/* 1. 윈도우 모드일 때 전체 드래그를 허용하되 */
+#app.window-mode {
+    -webkit-app-region: drag !important;
+}
+
+/* 2. 실제 클릭이 발생하는 모든 요소는 드래그 영역에서 제외하여 '관통' 방지 */
+#app.window-mode .window-controls,
+#app.window-mode button,
+#app.window-mode input,
+#app.window-mode canvas,
+#app.window-mode .todo-item,
+#app.window-mode .item-slot,
+#app.window-mode .pretty-radio,
+#app.window-mode .modal-window {
+    -webkit-app-region: no-drag !important; /* 이 코드가 있어야 클릭이 앱 내부로 들어옵니다 */
+    pointer-events: auto !important; /* 클릭 이벤트 강제 활성화 */
+}
+
+/* [교정] 가로 모드(Horizontal) 레이아웃 */
+#app.horizontal-mode {
+    flex-direction: row !important; /* 좌우 배치 */
+    flex-wrap: wrap !important;     /* 헤더 처리를 위해 wrap 허용 */
+    align-items: flex-start !important;
+    gap: 20px !important;
+    padding: 24px !important;
+}
+
+/* 헤더는 상단 전체 너비 차지 */
+#app.horizontal-mode header {
+    width: 320px !important;
+    margin-bottom: 0 !important;
+}
+
+/* 왼쪽: 캐릭터 뷰 (고정 크기) */
+#app.horizontal-mode #game-view {
+    width: 320px !important;
+    height: 320px !important;
+    flex-shrink: 0 !important;
+}
+
+/* 오른쪽: 모든 컨트롤 및 리스트 (스크롤 영역) */
+#app.horizontal-mode #controls {
+    flex: 1 !important;
+    height: calc(100vh - 120px) !important; /* 헤더 제외 높이 확보 */
+    overflow-y: auto !important;
+    -webkit-app-region: no-drag !important; /* 리스트는 스크롤 가능하게 */
+}
+
+/* 가로 모드용 토글 스위치 스타일 */
+.horizontal-mode-toggle {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 14px; background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px; cursor: pointer; margin-top: 8px;
+}
+.horizontal-mode-toggle.active .switch-base { background: var(--ios-blue); }
+.horizontal-mode-toggle.active .switch-circle { transform: translateX(20px); }
+
+/* [교정] 가로 모드 시 좌우 분할 레이아웃 */
+
+/* 1. 기본 세로 상태 */
+#main-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* 2. 가로 모드 활성화 시 */
+#app.horizontal-mode #main-layout {
+    display: grid !important;
+    grid-template-columns: 320px 1fr !important; /* 왼쪽 320px 고정, 오른쪽 나머지 */
+    gap: 24px !important;
+    align-items: start;
+}
+
+/* 왼쪽 영역: 캐릭터와 버튼들 */
+#app.horizontal-mode #left-side {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* 오른쪽 영역: 스크롤 가능한 리스트들 */
+#app.horizontal-mode #controls.right-side {
+    height: calc(100vh - 120px) !important; /* 헤더 높이 제외 */
+    overflow-y: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    -webkit-app-region: no-drag !important; /* 리스트 스크롤 보장 */
+}
+
+/* 가로 모드일 때 캐릭터 뷰 크기 최적화 */
+#app.horizontal-mode #game-view {
+    width: 320px !important;
+    height: 320px !important;
+}
+
+/* [교정] 레이아웃 컨테이너 안정화 */
+
+/* 기본 상태 (세로 모드) */
+#main-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+/* 가로 모드 활성화 시 */
+#app.horizontal-mode #main-layout {
+    display: grid !important;
+    /* 왼쪽 캐릭터/버튼 영역(320px) | 오른쪽 리스트 영역(나머지) */
+    grid-template-columns: 320px 1fr !important;
+    grid-template-rows: auto 1fr !important; /* 헤더 공간 확보 */
+    gap: 20px !important;
+    height: 100%;
+}
+
+/* 왼쪽 사이드 정렬 */
+#app.horizontal-mode #left-side {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* 오른쪽 리스트 영역 */
+#app.horizontal-mode #controls.right-side {
+    grid-column: 2;
+    height: calc(100vh - 100px) !important;
+    overflow-y: auto;
+}
+
+/* [추가] 영수증 내 딴짓 항목 스타일 */
+.distract-item .name {
+    color: #ff453a !important; /* 빨간색으로 경고 느낌 */
+    font-style: italic;
+}
+
+.distract-item .time {
+    color: #ff453a !important;
+}
+
+/* 딴짓 리스트 버튼 전용 컬러 */
+#distract-apps-accordion .btn-trash:hover {
+    background: rgba(255, 69, 58, 0.2) !important;
+}
+
+/* [교정] 영수증이 모든 모달보다 '무조건' 위에 오도록 수정 */
+
+/* 1. 영수증 레이어를 가장 높은 순위로 올립니다 (200000) */
+#receipt-wrapper { 
+    z-index: 200000 !important; 
+}
+
+/* 2. 일반 모달들은 영수증보다 아래에 있게 합니다 (100020) */
+.modal-overlay { 
+    z-index: 100020 !important; 
+}
+
+/* 3. 알림창은 혹시 모르니 영수증과 모달 사이 정도로 둡니다 */
+.alert-overlay { 
+    z-index: 100030 !important; 
+}
+
+/* [추가] style.css - 딴짓 중 뱃지 (레드 네온 스타일) */
+#status-badge.distracting {
+  background: rgba(255, 69, 58, 0.85) !important; /* --danger-red 계열 */
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 69, 58, 1);
+  box-shadow: 0 0 12px rgba(255, 69, 58, 0.5); /* 강한 레드 광채 */
+  animation: distract-pulse 1.5s infinite; /* 긴장감을 주는 박동 효과 */
+}
+
+/* 딴짓 중일 때 미세하게 깜빡이는 애니메이션 */
+@keyframes distract-pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; transform: scale(1.02); }
+  100% { opacity: 1; }
+}
+
+/* [최종 통합] 모든 모달 헤더 규격 통일 */
+.modal-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 16px 20px !important; /* 모든 모달 여백 통일 */
+    height: 64px !important;       /* 높이 고정으로 가변성 차단 */
+    border-bottom: 1px solid var(--glass-border) !important;
+    background: transparent;
+}
+
+/* 헤더 내 제목 스타일 통일 */
+.modal-header h3 {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-primary) !important;
+}
+
+/* 헤더 내 버튼 그룹 (카메라, 닫기 등) */
+.modal-header .header-btns {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* 개별 모달의 헤더 오버라이드 삭제 필수! */
+#shop-modal .modal-header,
+#daily-log-modal .modal-header,
+#char-detail-modal .modal-header,
+#settings-modal .modal-header,
+#collection-modal .modal-header {
+    padding: 1em !important;
+    margin: 0 !important;
+    height: inherit !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+}
+
+/* [추가] 설정 탭 디자인 */
+.settings-tabs {
+    display: flex;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--glass-border);
+    gap: 20px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 12px 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.tab-btn.active {
+    color: var(--ios-blue); /* 활성화된 탭은 파란색 강조 */
+}
+
+/* 하단 활성화 표시 선 */
+.tab-btn.active::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--ios-blue);
+}
+
+.tab-content {
+    animation: fadeIn 0.3s ease; /* 전환 시 부드러운 효과 */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* [추가] 토스트 팝업 디자인 */
+.toast-item {
+    background: rgba(30, 30, 32, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    padding: 10px 18px;
+    border-radius: 18px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: toast-animation 3s ease forwards; /* 3초 후 자동 소멸 */
+    pointer-events: none;
+}
+
+.toast-item i { font-size: 0.9rem; }
+.toast-item.success i { color: #32d74b; } /* 성공 시 초록 아이콘 */
+
+@keyframes toast-animation {
+    0% { opacity: 0; transform: translateY(20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
+}
+
+/* [추가] 핀 버튼 활성화 상태 스타일 */
+#pin-btn.active {
+    background: var(--ios-blue) !important;
+    color: white !important;
+    box-shadow: var(--shadow-blue);
+}
+
+/* 기존 win-btn 스타일 유지 */
+.win-btn {
+    transition: all 0.2s ease;
+}
+
+/* [교정] style.css - 잠긴 슬롯 스타일 */
+.char-slot.locked {
+    cursor: default !important; /* 클릭 불가 표시 */
+    opacity: 0.8;
+}
+
+.char-slot.locked:hover {
+    transform: none !important; /* 마우스를 올려도 움직이지 않음 */
+    background: rgba(255, 255, 255, 0.08) !important; /* 배경색 변화 차단 */
+}
+
+/* 해금되거나 부화 중인 슬롯에만 포인터 커서 적용 */
+.char-slot.unlocked, .char-slot.hatching {
+    cursor: pointer;
+}
+
+/* [추가] 공용 툴팁 스타일 */
+@keyframes tooltip-fade {
+    from { 
+        opacity: 0; 
+        /* 가로 중앙(-50%)은 유지하면서 위(-5px)에서 아래로 등장 */
+        transform: translateX(-50%) translateY(-5px); 
+    }
+    to { 
+        opacity: 1; 
+        /* 가로 중앙(-50%)을 명시적으로 유지 */
+        transform: translateX(-50%) translateY(0); 
+    }
+}
+
+/* [style.css] 툴팁 배경 이미지 제거 및 시인성 보강 */
+#common-tooltip {
+    position: fixed;
+    display: none;
+    pointer-events: none;
+    z-index: 1000000;
+    
+    /* [수정] var(--glass-bg) 대신 고정된 반투명 배경색 사용 */
+    background: rgba(15, 15, 17, 0.9) !important; 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    /* 테두리 포인트 추가 */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 8px 14px;
+    border-radius: 8px;
+    
+    /* 텍스트 스타일 */
+    color: #ffffff !important;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: pre-wrap !important; /* \n 줄바꿈 허용 */
+    line-height: 1.5;
+    text-align: center;
+    max-width: 220px;
+    word-break: keep-all;
+    
+    /* 그림자 및 애니메이션 */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    transform: translateX(-50%);
+    animation: tooltip-fade 0.2s ease forwards;
+}
+
+/* [최종] 투두 아이템: 드래그 기능 보장 스타일 */
+.todo-item {
+    -webkit-app-region: no-drag !important; /* 창 드래그 기능 차단 */
+    cursor: grab !important;               /* 마우스 올리면 손바닥 모양 */
+    user-select: none !important;          /* 드래그 시 텍스트 선택 방지 */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 6px !important;
+    border: var(--glass-border);
+    border-radius: 14px !important;
+    margin-bottom: 8px;
+}
+.todo-item:active { cursor: grabbing !important; }
+
+/* [수정] 드롭 타겟 하이라이트: 너비 확장 대신 안쪽으로 강조 */
+.todo-item.drag-over {
+    border: 2px solid var(--ios-blue) !important;
+    background: rgba(10, 132, 255, 0.1) !important;
+    /* ★ scale을 1.01로 줄이거나 제거하여 가로 침범 최소화 */
+    transform: scale(1.01); 
+    box-shadow: inset 0 0 10px rgba(10, 132, 255, 0.2); 
+    transition: all 0.2s ease;
+}
+
+/* [추가] 가로 모드일 때의 오른쪽 리스트 영역 가로 스크롤 방지 */
+#app.horizontal-mode #controls.right-side {
+    overflow-x: hidden !important; /* */
+}
+
+/* 드래그 중인 원본 아이템 스타일 강화 */
+.todo-item.dragging {
+    opacity: 0.2 !important; /* 더 투명하게 하여 위치 선별을 돕습니다 */
+    border: 1px dashed var(--text-secondary) !important;
+}
+
+/* 기본 라디오 원형 숨기기 */
+.pretty-radio input[type="radio"] {
+    display: none;
+}
+
+.pretty-radio-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.pretty-radio {
+    flex: 1;
+    cursor: pointer;
+}
+
+.radio-content {
+    /* background: rgba(255, 255, 255, 0.05); */
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 12px;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+}
+
+.radio-content i {
+    font-size: 1.2rem;
+}
+
+.radio-content span {
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* 마우스 호버 시 */
+.pretty-radio:hover .radio-content {
+    background: var(--glass-surface-light);
+    color: var(--text-primary);
+}
+
+/* ★ 체크되었을 때 (아이콘과 보더 파란색 강조) ★ */
+.pretty-radio input[type="radio"]:checked + .radio-content {
+    border: 2px solid var(--ios-blue) !important;
+    color: var(--ios-blue) !important;
+    background-color: var(--shadow-blue) !important;
+    box-shadow: 0 0 15px var(--shadow-blue) !important;
+}
+
+/* [추가] style.css 하단부 */
+
+/* 오뚜기처럼 기우뚱거리는 키프레임 정의 */
+@keyframes egg-wobble {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-4deg); } /* 왼쪽으로 살짝 */
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(4deg); }  /* 오른쪽으로 살짝 */
+    100% { transform: rotate(0deg); }
+}
+
+/* 알 상태일 때 적용될 애니메이션 클래스 */
+.egg-hatching-anim {
+    /* 회전 축을 이미지 하단 중앙으로 설정 (오뚜기 효과 핵심) */
+    transform-origin: bottom center;
+    /* 2초 동안 부드럽게(ease-in-out) 무한 반복 */
+    animation: egg-wobble 2s ease-in-out infinite;
+    /* 렌더링 최적화 */
+    will-change: transform;
+}
+
+/* 부화 직전 알이 강하게 흔들리는 효과 */
+@keyframes egg-shake-hard {
+    0%, 100% { transform: scale(2.2) rotate(0); }
+    25% { transform: scale(2.2) rotate(-10deg); }
+    75% { transform: scale(2.2) rotate(10deg); }
+}
+
+.egg-focus-bounce {
+    animation: egg-shake-hard 0.2s infinite !important; /* 아주 빠르게 흔들림 */
+}
+
+/* 화이트 플래시 레이어 */
+.hatch-flash-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: white;
+    opacity: 0;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.flash-trigger {
+    animation: flash-active 0.8s ease-out;
+}
+
+@keyframes flash-active {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.pref-hint-item.locked {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px dashed rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.2) !important;
+    opacity: 0.6;
+}
+
+.pref-hint-item.locked i {
+    font-size: 0.8rem;
+}
+
+/* [style.css] 상점 아이템 슬롯 스타일 개선 */
+
+/* 1. 슬롯 전체 레이아웃: Flexbox 적용 */
+.shop-item-grid .item-slot {
+    display: flex;             /* 가로 배치 시작 */
+    align-items: center;       /* 수직 중앙 정렬 (핵심!) */
+    justify-content: flex-start; 
+    gap: 12px;                 /* 아이콘-이름-가격 사이 간격 확보 (핵심!) */
+    
+    /* 기존 스타일 유지 */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 16px;        /* 내부 여백을 좀 더 시원하게 */
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* 2. 아이콘 컨테이너: 크기 고정 및 중앙 정렬 */
+.item-slot .item-icon {
+    /* 아이콘을 담는 그릇의 크기를 고정합니다. */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* 공간이 부족해도 찌그러지지 않게 */
+}
+
+/* 3. 실제 Font Awesome 아이콘 스타일 */
+.item-slot .item-icon i {
+    font-size: 1.1rem; /* 요청하신 대로 크기는 아담하게 */
+    color: var(--primary-gold);   /* 금색으로 포인트 (원하는 색으로 변경 가능) */
+}
+
+/* 4. 아이템 이름: 남은 공간 차지하기 */
+.item-slot .item-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    flex-grow: 1; /* 이름이 중간 공간을 모두 차지하여 가격을 오른쪽으로 밉니다 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 5. 가격 표시 영역: 오른쪽 고정 */
+.item-slot .item-price {
+    font-size: 0.75rem !important;
+    display: flex;
+    align-items: baseline; /* 숫자와 단위의 밑줄 맞춤 */
+    flex-shrink: 0;
+    font-weight: bold;
+}
+
+/* style.css 하단에 추가 또는 수정 */
+
+/* 도감 내 힌트 아이템 기본 스타일 */
+.pref-hint-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+/* ★ 핵심: 내부 아이콘(i) 스타일 ★ */
+.pref-hint-item i {
+    font-size: 1rem !important; /* 요청하신 대로 약간 작게 설정 */
+    color: var(--text-secondary); /* 기본은 차분한 회색 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 선호하는 선물일 때 (핑크 강조) */
+.pref-hint-item.favorite {
+    border: 2px solid var(--primary-gold);
+    border-color: rgba(255, 191, 108, 0.4) !important;
+    background: rgba(255, 108, 142, 0.1) !important;
+}
+.pref-hint-item.favorite i {
+    color: var(--primary-gold) !important; /* 아이콘을 핑크색으로 */
+}
+
+/* 싫어하는 선물일 때 (회색 처리) */
+.pref-hint-item.dislike {
+    opacity: 0.5;
+}
+.pref-hint-item.dislike i {
+    color: var(--ios-gray) !important;
+}
+
+/* 아직 주지 않은 선물 (물음표) */
+.pref-hint-item.locked i {
+    font-size: 0.8rem !important;
+    opacity: 0.3;
+}
+
+/* 1. 공통 애니메이션 정의 */
+@keyframes status-gradient-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 2. [집중 중] - 따뜻하고 은은한 오렌지/핑크 (6초, 천천히) */
+/* #status-badge.working {
+    background: linear-gradient(-45deg, #FF8C42, #FF5E7E, #F2709C, #FF8C42);
+    background-size: 300% 300%;
+    animation: status-gradient-flow 6s ease infinite;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 10px rgba(255, 94, 126, 0.3);
+} */
+
+#status-badge.working {
+    background: linear-gradient(-45deg, #ffb24c, #be8e57, #e6b980, #cea469);
+    background-size: 300% 300%;
+    animation: status-gradient-flow 6s ease infinite;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 10px rgba(255, 185, 94, 0.3);
+}
+
+/* 3. [몰입의 정점] - 강렬한 시안/블루 네온 (1.5초, 빠르게 + 광채) */
+#status-badge.working.flow-state {
+    /* 아티스트님이 좋아하신 시안(Cyan) 기반 전용 그라데이션 */
+    background: linear-gradient(-45deg, #FF8C42, #FF5E7E, #F2709C, #FF8C42);
+    background-size: 300% 300% !important;
+    animation: status-gradient-flow 6s ease infinite;
+    color: #ffffff;
+    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 0 20px rgba(255, 63, 127, 0.2), 0 0 20px rgba(0, 210, 255, 0.2) !important;
+}
+
+/* [수정] style.css - 초기 로딩 시 이동 애니메이션 제거 */
+#character-container {
+    position: absolute;
+    /* transition: all 0.3s ease;  <-- 이 부분이 있다면 삭제하거나 위치(top, left)는 제외하세요! */
+    transition: opacity 0.3s ease; /* 위치 이동이 아닌 투명도 변화만 허용 */
+    
+    /* 처음에는 보이지 않게 설정하여 '점프' 현상을 감춥니다. */
+    opacity: 0; 
+}
+
+/* 로딩이 완료된 후 붙여줄 클래스 */
+.ready #character-container {
+    opacity: 1;
+}
+
+/* 초기 위치 잡는 동안 숨기기 */
+#character-container {
+    opacity: 0;
+    transition: opacity 0.4s ease; /* 위치(top, left)에는 transition을 주지 마세요! */
+}
+
+/* 준비 완료 시 표시 */
+.ready #character-container {
+    opacity: 1;
+}
+
+/* [진화 연출] style.css 추가분 */
+
+/* 1. 섬광 오버레이 설정 (HTML에 이미 있는 #hatch-flash 활용) */
+#hatch-flash {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    z-index: 10000; /* 최상단 배치 */
+    pointer-events: none;
+}
+
+/* 2. 진화 중 떨림 및 발광 애니메이션 */
+@keyframes evolve-vibration {
+    0% { transform: scale(1); filter: brightness(1) blur(0px); }
+    10% { transform: scale(1.05) translate(-2px, 2px); filter: brightness(1.5); }
+    30% { transform: scale(1.1) translate(2px, -2px); filter: brightness(2); }
+    50% { transform: scale(1.15) translate(-3px, 1px); filter: brightness(3); }
+    70% { transform: scale(1.2) translate(3px, -1px); filter: brightness(5); }
+    90% { transform: scale(1.3) translate(0, 0); filter: brightness(8); }
+    100% { transform: scale(1.4); filter: brightness(15) blur(2px); }
+}
+
+/* 3. 진화 완료 후 부드러운 등장 애니메이션 */
+@keyframes evolved-appearance {
+    0% { opacity: 0; transform: scale(0.7) translateY(20px); filter: brightness(3); }
+    100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1); }
+}
+
+/* 클래스 적용 */
+.evolving-act {
+    animation: evolve-vibration 2.5s ease-in forwards !important;
+}
+
+.evolved-new {
+    animation: evolved-appearance 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* [style.css] 2열 그리드 상점 디자인 */
+
+/* 1. 그리드를 2열로 변경 */
+#shop-item-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important; /* 한 줄에 2개씩 배치 */
+    gap: 6px;
+    padding: 1em;
+}
+
+/* 2. 아이템 슬롯: 수직 배치로 변경 */
+.item-slot {
+    display: flex !important;
+    flex-direction: column !important; /* 위에서 아래로 배치 */
+    align-items: center !important;
+    text-align: center !important;
+    padding: 20px 12px !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 20px !important;
+    min-height: 220px; /* 높이를 일정하게 유지 */
+}
+
+/* 3. 아이콘 박스 */
+.item-icon-circle {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    color: var(--primary-gold) !important;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+}
+
+/* 4. 정보 영역 */
+.item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.item-name {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+}
+
+/* 5. 설명 스타일: 2줄까지만 허용하고 말줄임 처리 */
+.item-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    word-break: keep-all;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; 
+    overflow: hidden;
+    height: 4em; /* 2줄 분량의 높이 고정으로 카드 정렬 유지 */
+}
+
+/* 6. 가격 표시: 하단 고정 */
+.item-price {
+    margin-top: auto; /* 설명 길이와 상관없이 항상 맨 아래로 */
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.price-val {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffd700;
+}
+
+.et-symbol {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--ios-blue);
+}
+
+/* =========================================
+   [style.css] 초정밀 에테르 글래스 버튼 리디자인
+   ========================================= */
+
+.control-group.game .action-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 4px !important;
+    margin-bottom: 10px;
+}
+
+.control-group.game .action-row img {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;      /* 크롬, 엣지, 최신 브라우저 */
+    image-rendering: -moz-crisp-edges; /* 파이어폭스 */
+    image-rendering: crisp-edges;    /* 사파리 및 기타 */
+    object-fit: contain;
+}
+
+.control-group.game .btn {
+    width: 100% !important;
+    height: 52px !important;
+}
+.control-group.focus .btn {
+    width: 100% !important;
+    height: 52px !important;
+}
+
+@media screen and (max-width: 360px) {
+    .control-group.game .action-row {
+        grid-template-columns: repeat(6, 1fr) !important;
+    }
+    .control-group.game .action-row button span {
+        display: none;
+    }
+}
+
+/* 5. 호버 인터랙션: 에테르 에너지가 활성화되는 연출 */
+.control-group.game .btn:hover {
+    transform: translateY(-2px) !important;
+}
+
+/* [style.css] 플랫하지만 깊이 있는 에테르 게이지 */
+/* 1. 게이지 바닥(까만 라인): 배경을 투명하게 블러 처리 */
+.progress-container {
+    height: 10px !important;
+    /* [핵심] 까만색에 투명도를 주고 블러를 걸어 배경이 비치게 합니다. */
+    background: rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    margin: 14px 0 0;
+}
+
+/* 2. 게이지 본체: 플랫하지만 깊이 있는 그라데이션 */
+#exp-bar {
+    height: 100% !important;
+    /* 이미지 `image_a4912c.png`에서 추출한 앰버-브론즈 배색 */
+    background: linear-gradient(
+        to right, 
+        #8b5e34 0%, 
+        #e5b07a 100%
+    ) !important;
+    
+    border-radius: 20px !important;
+    /* 플랫한 느낌을 위해 입체적 하이라이트와 애니메이션은 제거 */
+    box-shadow: 0 0 10px rgba(229, 176, 122, 0.2) !important;
+    
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 불필요한 장식 요소 완전 제거 */
+#exp-bar::after {
+    display: none !important;
+}
+
+/* [style.css] 상단바 요소별 시각적 수직 정렬 오버라이드 */
+header {
+    display: flex !important;
+    align-items: center !important; 
+    height: 50px !important;
+    gap: 16px !important;
+}
+
+.header-left {
+    display: flex !important;
+    align-items: center !important; /* 전체적인 큰 틀은 중앙에 둡니다 */
+}
+
+/* 1. "Ether Flow" 타이틀 */
+.header-left h2 {
+    font-size: 1.7em !important;
+    line-height: 1 !important;
+}
+
+/* 2. "1,031 Et" 수치 정렬 (이미지에서 너무 높음) */
+#work-points {
+    font-size: 1rem !important;
+    line-height: 1 !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    /* ★ 핵심: 너무 높이 떠 있는 글자를 아래로 3~4px 강제 이동시킵니다 */
+    transform: translateY(3.5px) !important; 
+}
+
+/* 3. "집중 중" 배지 정렬 (이미지에서 너무 낮음) */
+#status-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 26px !important;
+    line-height: 1 !important;
+    padding: 0 12px !important;
+    font-size: 0.8rem !important;
+    font-weight: 800 !important;
+    /* ★ 핵심: 너무 내려가 있는 배지를 위로 1~2px 강제 이동시킵니다 */
+    transform: translateY(-1.5px) !important; 
+}
+
+/* 배지 내부 아이콘도 묘하게 안 맞다면 미세 조정 */
+#status-badge i {
+    margin-right: 4px !important;
+    transform: translateY(-0.5px) !important;
+}
+
+header .header-right {
+  margin-top: 6px;
+}
+
+/* [style.css] 도감 상세 설명 섹션 스타일 */
+.detail-desc-section {
+    background: var(--glass-surface-light);
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid var(--glass-border); /* 기존 테두리 규격 준수 */
+}
+
+.detail-desc-section label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary-gold); /* 에테르 골드 포인트 컬러 */
+    margin-bottom: 8px;
+    opacity: 0.8;
+}
+
+#detail-char-desc {
+    font-size: 0.85rem;
+    line-height: 1.6; /* 가독성을 위한 행간 확보 */
+    color: var(--text-primary);
+    word-break: keep-all; /* 한글 단어 단위 줄바꿈 */
+    white-space: pre-wrap; /* 줄바꿈 기호 적용 */
+}
+
+/* [style.css] 인트로 시퀀스 전용 스타일 */
+#intro-sequence {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    font-family: 'Galmuri11' !important;
+    background: radial-gradient(circle, #2c2c2e 0%, #1c1c1e 100%);
+    z-index: 500000; display: none; align-items: center; justify-content: center;
+    overflow: hidden; border-radius: 2em;
+    -webkit-app-region: no-drag !important;
+}
+#intro-sequence button,
+#intro-sequence .sphere,
+#intro-sequence .letter-paper,
+#intro-sequence .seal-wax {
+    -webkit-app-region: no-drag !important;
+    cursor: pointer !important;
+}
+
+.intro-step { display: none; flex-direction: column; align-items: center; width: 100%; }
+
+/* 1단계: 봉투 및 인장 */
+.envelope-body {
+    width: 300px; height: 200px; background: url(./assets/bg/envelope.jpg); border-radius: 4px;
+    position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); cursor: pointer;
+}
+.seal-wax {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 60px; height: 60px; background: url(./assets/bg/seal-wax.png);
+    display: flex; align-items: center; justify-content: center;
+}
+.seal-wax.vibrate { animation: seal-shake 0.1s infinite; }
+#ritual-envelope .click-guide {margin-top: 1em;}
+
+/* 2단계: 잉크 번짐 효과 */
+.letter-paper {
+    width: 85%; max-width: 450px; padding: 40px; 
+    color: #2c2c2e !important;
+    position: relative; word-break: break-word;
+}
+.letter-line { opacity: 0; margin-bottom: 15px; line-height: 1.6; }
+.letter-line.ink-bleed { animation: inkFade 1.5s forwards; }
+#letter-click-prompt {color: #2c2c2e !important; text-align: right; margin-top: 2em;}
+
+/* [style.css] 인트로 2단계 연출 수정 */
+
+.intro-step.active { 
+    display: flex;
+}
+/* 편지지는 단계가 활성화되자마자 100% 농도로 표시 */
+.letter-paper {
+    width: 85%; 
+    max-width: 450px;
+    height: 640px;
+    padding: 40px; 
+    background: url(./assets/bg/letter-paper.png);
+    color: #2c2c2e !important;
+    border-radius: 4px;
+    opacity: 1 !important; /* 즉시 나타남 */
+    transform: none !important;
+}
+
+/* 글씨는 처음에 투명했다가 잉크가 번지듯 나타남 */
+.letter-line { 
+    opacity: 0; 
+    margin-bottom: 18px; 
+    line-height: 1.7; 
+    font-weight: 600;
+    color: #2c2c2e !important;
+    filter: blur(5px); /* 처음에 흐릿하게 시작 */
+    transition: filter 1.5s ease;
+}
+
+/* 잉크가 번지는 듯한 애니메이션 */
+@keyframes inkFade { 
+    0% { 
+        opacity: 0; 
+        filter: blur(8px); 
+        transform: translateY(2px);
+    } 
+    100% { 
+        opacity: 1; 
+        filter: blur(0px); 
+        transform: translateY(0);
+    } 
+}
+
+.letter-line.ink-bleed { 
+    animation: inkFade 1.8s ease-out forwards; /* 번짐 효과 지속 시간 */
+}
+
+/* 3단계: 빛의 구체 */
+.sphere {
+    width: 120px; height: 120px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--gold-light), var(--primary-gold));
+    filter: blur(2px); box-shadow: 0 0 30px var(--gold-glow);
+    cursor: pointer; transition: all 0.5s var(--anim-ease);
+}
+.sphere:hover { transform: scale(1.2); filter: blur(0px); box-shadow: 0 0 50px var(--primary-gold); }
+
+@keyframes seal-shake { 0% { transform: translate(-52%, -50%); } 100% { transform: translate(-48%, -50%); } }
+@keyframes inkFade { from { opacity: 0; filter: blur(5px); } to { opacity: 1; filter: blur(0px); } }
+
+/* [style.css] 공명 단계 상세 스타일 */
+#sphere-container {
+    display: flex;
+    gap: 25px;
+    margin-top: 40px;
+    justify-content: center;
+    z-index: 10;
+}
+
+/* 신비로운 에테르 구체 연출 */
+.sphere {
+    width: 100px; height: 100px; /* 크기 확장 */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 투명한 외곽 영역을 두어 마우스 인식 범위 확장 */
+    border: 20px solid transparent; 
+    background-clip: padding-box; 
+    filter: blur(0.5px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.sphere:hover {
+    transform: scale(1.2);
+    filter: brightness(1.3);
+    box-shadow: 0 0 50px var(--primary-gold);
+}
+
+/* 알 실루엣 크기 조정 */
+.egg-preview-silhouette {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: contain;
+}
+
+/* 추신(P.S.) 설명창 */
+#ps-description {
+    margin-top: 40px;
+    width: 80%;
+    max-width: 400px;
+    min-height: 80px;
+    color: var(--gold-light);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    word-break: keep-all;
+}
+
+#ps-description.active { opacity: 1; }
+
+.ps-label {
+    font-weight: 800;
+    color: var(--primary-gold);
+    margin-right: 8px;
+    font-style: italic;
+}
+
+/* 알 이미지 초기 상태: 검은 실루엣 + 블러 */
+.egg-preview-silhouette {
+    width: 100%;
+    height: auto;
+    filter: brightness(0) blur(4px); /* 실루엣 처리 */
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform: scale(1);
+}
+
+/* 호버 시 알의 본래 모습이 드러남 */
+.egg-preview-silhouette.reveal {
+    filter: brightness(1) blur(0px) drop-shadow(0 0 10px var(--primary-gold));
+    transform: scale(1.1);
+}
+
+/* 구체 하단 안내 문구 */
+.resonance-guide {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px var(--gold-glow);
+}
+
+/* 신비로운 에테르 구체(알) 스타일 보강 */
+.sphere {
+    width: 100px; 
+    height: 100px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 20px solid transparent; 
+    background-clip: padding-box; 
+    filter: blur(0.5px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10;
+    /* 클릭이 되는 영역임을 시각적으로 표시 */
+    cursor: pointer !important;
+}
+
+/* 알 선택 최종 확인 모달도 클릭 가능하게 설정 */
+#intro-confirm-modal {
+    -webkit-app-region: no-drag !important;
+}
+#intro-confirm-modal .modal-window {
+    -webkit-app-region: no-drag !important;
+    pointer-events: auto !important;
+}
+
+/* [style.css] 편지함 알림 뱃지 스타일 */
+#mail-badge {
+    position: absolute;
+    top: -5px;           /* 버튼 상단으로 살짝 튀어나오게 설정 */
+    right: -5px;         /* 버튼 우측으로 살짝 튀어나오게 설정 */
+    background: #FF453A; /* iOS 스타일의 선명한 레드 */
+    color: white;
+    font-size: 0.65rem;
+    padding: 0.2em 0.6em;
+    border-radius: 1em;
+    display: none; /* 기본은 숨김 상태로 둡니다. */
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* [style.css] 목록 비어있음 메시지 스타일 */
+.empty-list-msg {
+    width: 100%;
+    padding: 1em 0 2em 0;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-secondary) !important; /* 은은한 회색 */
+    font-style: italic;
+    list-style: none;
+}
+
+
+/* [style.css] 도감 상세페이지용 파트너 태그 */
+.current-partner-tag {
+    width: 100%;
+    padding: 12px;
+    background: rgba(189, 143, 98, 0.1); /* 금색 반투명 배경 */
+    color: #bd8f62; /* 금색 텍스트 */
+    border: 1px solid rgba(189, 143, 98, 0.4);
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    cursor: default;
+}
+
+/* [style.css] 인라인 편집용 투명 인풋 스타일 */
+.inline-edit-input {
+    background: transparent !important; /* 배경 투명 */
+    border: none !important;           /* 테두리 제거 */
+    border-bottom: 1px dashed rgba(189, 143, 98, 0.5) !important; /* 위치만 알 수 있게 밑줄 */
+    color: inherit;                    /* 기존 텍스트 색상 상속 */
+    font-family: inherit;              /* 기존 폰트 상속 */
+    font-size: 1rem;
+    width: 100%;
+    outline: none;                     /* 포커스 테두리 제거 */
+    padding: 0;
+    margin: 0;
+}
+
+.todo-text {
+    flex: 1;
+    min-width: 0;
+    margin-right: 10px;
+}
+
+/* [style.css] 할 일 리스트 아이템 정렬 */
+.todo-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    margin: 1.5em 0;
+    transition: all 0.2s;
+}
+
+/* ★ 버튼 그룹 정렬 */
+.todo-actions {
+    display: flex;
+    gap: 4px; /* 버튼 사이 간격 */
+    margin-left: auto; /* 오른쪽 끝으로 밀기 */
+}
+
+/* ★ 쓰레기통과 동일한 공통 버튼 스타일 */
+.btn-todo-action {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px; /* 둥근 사각형 */
+    color: var(--glass-border) !important; /* 아이콘 색상 */
+    background: transparent !important;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-trash:hover {
+    color: #ff453a; /* 삭제 버튼은 호버 시 빨간색 */
+}
+
+/* 인라인 입력창 스타일 보정 (나란히 정렬 유지) */
+.inline-edit-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed var(--glass-border);
+    color: var(--text-primary);
+    font-size: 0.75rem !important;
+    outline: none;
+    padding: 0;
+}
+
+/* [style.css] 서신함 무한 스크롤 로딩 표시 */
+.mail-load-more {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.8rem;
+    color: var(--primary-gold);
+    opacity: 0.6;
+    font-style: italic;
+    letter-spacing: 0.05em;
+}
+
+/* 스크롤바가 생기도록 컨테이너 높이 확인 */
+.mail-list-container {
+    max-height: 450px; /* 적절한 높이 설정 */
+    overflow-y: auto;
+}
+
+/* [style.css] 토글 활성화 시 시각 효과 */
+
+/* 1. 부모에 active가 붙으면 배경색 변경 */
+.window-mode-toggle.active .switch-base {
+    background: var(--ios-blue) !important;
+}
+
+/* 2. 부모에 active가 붙으면 원형 버튼 이동 */
+.window-mode-toggle.active .switch-circle {
+    transform: translateX(20px) !important;
+}
+
+/* [style.css] 레벨업 시각 효과 추가 */
+
+/* 1. 레벨 배지 강조 애니메이션 */
+@keyframes level-up-shine {
+    0% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.5); filter: brightness(2) drop-shadow(0 0 15px var(--primary-gold)); }
+    100% { transform: scale(1); filter: brightness(1); }
+}
+
+.level-up-active {
+    animation: level-up-shine 1s ease-in-out;
+    z-index: 100;
+}
+
+/* 2. 화면 전체 찰나의 섬광 효과 (선택 사항) */
+.screen-flash {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999999;
+    transition: opacity 0.1s;
+}
+
+.screen-flash.active {
+    opacity: 0.2;
+}
+
+/* [style.css] 셀렉트 박스 커스텀 디자인 */
+
+.pretty-select-container {
+    position: relative;
+    width: 100%;
+}
+
+.pretty-select {
+    appearance: none; /* 브라우저 기본 화살표 제거 */
+    -webkit-appearance: none;
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.pretty-select:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--ios-blue);
+}
+
+/* ★ 핵심: 드롭다운 옵션 목록의 배경색 및 글자색 고정 ★ */
+.pretty-select option {
+    background-color: #2c2c2e; /* iOS 다크모드 배경색과 유사한 진한 회색 */
+    color: #ffffff;
+    padding: 10px;
+}
+
+/* 커스텀 화살표 아이콘 */
+.select-arrow {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ios-blue);
+    font-size: 0.8rem;
+    pointer-events: none; /* 아이콘이 클릭을 방해하지 않도록 설정 */
+}
+
+.setting-hint {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    padding-left: 4px;
+    opacity: 0.6;
+}
+
+/* [style.css] 드래그 조작감 개선 스타일 */
+
+/* 1. 드래그 중인 원본 항목: 반투명해지며 존재감 약화 */
+.todo-item.dragging {
+    opacity: 0.3 !important;
+    border: 1px dashed var(--ios-blue) !important;
+    background: rgba(10, 132, 255, 0.05) !important;
+    transform: scale(0.98);
+}
+
+/* 2. 마우스가 올라간(드롭될) 위치: 쫀득한 강조 효과 */
+.todo-item.drag-over {
+    border: 2px solid var(--ios-blue) !important;
+    background: rgba(10, 132, 255, 0.15) !important;
+    transform: scale(1.02); /* 살짝 커지며 '여기에 놓으세요'라고 알림 */
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.2);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 3. 드래그 시 아이템이 밀려나는 느낌을 위한 트랜지션 */
+.todo-item {
+    transition: transform 0.2s ease, background 0.2s ease, border 0.2s ease !important;
+}
+
+/* style.css 하단 추가 또는 기존 내용 수정 */
+
+/* 1. 라벨과 뱃지를 묶어주는 그룹 설정 */
+.accordion-title-group {
+    display: flex;
+    align-items: center; /* 수직 중앙 정렬 */
+    gap: 8px;           /* 이름과 숫자 사이의 간격 */
+}
+
+/* 2. 뱃지 스타일 보정 */
+.count-badge {
+    font-size: 0.65rem;
+    color: var(--text-secondary) !important; /* 평소에는 은은한 회색 */
+    background: var(--glass-surface-light); /* 미세한 배경 추가로 가독성 확보 */
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 800;
+    transition: all 0.3s ease;
+    /* 기존에 있던 margin-left는 gap으로 대체되었으므로 삭제해도 무방합니다. */
+}
+
+/* 3. 모두 완료했을 때 (All-Completed) 연출 강화 */
+.count-badge.all-completed {
+    color: #ffffff !important;
+    background: var(--ios-blue); /* 푸른색으로 완료 강조 */
+    box-shadow: var(--shadow-blue);
+    text-shadow: none;
+}
+
+/* 아코디언 헤더 전체 정렬 유지 확인 */
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 6px;
+}
+
+/* [style.css] 서신 보상 영역 및 버튼 디자인 */
+/* === ✉️ 서신함(Mailbox) 시스템: 에디션 === */
+
+/* [1] 서신 목록: 극도의 단정함 (Neat List) */
+.mail-list-container {
+    padding: 1em;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.mail-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    margin-bottom: 8px;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 15px;
+}
+
+.mail-item:hover {
+    background: rgba(189, 143, 98, 0.08); /* 금색 한 방울 섞인 호버 */
+    border-color: var(--primary-gold);
+    transform: translateX(4px);
+}
+
+/* 읽지 않은 상태: 아주 절제된 강조 */
+.mail-item.unread {
+    background: rgba(189, 143, 98, 0.05);
+    border-left: 3px solid var(--primary-gold);
+}
+
+.mail-item.unread .mail-title {
+    color: var(--primary-gold) !important;
+    font-weight: 700;
+}
+
+/* 리스트 내 텍스트 정돈 */
+.mail-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.mail-title {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    margin-bottom: 2px;
+}
+
+.mail-sender {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+/* [2] 서신 상세보기: 화려하고 품격 있는 연출 (Exquisite Detail) */
+.letter-paper-wrap {
+    width: 95%;
+    max-width: 480px;
+    perspective: 1000px;
+}
+
+.letter-paper {
+    background: #fdfcf0 !important; /* 최고급 수입지 색상 */
+    color: #2c221a !important;
+    padding: 40px 35px;
+    border-radius: 2px;
+    position: relative;
+    box-shadow: 
+        0 0 0 8px #fdfcf0,
+        0 0 0 10px #8c6d51,
+        0 20px 50px rgba(0,0,0,0.5);
+    /* 종이 질감 미세 효과 */
+    background-image: radial-gradient(#efede0 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* 상단 문양 장식 */
+.letter-paper::before {
+    content: "◈";
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #8c6d51;
+    font-size: 1.2rem;
+    opacity: 0.5;
+}
+
+.letter-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px double rgba(140, 109, 81, 0.3);
+    padding-bottom: 20px;
+}
+
+#letter-detail-title {
+    font-family: 'serif';
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #3e2b1d !important;
+    margin-bottom: 5px;
+}
+
+#letter-detail-sender {
+    font-size: 0.85rem;
+    color: #8c6d51 !important;
+    letter-spacing: 1px;
+}
+
+/* 본문: 긴 내용을 고려한 스크롤 및 가독성 */
+#letter-view-content {
+    font-family: 'serif';
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: #4a3b2e !important;
+    max-height: 350px; /* 긴 내용 대응 */
+    overflow-y: auto;
+    padding-right: 10px;
+    word-break: keep-all;
+    white-space: pre-wrap;
+}
+
+/* 본문 전용 커스텀 스크롤바 */
+#letter-view-content::-webkit-scrollbar { width: 4px; }
+#letter-view-content::-webkit-scrollbar-thumb { background: #d4c19d; border-radius: 2px; }
+
+/* 보상 영역: 인장이 찍힌 듯한 디자인 */
+.mail-reward-box {
+    margin-top: 30px;
+    padding: 25px;
+    background: rgba(140, 109, 81, 0.05);
+    border: 1px dashed #8c6d51;
+    border-radius: 4px;
+    text-align: center;
+    position: relative;
+}
+
+.reward-label {
+    font-size: 0.75rem !important;
+    font-weight: 800;
+    color: #8c6d51 !important;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* 수령 버튼: 묵직한 가죽/금속 느낌 */
+.btn-claim-reward {
+    background: #3e2b1d !important;
+    color: #fdfcf0 !important;
+    border: none !important;
+    padding: 12px 35px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #2c221a;
+    transition: all 0.1s;
+}
+
+.btn-claim-reward:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #2c221a;
+}
+
+/* 하단 닫기 버튼 */
+.letter-footer {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.btn-letter-close {
+    background: transparent;
+    border: 1px solid rgba(140, 109, 81, 0.3);
+    color: #8c6d51 !important;
+    padding: 5px 20px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+.btn-letter-close:hover {
+    background: rgba(140, 109, 81, 0.1);
+}
+
+/* [style.css] 1. 인트로 클릭 차단 원천 해결 */
+#intro-sequence, #intro-sequence *, #intro-confirm-modal, #intro-confirm-modal * {
+    -webkit-app-region: no-drag !important; /* 윈도우 드래그 차단 (클릭 허용) */
+    pointer-events: auto !important; /* 마우스 이벤트 강제 활성화 */
+}
+
+/* 아이템 슬롯 버튼 (스타듀밸리 인벤토리 칸) */
+.btn-claim-reward {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; width: 100%; padding: 12px; cursor: pointer;
+    background: #e0d2b4 !important; /* 슬롯 내부색 */
+    border: 3px solid #a68d7a !important;
+    border-radius: 6px;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2); /* 파인 느낌 */
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 아이콘 및 텍스트 */
+.btn-claim-reward i {
+    font-size: 1.5rem !important;
+    color: #bd8f62 !important;
+    filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.5));
+}
+
+.btn-claim-reward:not(i) {
+    color: #3e2b1d !important;
+    font-weight: 700;
+}
+
+/* 호버 시 슬롯 광택 */
+.btn-claim-reward:hover {
+    background: #fff9ed !important;
+    border-color: #bd8f62 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2), inset 0 0 0 2px white;
+}
+
+/* [style.css] 인트로 클릭 가로채기 방지 */
+#intro-sequence, 
+#intro-sequence *, 
+.sphere, 
+.egg-preview-silhouette,
+#intro-confirm-modal, 
+#intro-confirm-modal * {
+    -webkit-app-region: no-drag !important; /* 윈도우 드래그 방지 */
+    pointer-events: auto !important;        /* 마우스 이벤트 강제 허용 */
+    cursor: pointer !important;             /* 커서 모양 강제 변경 */
+}
+
+/* 알(Sphere)의 클릭 반경을 확실히 보장 */
+.sphere {
+    z-index: 500001 !important;
+    position: relative;
+}
+
+/* [style.css] 모달 가림 방지 및 클릭 보장 */
+
+#intro-confirm-modal {
+    background: rgba(0, 0, 0, 0.85) !important; /* 배경을 더 어둡게 하여 확실히 구분 */
+    z-index: 999999 !important;
+    -webkit-app-region: no-drag !important;
+    pointer-events: auto !important;
+}
+
+#intro-confirm-modal .modal-window {
+    background: #1c1c1e !important;
+    border: 2px solid var(--primary-gold) !important;
+    box-shadow: 0 0 30px rgba(189, 143, 98, 0.5) !important;
+    -webkit-app-region: no-drag !important;
+    transform: translateZ(0); /* GPU 가속으로 최상단 렌더링 강제 */
+}
+
+/* 확인 버튼 클릭 안 됨 방지 */
+#intro-confirm-btn, .btn-modal-cancel {
+    -webkit-app-region: no-drag !important;
+    cursor: pointer !important;
+}
+
+/* [style.css] 서신 목록: 고정 높이 및 단일 행 정렬 */
+
+.mail-item {
+    display: flex;
+    align-items: center; /* 모든 요소를 수직 중앙 정렬 */
+    height: 64px;       /* ★ 모든 항목의 높이를 64px로 고정 */
+    padding: 0 18px;    /* 위아래 패딩 대신 높이로 제어 */
+    margin-bottom: 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 12px;
+}
+
+.mail-info {
+    flex: 1;
+    min-width: 0; /* 말줄임표 작동을 위한 필수 속성 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 텍스트를 수직 중앙에 배치 */
+}
+
+.mail-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    display: block;        /* 블록 요소로 변경 */
+    white-space: nowrap;   /* 줄바꿈 금지 */
+    overflow: hidden;      /* 넘치는 부분 숨김 */
+    text-overflow: ellipsis; /* 말줄임표(...) 표시 */
+}
+
+.mail-sender {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mail-date {
+    font-size: 0.62rem;
+    color: var(--text-secondary);
+    opacity: 0.4;
+    white-space: nowrap;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* === ✉️ 서신 상세보기 에디션 === */
+
+/* 1. 편지 봉투가 펼쳐지는 연출용 래퍼 */
+.mail-paper-wrap {
+    width: 95%;
+    max-width: 480px;
+    perspective: 1000px;
+    z-index: 100021; /* 영수증보다는 아래, 다른 모달보다는 위 */
+}
+
+/* 2. 최고급 양피지 본체 */
+.mail-paper {
+    background: #fdfcf0 !important; /* 바랜 종이의 미색 */
+    color: #2c221a !important; /* 잉크색 */
+    padding: 45px 35px 35px 35px;
+    border-radius: 4px;
+    position: relative;
+    /* 고풍스러운 이중 테두리 효과 */
+    box-shadow: 
+        0 0 0 8px #fdfcf0,
+        0 0 0 10px #8c6d51,
+        0 20px 60px rgba(0, 0, 0, 0.6);
+    /* 미세한 종이 결 질감 */
+    background-image: radial-gradient(#efede0 1px, transparent 1px);
+    background-size: 20px 20px;
+    animation: letter-unfold 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 상단 고딕 양식 문양 */
+.mail-paper::before {
+    content: "◈";
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #8c6d51;
+    font-size: 1.2rem;
+    opacity: 0.6;
+}
+
+/* 헤더: 제목 및 발신인 */
+.mail-paper .letter-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px double rgba(140, 109, 81, 0.3);
+    padding-bottom: 25px;
+}
+
+#letter-detail-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #3e2b1d !important;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+#letter-detail-sender {
+    font-size: 0.85rem;
+    color: #8c6d51 !important;
+    letter-spacing: 1px;
+    margin-top: 0.25em;
+}
+
+/* 본문: 내용이 길어질 때를 대비한 스크롤 및 가독성 */
+#letter-view-content {
+    font-family: 'serif';
+    font-size: 1em;
+    line-height: 1.9;
+    color: #4a3b2e !important;
+    max-height: 320px; /* 긴 내용 대응 */
+    overflow-y: auto;
+    padding-right: 12px;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+/* 본문용 전용 슬림 스크롤바 */
+#letter-view-content::-webkit-scrollbar { width: 4px; }
+#letter-view-content::-webkit-scrollbar-thumb { background: #d4c19d; border-radius: 2px; }
+
+/* 3. 보상 영역: 스타듀밸리 아이템 슬롯 스타일 */
+.mail-reward-box {
+    margin-top: 35px;
+    background: #f4e6c9 !important; /* 따뜻한 크림색 보드 */
+    border: 3px solid #6b533f !important; /* 도톰한 나무 테두리 */
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    box-shadow: 0 4px 0 #4a3b2e; /* 바닥 무게감 */
+    text-align: center;
+}
+
+.reward-label {
+    display: block;
+    font-size: 0.75rem !important;
+    font-weight: 800;
+    color: #8c6d51 !important;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+/* 수령 버튼: 스타듀밸리 인벤토리 칸 */
+.btn-claim-reward {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px;
+    cursor: pointer;
+    background: #e0d2b4 !important; /* 움푹 파인 칸 색상 */
+    border: 3px solid #a68d7a !important;
+    border-radius: 8px;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.15); /* 음각 효과 */
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-claim-reward i {
+    font-size: 1.5rem !important;
+    color: #bd8f62 !important;
+    filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.4));
+}
+
+.btn-claim-reward:not(i) {
+    color: #3e2b1d !important;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+/* 호버 시 슬롯이 밝아지며 튀어나옴 */
+.btn-claim-reward:hover {
+    background: #fff9ed !important;
+    border-color: #bd8f62 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15), inset 0 0 0 2px white;
+}
+
+/* 이미 수령한 상태 */
+.mail-reward-box.claimed {
+    background: #d4c19d !important;
+    opacity: 0.7;
+}
+.mail-reward-box.claimed .btn-claim-reward {
+    opacity: 0.3;
+    pointer-events: none;
+    border-style: dashed !important;
+}
+
+/* 하단 접어두기 버튼 */
+.letter-footer {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.btn-letter-close {
+    background: transparent;
+    border: 1px solid rgba(140, 109, 81, 0.2);
+    color: #8c6d51 !important;
+    padding: 6px 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-letter-close:hover {
+    background: rgba(140, 109, 81, 0.1);
+    color: #3e2b1d !important;
+}
+
+/* 펼쳐지는 애니메이션 */
+@keyframes letter-unfold {
+    from { transform: scaleY(0.5) translateY(20px); opacity: 0; }
+    to { transform: scaleY(1) translateY(0); opacity: 1; }
+}
+
+/* 1. 전체 배경: 어두운 연구실 분위기 */
+#intro-sequence {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at center, #2c221a 0%, #0a0a0a 100%);
+    z-index: 500000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    -webkit-app-region: no-drag !important;
+    border-radius: 1em !important;
+}
+
+/* 2. 봉인된 편지(Envelope) 디자인 */
+#ritual-envelope {
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.envelope-box {
+    width: 320px;
+    height: 200px;
+    background: #c19a6b;
+    border-radius: 4px;
+    position: relative;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.6s;
+}
+
+/* 왁스 실링(인장) */
+
+/* 3. 유산 편지(Legacy Letter) 스타일 */
+#legacy-letter .letter-paper {
+    background: #fdfcf0 !important;
+    padding: 50px 40px;
+    border-radius: 2px;
+    box-shadow: 
+        0 0 0 10px #fdfcf0,
+        0 0 0 12px #8c6d51,
+        0 30px 60px rgba(0,0,0,0.8);
+    max-width: 500px;
+}
+
+.intro-text-line {
+    font-family: 'serif';
+    font-size: 1.15rem;
+    line-height: 2;
+    color: #2c221a !important;
+    margin-bottom: 15px;
+    opacity: 0;
+    transition: opacity 1s;
+    text-align: center;
+}
+
+/* [style.css] 3단계: 공명 단계 (레이아웃 흔들림 방지) */
+
+#resonance-stage {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    /* ★ 전체 높이의 기준점을 잡아 상단 요소들이 밀리지 않게 함 */
+    min-height: 450px; 
+}
+
+#sphere-container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-bottom: 20px; /* 설명창과의 고정 간격 */
+    height: 180px; /* 알 목록의 높이 고정 */
+    align-items: flex-end;
+}
+
+/* 신비로운 에테르 구체 슬롯 (위치 고정) */
+.sphere {
+    width: 110px;
+    height: 140px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(189, 143, 98, 0.15);
+    border-radius: 55px 55px 10px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer !important;
+}
+
+/* 4. 하단 설명(P.S.) - 레이아웃 고정의 핵심 */
+#ps-description {
+    margin-top: 30px;
+    width: 80%;
+    max-width: 500px;
+    /* ★ 핵심: 설명의 길이에 상관없이 80px의 공간을 항상 차지함 */
+    height: 80px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    
+    color: #a68d7a;
+    font-style: italic;
+    font-size: 0.95rem;
+    text-align: center;
+    word-break: keep-all;
+    line-height: 1.6;
+
+    /* 애니메이션 준비 */
+    opacity: 0;
+    transform: translateY(10px); /* 살짝 아래에서 대기 */
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
+}
+
+/* 나타날 때 연출 */
+#ps-description.active {
+    opacity: 1;
+    transform: translateY(0); /* 제자리로 올라오며 등장 */
+}
+
+.ps-label {
+    font-weight: 800;
+    color: var(--primary-gold);
+    margin-bottom: 5px;
+    display: block;
+    letter-spacing: 2px;
+}
+
+/* === 🏆 업적/컬렉션 모달 스타일 (진열장 테마) === */
+
+#achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+}
+
+.achieve-slot {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    font-size: 1.4rem;
+}
+
+/* 🔒 비활성화 상태: 이미지(image_dabe2a.png)의 점선 물음표 구현 */
+.achieve-slot.locked {
+    border: 1.5px dashed var(--glass-border); /* 점선 테두리 */
+    color: rgba(255, 255, 255, 0.15) !important; /* 흐린 회색 물음표 */
+    cursor: default;
+    opacity: 0.5;
+}
+
+/* 🔓 해금 상태: 깔끔한 솔리드 테두리 */
+.achieve-slot.unlocked {
+    border: 1px solid var(--primary-gold);
+    color: #ffd700;
+}
+
+.achieve-slot.unlocked:hover {
+    background: rgba(189, 143, 98, 0.15);
+}
+
+/* ✨ [극강의 화려함] 슈퍼 노바 섬광 (White-Gold Flash) ✨ */
+.achieve-slot.new-earned {
+    z-index: 100 !important;
+}
+
+/* NEW 배지: 섬광에 묻히지 않게 더 강렬하게 */
+.ach-new-badge {
+    position: absolute;
+    top: -6px; right: -6px;
+    background: #ff453a;
+    color: white !important;
+    font-size: 0.55rem;
+    font-weight: 900;
+    padding: 2px 5px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(255, 69, 58, 0.8);
+    z-index: 110;
+}
+
+/* ============================================================
+   [🧪 심연의 연성소] 모달 스타일 - Deep Sediment Storage
+   ============================================================ */
+
+/* 1. 에테르 농도 게이지 구역 */
+.saturation-area {
+    background: var(--glass-surface-light);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.area-label {
+    font-size: 0.9rem;
+    color: #a1a1a6;
+    margin-bottom: 8px;
+}
+
+.area-label #sat-value {
+    color: var(--primary-gold);
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); /* 은은한 빛 번짐 추가 */
+    font-weight: 700;
+    margin-left: 0.5em;
+}
+
+#sat-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #E6C27B 0%, #C89D53 50%, #B8860B 100%);
+    box-shadow: 0 0 15px rgba(184, 134, 11, 0.6), inset 0 0 5px rgba(255, 255, 224, 0.3);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; /* 쉬머 효과를 위해 필요 */
+    overflow: hidden;
+}
+
+/* (선택 사항) 고급스러움을 더하는 쉬머(반짝임) 애니메이션 추가 */
+#sat-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -150%;
+    width: 150%; height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+    animation: gold-shimmer 3s infinite linear;
+}
+
+@keyframes gold-shimmer {
+    0% { left: -150%; }
+    100% { left: 150%; }
+}
+
+.sat-bar-container {
+    width: 100%;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+}
+
+.sat-guide {
+    font-size: 0.75rem;
+    color: var(--text-secondary) !important;
+    margin-top: 8px;
+}
+
+/* 2. 부산물 인벤토리 그리드 */
+.sediment-inventory {
+    margin-bottom: 25px;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 이미지처럼 5열 구성 */
+    gap: 10px;
+}
+
+.empty-inventory-hint {
+    color: var(--text-secondary) !important;
+    text-align: center;
+}
+
+/* 개별 아이템 슬롯 */
+.sediment-slot {
+    aspect-ratio: 1/1;
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.sediment-slot img, .sediment-slot i {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}
+
+.sediment-count {
+    font-size: 0.7rem;
+    color: var(--ios-gray);
+}
+
+/* 3. 심연의 연성 제단 (하단) */
+.abyss-altar {
+    background: rgba(189, 143, 98, 0.05);
+    border: 1px solid rgba(189, 143, 98, 0.2);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.abyss-altar h4 {
+    color: var(--primary-gold) !important;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.abyss-altar p {
+  font-size: 0.9em;
+  margin-bottom: 2em;
+  color: var(--text-secondary);
+}
+
+.recipe-check {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.req-item {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.req-item .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--glass-surface-light);
+}
+
+/* 충족되었을 때의 스타일 */
+.req-item.met {font-weight: 600; }
+.req-item.met .dot { background: #00ff88; box-shadow: 0 0 5px #00ff88; }
+
+/* 4. 거대 연성 버튼 */
+.btn-craft-large {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Paperlogy';
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--primary-gold);
+}
+
+/* 준비 완료 시 활성화 스타일 */
+.btn-craft-large.ready {
+    background: linear-gradient(135deg, #bf8f62 0%, #8c6d51 100%);
+    color: white;
+    box-shadow: 0 0 15px rgba(189, 143, 98, 0.4);
+    animation: pulse-gold 1.5s infinite;
+}
+
+.btn-craft-large.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+@keyframes pulse-gold {
+    0% { transform: scale(1); box-shadow: 0 0 10px rgba(189, 143, 98, 0.4); }
+    50% { transform: scale(1.02); box-shadow: 0 0 25px rgba(189, 143, 98, 0.7); }
+    100% { transform: scale(1); box-shadow: 0 0 10px rgba(189, 143, 98, 0.4); }
+}
+
+/* === 심연의 연성소 (Sediment Modal) 디자인 보강 === */
+
+#sediment-modal .modal-body {
+  padding: 0.5em;
+}
+
+.sediment-inventory label {
+    font-size: 0.8em;
+    font-weight: 700;
+    margin-bottom: 0.5em;
+    display: block;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5em;
+}
+
+.sediment-slot {
+    aspect-ratio: 1 / 1; /* 이름 공간을 위해 세로로 약간 더 길게 */
+    border-radius: 0.5em;
+    display: flex;
+    flex-direction: column; /* 아이콘-이름-개수 수직 배치 */
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    transition: all 0.2s;
+}
+
+.sediment-slot.has-item {
+    border: 1px solid var(--glass-border);
+    cursor: default;
+}
+
+/* [추가] 슬롯 내부 아이템 이름 */
+.sediment-name {
+    font-size: 0.65rem; /* 아주 작고 깔끔하게 */
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: 4px;
+    word-break: keep-all; /* 한글 단어 유지 */
+}
+
+/* 슬롯 내부 개수 */
+.sediment-count {
+    font-size: 0.6rem;
+    color: #bf8f62; /* 포인트 컬러 */
+    font-weight: 700;
+}
+
+/* 비어있는 슬롯 물음표 스타일 */
+.sediment-slot i.fa-question {
+    opacity: 0.15;
+    font-size: 1rem;
+}
+
+
+
+
+/* === 🌐 통합 모달 표준 스타일 (Master Template) === */
+
+/* (1) 배경 오버레이 - 중앙 정렬 보장 */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.75); /* 배경을 조금 더 차분하게 */
+    backdrop-filter: blur(4px); /* 뒤쪽 살짝 흐리게 */
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px; /* 모바일 환경 대비 최소 여백 */
+}
+
+/* (2) 모달 윈도우 - 너비와 여백 통일 */
+.modal-window {
+    width: 100%;
+    max-width: 400px; /* 모든 모달의 표준 너비 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1em; /* 둥근 모서리 통일 */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    animation: modal-pop 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+
+/* (3) 헤더 규격화 */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-header h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.modal-body {
+  padding: 1em !important;
+}
+
+/* (4) 닫기 버튼 통일 */
+.close-btn {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.close-btn:hover { color: #fff; }
+
+/* (5) 애니메이션 */
+@keyframes modal-pop {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.reveal-container {
+    text-align: center;
+    color: #000; /* 하얀 배경에선 검은 글씨 */
+    font-family: 'Paperlogy';
+}
+
+.new-egg-name {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: 5px;
+}
+
+.new-egg-reveal {
+    width: 250px;
+    height: 250px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.2));
+    transform: scale(0.8);
+    opacity: 0;
+    transition: all 1.5s ease-out;
+}
+
+.new-egg-reveal.show {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.new-egg-desc {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* --- 토스트 알림 시스템 (초미니멀 버전) --- */
+#toast-container {
+    position: fixed;
+    bottom: 25px;
+    right: 20px;
+    z-index: 1000000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.toast-notification {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px 8px 12px; 
+    margin-bottom: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px; /* 지침 준수 */
+    color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); /* 더 부드러운 애니메이션 */
+    word-break: keep-all;       /* 한글 가독성 보호 */
+    overflow-wrap: break-word;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 1. 토스트 본체: 내부 요소들이 삐져나가지 않도록 설정 */
+#app:not(.horizontal-mode) ~ #toast-container .toast-notification {
+    width: 300px !important;    /* 너비를 더 타이트하게 제한 */
+    display: flex !important;
+    align-items: center;
+    overflow: hidden;               /* 혹시 모를 탈출 원천 차단 */
+}
+
+/* 2. 토스트 내부 텍스트(span): 여기가 핵심입니다 */
+#app:not(.horizontal-mode) ~ #toast-container .toast-notification span {
+    flex: 1;                        /* 남은 공간을 꽉 채우게 함 */
+    min-width: 0;                   /* Flex 아이템의 최소 너비 해제 (줄바꿈 필수 조건) */
+    
+    /* 줄바꿈 강제 설정 */
+    white-space: normal !important; /* nowrap 방지 */
+    word-break: break-all !important; /* 좁은 폭에서는 단어 파괴해서라도 줄바꿈 */
+    overflow-wrap: anywhere;        /* 모든 위치에서 줄바꿈 허용 */
+    
+    line-height: 1.4;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* 3. 아이콘 크기 고정: 텍스트에 밀리지 않게 설정 */
+#app:not(.horizontal-mode) ~ #toast-container .toast-notification i {
+    flex-shrink: 0;                 /* 아이콘 크기 유지 */
+    font-size: 1rem;
+}
+
+/* 타입별 아주 미세한 틴트 (배경 투명도 0.08) */
+.toast-info { background: rgba(10, 132, 255, 0.192); border: 1px solid #5ac7fa3b; }
+.toast-success { background: rgba(48, 209, 88, 0.205); border: 1px solid #34c75928; }
+.toast-error { background: rgba(255, 68, 58, 0.219); border: 1px solid #ff3a303b; }
+.toast-achievement { background: rgba(255, 214, 10, 0.199); border: 1px solid #ffcc003a; }
+.toast-event { background: rgba(242, 90, 184, 0.12); border-left: 2px solid #f756b4; box-shadow: 0 0 10px rgba(191, 90, 242, 0.15);}
+
+.toast-notification i {
+    font-size: 0.85rem; /* 아이콘 크기 축소 */
+}
+
+.toast-notification span {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    white-space: nowrap;
+}
+
+.toast-info i { color: #5ac8fa; }
+.toast-success i { color: #34c759; }
+.toast-error i { color: #ff3b30; }
+.toast-achievement i { color: #ffcc00; }
+.toast-event i { color: #f756b4; }
+
+/* [style.css] 보상 버튼 전용 애니메이션 */
+
+/* 1. 페이드인 + 위로 슥 올라오는 효과 */
+@keyframes rewardAppearance {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+        filter: blur(5px); /* 살짝 흐릿하게 시작 */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+/* 2. 버튼 주위로 은은하게 빛나는 효과 (수령 전) */
+@keyframes rewardGlow {
+    0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.2); }
+    50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+    100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.2); }
+}
+
+.reward-reveal {
+    animation: rewardAppearance 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.reward-reveal .btn-claim-reward {
+    animation: rewardGlow 2s infinite ease-in-out;
+}
+
+/* === 🏆 업적 그리드 디자인 (스타듀밸리 스타일) === */
+#achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    justify-items: center;
+}
+
+.achieve-slot {
+    width: 100%;
+    height: 100%;
+    border: 4px solid var(--glass-border); /* 테두리 */
+    border-radius: 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: help;
+    transition: transform 0.1s ease;
+}
+
+.achieve-slot i {
+    font-size: 2rem;
+    color: #5a4231;
+}
+
+/* 잠긴 상태 */
+.achieve-slot.locked {
+    opacity: 0.6;
+}
+
+.achieve-slot.locked i {
+    color: rgba(90, 66, 49, 0.4);
+}
+
+/* === 💬 공용 툴팁 보정 (제목/내용 구분) === */
+#common-tooltip {
+    /* 기존 스타일 유지하면서 아래 속성 확인/추가 */
+    white-space: pre-wrap !important; /* \n 줄바꿈 인식 */
+    line-height: 1.5;
+    text-align: center;
+    max-width: 130px;
+    word-wrap: break-word;
+    word-break: keep-all;
+}
+
+/* === 🌌 상점 리디자인: 글래스모피즘 === */
+
+.shop-window-glass {
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+/* 탭 바 */
+.shop-tabs-glass {
+    display: flex;
+    padding: 10px 20px;
+    gap: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.shop-tabs-glass button {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 5px 0;
+    transition: all 0.3s;
+    position: relative;
+    font-family: 'Paperlogy';
+}
+
+.shop-tabs-glass button.shop-tab-active {
+    color: var(--primary-gold);
+}
+
+.shop-tabs-glass button.shop-tab-active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--primary-gold);
+    box-shadow: 0 0 10px var(--primary-gold);
+}
+
+/* 그리드 레이아웃 */
+.shop-grid-glass {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 20px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* 개별 카드 */
+.shop-card-glass {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.5em;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.shop-card-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
+}
+
+.shop-card-name {
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.shop-card-price {
+    font-size: 0.85rem;
+    color: var(--primary-gold);
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+/* 미니 버튼 */
+.btn-buy-glass {
+    width: 100%;
+    padding: 6px 0;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    background: var(--primary-gold);
+    color: #000;
+}
+
+.btn-buy-glass:disabled {
+    border-color: #555;
+    color: #555;
+    background: none;
+    cursor: not-allowed;
+}
+
+/* 푸터 */
+.shop-footer-glass {
+    padding: 15px 20px;
+    border-top: var(--glass-border);
+}
+
+/* === 🌌 상점: 하이엔드 글래스모피즘 스타일 === */
+/* 상단 탭 바 */
+.shop-tabs-glass {
+    display: flex;
+    padding: 15px 25px 0;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.shop-tabs-glass button {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.shop-tabs-glass button.shop-tab-active {
+    color: var(--primary-gold);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.shop-tabs-glass button.shop-tab-active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--primary-gold);
+    box-shadow: 0 0 15px var(--primary-gold);
+}
+
+/* 아이템 그리드 (스크롤바 포함) */
+.shop-grid-glass {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* 개별 아이템 카드 (유리 타일) */
+.shop-card-glass {
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5em;
+    padding: 18px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.shop-card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.15));
+}
+
+.shop-card-name {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-top: 0.5em;
+    margin-bottom: 4px;
+    white-space: nowrap;
+}
+
+.shop-card-price {
+    font-size: 0.85rem;
+    color: var(--primary-gold);
+    font-weight: 800;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+/* 구매 버튼 */
+.btn-buy-glass {
+    width: 100%;
+    border: none;
+    color: var(--primary-gold);
+    border-radius: 8px;
+    padding: 7px 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-buy-glass:disabled {
+    opacity: 0.3;
+    border-color: #555;
+    color: #777;
+    cursor: not-allowed;
+}
+
+/* 커스텀 스크롤바 (글래스 전용) */
+.shop-grid-glass::-webkit-scrollbar { width: 4px; }
+.shop-grid-glass::-webkit-scrollbar-track { background: transparent; }
+.shop-grid-glass::-webkit-scrollbar-thumb { 
+    background: rgba(255, 255, 255, 0.1); 
+    border-radius: 10px; 
+}
+
+/* 탭 버튼 기본 */
+.shop-tab-re {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.3);
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+/* 활성화된 탭 (active) */
+.shop-tab-re.active {
+    color: var(--primary-gold);
+    border-bottom: 2px solid var(--primary-gold);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+
+/* === 🎒 연금술 가방: 세로형 글래스모피즘 리뉴얼 === */
+
+/* 1. 가방 모달 본체 */
+.inventory-window-vertical {
+    height: 80vh;
+    backdrop-filter: blur(25px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* 2. 아이템 그리드 영역 (스크롤 가능) */
+#inventory-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 3열 배치 */
+    grid-auto-rows: 54px;
+    gap: 8px;
+    padding: 1em;
+    overflow-y: auto;
+}
+
+/* 개별 아이템 슬롯 */
+.inventory-slot-glass {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.inventory-slot-glass:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-gold);
+    transform: scale(1.05);
+}
+
+.inventory-slot-glass.active {
+    background: rgba(212, 175, 55, 0.12);
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
+/* 슬롯 내 아이콘 및 수량 */
+.slot-icon { font-size: 1.5rem;}
+.slot-count {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    font-size: 0.7rem;
+    color: #fff !important;
+    background: #00000077;
+    padding: 2px 4px;
+    border-radius: 1em;
+    font-weight: 800;
+}
+
+/* 3. 하단 상세 정보 서랍 (Drawer) */
+.inventory-detail-drawer {
+    background: var(--glass-surface-light);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1em;
+    text-align: center;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#detail-info-area {
+    width: 100%;
+    animation: slideUp 0.4s ease-out;
+    padding: 1em;
+    text-align: center;
+    background-color: var(--glass-surface-light);
+}
+
+.detail-icon-lg { margin-bottom: 15px; }
+.detail-name-lg { font-size: 1.1rem; color: #fff; font-weight: 800; margin-bottom: 8px; }
+.detail-desc-lg { 
+    font-size: 0.8rem; 
+    color: var(--text-secondary) !important; 
+    line-height: 1.6; 
+    margin-bottom: 20px;
+    word-break: keep-all;
+}
+
+#inventory-detail .lable {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+}
+
+/* 4. 사용/선물 버튼 */
+.btn-inventory-action {
+    width: 100%;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--primary-gold);
+    color: var(--primary-gold);
+    border-radius: 12px;
+    padding: 12px 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-inventory-action:hover:not(:disabled) {
+    background: var(--primary-gold);
+    color: #111;
+}
+
+/* 비어있을 때 문구 */
+.empty-bag-msg {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.9rem;
+    padding: 40px;
+    text-align: center;
+    border-top: 1px solid var(--glass-border);
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.shop-tab-bar {
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* [style.css] 아이템 상세 설명 영역 */
+.detail-desc-lg {
+    white-space: pre-line;
+    line-height: 1em;
+}
+
+/* ============================================================
+   [작업 기록 모달 - 전용 스타일]
+   ============================================================ */
+
+/* 1. 작업 로그 목록 (List) */
+.log-item-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    border-radius: 0.25em;
+    border: 1px solid var(--glass-border);
+    transition: background-color 0.2s ease;
+}
+
+.log-item-card:hover {
+    background: var(--glass-surface-light);
+}
+
+.log-time {
+    width: 36px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.75rem;
+    font-family: monospace;
+}
+
+.log-badge {
+    width: 44px;
+    font-size: 0.65rem;
+    padding: 3px 0;
+    border-radius: 1em;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+}
+
+.log-badge.work {
+    background: rgba(160, 196, 255, 0.2);
+    color: #a0c4ff;
+}
+
+.log-badge.distract {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+}
+
+.log-owner {
+    flex: 1;
+    font-size: 0.8rem;
+    color: #ddd;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.log-progress-container {
+    width: 70px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.log-progress-fill {
+    height: 100%;
+    opacity: 0.8;
+}
+
+.log-duration {
+    width: 32px;
+    font-size: 0.65em !important;
+    text-align: right;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: monospace;
+}
+
+/* 2. 통계 탭 상세 리스트 (Chart Details) */
+.stat-detail-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    background: var(--glass-surface-light);
+    border-radius: 0 0.5em 0.5em 0;
+}
+
+.stat-detail-item:hover {
+    background: var(--glass-surface-light);
+}
+
+.stat-app-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.8em;
+    color: #eee;
+    padding-right: 15px;
+}
+
+.stat-app-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: monospace;
+}
+
+.stat-min {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.stat-percent {
+    font-size: 0.75rem;
+    font-weight: bold;
+    width: 50px;
+    text-align: right;
+}
+
+/* ============================================================
+   [작업 기록 모달 - UI 레이아웃]
+   ============================================================ */
+
+/* 날짜 네비게이션 */
+.log-date-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.log-date-nav .nav-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: var(--text-secondary);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.log-date-nav .nav-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+#log-date-display {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 120px;
+    text-align: center;
+}
+
+/* 통계 컨테이너 */
+.stat-container {
+    padding: 1em;
+    margin-bottom: 2em;
+    background: var(--glass-surface-light);
+    border-radius: 0.5em;
+}
+
+.stat-label-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.stat-gauge-total {
+    height: 12px;
+    background: var(--glass-surface-light);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 상세 리스트 그룹 */
+.stat-detail-group {
+    margin-bottom: 25px;
+}
+
+.stat-group-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    display: block;
+    padding-bottom: 6px;
+}
+
+.stat-group-label.work {
+    color: #a0c4ff;
+    border-bottom: 1px solid rgba(160, 196, 255, 0.2);
+}
+
+.stat-group-label.distract {
+    color: #ff6b6b;
+    border-bottom: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+/* 스크롤바 최적화 */
+.stat-scroll-area {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.stat-scroll-area::-webkit-scrollbar {
+    width: 4px;
+}
+
+.stat-scroll-area::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+/* --- 도감 상세정보: 선호/불호 선물 (최종 클린 버전) --- */
+
+.pref-section {
+    margin-bottom: 15px;
+}
+
+/* 섹션 제목: 아이콘 크기 및 정렬 최적화 */
+.pref-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.02em;
+}
+
+.pref-title.fav { color: #ff8c8c; } /* 부드러운 분홍 */
+.pref-title.dis { color: #b088f5; } /* 부드러운 보라 */
+
+.pref-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* 개별 아이템 캡슐: 장식을 최소화하고 가독성 강조 */
+.pref-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--glass-surface-light);
+    border: 1px solid var(--glass-border);
+    padding: 6px 12px 8px 10px;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+/* 아이콘 영역 고정 크기 */
+.pref-item-icon-wrapper {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.pref-item-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #eee;
+}
+
+/* 잠긴 상태: 정보를 가리면서도 존재감 유지 */
+.pref-item.locked {
+    opacity: 0.4;
+    background: var(--glass-surface-light);
+    border-style: 1px dashed var(--glass-border);
+}
+
+.pref-item.locked .pref-item-icon-wrapper {
+    color: #666;
+}
+
+
+/* 모달 콘텐츠 세로모드 최적화*/
+@media screen and (max-width: 360px) {
+  .char-slot {padding: 0;}
+  #inventory-grid {grid-template-columns: repeat(5, 1fr);}
+  .sediment-inventory .inventory-grid {grid-template-columns: repeat(3, 1fr);}
+  .mail-paper {padding: 45px 1em;}
+  .log-item-card .log-progress-container {display: none;}
+  #achievement-grid {grid-template-columns: repeat(5, 1fr);}
+}
+
+
+
+/* 기존 style.css 내부 수정 예시 */
+#game-view {
+    background-image: var(--game-view-bg); /* 테마에 따라 배경 자동 교체 */
+    border: 5px solid transparent;
+    border-image: var(--frame-border) 7 stretch; /* 플라스크 프레임 적용 */
+}
+
+.ether-glow-title {
+    color: var(--primary-glow);
+    text-shadow: 0 0 10px var(--primary-glow); /* 에테르 발광 효과 */
+}
+
+.btn-game {
+    background: var(--panel-bg);
+    color: var(--text-dark) !important;
+    border-radius: 0 !important;
+}
+
+.btn-task {
+    background: var(--panel-bg-long);
+    color: var(--text-dark) !important;
+    border-radius: 0 !important;
+}
+
+#exp-bar {
+    background: linear-gradient(90deg, var(--primary-glow), var(--accent-liquid));
+    transition: width 0.3s ease-in-out;
+}
+
+.theme-alchemy-lab .btn-game,
+.theme-alchemy-lab .btn-task {
+    /* 1. 기본 구조 설정 */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* gap: 8px; */
+    padding: 0px 12px;    /* 내부 여백 (글자 길이에 따라 유동적으로 변함) */
+    cursor: pointer;
+    font-weight: 600;
+
+    /* 2. ✨ 핵심: 9-슬라이스 테두리 설정 */
+    /* 투명한 테두리를 먼저 확보해야 border-image가 나타납니다. */
+    border: 12px solid transparent; 
+    
+    /* 테두리 이미지 경로와 슬라이스 수치 */
+    /* 12는 이미지의 모서리 크기(px)이며, 'fill'은 내부 배경까지 채우겠다는 의미입니다. */
+    border-image-source: url('assets/images/btn_game.png');
+    border-image-slice: 12 fill; 
+    border-image-repeat: stretch; /* 내부는 늘어나도록 설정 */
+    
+    background: none;      /* border-image가 배경 역할을 하므로 배경은 끕니다 */
+    outline: none;
+}
+
+.theme-alchemy-lab .btn-game span,
+.theme-alchemy-lab .btn-task span,
+.theme-alchemy-lab .habit-info-text span,
+.theme-alchemy-lab .todo-text-main,
+.theme-alchemy-lab .todo-deadline-text,
+.theme-alchemy-lab .drag-handle,
+.theme-alchemy-lab #habit-input,
+.theme-alchemy-lab #todo-input,
+.theme-alchemy-lab #btn-deadline-trigger {
+    color: var(--text-dark) !important;
+}
+
+.theme-alchemy-lab .current-app-box, 
+.theme-alchemy-lab .accordion {
+    /* 1. 테두리 두께 설정 (이미지의 실제 테두리 두께와 맞추는 것이 좋습니다) */
+    border-style: solid;
+    border-width: 0.5em; 
+
+    /* 2. 이미지 슬라이싱 로직 */
+    /* 이미지를 상하좌우 24px 지점에서 잘라 9등분합니다. */
+    /* 'fill' 키워드를 넣으면 테두리 안쪽(중앙) 배경도 이미지의 중앙부로 채웁니다. */
+    border-image-slice: 24 fill;
+
+    /* 3. 반복 방식 설정 */
+    /* stretch: 늘리기 / repeat: 반복 / round: 빈틈없이 반복 */
+    border-image-repeat: round; 
+
+    /* 등록할 테두리 이미지 경로 */
+    border-image-source: url('assets/images/frame-paper.png');
+    
+    /* 텍스트 가독성을 위해 배경색이 비치게 하려면 (fill을 안 썼을 경우) */
+    background-clip: padding-box; /* 배경색이 테두리 영역까지 침범하지 않게 함 */
+    color: var(--text-dark) !important;
+}
+
+
+.theme-alchemy-lab .current-app-box span, 
+.theme-alchemy-lab .work-app-item span, 
+.theme-alchemy-lab .todo-text {
+    color: var(--text-dark) !important;
+    font-weight: 500 !important;
+}
+
+.theme-alchemy-lab .accordion-title-group,
+.theme-alchemy-lab .accordion-header .group-label,
+.theme-alchemy-lab .btn-todo-action,
+.theme-alchemy-lab .btn-trash i,
+.theme-alchemy-lab .habit-streak-badge {
+    color: var(--text-dark) !important;
+}
+
+.theme-alchemy-lab .btn-trash:hover i {
+    color: var(--danger-red) !important;
+}
+
+.theme-alchemy-lab .todo-input-group {
+    background: var(--glass-surface-light) !important;
+}
+
+.theme-alchemy-lab .header-left h2 {
+    color: var(--text-dark) !important;
+}
+
+.theme-DEFAULT_DARK .control-group.game .btn,
+.theme-DEFAULT_DARK .control-group.focus .btn  {
+    width: 100% !important;
+    height: 52px !important;
+    padding: 0 12px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    
+    border-radius: 14px !important;
+    
+    background: 
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0%, transparent 75%),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1)),
+        rgba(30, 32, 40, 0.4) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.25) !important; 
+    
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.4),
+        inset 0 0 10px rgba(255, 255, 255, 0.02) !important;
+
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+.theme-DEFAULT_DARK .control-group.game .btn i {
+    font-size: 1.1rem !important;
+    filter: drop-shadow(0 0 5px rgba(229, 176, 122, 0.5));
+}
+.theme-DEFAULT_DARK .control-group.focus .btn i {
+    font-size: 1.1rem !important;
+    filter: drop-shadow(rgba(122, 147, 229, 0.5)rgba(122, 168, 229, 0.5));
+}
+
+/* [style.css] 다크 모드: 반투명 다크 글래스 프레임 */
+#app.theme-DEFAULT_DARK #game-view {
+    /* 1. 이미지 테두리 강제 제거 및 굴곡 설정 */
+    border-image: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 24px !important;
+    
+    /* 2. 글래스모피즘의 핵심: 배경 불투명도와 블러 */
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+
+    /* 3. 깊이감을 주는 그림자 */
+    box-shadow: 
+        0 8px 32px 0 rgba(0, 0, 0, 0.5),
+        inset 0 0 10px rgba(255, 255, 255, 0.05) !important; /* 내부 반사광 */
+    overflow: hidden;
+}
+
+.theme-DEFAULT_LIGHT .ether-glow-title {
+    text-shadow: none !important;
+}
+
+.theme-DEFAULT_LIGHT .control-group.game .btn,
+.theme-DEFAULT_LIGHT .control-group.focus .btn  {
+    width: 100% !important;
+    height: 52px !important;
+    padding: 0 12px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    
+    border-radius: 14px !important;
+    
+    background: 
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.04) 0%, transparent 75%), linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.1)), rgb(242 242 247) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.25) !important; 
+    
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.2),
+        inset 0 0 10px rgba(255, 255, 255, 0.01) !important;
+
+    color: var(--text-dark) !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+.theme-DEFAULT_LIGHT .control-group.game .btn i {
+    font-size: 1.1rem !important;
+    filter: drop-shadow(0 0 5px rgba(229, 176, 122, 0.5));
+}
+.theme-DEFAULT_LIGHT .control-group.focus .btn i {
+    font-size: 1.1rem !important;
+    filter: drop-shadow(rgba(122, 147, 229, 0.5)rgba(122, 168, 229, 0.5));
+}
+
+/* [style.css] 라이트 모드: 반투명 화이트 글래스 프레임 */
+#app.theme-DEFAULT_LIGHT #game-view {
+    /* 1. 이미지 테두리 강제 제거 및 굴곡 설정 */
+    border-image: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 24px !important;
+    
+    /* 2. 밝고 투명한 느낌의 배경과 강한 블러 */
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+
+    /* 3. 깨끗한 입체감을 주는 부드러운 그림자 */
+    box-shadow: 
+        0 8px 32px 0 rgba(31, 38, 135, 0.15),
+        inset 0 0 12px rgba(255, 255, 255, 0.5) !important;
+
+    overflow: hidden;
+}
+
+#app.theme-DEFAULT_LIGHT .win-btn,
+#app.theme-DEFAULT_LIGHT .header-btns .win-btn {
+    background: var(--glass-surface-light);
+}
+
+#app.theme-DEFAULT_LIGHT .win-btn:hover,
+#app.theme-DEFAULT_LIGHT .header-btns .win-btn:hover {
+    color: var(--text-dark) !important;
+}
+
+
+
+/* [style.css] 게임 뷰 영역 내 텍스트 시인성 강제 확보 */
+
+#game-view, 
+#game-view span, 
+#game-view b, 
+#game-view div:not(.progress-container):not(#exp-bar) {
+    /* 테마와 상관없이 게임 영역 안의 글자는 항상 밝게 유지 */
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important; /* 가독성을 위한 그림자 추가 */
+}
+
+/* 호감도 수치는 포인트 컬러 유지 */
+#intimacy-stat i {
+    color: #ff416c !important; 
+}
+
+/* 시간 통계 레이블(오늘/누적)의 보조 색상 처리 */
+.time-stats .time-item {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+#today-time, #total-time {
+    color: #ffffff !important;
+}
+
+/* 레벨 텍스트 강조 */
+#level-display, #level-num {
+    color: var(--primary-gold) !important;
+    font-weight: 800 !important;
+}
+
+/* [style.css] 레이아웃 흔들림 방지를 위한 오버레이 스크롤 설정 */
+#controls.right-side, 
+#app.horizontal-mode #controls.right-side,
+.grid-container,
+.stat-scroll-area,
+.mail-list-container,
+#inventory-grid {
+    /* overflow-y: auto 대신 overlay를 사용하여 콘텐츠 영역 침범을 방지합니다. */
+    overflow-y: overlay !important; 
+    /* 최신 브라우저를 위한 레이아웃 고정 속성 */
+    scrollbar-gutter: stable both-edges; 
+}
+
+.btn-game {
+    position: relative !important; /* 뱃지가 버튼을 기준으로 움직이게 함 */
+}
+
+
+/* ============================================================
+   [🔊 Real Glassmorphism Player - Scrollable Edition]
+   ============================================================ */
+
+#gold-mini-player {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    z-index: 9998;
+    display: flex;
+    gap: 4px;
+    pointer-events: none;
+}
+
+.player-node {
+    pointer-events: auto;
+}
+
+/* 1. 트리거 아이콘: 테두리 없애고 은은한 광택만 남김 */
+.trigger-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 0.8em !important;
+    background: rgba(0, 0, 0, 0.8); /* 아주 옅은 배경 */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 얇은 유리 테두리 */
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.trigger-icon:hover, .trigger-icon.active {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 1);
+}
+
+/* 2. 패널: 노란선 제거, 완벽한 유리 질감 */
+.player-panel {
+    position: absolute;
+    top: 2.8em;
+    right: 0;
+    width: 286px;
+    background: rgba(18, 18, 22, 0.65);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08); /* 아주 미세한 테두리 */
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* 상단 빛반사 효과 */
+    border-radius: 0.8em;
+    padding: 0.8em;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    animation: glassUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.player-panel.active { display: flex; }
+
+.panel-header {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    padding-left: 4px;
+}
+
+/* 3. 스크롤 가능한 리스트 영역 (핵심) */
+.track-list {
+    max-height: 125px; /* 곡이 5~6개 넘어가면 스크롤 생김 */
+    overflow-y: auto;  /* 세로 스크롤 허용 */
+    margin-bottom: 16px;
+    padding-right: 4px; /* 스크롤바 공간 확보 */
+}
+
+/* 커스텀 스크롤바 (못생긴 기본 스크롤바 제거) */
+.track-list::-webkit-scrollbar {
+    width: 4px;
+}
+.track-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+.track-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+.track-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* 리스트 아이템 */
+.menu-item {
+    padding: 0.4em 0.6em;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    transition: all 0.2s;
+    margin-bottom: 2px;
+    font-size: 0.8em;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: translateX(4px); /* 호버 시 살짝 밀림 */
+}
+
+/* 선택된 아이템: 노란색 대신 하얀 빛 */
+.menu-item.selected {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 4. 컨트롤 바 */
+.control-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.2); /* 더 어둡게 눌러줌 */
+    padding: 8px 12px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ctrl-btn {
+    width: 30px; 
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #fff !important;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+}
+
+.ctrl-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+.ctrl-btn.active { color: #fff; background: rgba(255, 255, 255, 0.25); box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+
+/* 슬라이더: 미니멀 화이트 */
+.vol-slider {
+    width: 60px;
+    height: 3px;
+    accent-color: #fff;
+    cursor: pointer;
+}
+
+.vol-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.vol-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+}
+
+@keyframes glassUp {
+    from { opacity: 0; transform: translateY(10px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 상점 및 가방 아이콘 이미지 공용 스타일 */
+.shop-img-icon, .inventory-img-icon, .inventory-img-large, .sediment-img {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+    image-rendering: pixelated;      /* 크롬, 엣지, 최신 브라우저 */
+    image-rendering: -moz-crisp-edges; /* 파이어폭스 */
+    image-rendering: crisp-edges;    /* 사파리 및 기타 */
+    object-fit: contain;
+}
+
+/* 상세창 등 큰 이미지용 스타일 */
+.inventory-img-large {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 15px;
+}
+
+/* [style.css] 연성로(Sediment) 인벤토리 영역 교정 */
+
+.sediment-inventory {
+    /* 🚨 [핵심] 바디 영역 밖으로 삐져나오지 않도록 최대 높이 제한 및 내부 스크롤 부여 */
+    max-height: 280px; 
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 연성로 전용 그리드 설정 (가방 그리드와 별개로 최적화) */
+#sediment-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    width: 100%;
+}
+
+@media screen and (max-width: 360px) {
+    #sediment-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+}
+
+/* 부산물 슬롯 디자인 최적화 */
+.sediment-slot {
+    border-radius: 0.5em;
+    padding: 10px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    min-height: 80px;
+}
+
+.sediment-slot.has-item {
+    border-color: var(--glass-border);
+    padding: 0.4em 0;
+}
+
+/* 픽셀 아트 아이콘 깨짐 방지 및 크기 고정 */
+.sediment-img {
+    width: 32px !important;
+    height: 32px !important;
+    image-rendering: pixelated; /* 아티스트님의 요청사항 반영 */
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+.sediment-name {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    word-break: keep-all;
+}
+
+.sediment-count {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary-gold);
+    margin-top: 2px;
+}
+
+/* 스크롤바 글래스모피즘 스타일링 */
+.sediment-inventory::-webkit-scrollbar {
+    width: 4px;
+}
+.sediment-inventory::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+/* 상점 및 가방 아이콘 이미지 스타일 */
+.shop-img-icon, .inventory-img-icon, .achieve-img-icon {
+    width: 34px;
+    height: 34px;
+    object-fit: contain; /* 이미지 비율 유지 */
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+    image-rendering: pixelated;
+}
+
+/* 잠긴 업적 이미지 처리 */
+.locked-img {
+    filter: brightness(0) invert(0.3) grayscale(1);
+    opacity: 0.5;
+}
+
+/* [style.css] 통합 스타일 리셋 및 강화 */
+/* 키워드 설정 탭 전용 스타일 */
+.keyword-input-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1em;
+}
+
+.keyword-input-group .pretty-select-container {
+    width: 80px;
+}
+
+.select-type {
+    width: 80px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 8px;
+    padding: 0 10px;
+}
+
+.input-keyword {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 10px 15px;
+}
+
+.btn-add-keyword {
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background-color: var(--ios-blue);
+}
+
+.keyword-lists-container {
+    display: grid;
+    gap: 1em;
+    margin-top: 0.5em;
+}
+
+.keyword-list-box {
+    background: var(--glass-surface-light);
+    border-radius: 12px;
+    padding: 12px;
+    min-height: 150px;
+}
+
+.list-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}
+
+.label-work { color: #a0c4ff !important; }
+.label-distract { color: #ff6b6b !important; }
+
+.glass-keyword-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.keyword-tag {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: fadeIn 0.3s ease;
+}
+
+#work-keyword-list .keyword-tag {
+    background: #a0c4ff63;
+}
+
+#distract-keyword-list .keyword-tag {
+    background: #ff6b6b4d;
+}
+
+.btn-del-key {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    font-size: 0.7rem;
+    padding: 0;
+}
+
+@media screen and (max-width: 360px) {
+    /* [style.css] 세로 모드 전용 키워드 설정창 보정 */
+
+    /* 1. 세로 모드에서 입력행을 세로로 쌓기 */
+    .keyword-input-group {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        height: auto !important;
+    }
+
+    /* 2. 각 요소의 너비를 100%로 확장 */
+    .pretty-select-container,
+    #keyword-type-select,
+    #keyword-input,
+    .btn-add-keyword {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* 3. 입력창 높이 및 패딩 최적화 */
+    #keyword-input {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+
+    /* 4. 키워드 태그 리스트가 좁은 곳에서도 잘 흐르도록 설정 */
+    .glass-keyword-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 10px 0;
+    }
+
+    .keyword-tag {
+        max-width: 100%; /* 너무 긴 키워드 방지 */
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.pref-item-img {
+    width: 16px;   /* 도감 리스트에 적절한 작은 크기 */
+    height: 16px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+.pref-item-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* 긴 텍스트 경로가 삐져나가는 것을 방지 */
+}
+
+#trig-amb, #trig-mus {
+    transition: all 0.5s ease;
+    animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+#letter-view-content {
+    line-height: 1.8em;      /* 줄 간격을 넉넉히 주어 가독성을 높입니다 */
+    white-space: pre-line; /* 만약 타이핑 없이 출력되는 경우를 대비한 안전장치 */
+    word-break: break-all;
+}
+
+
+/* [style.css] 미니 위젯 모드 레이아웃 정의 */
+#app.mode-mini .sidebar-container,
+#app.mode-mini .right-sidebar,
+#app.mode-mini .main-content-scroll > *:not(.main-header):not(#game-container) {
+    display: none !important;
+}
+
+#app.mode-mini .app-container {
+    display: block; /* 사이드바가 없으므로 블록 레이아웃으로 변경 */
+}
+
+#app.mode-mini .main-content-scroll {
+    padding: 10px;
+    height: 100vh;
+}
+
+#app.mode-mini #game-container {
+    margin-top: 10px;
+    height: calc(100vh - 120px); /* 헤더 제외 남은 공간 차지 */
+}
+
+#app.mode-mini .control-group {
+    display: none;
+}
+
+#app.mode-mini #left-side {
+    overflow: hidden;
+}
+
+#app.mode-mini .right-side {
+    display: none;
+}
+
+
+/* [style.css] 레이아웃 모드 버튼 그룹 스타일링 */
+.window-mode-btns {
+    display: flex;
+    gap: 8px;
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+}
+
+.window-mode-btns button {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Paperlogy', sans-serif;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+/* 마우스 호버 시 */
+.window-mode-btns button:hover {
+    background: var(--ios-blue);
+    color: var(--text-primary);
+}
+
+/* 활성화(선택됨) 상태 - 상점 탭과 동일한 디자인 */
+.window-mode-btns button.active {
+    background: var(--ios-blue);
+    color: var(--text-primary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+}
+
+/* [style.css] 스크롤 기능 복구 및 드래그 영역 조정 */
+
+/* 1. 전체 배경은 여전히 드래그 가능하게 유지합니다 */
+#app, body {
+    -webkit-app-region: drag !important;
+}
+
+/* 2. ✨ [핵심] 스크롤이 일어나야 하는 영역은 반드시 no-drag여야 합니다 */
+.window-controls,
+#main-layout {
+    -webkit-app-region: no-drag !important;
+    user-select: auto !important;
+}
+
+/* 3. 사이드바와 하단 패널 등 '클릭'이 잦은 곳도 no-drag로 확실히 분리합니다 */
+.sidebar-container,
+.right-sidebar,
+.inventory-window-vertical,
+.modal-window,
+.player-panel {
+    -webkit-app-region: no-drag !important;
+}
+
+/* 4. 💡 팁: 실제 드래그는 '버튼이 없는 빈 공간'이나 '헤더'에서 하시면 됩니다 */
+.main-header {
+    /* 헤더는 클릭할 게 적으므로 다시 drag로 설정해 손잡이 역할을 하게 합니다 */
+    -webkit-app-region: drag !important;
+}
+
+#tab-content-etc .settings-section {
+    margin-bottom: 1.5em;
+}
+
+#tab-content-etc .settings-section p,
+#tab-content-etc .settings-section div,
+#tab-content-etc .settings-section ul li {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+#tab-content-etc .settings-section div a{
+    margin-left: 0.25em;
+}
+
+#tab-content-etc .settings-section ul {
+    list-style: none;
+}
+
+#tab-content-etc .settings-section ul li {
+    line-height: 1.4em;
+}
+
+#tab-content-etc .settings-section.last {
+    margin-bottom: 0;
+}
+
+/* 알이 숨 쉬듯이 까딱거리는 애니메이션 */
+@keyframes egg-wobble {
+    0% { transform: rotate(0deg) scale(2); }
+    25% { transform: rotate(-2deg) scale(2.02); } /* 살짝 왼쪽으로 */
+    50% { transform: rotate(0deg) scale(2); }
+    75% { transform: rotate(2deg) scale(2.02); }  /* 살짝 오른쪽으로 */
+    100% { transform: rotate(0deg) scale(2); }
+}
+
+/* 이 클래스가 붙으면 캔버스가 움직입니다 */
+.egg-anim-active {
+    animation: egg-wobble 2.5s infinite ease-in-out;
+    /* transform-origin: bottom center; 바닥을 중심으로 움직임 */
+    image-rendering: pixelated;
+}
+
+/* --- 투두 리스트 리뉴얼 스타일 --- */
+
+/* 입력 컨테이너 스타일 */
+.todo-input-container {
+    display: flex;
+    gap: 5px;
+    background: var(--glass-surface-light);
+    padding: 0.52em;
+    border-radius: 0.8em;
+}
+
+#todo-priority-select {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    width: 25px; /* 아이콘처럼 작게 표시하거나 조절 */
+    cursor: pointer;
+    -webkit-appearance: none; /* 기본 화살표 숨김 */
+    text-align: center;
+}
+/* 선택된 옵션에 따라 색상 변경은 JS로 처리하거나 간단하게 텍스트로 표시 */
+
+#todo-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 5px;
+}
+#todo-input:focus { outline: none; }
+
+.date-picker-wrapper { position: relative; }
+#todo-deadline-input {
+    position: absolute;
+    visibility: hidden;
+    width: 0;
+}
+#btn-deadline-trigger {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+}
+#btn-deadline-trigger:hover { color:var(--text-primary); }
+
+.btn-todo-add {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* 1. 리스트 아이템 레이아웃 */
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+    position: relative; /* 중요도 점 위치 잡기 위해 */
+}
+
+/* 2. 드래그 핸들 */
+.drag-handle {
+    cursor: grab;
+    color: var(--text-primary) !important;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+/* 3. 체크박스 영역 */
+.todo-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.todo-checkbox i { font-size: 0.7rem; color: var(--text-secondary);}
+
+/* 4. 내용 영역 */
+.todo-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+
+.todo-content-wrapper input,
+.inline-priority-edit {
+    border: none;
+    background-color: var(--game-view-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+.todo-content-wrapper input:focus {
+    outline: none;
+}
+
+.todo-text-main {
+    font-size: 1.1em;
+    color: var(--text-primary) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.completed .todo-text-main {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.todo-deadline-text {
+    font-size: 11px;
+    margin-top: 4px;
+    opacity: 0.6;
+}
+
+/* 5. 중요도 점 (오른쪽 끝) */
+.priority-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.priority-high { background-color: #ff4757; box-shadow: 0 0 4px #ff4757; }
+.priority-mid  { background-color: #ffa502; }
+.priority-low  { background-color: #747d8c; opacity: 0.5; }
+
+/* 6. 액션 버튼 (호버 시 표시) */
+.todo-actions {
+    display: none; /* 기본 숨김 */
+    gap: 5px;
+}
+.todo-item:hover .todo-actions {
+    display: flex;
+}
+.btn-todo-action {
+    width: 16px;
+    height: 16px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+/* --- 인라인 편집창(날짜/시간/입력) 디자인 리뉴얼 --- */
+
+/* Flatpickr 달력 팝업창 커스텀 디자인 */
+.flatpickr-day.selected {
+    background: var(--ios-blue) !important;
+    border-color: var(--ios-blue) !important;
+}
+
+/* --- 투두 리스트 입력창 디자인 보정 --- */
+
+.todo-input-container {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 14px;
+    height: 56px;
+}
+
+/* 1. 중요도 셀렉트: 잘림 현상 해결 */
+#todo-priority-select {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    width: 50px; /* 텍스트가 잘리지 않도록 너비 확보 */
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#todo-priority-select option {
+    background: #2c2c2e; /* 드롭다운 배경색 지정 */
+    color: #fff;
+}
+
+/* 2. 할 일 입력창 */
+#todo-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 0 5px;
+    font-size: 0.85rem;
+    min-width: 0;
+    height: 100%;
+}
+#todo-input:focus { outline: none; }
+
+/* 3. 날짜 및 추가 버튼: 높이 정렬 및 디자인 통일 */
+.date-picker-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+#btn-deadline-trigger, .btn-todo-add {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+}
+
+/* 숨겨진 날짜 입력창 방어 코드 */
+#todo-deadline-input {
+    position: absolute;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+/* --- 습관 상세 설정 스타일 --- */
+.habit-register-box {
+    background: var(--glass-surface-light);
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.habit-input-main {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.habit-options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 요일 버튼 */
+.day-selector {
+    display: flex;
+    gap: 2px;
+}
+
+.day-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+    background: var(--glass-surface-light);
+    border: none;
+    border-radius: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.day-btn.active {
+    background: var(--ios-blue);
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+#habit-input {
+    padding: 9px 0px !important;
+}
+
+/* 시간 입력기 */
+.habit-time-input {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    padding: 2px 4px;
+    outline: none;
+    width: 100%;
+    height: 24px;
+}
+
+/* 리스트 표시 보강 */
+.habit-info-text {
+    font-size: 11px;
+    color: var(--text-primary);
+    margin-top: 4px;
+    opacity: 0.6;
+}
+
+/* style.css 추가 */
+.user-id-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+#user-id-display,
+#gift-code-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    padding: 14px 12px;
+    font-size: 0.8rem;
+    outline: none;
+    cursor: default;
+}
+
+.btn-copy-id {
+    background: var(--ios-blue);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    width: 46px;
+    height: 46px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.account-info-box {
+    margin-bottom: 2em;
+}
+
+/* 사운드 제어 행 레이아웃 */
+/* 사운드 행 컨테이너 */
+.sound-control-row {
+    margin-bottom: 15px;
+    padding: 8px 12px;
+    background: var(--glass-surface-light);
+    border-radius: 14px
+}
+
+/* 1층 타이틀 스타일 */
+.sound-label {
+    font-size: 0.75rem; /* 크기를 줄여 미니멀함 강조 */
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+/* 2층 버튼+슬라이더 정렬 */
+.sound-controls-flex {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* 버튼과 슬라이더 사이 간격 */
+}
+
+/* 나팔 버튼 크기 조정 */
+.btn-sound-mute {
+    flex-shrink: 0; /* 버튼 크기 고정 */
+    width: 24px;
+    height: 24px;
+    font-size: 0.9rem;
+    color: var(--primary-gold);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+/* 슬라이더가 나머지 공간을 차지 */
+.sound-slider {
+    flex: 1; 
+    -webkit-appearance: none;
+    height: 3px;
+    background: var(--glass-border);
+    border-radius: 2px;
+    outline: none;
+}
+
+.sound-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--ios-blue);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(var(--gold-rgb), 0.3);
+}
+
+/* 기본 나팔 아이콘 스타일 */
+.btn-sound-mute {
+    background: none;
+    border: none;
+    color: var(--ios-blue); /* 기본: 황금색 */
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+/* ✨ 소리가 꺼졌을 때(Muted) 스타일 */
+.btn-sound-mute.muted {
+    color: #ff5f5f !important; /* 비활성: 붉은색 계열 */
+    filter: drop-shadow(0 0 5px rgba(255, 95, 95, 0.3));
+}
+
+.btn-sound-mute:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+/* ============================================================
+   [떠다니는 연구 메모 (Floating Notes)]
+   ============================================================ */
+
+/* 1. 메모장 기본 본체 (다중 메모를 위해 클래스로 관리) */
+.floating-note {
+    position: fixed;
+    min-width: 200px;  /* 최소 너비 */
+    max-width: 360px;  /* 최대 너비 */
+    min-height: 150px; /* 최소 높이 */
+    max-height: 600px; /* 최대 높이 */
+    padding: 10px;
+    background-color: #fff9c4; /* 기본 크림색 */
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    z-index: 1000; /* 캐릭터 위, 모달 아래 */
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    cursor: default;
+    /* ✨ 일렉트론 창 드래그와 포스트잇 드래그 분리 */
+    -webkit-app-region: no-drag; 
+}
+
+/* ✨ 크기 조절 핸들 (우측 하단) */
+.note-resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize; /* 대각선 커서 */
+    background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50%);
+    border-radius: 0 0 4px 0;
+    z-index: 10;
+}
+
+/* 최소화 상태에서는 크기 조절 핸들 숨김 */
+.floating-note.minimized .note-resize-handle {
+    display: none !important;
+}
+
+/* 본문 영역이 가변 높이에 적응하도록 수정 */
+.note-body {
+    flex: 1; /* 헤더를 제외한 나머지 공간을 꽉 채움 */
+    width: 100%;
+    height: auto !important; 
+}
+
+/* 2. 드래그 중인 상태 */
+.floating-note.dragging {
+    opacity: 0.8;
+    transform: scale(1.02);
+    cursor: grabbing;
+    z-index: 1002; /* 드래그 시 가장 위로 */
+}
+
+/* 3. 메모 상단바 (드래그 핸들 영역) */
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 8px;
+    cursor: grab;
+    user-select: none;
+    color: #333;
+}
+
+.note-header:active {
+    cursor: grabbing;
+}
+
+.note-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: rgba(0,0,0,0.5);
+    color: #333 !important;
+    pointer-events: none; /* 텍스트가 드래그를 방해하지 않게 설정 */
+}
+
+/* 4. 우측 상단 컨트롤 버튼 (최소화/닫기) */
+.note-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.note-controls button {
+    width: 1em;
+    height: 1em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    transition: color 0.2s, transform 0.1s;
+    color: #333 !important;
+}
+
+/* 5. 텍스트 입력 영역 */
+.note-body {
+    width: 100%;
+    height: 120px;
+    background: transparent;
+    border: none;
+    resize: none;
+    font-family: inherit;
+    font-size: 13px;      /* 가독성을 위해 크기를 살짝 키웠습니다. */
+    line-height: 1.6;
+    outline: none;
+    
+    /* ✨ 글자 색상을 선명한 검정색으로 변경 */
+    color: #333 !important; 
+    font-weight: 500;       /* 글자를 조금 더 또렷하게 만듭니다. */
+}
+
+/* 6. ✨ 최소화(접힘) 상태 (우선순위 보장을 위해 !important 사용) */
+.floating-note.minimized {
+    min-height: 40px !important;
+    height: 40px !important;
+    width: 160px !important;
+    overflow: hidden;
+}
+
+.floating-note.minimized .note-body {
+    display: none !important; /* 접혔을 때 내용 숨김 */
+}
+
+/* ============================================================
+   [새 메모 추가 버튼 (Floating Action Button)]
+   ============================================================ */
+#add-note-btn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px; /* 에테르 포인트 UI 위쪽 배치 */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--ios-blue);
+    border: 1px solid rgba(0,0,0,0.1);
+    font-size: 1em;
+    color: var(--text-primary);
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s, background-color 0.2s;
+    
+    /* 일렉트론 창 드래그 제외 */
+    -webkit-app-region: no-drag;
+}
+
+#add-note-btn:hover {
+    transform: scale(1.1) rotate(90deg);
+}
+
+/* [style.css] 메모 타이틀 줄바꿈 및 자동 확장 스타일 */
+.note-title-area {
+    background: transparent;
+    border: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: #333 !important;
+    width: calc(100% - 45px); /* 버튼 영역 제외 너비 */
+    outline: none;
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-family: inherit;
+    resize: none;             /* 수동 크기 조절 방지 */
+    overflow: hidden;         /* 스크롤바 숨김 */
+    white-space: pre-wrap;    /* 줄바꿈 허용 */
+    word-break: break-all;    /* 단어 단위 끊기 허용 */
+    line-height: 1.2;
+    min-height: 16px;
+    display: block;
+    cursor: text;
+}
+
+.note-title-area:focus {
+    background: rgba(255, 255, 255, 0.3);
+    color: #000;
+}
+
+/* 최소화 상태에서는 제목 높이 제한 */
+.floating-note.minimized .note-title-area {
+    max-height: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 포커스 시 시각적 피드백 */
+.note-title-input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    color: #000;
+}
+
+/* 드래그 핸들 영역 내의 입력창 예외 처리 */
+.note-header .note-title-input {
+    cursor: text;
+    color: #333;
+}
+
+.confirm-content #confirm-title {
+    color: var(--text-primary) !important;
+}
+
+.confirm-content #confirm-message {
+    color: var(--text-secondary) !important;
+}
+
+.mail-paper-wrap {
+    position: relative;
+}
+
+/* [style.css] 서신 보관 별표 버튼 스타일 */
+.btn-archive-star, .list-archive-btn {
+    position: absolute;
+    top: 1.5em;
+    right: 1.5em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    color: var(--primary-gold) !important;
+    transition: all 0.2s, transform 0.1s;
+    outline: none;
+    opacity: 0.5;
+}
+
+/* ✨ 보관됨 상태: 골드 색상 적용 */
+.btn-archive-star.is-archived, 
+.list-archive-btn.is-archived {
+    color: var(--primary-gold, #ffd700) !important;
+    opacity: 1;
+}
+
+.btn-archive-star:hover, 
+.list-archive-btn:hover {
+    color: var(--primary-gold, #ffd700);
+    transform: scale(1.05);
+    opacity: 1;
+}
+
+/* 잠긴 상점 카드의 시각적 효과 */
+.shop-card-glass.locked {
+    opacity: 0.6;
+    filter: grayscale(0.8);
+    cursor: not-allowed;
+}
+
+.shop-card-glass.locked .shop-img-icon {
+    filter: blur(1px);
+}
+
+/* 아이콘 위 잠금 표시 오버레이 */
+.shop-lock-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--primary-gold);
+    font-size: 1.5rem;
+    pointer-events: none;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* 연성 탭 컨텐츠 제어 */
+.alchemy-tab-content {
+    display: none; /* 기본적으로 숨김 */
+}
+
+.alchemy-tab-content.active {
+    display: block; /* active 클래스가 있으면 표시 */
+}
+
+/* 조합 연성 전용 슬롯 디자인 */
+.alembic-slots {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.alembic-slot {
+    width: 64px;
+    height: 64px;
+    background: var(--glass-surface-light);
+    padding: 0.5em;
+    border: 1px dashed var(--primary-gold);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--primary-gold);
+    transition: all 0.2s;
+}
+
+.alembic-slot img {
+    image-rendering: pixelated;
+}
+
+.alembic-slot:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.recipe-guide {
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 1em;
+}
+
+
+/* =========================================
+   🧪 재료 선택 모달 (Ingredient Picker) 디자인
+   ========================================= */
+
+/* 1. 모달 배경 및 컨테이너 */
+.ingredient-picker-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--glass-modal-bg); /* 짙은 어둠 */
+    backdrop-filter: blur(5px);      /* 배경 블러 효과 */
+    z-index: 1000001;                /* 최상단 보장 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.picker-modal-container {
+    width: 90%;
+    max-width: 400px;
+    background: var(--glass-modal-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transform: translateY(20px);
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+/* 2. 헤더 타이틀 */
+.picker-header h4 {
+    color: var(--primary-gold);
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 0;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 15px;
+}
+
+/* 3. 재료 그리드 영역 (스크롤 및 반응형) */
+.picker-grid-area {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+    gap: 4px;
+    max-height: 400px; /* 높이 제한 */
+    overflow-y: auto;  /* 스크롤 생성 */
+    padding: 5px;      /* 스크롤바와 간격 확보 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-gold) rgba(0,0,0,0.2);
+}
+
+/* 커스텀 스크롤바 디자인 (Webkit) */
+.picker-grid-area::-webkit-scrollbar {
+    width: 6px;
+}
+.picker-grid-area::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+.picker-grid-area::-webkit-scrollbar-thumb {
+    background: var(--primary-gold);
+    border-radius: 10px;
+}
+
+/* 4. 개별 재료 카드 디자인 */
+.picker-item-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 호버 효과: 떠오르면서 금빛 발광 */
+.picker-item-card:hover {
+    border-color: var(--primary-gold);
+}
+
+.picker-item-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+    transition: transform 0.3s;
+    image-rendering: pixelated;
+}
+.picker-item-count {
+    font-size: 0.7rem;
+    font-weight: bold;
+    background: var(--glass-surface-light);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.picker-item-name {
+    font-size: 0.7rem;
+    color: var(--text-primary);
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* 닫기 버튼 영역 */
+.picker-footer .btn-game {
+    padding: 12px;
+    font-size: 1.1rem;
+}
+
+.recipe-result-preview {
+    text-align: center;
+    padding: 1em;
+    font-size: 0.8em;
+}
+
+/* 등장 애니메이션 */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* 재료 선택 시 강조 효과 */
+.picker-item-card.selected {
+    border: 1px solid var(--primary-gold) !important;
+    background: rgba(212, 175, 55, 0.2) !important;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+}
+
+/* 선택 순서 표시 배지 */
+.selection-order {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: var(--primary-gold);
+    color: #000;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 하단 확인 버튼 영역 */
+.picker-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+.picker-footer .btn {
+    font-size: 1em;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.picker-footer .btn-close {
+    background: var(--glass-surface-light);
+    flex: 0.25;
+}
+.btn-confirm-selection {
+    flex: 2;
+    background: var(--primary-gold) !important;
+    color: #000 !important;
+    font-weight: bold;
+}
+
+.btn-confirm-selection:disabled {
+    filter: grayscale(1);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.picker-header p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 1em;
+    text-align: center;
+}
+
+.picker-item-card .req-label {
+   position: absolute;
+    bottom: 43%;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #cb0000;
+    font-weight: 700; 
+}
+
+/* [style.css] 연성 성공 슈퍼노바 효과 */
+#effect-layer.supernova-active {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: white;
+    z-index: 999999;
+    pointer-events: none;
+    animation: supernova-flash 2s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes supernova-flash {
+    0% { opacity: 0; }
+    10% { opacity: 1; } /* 강렬한 화이트 아웃 */
+    30% { background: radial-gradient(circle, #fff 0%, #ffd700 50%, transparent 100%); }
+    100% { opacity: 0; } /* 서서히 사라짐 */
+}
+
+/* 알 생성 시 캔버스 강조 효과 */
+#main-canvas {
+    transition: all 0.5s ease;
+}
