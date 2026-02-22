@@ -719,7 +719,7 @@
         "sender": "연금술 길드",
         "title": "[지침] 연구 재개에 따른 특별 보조금 안내",
         "trigger": {
-            "type": "return_after_long_absence",
+            "type": "inactive_days",
             "value": true
         },
         "content": "장기 부재 이후 연구실로 복귀하신 것을 확인했습니다. 길드는 숙련된 연금술사의 이탈을 방지하고 연구의 연속성을 보장하기 위해 정착 지원금을 송부합니다. [할 일] 목록을 재정비하고 안정적인 에테르 추출 궤도에 다시 진입하십시오.",
@@ -997,7 +997,7 @@
         "charId": "char_02",
         "title": "찰나의 성장이 남기는 흔적",
         "trigger": {
-            "type": "growth_level",
+            "type": "specific_growth",
             "value": 60
         },
         "content": "호문클루스와 함께한 시간이 제법 되었구나. 하지만 성장은 곧 이별의 시작이야. 부디 호문클루스가 알을 깨고 나왔을 때의 기분을 상기하며 한 번 더 다정하게 이름을 불러주도록 해.",
@@ -1025,7 +1025,7 @@
         "sender": "수상한 그림자",
         "title": "성숙의 끝에 기다리는 것",
         "trigger": {
-            "type": "growth_level",
+            "type": "specific_growth",
             "value": 300
         },
         "content": "아이가 드디어 성체의 모습이 되었구나. 훌륭하게 키워냈어. 지금 이 순간의 대화 하나하나를 소중히 여겨줘.",
@@ -1427,7 +1427,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 300
             }
         ],
@@ -1453,7 +1453,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 300
             }
         ],
@@ -1479,7 +1479,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 300
             }
         ],
@@ -1505,7 +1505,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 600
             }
         ],
@@ -1531,7 +1531,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 450
             }
         ],
@@ -1557,7 +1557,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 300
             }
         ],
@@ -1583,7 +1583,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 300
             }
         ],
@@ -1673,7 +1673,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 300
             }
         ],
@@ -1699,7 +1699,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 300
             }
         ],
@@ -1725,7 +1725,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 300
             }
         ],
@@ -1755,7 +1755,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_01",
+                "partnerId": "char_01",
                 "value": 300
             }
         ],
@@ -1802,7 +1802,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 300
             }
         ],
@@ -1828,7 +1828,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 300
             }
         ],
@@ -1854,7 +1854,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 300
             }
         ],
@@ -1880,7 +1880,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 600
             }
         ],
@@ -1906,7 +1906,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 450
             }
         ],
@@ -1932,7 +1932,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 300
             }
         ],
@@ -2021,7 +2021,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 300
             }
         ],
@@ -2051,7 +2051,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 300
             }
         ],
@@ -2077,7 +2077,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 300
             }
         ],
@@ -2107,7 +2107,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 300
             }
         ],
@@ -2133,7 +2133,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_02",
+                "partnerId": "char_02",
                 "value": 300
             }
         ],
@@ -2184,7 +2184,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_04",
+                "partnerId": "char_04",
                 "value": 300
             }
         ],
@@ -2210,7 +2210,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_04",
+                "partnerId": "char_04",
                 "value": 300
             }
         ],
@@ -2236,7 +2236,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_04",
+                "partnerId": "char_04",
                 "value": 300
             }
         ],
@@ -2262,7 +2262,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_04",
+                "partnerId": "char_04",
                 "value": 600
             }
         ],
@@ -2288,7 +2288,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_04",
+                "partnerId": "char_04",
                 "value": 450
             }
         ],
@@ -2314,7 +2314,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_04",
+                "partnerId": "char_04",
                 "value": 300
             }
         ],
@@ -2403,7 +2403,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_04",
+                "partnerId": "char_04",
                 "value": 300
             }
         ],
@@ -2429,7 +2429,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_04",
+                "partnerId": "char_04",
                 "value": 300
             }
         ],
@@ -2455,7 +2455,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_04",
+                "partnerId": "char_04",
                 "value": 300
             }
         ],
@@ -2481,7 +2481,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_04",
+                "partnerId": "char_04",
                 "value": 300
             }
         ],
@@ -2528,7 +2528,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_05",
+                "partnerId": "char_05",
                 "value": 300
             }
         ],
@@ -2554,7 +2554,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_05",
+                "partnerId": "char_05",
                 "value": 300
             }
         ],
@@ -2580,7 +2580,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_05",
+                "partnerId": "char_05",
                 "value": 300
             }
         ],
@@ -2606,7 +2606,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_05",
+                "partnerId": "char_05",
                 "value": 600
             }
         ],
@@ -2632,7 +2632,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_05",
+                "partnerId": "char_05",
                 "value": 450
             }
         ],
@@ -2658,7 +2658,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_05",
+                "partnerId": "char_05",
                 "value": 300
             }
         ],
@@ -2747,7 +2747,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_05",
+                "partnerId": "char_05",
                 "value": 300
             }
         ],
@@ -2773,7 +2773,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_05",
+                "partnerId": "char_05",
                 "value": 300
             }
         ],
@@ -2799,7 +2799,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_05",
+                "partnerId": "char_05",
                 "value": 300
             }
         ],
@@ -2825,7 +2825,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_05",
+                "partnerId": "char_05",
                 "value": 300
             }
         ],
@@ -2872,7 +2872,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 600
             }
         ],
@@ -2899,7 +2899,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 300
             }
         ],
@@ -2925,7 +2925,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 300
             }
         ],
@@ -2951,7 +2951,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 450
             }
         ],
@@ -2977,7 +2977,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 300
             }
         ],
@@ -3003,7 +3003,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 300
             }
         ],
@@ -3029,7 +3029,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 300
             }
         ],
@@ -3055,7 +3055,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 300
             }
         ],
@@ -3081,7 +3081,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 300
             }
         ],
@@ -3107,7 +3107,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 300
             }
         ],
@@ -3133,7 +3133,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 300
             }
         ],
@@ -3159,7 +3159,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_06",
+                "partnerId": "char_06",
                 "value": 300
             }
         ],
@@ -3206,7 +3206,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_07",
+                "partnerId": "char_07",
                 "value": 600
             }
         ],
@@ -3232,7 +3232,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_07",
+                "partnerId": "char_07",
                 "value": 300
             }
         ],
@@ -3258,7 +3258,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_07",
+                "partnerId": "char_07",
                 "value": 300
             }
         ],
@@ -3284,7 +3284,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_07",
+                "partnerId": "char_07",
                 "value": 450
             }
         ],
@@ -3310,7 +3310,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_07",
+                "partnerId": "char_07",
                 "value": 300
             }
         ],
@@ -3378,7 +3378,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_07",
+                "partnerId": "char_07",
                 "value": 300
             }
         ],
@@ -3404,7 +3404,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_07",
+                "partnerId": "char_07",
                 "value": 300
             }
         ],
@@ -3430,7 +3430,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_07",
+                "partnerId": "char_07",
                 "value": 300
             }
         ],
@@ -3477,7 +3477,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_08",
+                "partnerId": "char_08",
                 "value": 600
             }
         ],
@@ -3503,7 +3503,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_08",
+                "partnerId": "char_08",
                 "value": 300
             }
         ],
@@ -3529,7 +3529,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_08",
+                "partnerId": "char_08",
                 "value": 300
             }
         ],
@@ -3555,7 +3555,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_08",
+                "partnerId": "char_08",
                 "value": 450
             }
         ],
@@ -3581,7 +3581,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_08",
+                "partnerId": "char_08",
                 "value": 300
             }
         ],
@@ -3649,7 +3649,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_08",
+                "partnerId": "char_08",
                 "value": 300
             }
         ],
@@ -3675,7 +3675,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_08",
+                "partnerId": "char_08",
                 "value": 300
             }
         ],
@@ -3701,7 +3701,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_08",
+                "partnerId": "char_08",
                 "value": 300
             }
         ],
@@ -3726,7 +3726,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_09",
+                "partnerId": "char_09",
                 "value": 300
             }
         ],
@@ -3752,7 +3752,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_09",
+                "partnerId": "char_09",
                 "value": 300
             }
         ],
@@ -3799,7 +3799,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_09",
+                "partnerId": "char_09",
                 "value": 600
             }
         ],
@@ -3825,7 +3825,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_09",
+                "partnerId": "char_09",
                 "value": 450
             }
         ],
@@ -3951,7 +3951,7 @@
                 "value": "char_09"
             },
             {
-                "type": "gift_connoisseur",
+                "type": "gift_count_favorite",
                 "value": 3
             }
         ],
@@ -4061,7 +4061,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_10",
+                "partnerId": "char_10",
                 "value": 600
             }
         ],
@@ -4087,7 +4087,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_10",
+                "partnerId": "char_10",
                 "value": 300
             }
         ],
@@ -4113,7 +4113,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_10",
+                "partnerId": "char_10",
                 "value": 450
             }
         ],
@@ -4139,7 +4139,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_10",
+                "partnerId": "char_10",
                 "value": 300
             }
         ],
@@ -4160,7 +4160,7 @@
                 "value": "char_10"
             },
             {
-                "type": "gift_connoisseur",
+                "type": "gift_count_favorite",
                 "value": 8
             }
         ],
@@ -4249,7 +4249,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_10",
+                "partnerId": "char_10",
                 "value": 15
             }
         ],
@@ -4275,7 +4275,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_10",
+                "partnerId": "char_10",
                 "value": 15
             }
         ],
@@ -4301,7 +4301,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_10",
+                "partnerId": "char_10",
                 "value": 0
             }
         ],
@@ -4327,7 +4327,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_10",
+                "partnerId": "char_10",
                 "value": 300
             }
         ],
@@ -4353,7 +4353,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_10",
+                "partnerId": "char_10",
                 "value": 15
             }
         ],
@@ -4399,7 +4399,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_11",
+                "partnerId": "char_11",
                 "value": 600
             }
         ],
@@ -4426,7 +4426,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_11",
+                "partnerId": "char_11",
                 "value": 450
             }
         ],
@@ -4452,7 +4452,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_11",
+                "partnerId": "char_11",
                 "value": 300
             }
         ],
@@ -4564,7 +4564,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_11",
+                "partnerId": "char_11",
                 "value": 300
             }
         ],
@@ -4590,7 +4590,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_11",
+                "partnerId": "char_11",
                 "value": 300
             }
         ],
@@ -4616,7 +4616,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_11",
+                "partnerId": "char_11",
                 "value": 300
             }
         ],
@@ -4642,7 +4642,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_11",
+                "partnerId": "char_11",
                 "value": 300
             }
         ],
@@ -4668,7 +4668,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_11",
+                "partnerId": "char_11",
                 "value": 300
             }
         ],
@@ -4694,7 +4694,7 @@
             },
             {
                 "type": "specific_growth",
-                "charId": "char_11",
+                "partnerId": "char_11",
                 "value": 300
             }
         ],
@@ -4905,7 +4905,7 @@
                 "value": "char_hidden_0104"
             },
             {
-                "type": "growth_level",
+                "type": "specific_growth",
                 "value": 300
             },
             {
@@ -4930,7 +4930,7 @@
                 "value": "char_hidden_0104"
             },
             {
-                "type": "growth_level",
+                "type": "specific_growth",
                 "value": 300
             },
             {
@@ -5335,7 +5335,7 @@
             },
             {
                 "type": "marathon_focus",
-                "value": 5400
+                "value": 90
             }
         ],
         "content": "모두가 잠든 밤, 90분 넘게 초집중 상태에 머물러 있는 널 봤어. 네 주변의 에테르가 달빛처럼 푸르게 일렁이는 게 정말 예쁘더라. 이 귀한 풍경을 보여준 답례로 내가 아껴둔 별 사탕을 두고 갈게!",

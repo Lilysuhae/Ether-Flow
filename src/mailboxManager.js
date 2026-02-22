@@ -27,6 +27,7 @@ class MailboxManager {
     /**
      * 렌더러로부터 받은 통계(stats)를 바탕으로 모든 서신 트리거를 체크합니다.
      */
+    // [mailboxManager.js] checkTriggers 함수 및 내부 판정 로직 전문
     checkTriggers(stats) {
         const newMails = [];
         
@@ -36,18 +37,16 @@ class MailboxManager {
         );
 
         availablePool.forEach(mail => {
-            // 2. 단일 trigger 또는 다중 triggers 배열 모두 대응합니다.
             const triggerList = Array.isArray(mail.triggers) 
                 ? mail.triggers 
                 : (mail.trigger ? [mail.trigger] : []);
 
             if (triggerList.length === 0) return;
 
-            // 서신 데이터에 logic이 없으면 기본적으로 "AND"를 사용합니다.
             const logic = mail.logic || "AND";
 
             /**
-             * [내부 헬퍼] 개별 조건을 판정합니다. (28개 트리거 전원 대응)
+             * ✨ [수정] 모든 28가지 트리거를 판정하는 완전한 조건 체크 함수입니다.
              */
             const checkCondition = (condition) => {
                 let isMet = false;
@@ -56,49 +55,50 @@ class MailboxManager {
                 const currentVal = stats[type];
 
                 switch (type) {
-                    // --- [기타 및 특수 조건] ---
+                    // --- 특수 조건 판정 ---
                     case 'always':
                         isMet = true; 
                         break;
 
                     case 'first_gift':
-                        // 특정 아이템(targetVal)을 선물한 기록이 있는지 확인
+                        // ✨ [핵심] renderer에서 보낸 gift_history 객체 내에 아이템이 있는지 확인
                         isMet = (stats.gift_history && stats.gift_history[targetVal] > 0);
                         break;
 
                     case 'specific_growth':
-                        // 특정 캐릭터의 성장도(분) 확인 (성체 진화 등)
+                        // 특정 캐릭터 혹은 현재 파트너의 성장도(분) 확인
                         const growthMap = stats.specific_growth || {};
                         const growthSec = growthMap[condition.partnerId || stats.partnerId] || 0;
                         isMet = (Math.floor(growthSec / 60) >= targetVal);
                         break;
+                    
+                    case 'first_gift':
+                    // ID로 먼저 확인하고, 없으면 이름으로도 확인하도록 보강
+                    isMet = (stats.gift_history && stats.gift_history[targetVal] > 0);
+                    break;
 
-                    // --- [상태 및 환경 (Boolean)] ---
+                    // --- 불리언 상태 판정 ---
+                    case 'flow_state':
+                    case 'perfect_day':
                     case 'night_owl':
                     case 'early_bird':
                     case 'weekend_alchemist':
-                    case 'perfect_day':
-                    case 'flow_state':
                     case 'gift_type_dislike':
-                        // renderer에서 판정된 true/false 값을 그대로 확인
                         isMet = (currentVal === true);
                         break;
 
-                    // --- [문자열 매칭] ---
+                    // --- 문자열 매칭 ---
                     case 'current_stage':
                     case 'partnerId':
                         isMet = (currentVal === targetVal);
                         break;
 
-                    // --- [누적 수치 및 레벨 (Numeric)] ---
-                    // 성취: alchemist_level, total_focus, todo_count, habit_master, rich_alchemist, failed_attempt_count, owned_count, adultCount
-                    // 교감: intimacy_level, daily_pet_limit, gift_total_count, gift_connoisseur, gift_count_favorite
-                    // 몰입: marathon_focus, app_juggler, inactive_days
-                    // 기타: previous_streak
+                    // --- 숫자 및 누적 수치 판정 (기본) ---
                     default:
                         if (currentVal !== undefined) {
+                            // 숫자인 경우 '이상(>=)' 판정, 그 외엔 '일치(===)' 판정
                             if (typeof currentVal === 'number' && typeof targetVal === 'number') {
-                                isMet = (currentVal >= targetVal); // 기준치 이상이면 충족
+                                isMet = (currentVal >= targetVal);
                             } else {
                                 isMet = (currentVal === targetVal);
                             }
@@ -108,7 +108,6 @@ class MailboxManager {
                 return isMet;
             };
 
-            // 3. AND/OR 논리 연산 수행 후 최종 수신 결정
             const isMet = (logic === "OR") 
                 ? triggerList.some(checkCondition) 
                 : triggerList.every(checkCondition);
@@ -116,7 +115,7 @@ class MailboxManager {
             if (isMet) {
                 this.addMail(mail);
                 newMails.push(mail);
-                console.log(`✉️ [Mailbox] 새로운 서신 도착: ${mail.title}`);
+                console.log(`✉️ 새로운 서신 도착: ${mail.title}`);
             }
         });
 

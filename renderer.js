@@ -1771,47 +1771,43 @@ window.applyHorizontalMode = () => {
 
 
 /**
- * [renderer.js] 새로운 알 획득 및 엔진 동기화 (중복 방지 강화)
+ * [renderer.js] 새로운 알 획득 및 엔진 동기화 (hatchTime 누락 수정본)
  */
 window.processNewEggAcquisition = async (charId, targetSec = 1800, source = 'system') => {
-    // 1. ✨ [방어] 이미 플라스크에 알이 있다면 'false'를 반환하고 즉시 종료
     if (window.collection && window.collection.activeEgg) {
         window.showToast("이미 알이 플라스크 안에 있어 받을 수 없습니다.", "error");
         return false; 
     }
 
-    // 2. 캐릭터 데이터 확인
     const char = window.charData.characters.find(c => String(c.id) === String(charId));
     if (!char) return false;
 
-    // 3. ✨ 파트너 정보 및 엔진 상태 동기화 (이름/배경 변경 해결)
     window.currentPartner = char; 
     window.masterData.character.selectedPartnerId = char.id; 
     window.currentStage = 'egg'; 
 
-    // 4. 알 데이터 등록
+    // ✨ [수정] AlchemyManager.js의 감시 엔진이 인식할 수 있도록 hatchTime을 추가합니다.
+    const nowTimestamp = Date.now();
     window.collection.activeEgg = {
         type: char.id,
         progress: 0,
         target: targetSec,
-        date: new Date().toISOString()
+        date: new Date(nowTimestamp).toISOString(),
+        hatchTime: nowTimestamp + (targetSec * 1000) // ✨ 여기에 hatchTime이 반드시 있어야 합니다!
     };
 
-    // 5. 그래픽 강제 리프레시
     if (window.characterManager) {
         await window.characterManager.refreshSprite(true); 
     }
 
-    // 6. UI 업데이트 및 저장
     window.updateUI(); 
     if (window.saveAllData) await window.saveAllData();
     
-    // 7. 연출 실행
     if (window.triggerSupernovaEffect) {
         window.triggerSupernovaEffect(char);
     }
 
-    return true; // ✨ 모든 과정이 성공했을 때만 true 반환
+    return true; 
 };
 
 
@@ -2044,16 +2040,9 @@ async function handleMidnightReset(nowMolipDate) {
 }
 
 /**
- * [renderer.js] 서신 및 업적 조건 체크 함수 전문
- * @param {boolean} isFocusing - 현재 집중 중인지 여부 (flow_state 판정용)
- * @param {string} nowMolipDate - 현재 논리적 날짜 (YYYY-MM-DD)
+ * [renderer.js] 모든 유저에게 적용되는 자동 서신 체크 엔진
  */
-
-/**
- * [renderer.js] 서신 및 업적 트리거 체크 엔진 (완전판)
- * 유저 제공 목록의 28개 트리거를 모두 실시간 데이터와 연결합니다.
- */
-function checkMailAndAchievements(isFocusing, nowMolipDate) {
+window.checkMailAndAchievements = function(isFocusing, nowMolipDate) {
     if (!window.mailbox || !window.progress || !window.collection) return;
 
     const currentId = window.currentPartner?.id;
@@ -2061,61 +2050,58 @@ function checkMailAndAchievements(isFocusing, nowMolipDate) {
     const currentHour = now.getHours();
     const currentDay = now.getDay();
 
-    // [계산] 성체 수 판정 (evolution_level 기준)
+    // 1. 성체 캐릭터 수 계산
     const adultCount = (window.charData?.characters || []).filter(char => {
         const growthSec = window.charGrowthMap[char.id] || 0;
         return (growthSec / 60) >= (char.evolution_level || 300);
     }).length;
 
-    // [계산] 완벽한 하루 판정 (할일+습관 모두 완료)
-    const hasTasks = window.molipTodos.length > 0 || window.molipHabits.length > 0;
+    // 2. 완벽한 하루 판정
+    const hasTasks = (window.molipTodos.length > 0 || window.molipHabits.length > 0);
     const allTodosDone = window.molipTodos.length > 0 ? window.molipTodos.every(t => t.completed) : true;
     const allHabitsDone = window.molipHabits.length > 0 ? window.molipHabits.every(h => h.completed) : true;
     const isPerfectDay = hasTasks && allTodosDone && allHabitsDone;
 
-    // [계산] 선물 통계
-    const giftHistory = window.givenGiftsMap || {};
-    const giftTotalCount = Object.values(giftHistory).reduce((sum, val) => sum + (Number(val) || 0), 0);
+    // 3. 선물 기록 평면화 (first_gift 판정용)
+    const allGiftsGiven = {};
+    let giftTotalCount = 0;
+    Object.values(window.givenGiftsMap || {}).forEach(giftList => {
+        if (Array.isArray(giftList)) {
+            giftList.forEach(giftNameOrId => {
+                allGiftsGiven[giftNameOrId] = 1; 
+                giftTotalCount++;
+            });
+        }
+    });
 
-    // ✨ [데이터 매핑] 주석이 아닌 실제 실행 데이터 객체입니다.
+    // 4. ✨ [캐릭터별 자동 분류] 현재 파트너의 좋아하는 선물 횟수 가져오기
+    const favoriteGiftMap = window.masterData.character.favoriteGiftMap || {};
+    const currentFavCount = currentId ? (favoriteGiftMap[currentId] || 0) : 0;
+
+    // 5. 엔진에 전달할 데이터 집합(stats) 구성
     const stats = {
-        // --- 성취 (Achievement) ---
         alchemist_level: window.progress.getProgressData().level,
-        total_focus: Math.floor(window.progress.totalFocusTime / 60), // 분 단위
+        total_focus: Math.floor(window.progress.totalFocusTime / 60), 
         todo_count: window.molipTodos.filter(t => t.completed).length,
         habit_master: Math.max(0, ...window.molipHabits.map(h => h.streak || 0)),
         rich_alchemist: window.collection.points,
-        failed_attempt_count: window.masterData.progress.failedCount || 0,
         owned_count: (window.collection.ownedIds || []).length,
         adultCount: adultCount,
-
-        // --- 교감 (Bond) ---
         intimacy_level: window.charIntimacyMap[currentId] || 0,
-        daily_pet_limit: window.dailyPetCountMap ? (window.dailyPetCountMap[`${currentId}_${nowMolipDate}`] || 0) : 0,
         gift_total_count: giftTotalCount,
-        gift_connoisseur: Object.keys(giftHistory).length,
-        gift_count_favorite: window.masterData.character.favoriteGiftCount || 0,
-        gift_history: giftHistory, // first_gift 판정용
-
-        // --- 몰입 및 환경 ---
-        marathon_focus: Math.floor((window.molipMonitor?.currentSessionTime || 0) / 60), // 분 단위
+        gift_history: allGiftsGiven, 
+        gift_count_favorite: currentFavCount, // ✨ 자동 추출된 개별 수치
         flow_state: isFocusing,
         night_owl: (currentHour >= 0 && currentHour < 4),
         early_bird: (currentHour >= 5 && currentHour < 9),
         weekend_alchemist: (currentDay === 0 || currentDay === 6),
         perfect_day: isPerfectDay,
-        inactive_days: window.masterData.progress.inactiveDays || 0,
-        app_juggler: (window.workApps || []).length,
-
-        // --- 기타 (General) ---
-        always: true,
         current_stage: window.currentStage,
-        specific_growth: window.charGrowthMap || {},
         partnerId: currentId,
-        previous_streak: window.masterData.progress.previousStreak || 0
+        always: true
     };
 
-    // 엔진 가동
+    // 6. 서신 조건 판정 및 자동 발송
     const newMails = window.mailbox.checkTriggers(stats);
 
     if (newMails && newMails.length > 0) {
@@ -2125,8 +2111,7 @@ function checkMailAndAchievements(isFocusing, nowMolipDate) {
         if (window.updateMailNotification) window.updateMailNotification();
         if (window.saveAllData) window.saveAllData(); 
     }
-}
-
+};
 /**
  * [renderer.js] 상태 배지 UI 업데이트 (디자인 클래스 보존 버전)
  */
@@ -2171,66 +2156,55 @@ function updateStatusBadge() {
 window.finalizeContract = async (char) => {
     console.log("📜 첫 번째 계약 체결: ", char.name);
 
-    // 1. 인트로 화면 페이드 아웃
     const intro = document.getElementById('intro-sequence');
     if (intro) {
         intro.style.transition = "opacity 1.5s ease";
         intro.style.opacity = "0";
     }
 
-    // 2. 컬렉션 매니저 초기화
     if (!collection) collection = new CollectionManager({});
     
-    // 3. ✨ [알 상태 등록] 보유 목록(ownedIds)에 넣지 않고 플라스크(activeEgg)에만 등록합니다.
-    // 이렇게 해야 도감에서 "태어난 상태"가 아닌 "부화 중"으로 정확히 표시됩니다.
+    // ✨ [수정] 첫 번째 알 데이터 등록 시에도 hatchTime을 계산하여 넣습니다.
+    const nowTimestamp = Date.now();
+    const targetDuration = 1800; // 30분
     collection.activeEgg = {
         type: char.id,
         progress: 0,
-        target: 1800, // 30분
-        date: new Date().toISOString()
+        target: targetDuration,
+        date: new Date(nowTimestamp).toISOString(),
+        hatchTime: nowTimestamp + (targetDuration * 1000) // ✨ 감시 엔진용 타임스탬프 추가
     };
     
-    // 4. 파트너 및 UI 상태를 '알'로 강제 설정
     currentPartner = char;
     window.currentPartner = char;
-    window.currentStage = 'egg';      // 이름표 동기화 핵심
-    window.lastCharacterState = null; // 상태 초기화
+    window.currentStage = 'egg';      
+    window.lastCharacterState = null; 
     
     if (!masterData.character) masterData.character = {};
     masterData.character.selectedPartnerId = char.id;
     
-    // 연출용 플래그 및 농도 초기화
     window.isHatching = true; 
-    cylinderSaturation = 0;
     masterData.cylinderSaturation = 0;
     masterData.hatchCount = (masterData.hatchCount || 0) + 1;
 
-    // 5. 날짜 기록 및 데이터 영구 저장
     if (!masterData.progress) masterData.progress = {};
     masterData.progress.lastSaveDate = window.getMolipDate();
     await saveAllData();
 
-    // 6. 메인 화면 전환 및 엔진 가동
     setTimeout(async () => {
         if (intro) intro.style.display = 'none'; 
-        
-        // 캐릭터(알) 그래픽 및 UI 로드
         if (typeof refreshCharacterSprite === 'function') {
             await refreshCharacterSprite(); 
         }
-        
-        window.updateUI(); // 이름표가 'ㅁㅁ색 알'로 나오도록 갱신
-        if (window.renderCollection) window.renderCollection(); // 도감에 '부화 중' 표시
+        window.updateUI(); 
+        if (window.renderCollection) window.renderCollection(); 
 
-        // 엔진이 꺼져있다면 가동
         if (!window.gameEngineInterval) {
             window.startMainGameEngine();
             if (typeof isEngineStarted !== 'undefined') isEngineStarted = true;
         }
 
-        // 부화 연출 잠금 해제
         setTimeout(() => { window.isHatching = false; }, 1000);
-
         window.showToast(`${char.egg_name}과(와) 운명적인 계약을 맺었습니다.`, "success");
     }, 1500);
 };
@@ -2547,4 +2521,66 @@ window.triggerSupernovaEffect = (char) => {
             mainCanvas.style.transform = '';
         }
     }, 2000); // 2초간 지속
+};
+
+/**
+ * [renderer.js] 알 부화를 실제로 처리하고 캐릭터 목록에 추가하는 핵심 함수입니다.
+ * AlchemyManager.js의 부화 엔진과 데이터를 연결합니다.
+ */
+window.completeHatching = async (charId) => {
+    try {
+        console.log(`🐣 [System] ${charId} 캐릭터 부화 프로세스 시작...`);
+
+        if (!window.collection || !window.collection.ownedIds) {
+            console.error("❌ 수집 데이터(collection)를 찾을 수 없습니다.");
+            return false;
+        }
+
+        // 1. 캐릭터 보유 목록에 추가 (중복 방지)
+        if (!window.collection.ownedIds.includes(charId)) {
+            window.collection.ownedIds.push(charId);
+        }
+
+        // 2. 실린더에서 부화된 알 제거
+        window.collection.activeEgg = null;
+
+        // 3. ✨ [연출] 슈퍼노바 효과 트리거 (renderer.js에 정의된 연출 함수)
+        if (window.triggerSupernovaEffect) {
+            const charData = window.charData.characters.find(c => c.id === charId);
+            if (charData) window.triggerSupernovaEffect(charData);
+        }
+
+        // 4. 데이터 즉시 영구 저장
+        if (window.saveAllData) {
+            await window.saveAllData();
+        }
+
+        // 5. UI 및 도감 즉시 갱신
+        if (window.renderCollection) window.renderCollection();
+        if (window.showToast) {
+            window.showToast("새로운 생명이 부화했습니다! 도감을 확인해보세요.", "success");
+        }
+
+        console.log(`✅ [System] ${charId} 부화 완료 및 세이브 성공`);
+        return true;
+
+    } catch (error) {
+        console.error("❌ 부화 처리 중 치명적 오류 발생:", error);
+        return false;
+    }
+};
+
+/**
+ * [renderer.js] 유저가 선물을 주면 호출되는 자동 카운팅 시스템
+ */
+window.processFavoriteGiftSuccess = function(charId) {
+    if (!window.masterData.character) window.masterData.character = {};
+    if (!window.masterData.character.favoriteGiftMap) window.masterData.character.favoriteGiftMap = {};
+
+    // 1. 해당 캐릭터 전용 금고에 카운트 +1
+    window.masterData.character.favoriteGiftMap[charId] = (window.masterData.character.favoriteGiftMap[charId] || 0) + 1;
+
+    // 2. 파일 자동 저장 및 서신 체크
+    if (window.saveAllData) window.saveAllData();
+    window.checkMailAndAchievements(window.isActuallyWorking, window.getMolipDate());
 };
