@@ -2327,27 +2327,34 @@ async function startEngine() {
         logManager.init();
         codeManager.init();
 
-        // 7. 캐릭터 복구
+        // 7. 캐릭터 복구 및 인트로 트리거
         const savedId = masterData.character?.selectedPartnerId;
         const hasOwned = collection.ownedIds && collection.ownedIds.length > 0;
         const hasEgg = !!collection.activeEgg;
-        
+
+        // ✨ [수정] 파트너, 알, 보유 캐릭터가 모두 없는 경우를 신규 유저로 판정
         if (!savedId && !hasEgg && !hasOwned) {
+            console.log("🆕 신규 연금술사 감지: 인트로 시퀀스를 가동합니다.");
             const intro = document.getElementById('intro-sequence');
-            if (intro) intro.style.display = 'flex';
+            
+            if (intro) {
+                intro.style.display = 'flex'; // 인트로 배경 노출
+                
+                // ✨ [핵심 추가] 데이터 로드가 완료된 이 시점에 인트로 초기화(카드 렌더링) 호출
+                if (window.initIntro) {
+                    window.initIntro(); 
+                } else if (typeof renderIntroChoices === 'function') {
+                    renderIntroChoices(); 
+                }
+            }
         } else {
+            // 기존 유저 복구 로직 (기존 코드 유지)
             const targetId = savedId || (hasOwned ? collection.ownedIds[0] : (hasEgg ? collection.activeEgg.type : null));
             if (targetId) {
                 currentPartner = charData.characters.find(c => c.id === targetId);
-                // ✨ [핵심 수정] 파트너 정보를 전역 객체에 공유 (CharacterManager가 인식하도록 함)
                 window.currentPartner = currentPartner; 
-                
                 if (currentPartner) await refreshCharacterSprite(); 
             }
-        }
-
-        if (window.NoteManager) {
-            window.NoteManager.init();
         }
 
         // 8. UI 최종 적용
@@ -2402,6 +2409,41 @@ async function startEngine() {
         console.error("❌ [System] 엔진 시작 중 오류:", err);
     }
 }
+
+/**
+ * [renderer.js 하단 추가]
+ * 인트로의 편지 봉인을 해제하고 내용을 보여줍니다.
+ */
+window.breakSeal = () => {
+    const envelope = document.getElementById('ritual-envelope');
+    const letter = document.getElementById('legacy-letter');
+    
+    if (envelope) {
+        envelope.classList.remove('active'); // 봉투 사라짐
+    }
+    
+    if (letter) {
+        letter.classList.add('active'); // 편지 나타남
+        if (window.playSFX) window.playSFX('paper'); // 종이 소리 재생
+    }
+};
+
+/**
+ * [renderer.js 하단 추가]
+ * 인트로에서 알(캐릭터)을 클릭했을 때 확인 모달을 띄웁니다.
+ */
+window.selectFirstPartner = (charId) => {
+    // introManager.js에 정의된 charData를 참조하여 해당 캐릭터를 찾습니다.
+    const char = (window.charData && window.charData.characters) 
+                 ? window.charData.characters.find(c => c.id === charId) 
+                 : null;
+
+    if (char && window.showIntroConfirm) {
+        window.showIntroConfirm(char); // introManager.js의 확인창 호출
+    } else {
+        console.error("❌ 캐릭터를 찾을 수 없거나 모달 함수가 로드되지 않았습니다.");
+    }
+};
 
 // 오디오 엔진 설정
 window.setupEngine = () => {

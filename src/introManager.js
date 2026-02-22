@@ -36,18 +36,15 @@ const introScript = [
 ];
 
 // 2. [1단계] 봉인 해제 함수
-window.breakSeal = function() {
-    const seal = document.querySelector('.seal-wax');
-    if (!seal) return;
-
-    seal.classList.add('vibrate'); 
-    
-    setTimeout(() => {
-        document.getElementById('ritual-envelope').style.display = 'none';
-        document.getElementById('legacy-letter').style.display = 'flex';
-        document.getElementById('legacy-letter').classList.add('active');
-        window.startReading(); 
-    }, 500);
+// [renderer.js] 하단에 추가
+window.breakSeal = () => {
+    const envelope = document.getElementById('ritual-envelope');
+    const letter = document.getElementById('legacy-letter');
+    if (envelope) envelope.classList.remove('active');
+    if (letter) {
+        letter.classList.add('active');
+        if (window.playSFX) window.playSFX('paper'); // 효과음 재생
+    }
 };
 
 // 3. [2단계] 몰입의 독서 (텍스트 출력)

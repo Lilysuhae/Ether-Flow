@@ -25,115 +25,91 @@ class MailboxManager {
      */
     checkTriggers(stats) {
         const newMails = [];
-        // 이미 받은 편지는 제외하고 체크
+        
+        // 이미 받은 편지는 제외하고 체크할 대상을 선별합니다.
         const availablePool = this.mailPool.filter(mail => 
             !this.receivedMails.find(m => m.id === mail.id)
         );
 
         availablePool.forEach(mail => {
-            const triggerList = Array.isArray(mail.triggers) ? mail.triggers : (mail.trigger ? [mail.trigger] : []);
-
-            // 1. 캐릭터 전용 ID가 지정되어 있거나, 트리거 조건 중 '특정 캐릭터' 혹은 '성장도'를 체크하는지 확인합니다.
-            const isCharacterRelated = mail.charId || triggerList.some(t => 
-                t.type === 'partnerId' || t.type === 'specific_growth'
-            );
-
-            // 2. 만약 현재 알 상태(isEggStage)이고 캐릭터 관련 편지라면, 조건 검사를 하지 않고 건너뜁니다.
-            if (stats.isEggStage && isCharacterRelated) {
-                return; 
-            }
+            // 단일 trigger 또는 다중 triggers 배열 모두 대응합니다.
+            const triggerList = Array.isArray(mail.triggers) 
+                ? mail.triggers 
+                : (mail.trigger ? [mail.trigger] : []);
 
             if (triggerList.length === 0) return;
 
-            const logic = mail.logic || "AND"; // 기본값은 모든 조건 충족(AND)
+            // logic 필드가 없으면 기본값으로 "AND"를 사용합니다.
+            const logic = mail.logic || "AND";
 
-            // [mailboxManager.js] 시간 관련 비교 로직을 모두 분(Min) 단위로 통일
+            /**
+             * 개별 조건이 충족되었는지 판정하는 내부 헬퍼 함수입니다.
+             */
             const checkCondition = (condition) => {
-                // 1. '항상 수신' 조건 처리
-                if (condition.type === 'always') return true;
-
                 let isMet = false;
-                switch (condition.type) {
-                    // --- [시간 관련: 모두 분(Min) 단위로 변환하여 비교] ---
-                    
-                    case 'total_focus':
-                        // 누적 몰입 시간: (초 / 60) >= JSON에 적힌 분
-                        isMet = (stats.totalTime / 60) >= condition.value;
+                const type = condition.type;
+                const targetVal = condition.value;
+
+                // [핵심] JSON의 조건 타입(Snake_case)과 시스템 데이터(CamelCase)를 연결합니다.
+                switch (type) {
+                    case 'adultCount':
+                        // 성체 진화 횟수 체크
+                        isMet = (stats.adultCount >= targetVal);
+                        break;
+
+                    case 'owned_count':
+                        // 보유 캐릭터 수 체크 (Snake/Camel 대응)
+                        const currentOwned = stats.owned_count !== undefined ? stats.owned_count : stats.ownedCount;
+                        isMet = (currentOwned >= targetVal);
+                        break;
+
+                    case 'rich_alchemist':
+                        // 보유 에테르 체크 (Snake/Camel 대응)
+                        const currentPoints = stats.rich_alchemist !== undefined ? stats.rich_alchemist : stats.points;
+                        isMet = (currentPoints >= targetVal);
+                        break;
+
+                    case 'app_juggler':
+                        // 사용 도구 수 체크 (Snake/Camel 대응)
+                        const currentApps = stats.app_juggler !== undefined ? stats.app_juggler : stats.uniqueAppsCount;
+                        isMet = (currentApps >= targetVal);
                         break;
 
                     case 'marathon_focus':
-                        // 연속 몰입 시간: (초 / 60) >= JSON에 적힌 분
-                        // stats.marathonTime은 renderer.js에서 넘겨줘야 합니다.
-                        isMet = (stats.marathonTime / 60) >= condition.value;
+                        // 연속 집중 시간 체크 (Snake/Camel 대응)
+                        const currentFocus = stats.marathon_focus !== undefined ? stats.marathon_focus : stats.maxContinuousFocus;
+                        isMet = (currentFocus >= targetVal);
                         break;
 
-                    case 'specific_growth':
-                        // 특정 캐릭터 성장도: (초 / 60) >= JSON에 적힌 분
-                        const growthSec = stats.all_growth ? (stats.all_growth[condition.charId] || 0) : 0;
-                        isMet = (growthSec / 60) >= condition.value;
-                        break;
-
-                    case 'growth_level':
-                        // 현재 파트너 성장도: (초 / 60) >= JSON에 적힌 분
-                        const currentGrowthSec = stats.all_growth ? (stats.all_growth[stats.partnerId] || 0) : 0;
-                        isMet = (currentGrowthSec / 60) >= condition.value;
-                        break;
-
-                    // --- [수치 및 상태 관련: 기존 유지] ---
-                    case 'owned_count':
-                        isMet = (stats.ownedCount >= condition.value);
-                        break;
-                    case 'todo_count':
-                        isMet = (stats.todoCount >= condition.value);
-                        break;
-                    case 'alchemist_level':
-                        isMet = (stats.alchemist_level >= condition.value);
-                        break;
-                    case 'rich_alchemist':
-                        isMet = (stats.points >= condition.value);
-                        break;
-                    case 'partnerId':
-                        isMet = (stats.partnerId === condition.value);
-                        break;
-                    case 'intimacy_level':
-                        isMet = (stats.intimacy_level >= condition.value);
-                        break;
-                    case 'current_stage':
-                        isMet = (stats.current_stage === condition.value);
-                        break;
-                    case 'flow_state':
-                        isMet = (stats.isFlowActive === condition.value);
-                        break;
-                    case 'perfect_day':
-                        isMet = (stats.isPerfectDay === true);
-                        break;
-                    case 'early_bird':
-                        isMet = (stats.currentHour >= 6 && stats.currentHour <= 9);
-                        break;
-                    case 'night_owl':
-                        isMet = (stats.currentHour >= 0 && stats.currentHour < 5);
-                        break;
                     case 'weekend_alchemist':
+                        // 주말 판정 (일요일: 0, 토요일: 6)
                         isMet = (stats.currentDay === 0 || stats.currentDay === 6);
                         break;
+
                     default:
-                        if (typeof stats[condition.type] === 'number' && typeof condition.value === 'number') {
-                            isMet = (stats[condition.type] >= condition.value);
+                        // 정의되지 않은 기타 조건은 stats 객체에서 직접 필드명을 찾아 비교합니다.
+                        const genericVal = stats[type];
+                        if (typeof genericVal === 'number' && typeof targetVal === 'number') {
+                            isMet = (genericVal >= targetVal);
                         } else {
-                            isMet = (stats[condition.type] === condition.value);
+                            isMet = (genericVal === targetVal);
                         }
                 }
                 return isMet;
             };
 
-            // 3. AND/OR 논리 연산 수행
-            const isMet = (logic === "OR") ? triggerList.some(checkCondition) : triggerList.every(checkCondition);
+            // 3. 설정된 로직(AND/OR)에 따라 최종 수신 여부를 결정합니다.
+            const isMet = (logic === "OR") 
+                ? triggerList.some(checkCondition) 
+                : triggerList.every(checkCondition);
 
             if (isMet) {
                 this.addMail(mail);
                 newMails.push(mail);
+                console.log(`✉️ 새로운 서신 도착: ${mail.title}`);
             }
         });
+
         return newMails;
     }
 
