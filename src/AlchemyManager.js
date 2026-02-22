@@ -715,36 +715,53 @@ window.startRecipeSynthesis = async () => {
     if (window.updateAltarStatus) window.updateAltarStatus();
 };
 
-/**
- * [AlchemyManager.js]
- * 실시간 부화 감시 엔진 (Hatch Monitor)
- * 이 함수는 renderer.js의 메인 루프에서 호출되거나, 여기서 자체적으로 돕니다.
- */
+// [AlchemyManager.js]
 window.startHatchMonitor = () => {
-    setInterval(async () => {
+    // 이전 인터벌이 있다면 제거 (중복 방지)
+    if (window.hatchInterval) clearInterval(window.hatchInterval);
+
+    window.hatchInterval = setInterval(async () => {
+        // 데이터 로드 확인 방어 코드
+        if (!window.collection || !window.collection.activeEgg) return;
+        
         const egg = window.collection.activeEgg;
         
-        // 1. 실린더에 알이 있고, 연출 중이 아닐 때만 체크
-        if (egg && !window.isHatching) {
+        // 연성 연출 중(isHatching)이 아닐 때만 체크
+        if (!window.isHatching) {
             const now = Date.now();
             
-            // 2. 부화 예정 시간이 지났는지 확인
             if (now >= egg.hatchTime) {
-                console.log("🐣 부화 조건 충족! 이벤트를 시작합니다.");
-                
-                // 중복 실행 방지 잠금
-                window.isHatching = true; 
+                console.log("🐣 [System] 부화 시간이 도달했습니다:", egg.type);
+                window.isHatching = true; // 잠금
 
-                // 3. 실제 부화 처리 함수 호출 (renderer.js 등에 정의된 부화 연출)
-                if (window.triggerHatchSequence) {
-                    await window.triggerHatchSequence(egg);
-                } else {
-                    // 연출 함수가 없다면 즉시 데이터 변환 처리
-                    await window.completeHatching(egg.type);
+                try {
+                    // 1. 데이터 처리 (알 제거 및 캐릭터 추가)
+                    const success = await window.completeHatching(egg.type);
+                    
+                    if (success) {
+                        // 2. ✨ 핵심: 즉시 파일 저장 (재시작 시 안정성 확보)
+                        if (window.saveAllData) await window.saveAllData();
+                        
+                        // 3. ✨ 핵심: UI 및 캐릭터 캔버스 강제 리프레시
+                        if (window.renderCollection) window.renderCollection();
+                        
+                        // 4. 부화 성공 연출 (연출 함수가 없으면 알림만)
+                        if (window.triggerHatchSequence) {
+                            await window.triggerHatchSequence(egg);
+                        } else {
+                            window.showToast("새로운 생명이 깨어났습니다!", "success");
+                            // 연출이 없으면 즉시 파트너 업데이트
+                            if (window.CharacterManager) window.CharacterManager.init(); 
+                        }
+                    }
+                } catch (err) {
+                    console.error("부화 프로세스 중 오류:", err);
+                } finally {
+                    window.isHatching = false; // ✨ 어떤 상황에서든 잠금 해제
                 }
             }
         }
-    }, 1000); // 1초마다 감시
+    }, 2000); // 2초 간격으로 체크 (부하 최적화)
 };
 
 // 페이지 로드 시 감시 시작
