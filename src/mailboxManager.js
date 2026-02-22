@@ -1,4 +1,8 @@
-// src/mailboxManager.js
+/**
+ * [MailboxManager.js] 
+ * 서신 시스템의 핵심 로직을 담당하는 매니저 클래스입니다.
+ * 모든 트리거 조건을 누락 없이 판정하며 데이터 정합성을 유지합니다.
+ */
 class MailboxManager {
     constructor(initialData, poolData) {
         // initialData: masterData.mailbox (저장된 수신 목록)
@@ -8,7 +12,7 @@ class MailboxManager {
     }
 
     /**
-     * 트리거가 충족된 편지를 수신함(receivedMails)에 공식적으로 추가합니다.
+     * 조건이 충족된 편지를 수신함에 추가합니다.
      */
     addMail(mail) {
         const newEntry = {
@@ -21,84 +25,90 @@ class MailboxManager {
     }
 
     /**
-     * 렌더러로부터 받은 현재 통계(stats)를 바탕으로 편지 수신 조건을 체크합니다.
+     * 렌더러로부터 받은 통계(stats)를 바탕으로 모든 서신 트리거를 체크합니다.
      */
     checkTriggers(stats) {
         const newMails = [];
         
-        // 이미 받은 편지는 제외하고 체크할 대상을 선별합니다.
+        // 1. 이미 받은 편지는 제외하고 체크할 대상을 선별합니다.
         const availablePool = this.mailPool.filter(mail => 
             !this.receivedMails.find(m => m.id === mail.id)
         );
 
         availablePool.forEach(mail => {
-            // 단일 trigger 또는 다중 triggers 배열 모두 대응합니다.
+            // 2. 단일 trigger 또는 다중 triggers 배열 모두 대응합니다.
             const triggerList = Array.isArray(mail.triggers) 
                 ? mail.triggers 
                 : (mail.trigger ? [mail.trigger] : []);
 
             if (triggerList.length === 0) return;
 
-            // logic 필드가 없으면 기본값으로 "AND"를 사용합니다.
+            // 서신 데이터에 logic이 없으면 기본적으로 "AND"를 사용합니다.
             const logic = mail.logic || "AND";
 
             /**
-             * 개별 조건이 충족되었는지 판정하는 내부 헬퍼 함수입니다.
+             * [내부 헬퍼] 개별 조건을 판정합니다. (28개 트리거 전원 대응)
              */
             const checkCondition = (condition) => {
                 let isMet = false;
                 const type = condition.type;
                 const targetVal = condition.value;
+                const currentVal = stats[type];
 
-                // [핵심] JSON의 조건 타입(Snake_case)과 시스템 데이터(CamelCase)를 연결합니다.
                 switch (type) {
-                    case 'adultCount':
-                        // 성체 진화 횟수 체크
-                        isMet = (stats.adultCount >= targetVal);
+                    // --- [기타 및 특수 조건] ---
+                    case 'always':
+                        isMet = true; 
                         break;
 
-                    case 'owned_count':
-                        // 보유 캐릭터 수 체크 (Snake/Camel 대응)
-                        const currentOwned = stats.owned_count !== undefined ? stats.owned_count : stats.ownedCount;
-                        isMet = (currentOwned >= targetVal);
+                    case 'first_gift':
+                        // 특정 아이템(targetVal)을 선물한 기록이 있는지 확인
+                        isMet = (stats.gift_history && stats.gift_history[targetVal] > 0);
                         break;
 
-                    case 'rich_alchemist':
-                        // 보유 에테르 체크 (Snake/Camel 대응)
-                        const currentPoints = stats.rich_alchemist !== undefined ? stats.rich_alchemist : stats.points;
-                        isMet = (currentPoints >= targetVal);
+                    case 'specific_growth':
+                        // 특정 캐릭터의 성장도(분) 확인 (성체 진화 등)
+                        const growthMap = stats.specific_growth || {};
+                        const growthSec = growthMap[condition.partnerId || stats.partnerId] || 0;
+                        isMet = (Math.floor(growthSec / 60) >= targetVal);
                         break;
 
-                    case 'app_juggler':
-                        // 사용 도구 수 체크 (Snake/Camel 대응)
-                        const currentApps = stats.app_juggler !== undefined ? stats.app_juggler : stats.uniqueAppsCount;
-                        isMet = (currentApps >= targetVal);
-                        break;
-
-                    case 'marathon_focus':
-                        // 연속 집중 시간 체크 (Snake/Camel 대응)
-                        const currentFocus = stats.marathon_focus !== undefined ? stats.marathon_focus : stats.maxContinuousFocus;
-                        isMet = (currentFocus >= targetVal);
-                        break;
-
+                    // --- [상태 및 환경 (Boolean)] ---
+                    case 'night_owl':
+                    case 'early_bird':
                     case 'weekend_alchemist':
-                        // 주말 판정 (일요일: 0, 토요일: 6)
-                        isMet = (stats.currentDay === 0 || stats.currentDay === 6);
+                    case 'perfect_day':
+                    case 'flow_state':
+                    case 'gift_type_dislike':
+                        // renderer에서 판정된 true/false 값을 그대로 확인
+                        isMet = (currentVal === true);
                         break;
 
+                    // --- [문자열 매칭] ---
+                    case 'current_stage':
+                    case 'partnerId':
+                        isMet = (currentVal === targetVal);
+                        break;
+
+                    // --- [누적 수치 및 레벨 (Numeric)] ---
+                    // 성취: alchemist_level, total_focus, todo_count, habit_master, rich_alchemist, failed_attempt_count, owned_count, adultCount
+                    // 교감: intimacy_level, daily_pet_limit, gift_total_count, gift_connoisseur, gift_count_favorite
+                    // 몰입: marathon_focus, app_juggler, inactive_days
+                    // 기타: previous_streak
                     default:
-                        // 정의되지 않은 기타 조건은 stats 객체에서 직접 필드명을 찾아 비교합니다.
-                        const genericVal = stats[type];
-                        if (typeof genericVal === 'number' && typeof targetVal === 'number') {
-                            isMet = (genericVal >= targetVal);
-                        } else {
-                            isMet = (genericVal === targetVal);
+                        if (currentVal !== undefined) {
+                            if (typeof currentVal === 'number' && typeof targetVal === 'number') {
+                                isMet = (currentVal >= targetVal); // 기준치 이상이면 충족
+                            } else {
+                                isMet = (currentVal === targetVal);
+                            }
                         }
+                        break;
                 }
                 return isMet;
             };
 
-            // 3. 설정된 로직(AND/OR)에 따라 최종 수신 여부를 결정합니다.
+            // 3. AND/OR 논리 연산 수행 후 최종 수신 결정
             const isMet = (logic === "OR") 
                 ? triggerList.some(checkCondition) 
                 : triggerList.every(checkCondition);
@@ -106,22 +116,33 @@ class MailboxManager {
             if (isMet) {
                 this.addMail(mail);
                 newMails.push(mail);
-                console.log(`✉️ 새로운 서신 도착: ${mail.title}`);
+                console.log(`✉️ [Mailbox] 새로운 서신 도착: ${mail.title}`);
             }
         });
 
         return newMails;
     }
 
+    /**
+     * 읽지 않은 서신 개수를 반환합니다.
+     */
     getUnreadCount() {
         return this.receivedMails.filter(m => !m.isRead).length;
     }
 
+    /**
+     * 특정 서신을 읽음 처리합니다.
+     */
     markAsRead(mailId) {
         const mail = this.receivedMails.find(m => m.id === mailId);
-        if (mail) mail.isRead = true;
+        if (mail) {
+            mail.isRead = true;
+        }
     }
 
+    /**
+     * 보상을 수령 처리합니다.
+     */
     claimReward(mailId) {
         const mail = this.receivedMails.find(m => m.id === mailId);
         if (mail && !mail.isRewardClaimed) {
@@ -131,9 +152,15 @@ class MailboxManager {
         return null;
     }
 
+    /**
+     * 세이브 데이터에 저장할 수신 목록 배열을 반환합니다.
+     */
     getSaveData() {
         return this.receivedMails;
     }
 }
 
-module.exports = MailboxManager;
+// 모듈 내보내기 (CommonJS 환경 대응)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = MailboxManager;
+}

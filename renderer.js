@@ -2048,69 +2048,79 @@ async function handleMidnightReset(nowMolipDate) {
  * @param {boolean} isFocusing - 현재 집중 중인지 여부 (flow_state 판정용)
  * @param {string} nowMolipDate - 현재 논리적 날짜 (YYYY-MM-DD)
  */
+
+/**
+ * [renderer.js] 서신 및 업적 트리거 체크 엔진 (완전판)
+ * 유저 제공 목록의 28개 트리거를 모두 실시간 데이터와 연결합니다.
+ */
 function checkMailAndAchievements(isFocusing, nowMolipDate) {
-    // 기초 시스템 로드 확인
     if (!window.mailbox || !window.progress || !window.collection) return;
 
     const currentId = window.currentPartner?.id;
     const now = new Date();
+    const currentHour = now.getHours();
+    const currentDay = now.getDay();
 
-    // 1. 성체 캐릭터 수 계산
+    // [계산] 성체 수 판정 (evolution_level 기준)
     const adultCount = (window.charData?.characters || []).filter(char => {
         const growthSec = window.charGrowthMap[char.id] || 0;
         return (growthSec / 60) >= (char.evolution_level || 300);
     }).length;
 
-    // 2. 완벽한 하루(Perfect Day) 판정
+    // [계산] 완벽한 하루 판정 (할일+습관 모두 완료)
     const hasTasks = window.molipTodos.length > 0 || window.molipHabits.length > 0;
     const allTodosDone = window.molipTodos.length > 0 ? window.molipTodos.every(t => t.completed) : true;
     const allHabitsDone = window.molipHabits.length > 0 ? window.molipHabits.every(h => h.completed) : true;
     const isPerfectDay = hasTasks && allTodosDone && allHabitsDone;
 
-    // 3. 쓰다듬기 횟수 키 생성
-    const petKey = `${currentId}_${nowMolipDate}`;
+    // [계산] 선물 통계
+    const giftHistory = window.givenGiftsMap || {};
+    const giftTotalCount = Object.values(giftHistory).reduce((sum, val) => sum + (Number(val) || 0), 0);
 
-    // 4. ✨ [핵심 수정] mailboxManager.js가 내부적으로 사용하는 변수명으로 매핑
+    // ✨ [데이터 매핑] 주석이 아닌 실제 실행 데이터 객체입니다.
     const stats = {
-        // [식별자 및 단계]
-        partnerId: currentId,
-        current_stage: window.currentStage,
-        isEggStage: (window.currentStage === 'egg'),
-        
-        // [시간 데이터 - mailboxManager는 내부적으로 totalTime, marathonTime 등을 찾음]
-        totalTime: window.progress.totalFocusTime, // 초 단위로 전달 (매니저가 분으로 변환함)
-        marathonTime: window.molipMonitor?.currentSessionTime || 0,
-        all_growth: window.charGrowthMap || {},   // 덴데 조건(specific_growth) 판정용 객체
-        
-        // [능력치 및 수집]
+        // --- 성취 (Achievement) ---
         alchemist_level: window.progress.getProgressData().level,
-        intimacy_level: window.charIntimacyMap[currentId] || 0,
-        ownedCount: (window.collection.ownedIds || []).length, // owned_count 트리거 대응
-        todoCount: window.molipTodos.filter(t => t.completed).length, // todo_count 트리거 대응
-        points: window.collection.points, // rich_alchemist 트리거 대응
-        
-        // [활동 기록]
+        total_focus: Math.floor(window.progress.totalFocusTime / 60), // 분 단위
+        todo_count: window.molipTodos.filter(t => t.completed).length,
         habit_master: Math.max(0, ...window.molipHabits.map(h => h.streak || 0)),
+        rich_alchemist: window.collection.points,
+        failed_attempt_count: window.masterData.progress.failedCount || 0,
+        owned_count: (window.collection.ownedIds || []).length,
+        adultCount: adultCount,
+
+        // --- 교감 (Bond) ---
+        intimacy_level: window.charIntimacyMap[currentId] || 0,
+        daily_pet_limit: window.dailyPetCountMap ? (window.dailyPetCountMap[`${currentId}_${nowMolipDate}`] || 0) : 0,
+        gift_total_count: giftTotalCount,
+        gift_connoisseur: Object.keys(giftHistory).length,
+        gift_count_favorite: window.masterData.character.favoriteGiftCount || 0,
+        gift_history: giftHistory, // first_gift 판정용
+
+        // --- 몰입 및 환경 ---
+        marathon_focus: Math.floor((window.molipMonitor?.currentSessionTime || 0) / 60), // 분 단위
+        flow_state: isFocusing,
+        night_owl: (currentHour >= 0 && currentHour < 4),
+        early_bird: (currentHour >= 5 && currentHour < 9),
+        weekend_alchemist: (currentDay === 0 || currentDay === 6),
+        perfect_day: isPerfectDay,
+        inactive_days: window.masterData.progress.inactiveDays || 0,
         app_juggler: (window.workApps || []).length,
-        daily_pet_limit: window.dailyPetCountMap ? (window.dailyPetCountMap[petKey] || 0) : 0,
-        
-        // [상태 및 시간대 판정]
-        isFlowActive: isFocusing, // flow_state 트리거 대응
-        isPerfectDay: isPerfectDay, // perfect_day 트리거 대응
-        currentHour: now.getHours(),
-        currentDay: now.getDay()
+
+        // --- 기타 (General) ---
+        always: true,
+        current_stage: window.currentStage,
+        specific_growth: window.charGrowthMap || {},
+        partnerId: currentId,
+        previous_streak: window.masterData.progress.previousStreak || 0
     };
 
-    // 5. 서신 트리거 엔진 실행
+    // 엔진 가동
     const newMails = window.mailbox.checkTriggers(stats);
 
-    // 6. 신규 서신 도착 처리
     if (newMails && newMails.length > 0) {
-        console.log(`📨 [Note] 덴데의 서신을 포함한 ${newMails.length}통의 서신 도착`);
-        
         if (window.playSFX) window.playSFX('letterbox'); 
         if (window.showToast) window.showToast("새로운 서신이 도착했습니다!", "info");
-        
         if (window.renderMailList) window.renderMailList();
         if (window.updateMailNotification) window.updateMailNotification();
         if (window.saveAllData) window.saveAllData(); 
