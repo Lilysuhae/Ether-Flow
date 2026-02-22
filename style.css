@@ -7262,3 +7262,59 @@ header .header-right {
 #main-canvas {
     transition: all 0.5s ease;
 }
+
+
+/* ============================================================
+   [세로 모드] 전체 레이아웃 스크롤 통합 리팩토링
+   ============================================================ */
+
+/* 1. 메인 레이아웃: 개별 스크롤 활성화 및 높이 유연화 */
+
+#app.mode-vertical {
+    padding: 50px 0px 0px 0px !important;
+}
+
+.mode-vertical #drag-header {
+    padding: 0 1em 0 1em;
+}
+
+.mode-vertical #main-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* ✨ 전체 앱 영역 중 헤더를 제외한 나머지를 꽉 채우고 넘치면 스크롤 생성 */
+    flex: 1;
+    overflow-y: auto !important; 
+    overflow-x: hidden !important;
+    gap: 12px;
+    
+    /* 스크롤바 침범 방지 및 조작감 개선 */
+    scrollbar-gutter: stable;
+    -webkit-app-region: no-drag !important;
+
+    padding: 0 1em 1em 1em;
+}
+
+/* 2. 오른쪽 리스트 영역: 개별 스크롤 해제 (이중 스크롤 방지) */
+.mode-vertical #controls.right-side {
+    /* ✨ 높이를 고정하지 않고 내용물만큼 늘어나게 하여 부모 스크롤을 따르게 함 */
+    height: auto !important;
+    overflow-y: visible !important; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-bottom: 20px; /* 최하단 여백 확보 */
+}
+
+/* 3. 아코디언 및 리스트 컨테이너 높이 제한 해제 */
+.mode-vertical .accordion-content,
+.mode-vertical .todo-list-container {
+    max-height: none !important;
+    overflow-y: visible !important;
+}
+
+/* 5. 가로 모드 전용 드래그 손잡이 보강 */
+#app.horizontal-mode #drag-header {
+    -webkit-app-region: drag !important;
+    cursor: move;
+}

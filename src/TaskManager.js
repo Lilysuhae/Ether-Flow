@@ -330,7 +330,8 @@ class TaskManager {
         const badge = document.getElementById('habit-count-badge');
         if (!list) return;
 
-        const today = new Date().getDay();
+        // 현재 몰입 기준 요일 계산
+        const today = new Date(window.getMolipDate()).getDay();
         const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
         if (badge) {
@@ -344,19 +345,23 @@ class TaskManager {
             return;
         }
 
-        // 저장된 순서(order)에 따라 정렬
         this.habits.sort((a, b) => (a.order || 0) - (b.order || 0));
 
         list.innerHTML = this.habits.map((h, index) => {
-            const safeDays = Array.isArray(h.days) ? h.days : [];
+            // ✨ [핵심 수정] 렌더링 시에도 요일이 없으면 매일로 처리
+            const safeDays = (Array.isArray(h.days) && h.days.length > 0) 
+                ? h.days 
+                : [0, 1, 2, 3, 4, 5, 6];
+                
             const isToday = safeDays.includes(today);
             const dayText = safeDays.length === 7 ? "매일" : safeDays.map(d => dayNames[d]).join(', ');
 
             return `
             <li class="todo-item habit-item ${h.completed ? 'completed' : ''} ${!isToday ? 'not-today' : ''}" 
                 data-id="${h.id}" draggable="true"
-                ondragstart="window.handleHabitDragStart(event, ${index})" ondragover="window.handleDragOver(event)"
-                ondrop="window.handleHabitDrop(event, ${index})" ondragend="window.handleDragEnd(event)">
+                ondragstart="window.handleHabitDragStart(event, ${index})" 
+                ondrop="window.handleHabitDrop(event, ${index})" 
+                ondragend="window.handleDragEnd(event)">
                 <div class="drag-handle"><i class="fas fa-bars"></i></div>
                 <div class="todo-checkbox" onclick="window.toggleHabit('${h.id}')">
                     ${h.completed ? '<i class="fas fa-check"></i>' : ''}
@@ -371,11 +376,7 @@ class TaskManager {
                         <span class="habit-days">
                             <i class="fas fa-calendar-alt"></i> ${dayText}
                         </span>
-                        ${h.time ? `
-                        <span class="habit-info-sep">|</span>
-                        <span class="habit-time">
-                            <i class="fas fa-clock"></i> ${h.time}
-                        </span>` : ''}
+                        ${h.time ? `<span class="habit-info-sep">|</span><span class="habit-time"><i class="fas fa-clock"></i> ${h.time}</span>` : ''}
                     </div>
                 </div>
                 <div class="todo-actions">
@@ -458,26 +459,33 @@ class TaskManager {
     }
 
     checkHabitReset() {
-        const molipToday = window.getMolipDate(); // 설정 시간이 반영된 오늘 (YYYY-MM-DD)
+        const molipToday = window.getMolipDate(); // 유저 설정 시간이 반영된 오늘 날짜
         const lastDateStr = window.masterData.progress.lastSaveDate;
         
-        // ✨ 핵심 수정: 실제 Date 객체가 아닌, 몰입 날짜 문자열을 Date로 변환하여 요일 계산
         const lastMolipDate = new Date(lastDateStr);
         const lastDay = lastMolipDate.getDay(); 
 
         this.habits.forEach(h => {
-            const safeDays = Array.isArray(h.days) ? h.days : [];
-            // 오늘이 해당 습관을 수행하는 날인데, 몰입 날짜가 바뀌었음에도 완료하지 않았다면 스트릭 초기화
+            // ✨ [핵심 수정] 요일 정보가 없거나 비어있다면 매일(0~6) 수행하는 것으로 간주합니다.
+            const safeDays = (Array.isArray(h.days) && h.days.length > 0) 
+                ? h.days 
+                : [0, 1, 2, 3, 4, 5, 6];
+
+            // 1. 스트릭 파기 조건 체크
+            // 마지막 접속일(어제 등)이 습관 수행일이었는데, 완료하지 못한 채로 날이 바뀌었다면 스트릭 초기화
             if (safeDays.includes(lastDay) && !h.completed && h.lastCompletedDate !== molipToday) {
                 h.streak = 0; 
             }
-            // 날짜가 바뀌었으므로 모든 습관의 완료 상태를 리셋
+            
+            // 2. 당일 완료 상태 리셋
+            // 몰입 날짜가 바뀌었다면 모든 습관의 완료/보상 상태를 초기화합니다.
             if (h.lastCompletedDate !== molipToday) {
                 h.completed = false;
                 h.rewarded = false;
             }
         });
-        this.renderHabits();
+
+        this.renderHabits(); // UI 갱신
     }
 
     cleanupOldTasks() {

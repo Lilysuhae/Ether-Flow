@@ -55,12 +55,52 @@ window.openSedimentModal = () => {
     }
 };
 
+/**
+ * [AlchemyManager.js] 
+ * 연성로 모달을 닫을 때 호출되는 함수입니다.
+ * 조합 연성 슬롯(alembic-slots)을 확실하게 비워줍니다.
+ */
 window.closeSedimentModal = () => {
     const modal = document.getElementById('sediment-modal');
     if (modal) {
-        modal.style.display = 'none';
+        modal.style.display = 'none'; // 모달 숨기기
+    }
+
+    // 1. 데이터 초기화: 선택된 재료 ID 배열을 비웁니다.
+    window.selectedIngredients = [null, null, null];
+
+    // 2. UI 초기화: index.html의 'alembic-slot' 엘리먼트들을 직접 초기화합니다.
+    // AlchemyManager.js 하단에 있는 슬롯 리셋 로직을 그대로 적용했습니다.
+    for (let i = 0; i < 3; i++) {
+        const slot = document.getElementById(`recipe-slot-${i}`);
+        if (slot) {
+            slot.innerHTML = '+';                // 글자 복구
+            slot.classList.remove('has-item');    // 스타일 제거
+            slot.style.backgroundImage = 'none'; // 이미지 제거
+        }
+    }
+
+    // (참고) 만약 알타르 상태 갱신 함수가 따로 있다면 함께 호출합니다.
+    if (typeof window.updateAltarStatus === 'function') {
+        window.updateAltarStatus();
     }
 };
+
+/**
+ * [AlchemyManager.js]
+ * 모달 바깥(오버레이) 클릭 시 슬롯을 비우고 닫는 리스너
+ */
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('sediment-modal');
+    
+    // 클릭된 대상이 정확히 '모달 배경(overlay)'일 때만 실행합니다.
+    // 내부의 '모달 윈도우(window)'를 클릭했을 때는 닫히지 않게 방지합니다.
+    if (e.target === modal) {
+        if (window.closeSedimentModal) {
+            window.closeSedimentModal();
+        }
+    }
+});
 
 /**
  * 연성로 내부 탭 전환 함수 (일반/조합)
@@ -563,41 +603,41 @@ window.confirmIngredientSelection = () => {
  * [AlchemyManager.js] 비밀 조합 실행 (최종 통합 버전)
  */
 window.startRecipeSynthesis = async () => {
-    // 1. 기본 검증 및 중복 클릭 방지
-    if (window.isHatching) return;
-    
+    // 1. [검증] 실린더 가동 가능 여부 (가장 먼저 체크)
+    // ✨ [핵심 수정] isHatching과 activeEgg를 한꺼번에 체크하여 어떤 상황이든 토스트를 띄웁니다.
+    if (window.isHatching || (window.collection && window.collection.activeEgg)) {
+        window.showToast("이미 실린더에 고동치는 생명이 안착해 있습니다.", "warning");
+        return;
+    }
+
     const slots = window.selectedIngredients;
+
+    // 2. [검증] 슬롯 투입 여부 확인
     if (!slots || slots.every(s => s === null)) {
         window.showToast("조합할 재료가 선택되지 않았습니다.", "warning");
         return;
     }
 
-    // 부산물 포함 여부 체크 (최소 1개의 부산물 필요)
-    const hasByproduct = slots.some(id => id && window.isByproductItem(id));
+    // 3. [규칙] 부산물 포함 여부 검사
+    const hasByproduct = slots.some(id => id !== null && window.isByproductItem(id));
     if (!hasByproduct) {
-        window.showToast("연성 반응을 이끌어낼 '심연 부산물'이 최소 하나 필요합니다.", "warning");
+        window.showToast("연성을 시작하려면 최소 한 종류의 '심연 부산물'이 필요합니다.", "warning");
         return;
     }
 
-    if (window.collection.activeEgg) {
-        window.showToast("이미 실린더에 부화 중인 알이 있습니다.", "error");
-        return;
-    }
-
-    // 2. 통합 차감 데이터 구성 (Transaction 객체 생성)
-    // 슬롯의 재료들을 취합하여 한 번에 차감할 수량을 계산합니다.
+    // 4. 통합 차감 데이터 구성 (Transaction 객체 생성)
     const itemUpdates = {};
     slots.forEach(id => {
         if (!id) return;
-        // 부산물은 20개, 상점 재료는 1개를 소모합니다.
         const amount = window.isByproductItem(id) ? 20 : 1;
         itemUpdates[id] = (itemUpdates[id] || 0) - amount; 
     });
 
-    // 3. 레시피 판정 준비
+    // 5. 레시피 판정 준비
     const currentInput = [...slots].filter(s => s !== null).sort();
     const recipes = {
         'char_09': ['calcified_shell_fragment', 'starlight_antler', 'ether_sludge'].sort(),
+        'char_11': ['soft_down_feather', 'incomplete_fetus', 'cracked_beak'].sort(),
     };
 
     let resultCharId = null;
@@ -608,21 +648,18 @@ window.startRecipeSynthesis = async () => {
         }
     }
 
-    // 연성 프로세스 잠금
+    // 연성 프로세스 잠금 (연출 시작)
     window.isHatching = true;
 
     if (resultCharId) {
         // --- [성공 케이스] ---
-        // 이미 보유 중인지 체크
         if (window.collection.ownedIds.includes(resultCharId)) {
             window.isHatching = false;
             window.showToast("이미 연성해본 경험이 있는 생명입니다. 다른 조합을 시도해 보세요.", "info");
             return;
         }
 
-        // 통합 자산 차감 실행
         const result = await window.processResourceTransaction({ items: itemUpdates });
-
         if (result && result.success) {
             const success = await window.processNewEggAcquisition(resultCharId, 1800, 'recipe');
             if (success) {
@@ -638,11 +675,8 @@ window.startRecipeSynthesis = async () => {
         }
     } else {
         // --- [실패 케이스] ---
-        // 자산 차감 먼저 실행
         const result = await window.processResourceTransaction({ items: itemUpdates });
-
         if (result && result.success) {
-            // 실패 시 지급할 부산물 등급 결정 (기존 로직 유지)
             const rarityWeights = { 'common': 1, 'uncommon': 2, 'rare': 3, 'epic': 4 };
             const itemDB = [...(window.byproductTable || []), ...window.getShopItems()];
             const inputRarities = currentInput.map(id => itemDB.find(i => i.id === id)?.rarity || 'common');
@@ -661,7 +695,6 @@ window.startRecipeSynthesis = async () => {
             const possibleFails = window.failedProducts.filter(p => p.rarity === dominantRarity);
             const randomProduct = possibleFails.length > 0 ? possibleFails[Math.floor(Math.random() * possibleFails.length)] : window.failedProducts[0];
 
-            // 실패 보상 지급 (트랜잭션에 포함하지 않은 이유는 실패 보상이 동적으로 결정되기 때문)
             const inv = window.masterData.inventory.byproducts;
             inv[randomProduct.id] = (inv[randomProduct.id] || 0) + 1;
 
@@ -670,14 +703,49 @@ window.startRecipeSynthesis = async () => {
             
             await window.saveAllData();
             if (window.renderInventory) window.renderInventory();
-            window.isHatching = false; // 실패했으므로 즉시 잠금 해제
+            window.isHatching = false; 
         } else {
             window.isHatching = false;
             window.showToast("재료가 부족합니다.", "error");
         }
     }
 
-    // 슬롯 초기화 (연출과 무관하게 데이터 정리)
+    // 슬롯 초기화
     window.selectedIngredients = [null, null, null];
     if (window.updateAltarStatus) window.updateAltarStatus();
 };
+
+/**
+ * [AlchemyManager.js]
+ * 실시간 부화 감시 엔진 (Hatch Monitor)
+ * 이 함수는 renderer.js의 메인 루프에서 호출되거나, 여기서 자체적으로 돕니다.
+ */
+window.startHatchMonitor = () => {
+    setInterval(async () => {
+        const egg = window.collection.activeEgg;
+        
+        // 1. 실린더에 알이 있고, 연출 중이 아닐 때만 체크
+        if (egg && !window.isHatching) {
+            const now = Date.now();
+            
+            // 2. 부화 예정 시간이 지났는지 확인
+            if (now >= egg.hatchTime) {
+                console.log("🐣 부화 조건 충족! 이벤트를 시작합니다.");
+                
+                // 중복 실행 방지 잠금
+                window.isHatching = true; 
+
+                // 3. 실제 부화 처리 함수 호출 (renderer.js 등에 정의된 부화 연출)
+                if (window.triggerHatchSequence) {
+                    await window.triggerHatchSequence(egg);
+                } else {
+                    // 연출 함수가 없다면 즉시 데이터 변환 처리
+                    await window.completeHatching(egg.type);
+                }
+            }
+        }
+    }, 1000); // 1초마다 감시
+};
+
+// 페이지 로드 시 감시 시작
+window.startHatchMonitor();

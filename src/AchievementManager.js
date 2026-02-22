@@ -63,6 +63,7 @@ class AchievementManager {
             { id: 'dende_soft_embrace',  name: '덴데의 유일한 안식처',  icon: 'assets/images/achievements/dende_soft_embrace.png',  desc: '덴데가 모든 가시를 거두고 당신의 품을 세상에서 가장 안전한 곳으로 선택했습니다.',  hint: '가장 날카로운 두려움이 가장 부드러운 신뢰로 녹아내립니다.' },
             { id: 'belinda_eternal_steward', name: '벨린다의 영원한 계약자', icon: 'assets/images/achievements/belinda_eternal_steward.png', desc: '당신의 한심함마저 품격 있게 관리하기로 맹세한 집사와 함께, 실패와 성공을 모두 초월한 절대적인 계약 관계에 들어섰습니다.', hint: '독설로 용해된 마음 끝에 남은, 가장 고귀하고 단단한 유대를 마주합니다.' },
             { id: 'Kota_best_friend', name: '코타의 가장 소중한 친구', icon: 'assets/images/achievements/Kota_best_friend.png', desc: '코타는 당신의 가장 소중한 친구가 되었습니다.', hint: '당신의 외로운 여정을 조건 없이 지지해주는 친밀한 벗이 생깁니다.' },
+            { id: 'minerva_silent_night', name: '미네르바와 고요한 밤', icon: 'assets/images/achievements/minerva_silent_night.png', desc: '당신의 지성이 밤하늘 별 아래 반짝이게끔 미네르바가 모든 것을 정돈된 흐름으로 만듭니다.', hint: '늦은 밤의 집중은 적막하지만 그 어느때보다도 맑고 또렷합니다.' },
             
             // 4. 전문성 및 자산 관련 업적
             { id: 'sage_alchemist_30', name: '대연금술사의 증표', icon: 'assets/images/achievements/sage_alchemist_30.png', desc: '30레벨의 숙련도에 도달하여 연금술의 현자 경지를 증명했습니다.', hint: '현자의 돌에 다가가는 첫 번째 관문을 통과합니다.' },

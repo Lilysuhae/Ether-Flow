@@ -15,16 +15,19 @@ let isQuitting = false; // [전략 C] 최종 저장 여부를 확인하는 플�
 function createWindow() {
     // 1. 브라우저 창 설정
     mainWindow = new BrowserWindow({
-        width: 360,           // 기본 세로형 너비
-        height: 900,          // 충분한 세로 공간 확보
-        frame: false,         // 커스텀 타이틀바 사용을 위해 프레임 제거
-        transparent: true,    // 글래스모피즘 디자인을 위한 투명화
-        alwaysOnTop: true,     // 집중 도구 특성상 항상 위 유지
-        resizable: true,      // 개발 및 레이아웃 조절 허용
+        width: 360,
+        height: 900,
+        minWidth: 320,
+        minHeight: 500,
+        frame: false,
+        transparent: true,
+        resizable: true,     // ✨ 필수
+        maximizable: true,   // ✨ 필수
+        thickFrame: true,    // ✨ 윈도우에서 표준 리사이즈 경계선을 강제로 생성
+        alwaysOnTop: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-            backgroundThrottling: false
         }
     });
 
@@ -141,12 +144,11 @@ ipcMain.on('set-window-mode', (event, mode) => {
     // 2. 모드별 크기 적용
     if (mode === 'horizontal') {
         mainWindow.setSize(800, 800, true); // 시원하게 가로로 확장
-        mainWindow.setMinimumSize(800, 800);
+        mainWindow.setMinimumSize(748, 666);
     } 
     else if (mode === 'vertical') {
         mainWindow.setSize(360, 800, true);
         mainWindow.setMinimumSize(360, 640); // 최소 높이 설정
-        mainWindow.setMaximumSize(360, 1500);
     } 
     else if (mode === 'mini') {
         // ✨ 미니 모드: 이제 445(또는 436)로 정상적으로 줄어듭니다.
