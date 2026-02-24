@@ -74,10 +74,15 @@ class CodeManager {
             "ETHER_BOOST": 500,
             "TO_FRIEND": 5000,
             "reward_for_inviting_destiny": 10000,
+            "reward_for_inviting_Season2": 10000,
             "reward_for_inviting_inception": 20000,
+            "reward_for_inviting_FollowMe": 20000,
             "reward_for_inviting_igotoyou": 30000,
+            "reward_for_inviting_Light": 30000,
             "reward_for_inviting_hugupjigup": 40000,
-            "reward_for_inviting_umma": 50000
+            "reward_for_inviting_Alone": 40000,
+            "reward_for_inviting_umma": 50000,
+            "reward_for_inviting_Memories": 50000
         };
 
         if (etherRewards[code]) {

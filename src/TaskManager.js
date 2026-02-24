@@ -458,33 +458,37 @@ class TaskManager {
         if (idx !== -1) { this.habits.splice(idx, 1); this.renderHabits(); if (window.saveAllData) window.saveAllData(); }
     }
 
+    
     checkHabitReset() {
-        const molipToday = window.getMolipDate(); // 유저 설정 시간이 반영된 오늘 날짜
-        const lastDateStr = window.masterData.progress.lastSaveDate;
+        const molipToday = window.getMolipDate(); // 리셋 시간이 반영된 '오늘' 날짜 (YYYY-MM-DD)
+        const lastDateStr = window.masterData.progress.lastSaveDate; // 마지막으로 기록된 날짜
         
-        const lastMolipDate = new Date(lastDateStr);
-        const lastDay = lastMolipDate.getDay(); 
+        // 1. 날짜가 바뀌지 않았다면 리셋할 필요가 없습니다.
+        if (molipToday === lastDateStr) return;
+
+        // 2. 마지막 저장 날짜의 요일을 정확히 계산 (타임존 오류 방지)
+        const [y, m, d] = lastDateStr.split('-').map(Number);
+        const lastDay = new Date(y, m - 1, d).getDay(); 
 
         this.habits.forEach(h => {
-            // ✨ [핵심 수정] 요일 정보가 없거나 비어있다면 매일(0~6) 수행하는 것으로 간주합니다.
             const safeDays = (Array.isArray(h.days) && h.days.length > 0) 
                 ? h.days 
                 : [0, 1, 2, 3, 4, 5, 6];
 
-            // 1. 스트릭 파기 조건 체크
-            // 마지막 접속일(어제 등)이 습관 수행일이었는데, 완료하지 못한 채로 날이 바뀌었다면 스트릭 초기화
-            if (safeDays.includes(lastDay) && !h.completed && h.lastCompletedDate !== molipToday) {
+            // ✨ [리셋 로직 A] 스트릭 파기 체크
+            // 마지막 접속일이 습관 수행일이었는데, 완료(completed)하지 못했다면 스트릭 초기화
+            if (safeDays.includes(lastDay) && !h.completed) {
+                console.log(`[Habit] '${h.text}' 스트릭 초기화 (어제 미완료)`);
                 h.streak = 0; 
             }
             
-            // 2. 당일 완료 상태 리셋
-            // 몰입 날짜가 바뀌었다면 모든 습관의 완료/보상 상태를 초기화합니다.
-            if (h.lastCompletedDate !== molipToday) {
-                h.completed = false;
-                h.rewarded = false;
-            }
+            // ✨ [리셋 로직 B] 당일 상태 초기화
+            // 날짜가 바뀌었으므로 모든 습관의 체크박스와 보상 상태를 해제합니다.
+            h.completed = false;
+            h.rewarded = false;
         });
 
+        console.log(`📅 [System] ${molipToday} 일과 시작 - 습관 상태 리셋 완료`);
         this.renderHabits(); // UI 갱신
     }
 

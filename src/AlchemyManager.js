@@ -600,11 +600,10 @@ window.confirmIngredientSelection = () => {
 };
 
 /**
- * [AlchemyManager.js] 비밀 조합 실행 (최종 통합 버전)
+ * [AlchemyManager.js] 비밀 조합 실행 (UI 초기화 보강 버전)
  */
 window.startRecipeSynthesis = async () => {
-    // 1. [검증] 실린더 가동 가능 여부 (가장 먼저 체크)
-    // ✨ [핵심 수정] isHatching과 activeEgg를 한꺼번에 체크하여 어떤 상황이든 토스트를 띄웁니다.
+    // 1. [검증] 실린더 가동 가능 여부 체크
     if (window.isHatching || (window.collection && window.collection.activeEgg)) {
         window.showToast("이미 실린더에 고동치는 생명이 안착해 있습니다.", "warning");
         return;
@@ -625,7 +624,7 @@ window.startRecipeSynthesis = async () => {
         return;
     }
 
-    // 4. 통합 차감 데이터 구성 (Transaction 객체 생성)
+    // 4. 통합 차감 데이터 구성
     const itemUpdates = {};
     slots.forEach(id => {
         if (!id) return;
@@ -677,7 +676,6 @@ window.startRecipeSynthesis = async () => {
         // --- [실패 케이스] ---
         const result = await window.processResourceTransaction({ items: itemUpdates });
         if (result && result.success) {
-            const rarityWeights = { 'common': 1, 'uncommon': 2, 'rare': 3, 'epic': 4 };
             const itemDB = [...(window.byproductTable || []), ...window.getShopItems()];
             const inputRarities = currentInput.map(id => itemDB.find(i => i.id === id)?.rarity || 'common');
 
@@ -686,7 +684,7 @@ window.startRecipeSynthesis = async () => {
             const counts = {};
             inputRarities.forEach(r => {
                 counts[r] = (counts[r] || 0) + 1;
-                if (counts[r] > maxCount || (counts[r] === maxCount && rarityWeights[r] > rarityWeights[dominantRarity])) {
+                if (counts[r] > maxCount) {
                     maxCount = counts[r];
                     dominantRarity = r;
                 }
@@ -710,9 +708,20 @@ window.startRecipeSynthesis = async () => {
         }
     }
 
-    // 슬롯 초기화
-    window.selectedIngredients = [null, null, null];
-    if (window.updateAltarStatus) window.updateAltarStatus();
+    // ✨ [UI 및 데이터 초기화] 토스트 출력 시점에 슬롯 비우기
+    window.selectedIngredients = [null, null, null]; // 데이터 초기화
+    
+    for (let i = 0; i < 3; i++) {
+        const slot = document.getElementById(`recipe-slot-${i}`);
+        if (slot) {
+            slot.innerHTML = '+';                // 글자 복구
+            slot.classList.remove('has-item');    // 스타일 제거
+            slot.style.backgroundImage = 'none'; // 이미지 제거
+            slot.style.borderStyle = 'dashed';   // 점선 테두리로 복구
+        }
+    }
+
+    if (window.updateAltarStatus) window.updateAltarStatus(); // 제단 UI 갱신
 };
 
 // [AlchemyManager.js]
