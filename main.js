@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, screen, shell, powerMonitor, net } = require('electron');
+const { app, BrowserWindow, ipcMain, screen, shell, powerMonitor, net, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -109,6 +109,51 @@ ipcMain.handle('load-game-data', async () => {
         if (fs.existsSync(filePath)) return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
         return null;
     } catch (error) { return null; }
+});
+
+/* ============================================================
+   [데이터 내보내기/불러오기 핸들러 추가]
+   ============================================================ */
+
+// 1. 데이터 내보내기 (Save Dialog)
+ipcMain.handle('export-data-file', async (event, data) => {
+    const { filePath } = await dialog.showSaveDialog({
+        title: '연구 데이터 내보내기',
+        defaultPath: `ether_flow_backup_${new Date().toISOString().slice(0,10)}.json`,
+        filters: [{ name: 'JSON Files', extensions: ['json'] }]
+    });
+
+    if (filePath) {
+        try {
+            fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+            return { success: true };
+        } catch (err) {
+            console.error("파일 저장 실패:", err);
+            return { success: false, error: err.message };
+        }
+    }
+    return { success: false }; // 취소 시
+});
+
+// 2. 데이터 불러오기 (Open Dialog)
+ipcMain.handle('import-data-file', async (event) => {
+    const { filePaths } = await dialog.showOpenDialog({
+        title: '연구 데이터 불러오기',
+        filters: [{ name: 'JSON Files', extensions: ['json'] }],
+        properties: ['openFile']
+    });
+
+    if (filePaths && filePaths.length > 0) {
+        try {
+            const content = fs.readFileSync(filePaths[0], 'utf-8');
+            const data = JSON.parse(content);
+            return { success: true, data: data };
+        } catch (err) {
+            console.error("파일 읽기 실패:", err);
+            return { success: false, error: err.message };
+        }
+    }
+    return { success: false }; // 취소 시
 });
 
 // --------------------------------------------------------------------------

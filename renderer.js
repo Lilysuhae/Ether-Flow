@@ -2466,41 +2466,6 @@ async function startEngine() {
     }
 }
 
-/**
- * [renderer.js 하단 추가]
- * 인트로의 편지 봉인을 해제하고 내용을 보여줍니다.
- */
-window.breakSeal = () => {
-    const envelope = document.getElementById('ritual-envelope');
-    const letter = document.getElementById('legacy-letter');
-    
-    if (envelope) {
-        envelope.classList.remove('active'); // 봉투 사라짐
-    }
-    
-    if (letter) {
-        letter.classList.add('active'); // 편지 나타남
-        if (window.playSFX) window.playSFX('paper'); // 종이 소리 재생
-    }
-};
-
-/**
- * [renderer.js 하단 추가]
- * 인트로에서 알(캐릭터)을 클릭했을 때 확인 모달을 띄웁니다.
- */
-window.selectFirstPartner = (charId) => {
-    // introManager.js에 정의된 charData를 참조하여 해당 캐릭터를 찾습니다.
-    const char = (window.charData && window.charData.characters) 
-                 ? window.charData.characters.find(c => c.id === charId) 
-                 : null;
-
-    if (char && window.showIntroConfirm) {
-        window.showIntroConfirm(char); // introManager.js의 확인창 호출
-    } else {
-        console.error("❌ 캐릭터를 찾을 수 없거나 모달 함수가 로드되지 않았습니다.");
-    }
-};
-
 // 오디오 엔진 설정
 window.setupEngine = () => {
     if (soundManager) {
@@ -2675,4 +2640,60 @@ window.processFavoriteGiftSuccess = function(charId) {
     // 2. 파일 자동 저장 및 서신 체크
     if (window.saveAllData) window.saveAllData();
     window.checkMailAndAchievements(window.isActuallyWorking, window.getMolipDate());
+};
+
+/**
+ * [renderer.js] 연구 데이터 내보내기 (Export)
+ */
+window.exportData = async () => {
+    if (!window.masterData) return;
+    
+    try {
+        // 메인 프로세스에 저장 다이얼로그 및 파일 쓰기 요청
+        const result = await ipcRenderer.invoke('export-data-file', window.masterData);
+        
+        if (result.success) {
+            window.showToast("연구 데이터가 파일로 안전하게 추출되었습니다.", "success");
+        }
+    } catch (err) {
+        console.error("데이터 내보내기 실패:", err);
+        window.showToast("데이터 추출 중 오류가 발생했습니다.", "error");
+    }
+};
+
+/**
+ * [renderer.js] 연구 데이터 불러오기 (Import) - 정밀 수리본
+ */
+window.importData = async () => {
+    const confirmed = confirm("⚠️ 데이터를 불러오면 현재 기록된 모든 데이터가 덮어씌워집니다. 계속하시겠습니까?");
+    if (!confirmed) return;
+
+    try {
+        // 1. 메인 프로세스에 파일 열기 요청
+        const result = await ipcRenderer.invoke('import-data-file');
+        
+        if (result.success && result.data) {
+            // 🛡️ [핵심] 불러오기 중 매니저들이 파일을 오염시키지 못하게 차단
+            window.isResetting = true; 
+            
+            // 2. ✨ [중요] saveAllData()를 거치지 않고 불러온 데이터를 즉시 물리 파일로 저장
+            const saveResult = await ipcRenderer.invoke('save-game-data', result.data);
+            
+            if (saveResult.success) {
+                window.showToast("데이터 복구 성공! 연구실을 다시 불러옵니다.", "success");
+                
+                // 3. 저장 성공 후 1.5초 뒤 앱을 완전히 새로고침하여 데이터 반영
+                setTimeout(() => {
+                    window.isResetting = false;
+                    location.reload(); 
+                }, 1500);
+            } else {
+                throw new Error("파일 쓰기 실패");
+            }
+        }
+    } catch (err) {
+        console.error("데이터 불러오기 실패:", err);
+        window.isResetting = false;
+        window.showToast("올바른 백업 파일이 아니거나 복구 중 오류가 발생했습니다.", "error");
+    }
 };

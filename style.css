@@ -7318,3 +7318,28 @@ header .header-right {
     -webkit-app-region: drag !important;
     cursor: move;
 }
+
+/* style.css */
+.data-management-btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.data-management-btns .btn {
+    background-color: var(--ios-blue);   
+    color: var(--text-primary);
+}
+
+.btn-settings-action {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-main);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
