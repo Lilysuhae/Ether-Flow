@@ -323,13 +323,13 @@ window.updateAltarStatus = () => {
 };
 
 /**
- * 7. 실제로 호문클루스 연성을 실행하는 함수
+ * [AlchemyManager.js] 
+ * 7. 실제로 호문클루스 연성을 실행하는 함수 (비용 상승 로직 추가본)
  */
 window.startAbyssCrafting = async () => {
-    // ✨ [추가] 중복 연성 방지: 이미 연성 연출 중이라면 함수를 즉시 종료합니다.
     if (window.isHatching) return;
 
-    // 1. 통합 비용 계산 (에테르 + 재료)
+    // 1. 통합 비용 계산 (현재 hatchCount 기준)
     const costData = window.calculateNextEggCost(); 
     
     // 2. 기본 검증 (에테르 및 알 존재 여부)
@@ -355,7 +355,6 @@ window.startAbyssCrafting = async () => {
         return;
     }
 
-    // ✨ [핵심] 연성 시퀀스 잠금: 자산 차감 직전에 플래그를 true로 설정합니다.
     window.isHatching = true;
 
     // 4. 차감할 자원 데이터 구성
@@ -379,19 +378,25 @@ window.startAbyssCrafting = async () => {
         const success = await window.processNewEggAcquisition(randomChar.id, 1800, 'abyss');
         
         if (success) {
-            // 슈퍼노바 연출 실행 (연출 종료 시 window.isHatching이 false로 돌아갑니다)
+            // ✨ [핵심 수정] 연성 횟수(hatchCount) 증가 및 데이터 저장
+            // 이 코드가 있어야 다음 연성 시 calculateNextEggCost가 더 높은 비용을 반환합니다.
+            window.masterData.hatchCount = (window.masterData.hatchCount || 0) + 1;
+
+            // 슈퍼노바 연출 실행
             if (window.triggerSupernovaEffect) window.triggerSupernovaEffect(randomChar);
+            
+            // 데이터 저장 및 UI 즉시 갱신
+            if (window.saveAllData) await window.saveAllData();
             if (window.updateUI) window.updateUI();
+            if (window.updateAltarStatus) window.updateAltarStatus(); // 👈 늘어난 비용을 UI에 즉시 반영
             
             const particle = window.getKoreanParticle(randomChar.egg_name, "을/를");
             window.showToast(`'${randomChar.egg_name}'${particle} 연성해냈습니다!`, "success");
         } else {
-            // 알 획득 실패 시 잠금 해제
             window.isHatching = false;
             window.showToast("알을 실린더에 담는 데 실패했습니다.", "error");
         }
     } else {
-        // 자산 차감 실패 시 잠금 해제
         window.isHatching = false;
         window.showToast("연성 재료가 부족하거나 에너지가 불안정합니다.", "error");
     }

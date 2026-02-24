@@ -1477,11 +1477,12 @@ ipcRenderer.on('user-idle-state', (event, state) => {
  * 1. 설정된 초기화 시간을 반영한 '게임 내 오늘 날짜'를 반환합니다.
  */
 window.getMolipDate = () => {
-    const resetHour = window.masterData.settings.resetHour || 0; // 유저 설정값 (0, 4, 5, 6)
+    // ✨ [수정] window.masterData가 존재하는지 먼저 확인하는 안전장치를 추가합니다.
+    const resetHour = (window.masterData && window.masterData.settings) 
+                      ? (window.masterData.settings.resetHour || 0) 
+                      : 0; 
+                      
     const now = new Date();
-    
-    // 현재 시간에서 설정된 초기화 시간을 뺍니다.
-    // 예: 새벽 2시인데 초기화가 4시라면, 결과는 전날 밤 22시가 되어 날짜가 '어제'로 유지됨.
     now.setHours(now.getHours() - resetHour);
     
     const y = now.getFullYear();
@@ -2283,11 +2284,21 @@ async function startEngine() {
     try {
         const savedData = await ipcRenderer.invoke('load-game-data');
         
+        // ✨ [수정] 객체 리터럴 내부에서 getMolipDate()를 직접 호출하는 대신 일단 null로 둡니다.
         masterData = savedData || { 
-            progress: { level: 1, exp: 0, totalFocusTime: 0, todayFocusTime: 0, lastSaveDate: window.getMolipDate() }, 
-            settings: {}, character: {}, collection: {}, achievements: [], 
+            progress: { level: 1, exp: 0, totalFocusTime: 0, todayFocusTime: 0, lastSaveDate: "" }, 
+            settings: { resetHour: 0 }, // 기본 설정값 미리 삽입
+            character: {}, collection: {}, achievements: [], 
             inventory: { items: {}, byproducts: {} }, mailbox: { mailHistory: [] }, todo: [], habit: [] 
         };
+
+        // 전역 변수 연결을 먼저 수행하여 getMolipDate가 masterData를 인식할 수 있게 합니다.
+        window.masterData = masterData;
+
+        // 데이터가 새로 생성된 경우(신규 유저)에만 날짜를 수동으로 기입합니다.
+        if (!masterData.progress.lastSaveDate) {
+            masterData.progress.lastSaveDate = window.getMolipDate();
+        }
 
         if (masterData.userId) {
             window.molipUserId = masterData.userId;
