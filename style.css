@@ -102,6 +102,36 @@
     font-display: swap;
 }
 
+/* 강원교육모두 */
+@font-face {
+    font-family: 'okticon';
+    src: url('assets/fonts/okticon_light.ttf') format('truetype');
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'okticon';
+    src: url('assets/fonts/okticon_regular.ttf') format('truetype');
+    font-weight: 500;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'okticon';
+    src: url('assets/fonts/okticon_bold.ttf') format('truetype');
+    font-weight: 700;
+    font-display: swap;
+}
+
+/* 메모먼트꾹꾹체 */
+@font-face {
+    font-family: 'MemomentKkukkukk';
+    src: url('assets/fonts/MemomentKkukkukk.ttf') format('truetype');
+    font-weight: 500;
+    font-display: swap;
+}
+
+
+
 /* [style.css] 모든 텍스트에 부드러운 렌더링 적용 */
 * {
     /* 1. 안티앨리어싱 활성화 (macOS 및 고해상도 디스플레이) */
@@ -175,6 +205,8 @@ body.font-Galmuri11 { --main-font: "Galmuri11"; font-size: 12px !important; }
 body.font-Pretendard { --main-font: "Pretendard"; }
 body.font-NanumSquareNeo { --main-font: "NanumSquareNeo"; }
 body.font-NEXONLv1Gothic { --main-font: "NEXONLv1Gothic"; }
+body.font-okticon { --main-font: "okticon"; font-size: 20px !important; }
+
 
 input,
 textarea {

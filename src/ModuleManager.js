@@ -87,6 +87,7 @@ window.processNewEggAcquisition = async (charId, hatchTimeSeconds = 1800, source
 };
 
 // 3. 💖 [상호작용 모듈] 쓰다듬기/선물/클릭 통합
+// 3. 💖 [상호작용 모듈] 쓰다듬기/선물/클릭 통합
 window.processInteraction = async (type, data = {}) => {
     const partner = window.currentPartner;
     const stage = window.currentStage;
@@ -119,9 +120,24 @@ window.processInteraction = async (type, data = {}) => {
 
         const stageData = partner.stages[stage] || partner.stages['adult'];
         const res = stageData.gift_responses || { normal: "고마워요.", favorite: "정말 기뻐요!", dislike: "으음..." };
-        if (partner.preferences.favorite.includes(item.name)) { intimacyPoints = 10; forceText = res.favorite; }
-        else if (partner.preferences.dislike.includes(item.name)) { intimacyPoints = -5; forceText = res.dislike; }
-        else { intimacyPoints = 5; forceText = res.normal; }
+        
+        // ✨ 판정 결과에 따라 renderer의 전용 처리기 호출
+        if (partner.preferences.favorite.includes(item.name)) { 
+            intimacyPoints = 10; 
+            forceText = res.favorite; 
+            window.processFavoriteGiftSuccess(charId, item.name); //
+        }
+        else if (partner.preferences.dislike.includes(item.name)) { 
+            intimacyPoints = -5; 
+            forceText = res.dislike; 
+            window.processDislikeGiftSuccess(charId, item.name); //
+        }
+        else { 
+            intimacyPoints = 5; 
+            forceText = res.normal; 
+            // 일반 선물도 체크 루틴 돌림
+            window.checkMailAndAchievements(window.isActuallyWorking, window.getMolipDate(), { type: 'gift_normal', itemName: item.name, partnerId: charId });
+        }
     } else if (type === 'click') {
         responseCategory = window.currentStatus === 'working' ? 'work' : (window.currentStatus === 'distracting' ? 'distract' : 'idle');
     }

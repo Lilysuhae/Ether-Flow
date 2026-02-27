@@ -25,97 +25,173 @@ class MailboxManager {
     }
 
     /**
-     * 렌더러로부터 받은 통계(stats)를 바탕으로 모든 서신 트리거를 체크합니다.
+     * [핵심] 모든 서신 트리거 조건을 누락 없이 판정하여 조건 충족 시 즉시 발송합니다.
+     * @param {Object} stats - masterData.stats (누적 통계 데이터)
+     * @param {Object} eventContext - 실시간 발생 이벤트 (예: { type: 'gift_dislike', itemName: '손편지' })
      */
-    // [mailboxManager.js] checkTriggers 함수 및 내부 판정 로직 전문
-    checkTriggers(stats) {
+    checkTriggers(stats, eventContext = null) {
         const newMails = [];
-        
-        // 1. 이미 받은 편지는 제외하고 체크할 대상을 선별합니다.
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentDay = now.getDay(); // 0: 일, 6: 토
+
+        // 1. 이미 받은 편지는 제외하고 체크할 대상을 선별
         const availablePool = this.mailPool.filter(mail => 
             !this.receivedMails.find(m => m.id === mail.id)
         );
 
         availablePool.forEach(mail => {
-            const triggerList = Array.isArray(mail.triggers) 
-                ? mail.triggers 
-                : (mail.trigger ? [mail.trigger] : []);
-
+            const triggerList = Array.isArray(mail.triggers) ? mail.triggers : (mail.trigger ? [mail.trigger] : []);
             if (triggerList.length === 0) return;
 
             const logic = mail.logic || "AND";
 
-            /**
-             * ✨ [수정] 모든 28가지 트리거를 판정하는 완전한 조건 체크 함수입니다.
-             */
+            // 2. [절대 누락 금지] 모든 카테고리별 트리거 판정 로직
             const checkCondition = (condition) => {
+                const { type, value: targetVal } = condition;
                 let isMet = false;
-                const type = condition.type;
-                const targetVal = condition.value;
-                const currentVal = stats[type];
 
                 switch (type) {
-                    // --- 특수 조건 판정 ---
-                    case 'always':
-                        isMet = true; 
+                    /* --- [성취 (Achievement)] --- */
+                    case 'alchemist_level': // 연금술사 숙련도 레벨
+                        isMet = ((stats.alchemistLevel || 1) >= targetVal);
+                        break;
+                    case 'total_focus': // 누적 몰입 시간 (분 단위)
+                        isMet = ((stats.totalFocusTime || 0) >= targetVal);
+                        break;
+                    case 'todo_count': // 누적 완료 과업 개수
+                        isMet = ((stats.todoCount || 0) >= targetVal);
+                        break;
+                    case 'habit_master': // 연속 습관 수행 일수
+                        isMet = ((stats.currentHabitStreak || 0) >= targetVal);
+                        break;
+                    case 'rich_alchemist': // 보유 에테르 포인트
+                        isMet = ((window.masterData.currency?.ether || 0) >= targetVal);
+                        break;
+                    case 'failed_attempt_count': // 누적 실패/중단 횟수
+                        isMet = ((stats.failedAttempts || 0) >= targetVal);
+                        break;
+                    case 'owned_count': // 보유한 호문클루스 개수
+                        isMet = ((stats.ownedHomunculusCount || 0) >= targetVal);
+                        break;
+                    case 'adult_count': // 성체로 진화시킨 개수
+                        isMet = ((stats.evolvedAdultCount || 0) >= targetVal);
                         break;
 
-                    case 'first_gift':
-                        // ✨ [핵심] renderer에서 보낸 gift_history 객체 내에 아이템이 있는지 확인
-                        isMet = (stats.gift_history && stats.gift_history[targetVal] > 0);
-                        break;
-
-                    case 'specific_growth':
-                        // 특정 캐릭터 혹은 현재 파트너의 성장도(분) 확인
-                        const growthMap = stats.specific_growth || {};
-                        const growthSec = growthMap[condition.partnerId || stats.partnerId] || 0;
-                        isMet = (Math.floor(growthSec / 60) >= targetVal);
-                        break;
-                    
-                    case 'first_gift':
-                    // ID로 먼저 확인하고, 없으면 이름으로도 확인하도록 보강
-                    isMet = (stats.gift_history && stats.gift_history[targetVal] > 0);
-                    break;
-
-                    // --- 불리언 상태 판정 ---
-                    case 'flow_state':
-                    case 'perfect_day':
-                    case 'night_owl':
-                    case 'early_bird':
-                    case 'weekend_alchemist':
-                    case 'gift_type_dislike':
-                        isMet = (currentVal === true);
-                        break;
-
-                    // --- 문자열 매칭 ---
-                    case 'current_stage':
-                    case 'partnerId':
-                        isMet = (currentVal === targetVal);
-                        break;
-
-                    // --- 숫자 및 누적 수치 판정 (기본) ---
-                    default:
-                        if (currentVal !== undefined) {
-                            // 숫자인 경우 '이상(>=)' 판정, 그 외엔 '일치(===)' 판정
-                            if (typeof currentVal === 'number' && typeof targetVal === 'number') {
-                                isMet = (currentVal >= targetVal);
-                            } else {
-                                isMet = (currentVal === targetVal);
-                            }
+                    /* --- [교감 (Bond)] --- */
+                    case 'intimacy_level': // 특정 캐릭터와의 호감도 레벨
+                        if (window.currentPartner) {
+                            const intimacy = (window.charIntimacyMap && window.charIntimacyMap[window.currentPartner.id]) || 0;
+                            isMet = (intimacy >= targetVal);
                         }
+                        break;
+                    case 'daily_pet_limit': // 일일 쓰다듬기 횟수
+                        isMet = ((stats.dailyPetCount || 0) >= targetVal);
+                        break;
+                    case 'gift_total_count': // 누적 선물 전달 횟수
+                        isMet = ((stats.giftTotalCount || 0) >= targetVal);
+                        break;
+                    case 'gift_count_favorite': // 좋아하는 선물 전달 횟수
+                        isMet = ((stats.gift_count_favorite || 0) >= targetVal);
+                        break;
+                    case 'first_gift': 
+                        // 1. 실시간 이벤트 확인
+                        if (eventContext && (eventContext.type === 'gift' || eventContext.type === 'gift_favorite')) {
+                            isMet = (eventContext.itemName === targetVal);
+                        }
+                        // 2. 실시간 정보가 없으면 stats.gift_history(데이터셋)에서 해당 아이템 기록 확인
+                        if (!isMet && stats.gift_history) {
+                            isMet = !!stats.gift_history[targetVal];
+                        }
+                        break;
+
+                    case 'gift_type_dislike': // 싫어하는 타입 선물 전달 (실시간 이벤트)
+                        if (eventContext && eventContext.type === 'gift_dislike') {
+                            isMet = (targetVal === true);
+                        }
+                        break;
+                        // stats에 싫어하는 선물을 준 기록(flag)이 있다면 추가 확인 가능
+                        if (!isMet && stats.has_dislike_event) {
+                            isMet = (targetVal === true);
+                        }
+                        break;
+                    case 'gift_connoisseur': // 선물 종류 수집 또는 특정 조건
+                        isMet = ((stats.uniqueGiftsCount || 0) >= targetVal);
+                        break;
+
+                    /* --- [몰입 및 환경] --- */
+                    case 'marathon_focus': // 한 세션 연속 몰입 시간 (분)
+                        isMet = ((stats.currentSessionFocusTime || 0) >= targetVal);
+                        break;
+                    case 'flow_state': // 초집중 진입 여부
+                        isMet = (window.isFlowState === targetVal);
+                        break;
+                    case 'night_owl': // 심야 시간대 (00~05시)
+                        if (targetVal === true) isMet = (currentHour >= 0 && currentHour < 5);
+                        break;
+                    case 'early_bird': // 이른 아침 (05~09시)
+                        if (targetVal === true) isMet = (currentHour >= 5 && currentHour < 9);
+                        break;
+                    case 'weekend_alchemist': // 주말 활동 여부
+                        if (targetVal === true) isMet = (currentDay === 0 || currentDay === 6);
+                        break;
+                    case 'perfect_day': // 하루 계획 완전 완수
+                        isMet = (stats.isPerfectDay === targetVal);
+                        break;
+                    case 'inactive_days': // 미접속 기간
+                        isMet = ((stats.inactiveDays || 0) >= targetVal);
+                        break;
+                    case 'app_juggler': // 사용 중인 도구 개수
+                        isMet = ((stats.activeAppCount || 0) >= targetVal);
+                        break;
+
+                    case 'low_efficiency_session':
+                        // 렌더러가 stats.low_efficiency_session으로 불리언 값을 보내준다고 가정
+                        isMet = (stats.low_efficiency_session === targetVal);
+                        break;
+
+                    case 'adult_count': // 기존 adultCount 대응용
+                        isMet = ((stats.evolvedAdultCount || 0) >= targetVal);
+                        break;
+
+                    /* --- [기타 (General)] --- */
+                    case 'always': // 무조건 발생
+                        isMet = true;
+                        break;
+                    case 'current_stage': // 현재 성장 단계 (egg, child, adult)
+                        isMet = (window.currentStage === targetVal);
+                        break;
+                    case 'specific_growth': // 특정 캐릭터 성장도 (함께한 분)
+                        if (window.currentPartner) {
+                            const growth = (window.charGrowthMap && window.charGrowthMap[window.currentPartner.id]) || 0;
+                            isMet = (growth >= targetVal);
+                        }
+                        break;
+                    case 'partner_id': // 현재 선택된 파트너 ID
+                        isMet = (stats.partnerId === targetVal);
+                        break;
+                    case 'previous_streak': // 끊기기 전 이전 연속 기록
+                        isMet = ((stats.previousMaxStreak || 0) >= targetVal);
+                        break;
+
+                    default:
+                        // 정의되지 않은 타입은 stats 내 직접 비교
+                        isMet = (stats[type] === targetVal);
                         break;
                 }
                 return isMet;
             };
 
+            // 3. 논리 연산 처리 (AND/OR)
             const isMet = (logic === "OR") 
                 ? triggerList.some(checkCondition) 
                 : triggerList.every(checkCondition);
 
+            // 4. 즉시 발송 및 중복 방지
             if (isMet) {
                 this.addMail(mail);
                 newMails.push(mail);
-                console.log(`✉️ 새로운 서신 도착: ${mail.title}`);
+                console.log(`✉️ [Mailbox] 서신 조건 충족 발송: ${mail.title} (ID: ${mail.id})`);
             }
         });
 

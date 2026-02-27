@@ -860,6 +860,8 @@ window.changeFont = function(fontName, needSave = true) {
         'NanumSquareNeo': "'NanumSquareNeo', sans-serif", // ✨ 추가
         'paperlogy': "'Paperlogy', sans-serif",
         'NeoHyundai': "'NeoHyundai', sans-serif",
+        'okticon': "'okticon', sans-serif",
+        'MemomentKkukkukk': "'MemomentKkukkukk', sans-serif",
     };
 
     const selectedFont = fontMapping[fontName] || fontMapping['paperlogy'];
@@ -1578,6 +1580,8 @@ window.startMainGameEngine = () => {
     }
     console.log("🚀 에테르 엔진 가동 시작");
     window.gameEngineInterval = setInterval(updateLoop, 1000);
+
+    console.log(masterData);
 };
 
 /**
@@ -1929,89 +1933,69 @@ window.updateUI = function() {
 /* ============================================================
    [🏁 게임 엔진 루프 (Heartbeat) - 최적화 완료 버전]
    ============================================================ */
-
+/**
+ * [renderer.js] 최적화된 메인 엔진 루프
+ * 판정 로직은 MolipMonitor에게 맡기고, renderer는 결과에 따른 UI 갱신만 담당합니다.
+ */
 async function updateLoop() {
     if (!masterData || window.isResetting) return;
 
     const nowMolipDate = window.getMolipDate();
 
-    // 🕒 1. [부재중 판정] 실제 PC 유휴 시간 가져오기 (15초 기준)
+    // 1. [부재중 판정] 실제 PC 유휴 시간 가져오기
     const systemIdleSeconds = await ipcRenderer.invoke('get-idle-time'); 
-    const isNowIdle = (systemIdleSeconds >= 300); // 아티스트님이 원하시는 15초로 수정
+    const idleLimit = window.idleLimit || 300; 
+    const isNowIdle = (systemIdleSeconds >= idleLimit);
 
-    // ✨ 2. [상태 변화 트리거] 부재 상태가 변하는 순간 캐릭터 반응
+    // 2. [상태 변화 트리거] 부재 상태 전이 및 캐릭터 반응
     if (window.isIdle !== isNowIdle) {
         window.isIdle = isNowIdle;
-        isIdle = isNowIdle;
-
         if (window.isIdle) {
             if (window.renderer) window.renderer.setExpression('away');
-            awayStartTime = Date.now();
         } else {
             if (typeof window.showRandomDialogue === 'function') {
                 window.showRandomDialogue('return'); 
             }
-            if (window.characterManager) window.characterManager.refreshSprite(); 
         }
     }
 
-    // 📅 3. 날짜 변경 감지 (기존 로직 유지)
+    // 📅 3. 날짜 변경 감지
     if (masterData.progress && masterData.progress.lastSaveDate !== nowMolipDate) {
         await handleMidnightReset(nowMolipDate);
         return;
     }
 
-    // 🔍 4. [모니터링 분석] 집중/딴짓/대기 판별
-    let isFocusing = false;
+    // 🔍 4. [모니터링 분석] ✨ 판정 권한을 MolipMonitor로 단일화
+    // 여기서 analyze를 호출하면 MolipMonitor가 window.isActuallyWorking 등을 직접 세팅합니다.
     try {
         if (window.molipMonitor) {
-            isFocusing = await window.molipMonitor.analyze(lastActiveWin);
+            await window.molipMonitor.analyze(lastActiveWin);
         }
-    } catch (e) { console.error("⚠️ [Monitor] 분석 에러:", e); }
-
-    // 💡 5. [전역 상태 동기화] 뱃지 UI와 애니메이션이 참조할 핵심 변수 갱신
-    if (window.isIdle) {
-        window.isActuallyWorking = false;
-        window.isDistraction = false;
-    } else {
-        // 집중 앱이면 집중, 딴짓 앱이면 딴짓, 둘 다 아니면 대기(false) 처리
-        const appName = window.cleanAppName(lastActiveWin?.owner);
-        const winTitle = (lastActiveWin?.title || "").toLowerCase();
-        const distractKeywords = masterData.settings.monitor?.distractKeywords || [];
-        const isKnownDist = distractionApps.includes(appName) || distractKeywords.some(k => winTitle.includes(k.toLowerCase()));
-
-        window.isActuallyWorking = isFocusing; 
-        window.isDistraction = !isFocusing && isKnownDist;
+    } catch (e) { 
+        console.error("⚠️ [Monitor] 분석 에러:", e); 
     }
+
+    // 💡 5. [중요] renderer.js에서 자체적으로 isActuallyWorking을 다시 계산하던 
+    // "배지 UI와 애니메이션이 참조할 핵심 변수 갱신" 블록을 완전히 삭제했습니다.
 
     // ✉️ 6. 서신/업적/성장 체크
     try {
         checkMailAndAchievements(window.isActuallyWorking, nowMolipDate);
     } catch (e) { console.error("⚠️ [System] 조건 체크 에러:", e); }
 
-    try {
-        if (window.characterManager) {
-            window.characterManager.checkHatching();   
-            window.characterManager.checkEvolution();  
-        }
-    } catch (e) { console.error("⚠️ [Manager] 성장 로직 에러:", e); }
-
     // 🖥️ 7. UI 및 애니메이션 최종 갱신
     try {
-        // 🖥️ 7. UI 및 상태 배지 갱신
         if (window.updateCylinderSystem) window.updateCylinderSystem(); 
         window.updateUI(); 
-        updateStatusBadge(); 
+        updateStatusBadge(); // MolipMonitor가 설정한 전역 변수를 기반으로 배지를 그립니다.
 
-        // ✨ [핵심 수리] 알 둠칫둠칫(흔들림) 연출 로직
+        // 알 흔들림 연출
         const mainCanvas = document.getElementById('main-canvas');
         if (mainCanvas) {
-            // 판정 조건: (알 데이터가 있거나 단계가 알임) AND 집중 중 AND 연성/부화 연출 중이 아님
             const isEggState = (window.collection && window.collection.activeEgg) || (window.currentStage === 'egg');
             const shouldAnimate = isEggState && window.isActuallyWorking && !window.isHatching && !window.isIdle;
 
             if (shouldAnimate) {
-                // 집중 중일 때 'egg-anim-active' 클래스를 추가하여 CSS 애니메이션 가동
                 mainCanvas.classList.add('egg-anim-active');
             } else {
                 mainCanvas.classList.remove('egg-anim-active');
@@ -2051,7 +2035,7 @@ async function handleMidnightReset(nowMolipDate) {
 /**
  * [renderer.js] 모든 유저에게 적용되는 자동 서신 체크 엔진
  */
-window.checkMailAndAchievements = function(isFocusing, nowMolipDate) {
+window.checkMailAndAchievements = function(isFocusing, nowMolipDate, eventContext = null) {
     if (!window.mailbox || !window.progress || !window.collection) return;
 
     const currentId = window.currentPartner?.id;
@@ -2097,34 +2081,39 @@ window.checkMailAndAchievements = function(isFocusing, nowMolipDate) {
 
     // 5. 엔진에 전달할 데이터 집합(stats) 구성
     const stats = {
-        // --- 알케미스트 성취 (전역 수치) ---
-        alchemist_level: window.progress.getProgressData().level,
-        total_focus: Math.floor(window.progress.totalFocusTime / 60),
-        rich_alchemist: window.collection.points,
-        owned_count: (window.collection.ownedIds || []).length,
-        adultCount: adultCount,
-        gift_total_count: giftTotalCount, // 전체 캐릭터 선물 합계
-        gift_connoisseur: Object.keys(allGiftsGlobal).length, // 전체 선물 종류 수
+        // --- 1. 매니저 내부 카멜케이스(CamelCase) 대응 (필수) ---
+        alchemistLevel: window.progress.getProgressData().level, // alchemist_level
+        totalFocusTime: Math.floor(window.progress.totalFocusTime / 60), // total_focus
+        todoCount: window.masterData.stats?.todoCount || 0, // todo_count
+        currentHabitStreak: window.masterData.stats?.currentHabitStreak || 0, // habit_master
+        failedAttempts: window.masterData.stats?.failedAttempts || 0, // ✨ 추가: failed_attempt_count
+        ownedHomunculusCount: (window.collection.ownedIds || []).length, // owned_count
+        evolvedAdultCount: adultCount, // adult_count
+        dailyPetCount: window.masterData.character?.dailyPetCountMap?.[currentId] || 0, // ✨ 추가: daily_pet_limit
+        giftTotalCount: giftTotalCount, // gift_total_count
+        giftFavoriteCount: currentFavCount, // gift_count_favorite
+        uniqueGiftsCount: Object.keys(allGiftsGlobal).length, // (connoisseur)
+        currentSessionFocusTime: window.masterData.stats?.currentSessionFocusTime || 0, // ✨ 추가: marathon_focus
+        isPerfectDay: isPerfectDay, // ✨ 수정: perfect_day
+        inactiveDays: window.masterData.stats?.inactiveDays || 0, // ✨ 수정: inactive_days
+        activeAppCount: window.workApps?.length || 0, // ✨ 추가: app_juggler
+        previousMaxStreak: window.masterData.stats?.previousMaxStreak || 0, // ✨ 추가: previous_streak
 
-        // --- 파트너 교감 (개별 수치) ---
+        // --- 2. 렌더러 직통 스네이크케이스(snake_case) 및 전역 대응 ---
         partnerId: currentId,
         intimacy_level: window.charIntimacyMap[currentId] || 0,
-        // ✨ 이제 현재 파트너가 받은 선물만 전달되어 다른 캐릭터와 섞이지 않습니다!
-        gift_history: currentPartnerGifts, 
-        gift_count_favorite: currentFavCount, 
-
-        // --- 환경 및 기타 ---
+        gift_history: currentPartnerGifts,
         flow_state: isFocusing,
-        night_owl: (currentHour >= 0 && currentHour < 4),
+        night_owl: (currentHour >= 0 && currentHour < 5),
         early_bird: (currentHour >= 5 && currentHour < 9),
         weekend_alchemist: (currentDay === 0 || currentDay === 6),
-        perfect_day: isPerfectDay,
         current_stage: window.currentStage,
-        always: true
+        always: true,
+        low_efficiency_session: (window.isDistraction || window.isIdle) // default 판정으로 정상 작동
     };
 
     // 6. 서신 조건 판정 및 발송
-    const newMails = window.mailbox.checkTriggers(stats);
+    const newMails = window.mailbox.checkTriggers(stats, eventContext);
 
     if (newMails && newMails.length > 0) {
         if (window.playSFX) window.playSFX('letterbox'); 
@@ -2630,16 +2619,50 @@ window.completeHatching = async (charId) => {
 /**
  * [renderer.js] 유저가 선물을 주면 호출되는 자동 카운팅 시스템
  */
-window.processFavoriteGiftSuccess = function(charId) {
+/**
+ * [renderer.js] 좋아하는 선물 처리기 (아이템별 횟수 기록 추가)
+ */
+window.processFavoriteGiftSuccess = function(charId, itemName) {
     if (!window.masterData.character) window.masterData.character = {};
+    
+    // 1. 캐릭터별 좋아하는 선물 '총합' 기록 (기존 유지)
     if (!window.masterData.character.favoriteGiftMap) window.masterData.character.favoriteGiftMap = {};
-
-    // 1. 해당 캐릭터 전용 금고에 카운트 +1
     window.masterData.character.favoriteGiftMap[charId] = (window.masterData.character.favoriteGiftMap[charId] || 0) + 1;
 
-    // 2. 파일 자동 저장 및 서신 체크
+    // 2. ✨ [핵심] 캐릭터가 해당 아이템을 '몇 번' 받았는지 기록 (신규)
+    if (!window.masterData.character.itemCountMap) window.masterData.character.itemCountMap = {};
+    const itemKey = `${charId}_${itemName}`;
+    window.masterData.character.itemCountMap[itemKey] = (window.masterData.character.itemCountMap[itemKey] || 0) + 1;
+
     if (window.saveAllData) window.saveAllData();
-    window.checkMailAndAchievements(window.isActuallyWorking, window.getMolipDate());
+
+    // 3. 서신 체크 호출 (eventContext 포함)
+    const eventContext = { type: 'gift_favorite', itemName: itemName, partnerId: charId };
+    window.checkMailAndAchievements(window.isActuallyWorking, window.getMolipDate(), eventContext);
+    console.log(`✉️ [Event] ${charId}에게 ${itemName} 전달! (누적: ${window.masterData.character.itemCountMap[itemKey]}회)`);
+};
+
+/**
+ * [renderer.js] 싫어하는 선물 처리기 (아이템별 횟수 기록 추가)
+ */
+window.processDislikeGiftSuccess = function(charId, itemName) {
+    if (!window.masterData.character) window.masterData.character = {};
+    
+    // 1. 캐릭터별 싫어하는 선물 '총합' 기록
+    if (!window.masterData.character.dislikeGiftMap) window.masterData.character.dislikeGiftMap = {};
+    window.masterData.character.dislikeGiftMap[charId] = (window.masterData.character.dislikeGiftMap[charId] || 0) + 1;
+
+    // 2. ✨ [핵심] 캐릭터가 해당 아이템을 '몇 번' 받았는지 기록 (신규)
+    if (!window.masterData.character.itemCountMap) window.masterData.character.itemCountMap = {};
+    const itemKey = `${charId}_${itemName}`;
+    window.masterData.character.itemCountMap[itemKey] = (window.masterData.character.itemCountMap[itemKey] || 0) + 1;
+
+    if (window.saveAllData) window.saveAllData();
+
+    // 3. 서신 체크 호출 (eventContext 필수)
+    const eventContext = { type: 'gift_dislike', itemName: itemName, partnerId: charId };
+    window.checkMailAndAchievements(window.isActuallyWorking, window.getMolipDate(), eventContext);
+    console.log(`✉️ [Event] ${charId}가 ${itemName}을 싫어함! (누적: ${window.masterData.character.itemCountMap[itemKey]}회)`);
 };
 
 /**

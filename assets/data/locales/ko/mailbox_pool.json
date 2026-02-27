@@ -3,7 +3,7 @@
         "sender": "연금술 길드",
         "title": "[업적] 생명의 육성가",
         "triggers": [{
-            "type": "adultCount",
+            "type": "adult_count",
             "value": 4
         }],
         "content": "네 피조물을 성공적으로 성체기까지 진화시킨 귀하의 정성은 연금술 역사의 한 페이지를 장식할 것입니다.",
@@ -18,7 +18,7 @@
         "sender": "연금술 길드",
         "title": "[업적] 생명의 육성가",
         "triggers": [{
-            "type": "adultCount",
+            "type": "adult_count",
             "value": 8
         }],
         "content": "여덟 피조물을 성공적으로 성체기까지 진화시킨 귀하의 정성은 연금술 역사의 한 페이지를 장식할 것입니다.",
@@ -608,7 +608,7 @@
         "title": "[공인] 상급 호문클루스 관리 자격 승인",
         "content": "당신의 헌신적인 몰입 끝에 드디어 첫 번째 성체 호문클루스가 탄생했다는 소식을 접했습니다. 알에서 시작해 성체에 이르기까지, 에테르의 흐름을 완벽하게 제어한 당신의 능력을 길드에서도 높게 평가하고 있습니다. 앞으로 더 깊은 탐구를 지원하기 위해 길드 보조금을 송부합니다. 더욱 찬란한 연구 성과를 거두시길 바랍니다.",
         "trigger": {
-            "type": "adultCount",
+            "type": "adult_count",
             "value": 1
         },
         "reward": {
@@ -720,7 +720,7 @@
         "title": "[지침] 연구 재개에 따른 특별 보조금 안내",
         "trigger": {
             "type": "inactive_days",
-            "value": true
+            "value": 3
         },
         "content": "장기 부재 이후 연구실로 복귀하신 것을 확인했습니다. 길드는 숙련된 연금술사의 이탈을 방지하고 연구의 연속성을 보장하기 위해 정착 지원금을 송부합니다. [할 일] 목록을 재정비하고 안정적인 에테르 추출 궤도에 다시 진입하십시오.",
         "reward": {
@@ -1396,7 +1396,7 @@
         "charId": "char_01",
         "title": "[업적] 사색의 동반자",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1418,7 +1418,7 @@
         "title": "당신과 나의 계절",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1427,7 +1427,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 300
             }
         ],
@@ -1444,7 +1444,7 @@
         "title": "당신에게 스며든 작은 온기",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1453,7 +1453,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 300
             }
         ],
@@ -1470,7 +1470,7 @@
         "title": "함께 빚어내는 사색의 색깔",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1479,7 +1479,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 300
             }
         ],
@@ -1496,7 +1496,7 @@
         "title": "유리벽에 닿지 못한 나의 온기",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1505,7 +1505,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 600
             }
         ],
@@ -1522,7 +1522,7 @@
         "title": "당신이라는 다정한 우주를 유영하며",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1531,7 +1531,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 450
             }
         ],
@@ -1548,7 +1548,7 @@
         "title": "침묵 속의 대화",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1557,7 +1557,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 300
             }
         ],
@@ -1574,7 +1574,7 @@
         "title": "흐트러진 사색도 당신의 일부예요",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1583,7 +1583,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 300
             }
         ],
@@ -1601,7 +1601,7 @@
         "title": "당신의 마음이 닿은 양피지",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1622,7 +1622,7 @@
         "title": "겹겹이 쌓이는 당신의 배려",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1643,7 +1643,7 @@
         "title": "서로를 알아가는 과정일 뿐이에요",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1664,7 +1664,7 @@
         "title": "꽃피는 연금술의 재능",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1673,7 +1673,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 300
             }
         ],
@@ -1690,7 +1690,7 @@
         "title": "정돈된 하루의 온기",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1699,7 +1699,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 300
             }
         ],
@@ -1716,7 +1716,7 @@
         "title": "열흘간의 다정한 발걸음",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1725,7 +1725,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 300
             }
         ],
@@ -1742,7 +1742,7 @@
         "title": "밤이 깊었어요, 연금술사님",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_01"
             },
             {
@@ -1755,7 +1755,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_01",
+                "partner_id": "char_01",
                 "value": 300
             }
         ],
@@ -1771,7 +1771,7 @@
         "charId": "char_02",
         "title": "[업적] 정적의 공유자",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -1793,7 +1793,7 @@
         "title": "거슬리지 않는 온도",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -1802,7 +1802,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 300
             }
         ],
@@ -1819,7 +1819,7 @@
         "title": "거슬리던 소음이 리듬이 되기까지",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -1828,7 +1828,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 300
             }
         ],
@@ -1845,7 +1845,7 @@
         "title": "소란스러운 정적",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -1854,7 +1854,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 300
             }
         ],
@@ -1871,7 +1871,7 @@
         "title": "이 정적을 깨고 너에게 닿고 싶어",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -1880,7 +1880,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 600
             }
         ],
@@ -1897,7 +1897,7 @@
         "title": "너라서 좋아",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -1906,7 +1906,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 450
             }
         ],
@@ -1923,7 +1923,7 @@
         "title": "완벽한 정적의 증명",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -1932,7 +1932,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 300
             }
         ],
@@ -1949,7 +1949,7 @@
         "title": "아름다운 선율",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -1970,7 +1970,7 @@
         "title": "데이터가 증명하는 유대",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -1991,7 +1991,7 @@
         "title": "오차 범위 밖의 선택",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -2012,7 +2012,7 @@
         "title": "심연의 인정",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -2021,7 +2021,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 300
             }
         ],
@@ -2038,7 +2038,7 @@
         "title": "군더더기 없는 속도",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -2051,7 +2051,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 300
             }
         ],
@@ -2068,7 +2068,7 @@
         "title": "최적화된 사고 회로",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -2077,7 +2077,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 300
             }
         ],
@@ -2094,7 +2094,7 @@
         "title": "새벽의 규칙성",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -2107,7 +2107,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 300
             }
         ],
@@ -2124,7 +2124,7 @@
         "title": "먼지 쌓인 연구실의 정적",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_02"
             },
             {
@@ -2133,7 +2133,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_02",
+                "partner_id": "char_02",
                 "value": 300
             }
         ],
@@ -2149,7 +2149,7 @@
         "charId": "char_04",
         "title": "[업적] 심연의 반려",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2171,7 +2171,7 @@
         "title": "낯선 손길에 대하여",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2184,7 +2184,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_04",
+                "partner_id": "char_04",
                 "value": 300
             }
         ],
@@ -2201,7 +2201,7 @@
         "title": "지식의 허물 너머, 당신이라는 진실",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2210,7 +2210,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_04",
+                "partner_id": "char_04",
                 "value": 300
             }
         ],
@@ -2227,7 +2227,7 @@
         "title": "에테르의 소용돌이",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2236,7 +2236,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_04",
+                "partner_id": "char_04",
                 "value": 300
             }
         ],
@@ -2253,7 +2253,7 @@
         "title": "심연의 안내자가 아닌, 당신의 연인이 되고 싶은 밤",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2262,7 +2262,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_04",
+                "partner_id": "char_04",
                 "value": 600
             }
         ],
@@ -2279,7 +2279,7 @@
         "title": "당신이라는 진리",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2288,7 +2288,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_04",
+                "partner_id": "char_04",
                 "value": 450
             }
         ],
@@ -2305,7 +2305,7 @@
         "title": "무의식의 속삭임",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2314,7 +2314,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_04",
+                "partner_id": "char_04",
                 "value": 300
             }
         ],
@@ -2331,7 +2331,7 @@
         "title": "심연을 깨우는 쓴맛",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2352,7 +2352,7 @@
         "title": "갈증을 채우는 단비",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2373,7 +2373,7 @@
         "title": "어울리지 않는 선율",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2394,7 +2394,7 @@
         "title": "지혜로 물든 비늘",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2403,7 +2403,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_04",
+                "partner_id": "char_04",
                 "value": 300
             }
         ],
@@ -2420,7 +2420,7 @@
         "title": "껍질을 벗긴 성취",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2429,7 +2429,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_04",
+                "partner_id": "char_04",
                 "value": 300
             }
         ],
@@ -2446,7 +2446,7 @@
         "title": "반복 속에 숨겨진 진리",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2455,7 +2455,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_04",
+                "partner_id": "char_04",
                 "value": 300
             }
         ],
@@ -2472,7 +2472,7 @@
         "title": "심연이 깊어지는 시각",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_04"
             },
             {
@@ -2481,7 +2481,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_04",
+                "partner_id": "char_04",
                 "value": 300
             }
         ],
@@ -2497,7 +2497,7 @@
         "charId": "char_05",
         "title": "[업적] 황금빛 영광의 주역",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2519,7 +2519,7 @@
         "title": "곁을 허락한 영광",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2528,7 +2528,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_05",
+                "partner_id": "char_05",
                 "value": 300
             }
         ],
@@ -2545,7 +2545,7 @@
         "title": "황금빛 가호를 받을 자격",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2554,7 +2554,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_05",
+                "partner_id": "char_05",
                 "value": 300
             }
         ],
@@ -2571,7 +2571,7 @@
         "title": "요람의 여주인",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2580,7 +2580,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_05",
+                "partner_id": "char_05",
                 "value": 300
             }
         ],
@@ -2597,7 +2597,7 @@
         "title": "금빛 날개를 꺾고 당신의 대지 위로",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2606,7 +2606,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_05",
+                "partner_id": "char_05",
                 "value": 600
             }
         ],
@@ -2623,7 +2623,7 @@
         "title": "찬란한 마음을 내어준다면",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2632,7 +2632,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_05",
+                "partner_id": "char_05",
                 "value": 450
             }
         ],
@@ -2649,7 +2649,7 @@
         "title": "타오르는 의지의 불꽃",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2658,7 +2658,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_05",
+                "partner_id": "char_05",
                 "value": 300
             }
         ],
@@ -2675,7 +2675,7 @@
         "title": "고결한 광채에 대한 응답",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2696,7 +2696,7 @@
         "title": "정점에 어울리는 조공",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2717,7 +2717,7 @@
         "title": "품격에 어긋나는 결례",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2738,7 +2738,7 @@
         "title": "정점의 파트너",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2747,7 +2747,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_05",
+                "partner_id": "char_05",
                 "value": 300
             }
         ],
@@ -2764,7 +2764,7 @@
         "title": "격조 높은 하루의 완성",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2773,7 +2773,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_05",
+                "partner_id": "char_05",
                 "value": 300
             }
         ],
@@ -2790,7 +2790,7 @@
         "title": "시간으로 빚은 황금 왕관",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2799,7 +2799,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_05",
+                "partner_id": "char_05",
                 "value": 300
             }
         ],
@@ -2816,7 +2816,7 @@
         "title": "정상을 향한 아침",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_05"
             },
             {
@@ -2825,7 +2825,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_05",
+                "partner_id": "char_05",
                 "value": 300
             }
         ],
@@ -2841,7 +2841,7 @@
         "charId": "char_06",
         "title": "[업적] 나의 바다에게, 작은 물결이",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -2863,7 +2863,7 @@
         "title": "유리벽 너머의 너에게, 내 영혼까지 다 녹여 보낼게♡",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -2872,7 +2872,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_06",
+                "partner_id": "char_06",
                 "value": 600
             }
         ],
@@ -2890,7 +2890,7 @@
         "title": "네 손길은 정말 몽글몽글해! ٩(ˊᗜˋ*)و",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -2899,7 +2899,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_06",
+                "partner_id": "char_06",
                 "value": 300
             }
         ],
@@ -2916,7 +2916,7 @@
         "title": "연금술사! 내가 꽉~ 안아줄게! (•ө•)♡",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -2925,7 +2925,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_06",
+                "partner_id": "char_06",
                 "value": 300
             }
         ],
@@ -2942,7 +2942,7 @@
         "title": "너는 내 바다이자 단 하나뿐인 기적이야!",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -2951,7 +2951,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_06",
+                "partner_id": "char_06",
                 "value": 450
             }
         ],
@@ -2968,7 +2968,7 @@
         "title": "네 집중력이 파도처럼 넘실거려!",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -2977,7 +2977,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_06",
+                "partner_id": "char_06",
                 "value": 300
             }
         ],
@@ -2994,7 +2994,7 @@
         "title": "네 진심이 담긴 종이... 내 보물 1호야! ♡",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -3015,7 +3015,7 @@
         "title": "으으... 이건 너무 조용하고 따끔거려! ( •́ ̯•̀ )",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -3036,7 +3036,7 @@
         "title": "네 실력이 쑥쑥! 내가 다 뿌듯해! (๑˃̵ᴗ˂̵)و",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -3045,7 +3045,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_06",
+                "partner_id": "char_06",
                 "value": 300
             }
         ],
@@ -3062,7 +3062,7 @@
         "title": "와아! 오늘 하루 백 점 만점에 천 점이야! ♡",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -3071,7 +3071,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_06",
+                "partner_id": "char_06",
                 "value": 300
             }
         ],
@@ -3088,7 +3088,7 @@
         "title": "스무 개의 보석 같은 성취! 정말 멋져!",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -3097,7 +3097,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_06",
+                "partner_id": "char_06",
                 "value": 300
             }
         ],
@@ -3114,7 +3114,7 @@
         "title": "보고 싶어서 거품만 불고 있었단 말이야!",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -3123,7 +3123,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_06",
+                "partner_id": "char_06",
                 "value": 300
             }
         ],
@@ -3140,7 +3140,7 @@
         "title": "주말에도 나랑 같이 열공하는구나! 히히!",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_06"
             },
             {
@@ -3149,7 +3149,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_06",
+                "partner_id": "char_06",
                 "value": 300
             }
         ],
@@ -3165,7 +3165,7 @@
         "charId": "char_07",
         "title": "[업적] 마음 가는 곳",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3187,7 +3187,7 @@
         "title": "아홉 번째 꼬리의 영광을 그대에게",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3196,7 +3196,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_07",
+                "partner_id": "char_07",
                 "value": 600
             }
         ],
@@ -3213,7 +3213,7 @@
         "title": "묵묵히 정진하는 그대의 등을 보며",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3222,7 +3222,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_07",
+                "partner_id": "char_07",
                 "value": 300
             }
         ],
@@ -3239,7 +3239,7 @@
         "title": "그대와 함께라면 고행도 달콤합니다",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3248,7 +3248,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_07",
+                "partner_id": "char_07",
                 "value": 300
             }
         ],
@@ -3265,7 +3265,7 @@
         "title": "가장 붉은 진심을 그대에게 바칩니다",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3274,7 +3274,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_07",
+                "partner_id": "char_07",
                 "value": 450
             }
         ],
@@ -3291,7 +3291,7 @@
         "title": "흔들림 없는 그대의 눈빛",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3300,7 +3300,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_07",
+                "partner_id": "char_07",
                 "value": 300
             }
         ],
@@ -3317,7 +3317,7 @@
         "title": "붉은 기운이 소녀를 춤추게 합니다",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3338,7 +3338,7 @@
         "title": "차가운 냉기는 사양하겠습니다",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3359,7 +3359,7 @@
         "title": "한 계단을 더 오르셨군요",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3368,7 +3368,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_07",
+                "partner_id": "char_07",
                 "value": 300
             }
         ],
@@ -3385,7 +3385,7 @@
         "title": "완벽한 하루의 마침표",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3394,7 +3394,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_07",
+                "partner_id": "char_07",
                 "value": 300
             }
         ],
@@ -3411,7 +3411,7 @@
         "title": "기다림 또한 수련의 일부라지만...",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_07"
             },
             {
@@ -3420,7 +3420,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_07",
+                "partner_id": "char_07",
                 "value": 300
             }
         ],
@@ -3436,7 +3436,7 @@
         "charId": "char_08",
         "title": "[업적] 포근한 자리",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3458,7 +3458,7 @@
         "title": "너라는 온기를 입고",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3467,7 +3467,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_08",
+                "partner_id": "char_08",
                 "value": 600
             }
         ],
@@ -3484,7 +3484,7 @@
         "title": "조금은... 괜찮을지도 몰라",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3493,7 +3493,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_08",
+                "partner_id": "char_08",
                 "value": 300
             }
         ],
@@ -3510,7 +3510,7 @@
         "title": "네가 없는 방은 너무 넓어",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3519,7 +3519,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_08",
+                "partner_id": "char_08",
                 "value": 300
             }
         ],
@@ -3536,7 +3536,7 @@
         "title": "만약 이 유리가 사라진다면...",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3545,7 +3545,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_08",
+                "partner_id": "char_08",
                 "value": 450
             }
         ],
@@ -3562,7 +3562,7 @@
         "title": "벽을 넘어오는 온기",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3571,7 +3571,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_08",
+                "partner_id": "char_08",
                 "value": 300
             }
         ],
@@ -3588,7 +3588,7 @@
         "title": "유리벽 안이 따뜻해졌어...",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3609,7 +3609,7 @@
         "title": "가, 가시가 벽을 긁고 있어...",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3630,7 +3630,7 @@
         "title": "너의 그림자가 커졌어",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3639,7 +3639,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_08",
+                "partner_id": "char_08",
                 "value": 300
             }
         ],
@@ -3656,7 +3656,7 @@
         "title": "손을 맞대고 싶지만...",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3665,7 +3665,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_08",
+                "partner_id": "char_08",
                 "value": 300
             }
         ],
@@ -3682,7 +3682,7 @@
         "title": "유리벽 너머만 봤어...",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_08"
             },
             {
@@ -3691,7 +3691,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_08",
+                "partner_id": "char_08",
                 "value": 300
             }
         ],
@@ -3707,7 +3707,7 @@
         "charId": "char_09",
         "title": "풋내기의 잠재력",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3716,7 +3716,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_09",
+                "partner_id": "char_09",
                 "value": 300
             }
         ],
@@ -3733,7 +3733,7 @@
         "title": "집사의 보람",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3742,7 +3742,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_09",
+                "partner_id": "char_09",
                 "value": 300
             }
         ],
@@ -3758,7 +3758,7 @@
         "charId": "char_09",
         "title": "[업적] 티타임의 종신 계약",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3780,7 +3780,7 @@
         "title": "티타임에 초대합니다",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3789,7 +3789,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_09",
+                "partner_id": "char_09",
                 "value": 600
             }
         ],
@@ -3806,7 +3806,7 @@
         "title": "필요한 것",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3815,7 +3815,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_09",
+                "partner_id": "char_09",
                 "value": 450
             }
         ],
@@ -3832,7 +3832,7 @@
         "title": "모닝 티",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3853,7 +3853,7 @@
         "title": "깜짝 선물",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3874,7 +3874,7 @@
         "title": "반 시간의 몰입",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3895,7 +3895,7 @@
         "title": "선악과",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3916,7 +3916,7 @@
         "title": "건의 사항",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3937,7 +3937,7 @@
         "title": "괜찮은 파트너",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3958,7 +3958,7 @@
         "title": "젖은 양피지",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -3979,7 +3979,7 @@
         "title": "악마의 숫자",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -4000,7 +4000,7 @@
         "title": "값비싼 인정",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_09"
             },
             {
@@ -4020,7 +4020,7 @@
         "charId": "char_10",
         "title": "[업적] 무조건적인 지지와 성원",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4042,7 +4042,7 @@
         "title": "즐거운 기다림",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4051,7 +4051,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_10",
+                "partner_id": "char_10",
                 "value": 600
             }
         ],
@@ -4068,7 +4068,7 @@
         "title": "인간 연구가 코타",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4077,7 +4077,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_10",
+                "partner_id": "char_10",
                 "value": 300
             }
         ],
@@ -4094,7 +4094,7 @@
         "title": "멍킷리스트",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4103,7 +4103,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_10",
+                "partner_id": "char_10",
                 "value": 450
             }
         ],
@@ -4120,7 +4120,7 @@
         "title": "넌 참 신기한 인간이네",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4129,7 +4129,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_10",
+                "partner_id": "char_10",
                 "value": 300
             }
         ],
@@ -4146,7 +4146,7 @@
         "title": "소중한 컬렉션",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4167,7 +4167,7 @@
         "title": "마비",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4188,7 +4188,7 @@
         "title": "꼬리가 멈추지 않는 탓일까",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4209,7 +4209,7 @@
         "title": "센스있는 선물",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4230,7 +4230,7 @@
         "title": "도구의 마술사",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4239,7 +4239,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_10",
+                "partner_id": "char_10",
                 "value": 15
             }
         ],
@@ -4256,7 +4256,7 @@
         "title": "친구가 북적북적",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4265,7 +4265,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_10",
+                "partner_id": "char_10",
                 "value": 15
             }
         ],
@@ -4282,7 +4282,7 @@
         "title": "손이 가요 손이 가",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4291,7 +4291,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_10",
+                "partner_id": "char_10",
                 "value": 0
             }
         ],
@@ -4308,7 +4308,7 @@
         "title": "너에게 닿기를",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4317,7 +4317,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_10",
+                "partner_id": "char_10",
                 "value": 300
             }
         ],
@@ -4334,7 +4334,7 @@
         "title": "착한 아이",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_10"
             },
             {
@@ -4343,7 +4343,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_10",
+                "partner_id": "char_10",
                 "value": 15
             }
         ],
@@ -4358,7 +4358,7 @@
         "charId": "char_11",
         "title": "[업적] 전설급 필기구",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4380,7 +4380,7 @@
         "title": "중요한 것은 꺾이지 않는 마음",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4389,7 +4389,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_11",
+                "partner_id": "char_11",
                 "value": 600
             }
         ],
@@ -4407,7 +4407,7 @@
         "title": "흰올빼미 깃펜",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4416,7 +4416,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_11",
+                "partner_id": "char_11",
                 "value": 450
             }
         ],
@@ -4433,7 +4433,7 @@
         "title": "데이터의 질량이 줄어들어도",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4442,7 +4442,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_11",
+                "partner_id": "char_11",
                 "value": 300
             }
         ],
@@ -4459,7 +4459,7 @@
         "title": "처음엔 호기심이었다",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4480,7 +4480,7 @@
         "title": "감사 인사",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4501,7 +4501,7 @@
         "title": "어쩌다 서신함에 잘못 들어온 필사노트 한 장",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4522,7 +4522,7 @@
         "title": "반품 요청",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4545,7 +4545,7 @@
         "title": "인체의 생활 리듬",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4554,7 +4554,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_11",
+                "partner_id": "char_11",
                 "value": 300
             }
         ],
@@ -4571,7 +4571,7 @@
         "title": "두 번째 제자",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4580,7 +4580,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_11",
+                "partner_id": "char_11",
                 "value": 300
             }
         ],
@@ -4597,7 +4597,7 @@
         "title": "악법도 법이고",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4606,7 +4606,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_11",
+                "partner_id": "char_11",
                 "value": 300
             }
         ],
@@ -4623,7 +4623,7 @@
         "title": "감각적 사고적 판단적",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4632,7 +4632,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_11",
+                "partner_id": "char_11",
                 "value": 300
             }
         ],
@@ -4649,7 +4649,7 @@
         "title": "필요 목록",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4658,7 +4658,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_11",
+                "partner_id": "char_11",
                 "value": 300
             }
         ],
@@ -4675,7 +4675,7 @@
         "title": "서가 책상 위에 놓인 쪽지",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_11"
             },
             {
@@ -4684,7 +4684,7 @@
             },
             {
                 "type": "specific_growth",
-                "partnerId": "char_11",
+                "partner_id": "char_11",
                 "value": 300
             }
         ],
@@ -4701,7 +4701,7 @@
         "title": "오늘을 살아줘서 고마워",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_hidden_0613"
             },
             {
@@ -4726,7 +4726,7 @@
         "title": "웃어줘서 고마워",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_hidden_0613"
             },
             {
@@ -4751,7 +4751,7 @@
         "title": "주인의 모든 순간에 함께할게",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_hidden_0613"
             },
             {
@@ -4777,7 +4777,7 @@
         "title": "소중하게 간직할게",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_hidden_0613"
             },
             {
@@ -4802,7 +4802,7 @@
         "title": "미안, 나 이거 안 좋아해",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_hidden_0613"
             },
             {
@@ -4827,7 +4827,7 @@
         "title": "외로움의 무게를 나누며",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_hidden_0104"
             },
             {
@@ -4848,7 +4848,7 @@
         "title": "가장 아름다운 것을 보는 기분",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_hidden_0104"
             },
             {
@@ -4869,7 +4869,7 @@
         "title": "나의 별에게",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_hidden_0104"
             },
             {
@@ -4891,7 +4891,7 @@
         "title": "반짝이는 선물",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_hidden_0104"
             },
             {
@@ -4916,7 +4916,7 @@
         "title": "조금 짓궂은 선택",
         "logic": "AND",
         "triggers": [{
-                "type": "partnerId",
+                "type": "partner_id",
                 "value": "char_hidden_0104"
             },
             {
@@ -5056,7 +5056,7 @@
                 "value": 3
             },
             {
-                "type": "adultCount",
+                "type": "adult_count",
                 "value": 1
             }
         ],
