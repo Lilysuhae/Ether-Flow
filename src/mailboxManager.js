@@ -54,7 +54,8 @@ class MailboxManager {
                 switch (type) {
                     /* --- [성취 (Achievement)] --- */
                     case 'alchemist_level': // 연금술사 숙련도 레벨
-                        isMet = ((stats.alchemistLevel || 1) >= targetVal);
+                        // ✨ [수정] || 1 제거: 레벨 0인 유저가 레벨 1 서신을 미리 받는 현상 방지
+                        isMet = ((stats.alchemistLevel || 0) >= targetVal); 
                         break;
                     case 'total_focus': // 누적 몰입 시간 (분 단위)
                         isMet = ((stats.totalFocusTime || 0) >= targetVal);
@@ -66,7 +67,9 @@ class MailboxManager {
                         isMet = ((stats.currentHabitStreak || 0) >= targetVal);
                         break;
                     case 'rich_alchemist': // 보유 에테르 포인트
-                        isMet = ((window.masterData.currency?.ether || 0) >= targetVal);
+                        // ✨ [수정] 데이터 경로 수정: currency?.ether -> collection?.points (실제 데이터 위치)
+                        const currentPoints = window.masterData.collection?.points || 0;
+                        isMet = (currentPoints >= targetVal);
                         break;
                     case 'failed_attempt_count': // 누적 실패/중단 횟수
                         isMet = ((stats.failedAttempts || 0) >= targetVal);
@@ -92,14 +95,13 @@ class MailboxManager {
                         isMet = ((stats.giftTotalCount || 0) >= targetVal);
                         break;
                     case 'gift_count_favorite': // 좋아하는 선물 전달 횟수
-                        isMet = ((stats.gift_count_favorite || 0) >= targetVal);
+                        // ✨ [수정] 키 이름 불일치 해결: gift_count_favorite -> giftFavoriteCount (renderer.js와 동기화)
+                        isMet = ((stats.giftFavoriteCount || 0) >= targetVal);
                         break;
                     case 'first_gift': 
-                        // 1. 실시간 이벤트 확인
                         if (eventContext && (eventContext.type === 'gift' || eventContext.type === 'gift_favorite')) {
                             isMet = (eventContext.itemName === targetVal);
                         }
-                        // 2. 실시간 정보가 없으면 stats.gift_history(데이터셋)에서 해당 아이템 기록 확인
                         if (!isMet && stats.gift_history) {
                             isMet = !!stats.gift_history[targetVal];
                         }
@@ -109,8 +111,7 @@ class MailboxManager {
                         if (eventContext && eventContext.type === 'gift_dislike') {
                             isMet = (targetVal === true);
                         }
-                        break;
-                        // stats에 싫어하는 선물을 준 기록(flag)이 있다면 추가 확인 가능
+                        // ✨ [수정] break 위치를 조정하여 백업 체크 로직이 정상 작동하도록 수정
                         if (!isMet && stats.has_dislike_event) {
                             isMet = (targetVal === true);
                         }
@@ -124,34 +125,29 @@ class MailboxManager {
                         isMet = ((stats.currentSessionFocusTime || 0) >= targetVal);
                         break;
                     case 'flow_state': // 초집중 진입 여부
-                        isMet = (window.isFlowState === targetVal);
+                        // ✨ [수정] 전역 변수 대신 renderer가 넘겨준 실시간 stats.flow_state 사용
+                        isMet = (stats.flow_state === targetVal);
                         break;
                     case 'night_owl': // 심야 시간대 (00~05시)
-                        if (targetVal === true) isMet = (currentHour >= 0 && currentHour < 5);
+                        isMet = (stats.night_owl === targetVal);
                         break;
                     case 'early_bird': // 이른 아침 (05~09시)
-                        if (targetVal === true) isMet = (currentHour >= 5 && currentHour < 9);
+                        isMet = (stats.early_bird === targetVal);
                         break;
                     case 'weekend_alchemist': // 주말 활동 여부
-                        if (targetVal === true) isMet = (currentDay === 0 || currentDay === 6);
+                        isMet = (stats.weekend_alchemist === targetVal);
                         break;
                     case 'perfect_day': // 하루 계획 완전 완수
                         isMet = (stats.isPerfectDay === targetVal);
                         break;
                     case 'inactive_days': // 미접속 기간
                         isMet = ((stats.inactiveDays || 0) >= targetVal);
-                        break;
                     case 'app_juggler': // 사용 중인 도구 개수
                         isMet = ((stats.activeAppCount || 0) >= targetVal);
                         break;
 
                     case 'low_efficiency_session':
-                        // 렌더러가 stats.low_efficiency_session으로 불리언 값을 보내준다고 가정
                         isMet = (stats.low_efficiency_session === targetVal);
-                        break;
-
-                    case 'adult_count': // 기존 adultCount 대응용
-                        isMet = ((stats.evolvedAdultCount || 0) >= targetVal);
                         break;
 
                     /* --- [기타 (General)] --- */
@@ -159,12 +155,15 @@ class MailboxManager {
                         isMet = true;
                         break;
                     case 'current_stage': // 현재 성장 단계 (egg, child, adult)
-                        isMet = (window.currentStage === targetVal);
+                        // ✨ [수정] 전역 변수 대신 stats.current_stage 사용
+                        isMet = (stats.current_stage === targetVal);
                         break;
                     case 'specific_growth': // 특정 캐릭터 성장도 (함께한 분)
                         if (window.currentPartner) {
-                            const growth = (window.charGrowthMap && window.charGrowthMap[window.currentPartner.id]) || 0;
-                            isMet = (growth >= targetVal);
+                            const growthSec = (window.charGrowthMap && window.charGrowthMap[window.currentPartner.id]) || 0;
+                            // ✨ 2. 저장된 '초' 데이터를 '분'으로 변환하여 비교하거나, targetVal을 초로 계산
+                            const growthMin = Math.floor(growthSec / 60);
+                            isMet = (growthMin >= targetVal); 
                         }
                         break;
                     case 'partner_id': // 현재 선택된 파트너 ID

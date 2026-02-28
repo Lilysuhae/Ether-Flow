@@ -109,7 +109,9 @@ let isIdle = false;
 let lastInputTime = Date.now(); 
 let lastIdleState = false;      
 let awayStartTime = null;       
-let currentStatus = "good";     
+let currentStatus = "good";
+let autoSaveCounter = 0; 
+const AUTO_SAVE_INTERVAL = 5;     
 
 // 파트너 및 연출 정보
 let currentPartner = null;
@@ -1973,6 +1975,18 @@ async function updateLoop() {
         }
     } catch (e) { 
         console.error("⚠️ [Monitor] 분석 에러:", e); 
+    }
+
+    if (window.isActuallyWorking || window.isDistraction) {
+        autoSaveCounter++;
+        
+        if (autoSaveCounter >= AUTO_SAVE_INTERVAL) {
+            autoSaveCounter = 0;
+            console.log("💾 [System] 집중 데이터 정기 백업 중...");
+            window.saveAllData(); // 하드디스크에 실시간 기록
+        }
+    } else {
+        autoSaveCounter = 0; // 대기 상태일 때는 카운터 리셋
     }
 
     // 💡 5. [중요] renderer.js에서 자체적으로 isActuallyWorking을 다시 계산하던 

@@ -41,22 +41,24 @@ class LogManager {
         return now;
     }
 
-    // [LogManager.js] recordLog 함수 수정
     recordLog(owner, type) {
-        const today = window.getMolipDate();
-        if (!window.masterData.logs) window.masterData.logs = {};
-        if (!window.masterData.logs[today]) window.masterData.logs[today] = [];
+        const masterData = window.masterData;
+        if (!masterData) return;
 
-        const logs = window.masterData.logs[today];
+        // 여기서는 이미 renderer.js의 getMolipDate()를 쓰므로 초기화 시간이 적용됨 (수정 불필요)
+        const today = window.getMolipDate(); 
+        
+        if (!masterData.logs) masterData.logs = {};
+        if (!masterData.logs[today]) masterData.logs[today] = [];
+
+        const logs = masterData.logs[today];
         const lastLog = logs[logs.length - 1];
-        const cleanedOwner = window.cleanAppName(owner);
+        const nowTime = new Date().toLocaleTimeString('ko-KR', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        const cleanedOwner = window.cleanAppName ? window.cleanAppName(owner) : owner;
 
-        // ✨ [개선] 앱 이름이 같고 타입이 같으면 1초씩 더함
-        // 만약 타입이 'etc'인 짧은 공백(1~2초)이 생겨도 기존 흐름을 유지하도록 보정할 수 있습니다.
         if (lastLog && lastLog.owner === cleanedOwner && lastLog.type === type) {
             lastLog.duration = (lastLog.duration || 0) + 1;
         } else {
-            const nowTime = new Date().toLocaleTimeString('ko-KR', { hour12: false, hour: '2-digit', minute: '2-digit' });
             logs.push({
                 time: nowTime,
                 owner: cleanedOwner,
