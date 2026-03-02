@@ -1926,92 +1926,94 @@ window.updateUI = function() {
 };
 
 /* ============================================================
-   [🏁 게임 엔진 루프 (Heartbeat) - 최적화 완료 버전]
+   [🏁 게임 엔진 루프 (Heartbeat) - 최종 최적화 버전]
+   1초마다 실행되며 연구실의 상태 반영, UI 갱신, 성장 체크를 총괄합니다.
    ============================================================ */
-
 async function updateLoop() {
+    // 🛡️ 시스템 보호: 데이터가 로드되지 않았거나 리셋 중일 때는 엔진을 즉시 중단합니다.
     if (!masterData || window.isResetting) return;
 
-    const nowMolipDate = window.getMolipDate();
+    const nowMolipDate = window.getMolipDate(); // 현재 논리적 날짜 획득
 
-    // 🕒 1. [부재중 판정] 실제 PC 유휴 시간 가져오기 (15초 기준)
-    const systemIdleSeconds = await ipcRenderer.invoke('get-idle-time'); 
-    const isNowIdle = (systemIdleSeconds >= 300); // 아티스트님이 원하시는 15초로 수정
-
-    // ✨ 2. [상태 변화 트리거] 부재 상태가 변하는 순간 캐릭터 반응
-    if (window.isIdle !== isNowIdle) {
-        window.isIdle = isNowIdle;
-        isIdle = isNowIdle;
-
-        if (window.isIdle) {
-            if (window.renderer) window.renderer.setExpression('away');
-            awayStartTime = Date.now();
-        } else {
-            if (typeof window.showRandomDialogue === 'function') {
-                window.showRandomDialogue('return'); 
-            }
-            if (window.characterManager) window.characterManager.refreshSprite(); 
-        }
-    }
-
-    // 📅 3. 날짜 변경 감지 (기존 로직 유지)
-    if (masterData.progress && masterData.progress.lastSaveDate !== nowMolipDate) {
-        await handleMidnightReset(nowMolipDate);
-        return;
-    }
-
-    // 🔍 4. [모니터링 분석] 집중/딴짓/대기 판별
-    let isFocusing = false;
+    /* ------------------------------------------------------------
+       [1] 모니터링 분석 및 상태 결정 (판정 단일화)
+       부재중 체크, 집중/딴짓 판정, 시간 집계, 앱 이름 UI 업데이트, 
+       그리고 캐릭터 표정/대사 제어까지 MolipMonitor가 모두 수행합니다.
+       ------------------------------------------------------------ */
     try {
         if (window.molipMonitor) {
-            isFocusing = await window.molipMonitor.analyze(lastActiveWin);
+            // lastActiveWin 정보를 기반으로 현재 상태를 정밀 분석합니다.
+            await window.molipMonitor.analyze(lastActiveWin);
         }
-    } catch (e) { console.error("⚠️ [Monitor] 분석 에러:", e); }
-
-    // 💡 5. [전역 상태 동기화] 뱃지 UI와 애니메이션이 참조할 핵심 변수 갱신
-    if (window.isIdle) {
-        window.isActuallyWorking = false;
-        window.isDistraction = false;
-    } else {
-        // 집중 앱이면 집중, 딴짓 앱이면 딴짓, 둘 다 아니면 대기(false) 처리
-        const appName = window.cleanAppName(lastActiveWin?.owner);
-        const winTitle = (lastActiveWin?.title || "").toLowerCase();
-        const distractKeywords = masterData.settings.monitor?.distractKeywords || [];
-        const isKnownDist = distractionApps.includes(appName) || distractKeywords.some(k => winTitle.includes(k.toLowerCase()));
-
-        window.isActuallyWorking = isFocusing; 
-        window.isDistraction = !isFocusing && isKnownDist;
+    } catch (e) { 
+        console.error("⚠️ [Monitor] 분석 엔진 실행 에러:", e); 
     }
 
-    // ✉️ 6. 서신/업적/성장 체크
+    /* ------------------------------------------------------------
+       [2] 날짜 변경 감지 (자정 리셋 처리)
+       설정된 시간이 지나 날짜가 바뀌면 일과 리셋 및 데이터를 정리합니다.
+       ------------------------------------------------------------ */
+    if (masterData.progress && masterData.progress.lastSaveDate !== nowMolipDate) {
+        await handleMidnightReset(nowMolipDate);
+        return; // 리셋 후 루프 종료
+    }
+
+    /* ------------------------------------------------------------
+       [3] 서신 발송, 업적 달성 및 캐릭터 성장 체크
+       MolipMonitor가 결정한 window.isActuallyWorking 값을 참조합니다.
+       ------------------------------------------------------------ */
     try {
+        // 현재 집중 상태를 기반으로 서신 및 업적 조건을 검사합니다.
         checkMailAndAchievements(window.isActuallyWorking, nowMolipDate);
-    } catch (e) { console.error("⚠️ [System] 조건 체크 에러:", e); }
+    } catch (e) { 
+        console.error("⚠️ [System] 조건 체크 에러:", e); 
+    }
 
     try {
+        // 호문클루스의 부화 및 진화 조건을 실시간으로 확인합니다.
         if (window.characterManager) {
             window.characterManager.checkHatching();   
             window.characterManager.checkEvolution();  
         }
-    } catch (e) { console.error("⚠️ [Manager] 성장 로직 에러:", e); }
+    } catch (e) { 
+        console.error("⚠️ [Manager] 성장 로직 처리 에러:", e); 
+    }
 
-    // 🖥️ 7. UI 및 애니메이션 최종 갱신
+    /* ------------------------------------------------------------
+       [4] UI 및 시각 연출 최종 업데이트
+       집계된 데이터를 화면에 출력하고 상태 배지 및 애니메이션을 제어합니다.
+       ------------------------------------------------------------ */
     try {
+        // 실린더 포화도 및 부산물 연출 업데이트
         if (window.updateCylinderSystem) window.updateCylinderSystem(); 
-        window.updateUI(); 
         
-        // ✨ [알 흔들림 연출] '집중 중'일 때만 egg-anim-active 클래스를 활성화합니다.
-        const mainCanvas = document.getElementById('main-canvas');
-        if (mainCanvas) {
-            const shouldAnimate = window.collection.activeEgg && window.isActuallyWorking && !window.isHatching;
-            mainCanvas.classList.toggle('egg-anim-active', shouldAnimate);
-        }
+        // 시간, 레벨, 경험치, 에테르 포인트 등 메인 UI 동기화
+        window.updateUI(); 
 
-        // 상태 뱃지 업데이트 (window.isActuallyWorking 등을 참조함)
+        // [상태 배지 업데이트]
+        // MolipMonitor가 설정한 전역 변수(isIdle, isActuallyWorking 등)를 참조하여 배지를 그립니다.
         if (typeof updateStatusBadge === 'function') {
             updateStatusBadge();
         }
-    } catch (e) { console.error("⚠️ [UI] 최종 갱신 에러:", e); }
+
+        /* [알 흔들림 연출 제어] --------------------------------------- */
+        const mainCanvas = document.getElementById('main-canvas');
+        if (mainCanvas) {
+            // 현재 파트너가 진짜로 알 상태인지 확인합니다.
+            const isEggState = (window.collection && window.collection.activeEgg) || (window.currentStage === 'egg');
+            
+            // 알 상태 + 집중 중 + 부화 중 아님 + 부재중 아님 일 때만 흔들림 효과를 적용합니다.
+            const shouldAnimate = isEggState && window.isActuallyWorking && !window.isHatching && !window.isIdle;
+
+            if (shouldAnimate) {
+                mainCanvas.classList.add('egg-anim-active');
+            } else {
+                mainCanvas.classList.remove('egg-anim-active');
+            }
+        }
+    } catch (e) { 
+        console.error("⚠️ [UI] 최종 갱신 및 애니메이션 에러:", e); 
+    }
 }
 
 
