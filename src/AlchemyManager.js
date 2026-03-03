@@ -729,53 +729,107 @@ window.startRecipeSynthesis = async () => {
     if (window.updateAltarStatus) window.updateAltarStatus(); // 제단 UI 갱신
 };
 
-// [AlchemyManager.js]
-window.startHatchMonitor = () => {
-    // 이전 인터벌이 있다면 제거 (중복 방지)
-    if (window.hatchInterval) clearInterval(window.hatchInterval);
+/**
+ * [AlchemyManager.js - 알 관리 센터]
+ * 알의 생성부터 부화 감지까지의 전 과정을 책임집니다.
+ */
 
-    window.hatchInterval = setInterval(async () => {
-        // 데이터 로드 확인 방어 코드
-        if (!window.collection || !window.collection.activeEgg) return;
-        
-        const egg = window.collection.activeEgg;
-        
-        // 연성 연출 중(isHatching)이 아닐 때만 체크
-        if (!window.isHatching) {
-            const now = Date.now();
+/**
+ * 1. 새로운 알 획득 (연성 결과 처리)
+ * @param {string} eggType - 획득한 알의 종류 (ID)
+ */
+window.processNewEggAcquisition = (eggType) => {
+    // 데이터 구조 안전성 확보
+    if (!window.masterData.collection) window.masterData.collection = {};
+    if (!window.masterData.collection.eggs) window.masterData.collection.eggs = [];
+
+    // 부화 설정 (기본 30분 = 1800초)
+    const hatchTargetSeconds = 1800; 
+    const now = Date.now();
+
+    // ✨ [핵심] 알 객체 생성: 부화할 절대 시각(hatchTime)을 미리 계산하여 저장합니다.
+    const newEgg = {
+        type: eggType,
+        date: new Date().toISOString(),   // 생성 일자
+        target: hatchTargetSeconds,       // 목표 시간(초)
+        hatchTime: now + (hatchTargetSeconds * 1000) // ✨ 정확한 부화 타임스탬프
+    };
+
+    // 컬렉션(가방)에 알 추가
+    window.masterData.collection.eggs.push(newEgg);
+    console.log(`🥚 [Alchemy] 새로운 알 획득: ${eggType}, 부화 예정: ${new Date(newEgg.hatchTime).toLocaleString()}`);
+
+    // 데이터 보존 및 UI 업데이트
+    if (window.saveAllData) window.saveAllData();
+    if (window.renderCollection) window.renderCollection();
+    
+    window.showToast("연성 성공! 새로운 알을 획득했습니다.", "success");
+};
+
+/**
+ * 2. 부화 모니터링 엔진 (무한 루프)
+ * 배경에서 알들의 시간을 체크하여 부화를 실행합니다.
+ */
+window.startHatchMonitor = () => {
+    // 5초마다 주기적으로 체크 (시스템 부하 최적화)
+    setInterval(async () => {
+        // 부화 연출 중이거나 데이터가 로드되지 않았다면 중단
+        if (window.isHatching || !window.masterData || !window.masterData.collection) return;
+
+        const eggs = window.masterData.collection.eggs || [];
+        if (eggs.length === 0) return;
+
+        const now = Date.now();
+
+        // 배열을 역순으로 순회 (부화 성공 시 항목 제거를 위함)
+        for (let i = eggs.length - 1; i >= 0; i--) {
+            const egg = eggs[i];
             
-            if (now >= egg.hatchTime) {
-                console.log("🐣 [System] 부화 시간이 도달했습니다:", egg.type);
-                window.isHatching = true; // 잠금
+            /* -----------------------------------------------------------
+               ✨ [하위 호환 로직] 
+               hatchTime 속성이 없는 구버전 알은 생성일(date)을 기준으로 즉석 계산합니다.
+               ----------------------------------------------------------- */
+            let targetHatchTime = egg.hatchTime;
+            if (!targetHatchTime && egg.date) {
+                targetHatchTime = new Date(egg.date).getTime() + ((egg.target || 1800) * 1000);
+            }
+
+            // 부화 조건 충족 확인 (현재 시간 >= 부화 예정 시간)
+            if (targetHatchTime && now >= targetHatchTime) {
+                console.log("🐣 [Alchemy] 부화 조건 도달:", egg.type);
+                window.isHatching = true; // 중복 부화 방지 잠금
 
                 try {
-                    // 1. 데이터 처리 (알 제거 및 캐릭터 추가)
+                    // 1. 데이터 처리 (알 제거 및 캐릭터 획득 처리 함수 호출)
                     const success = await window.completeHatching(egg.type);
                     
                     if (success) {
-                        // 2. ✨ 핵심: 즉시 파일 저장 (재시작 시 안정성 확보)
+                        // 2. 가방에서 부화한 알 제거
+                        eggs.splice(i, 1);
+                        
+                        // 3. 변경 사항 즉시 파일 저장
                         if (window.saveAllData) await window.saveAllData();
                         
-                        // 3. ✨ 핵심: UI 및 캐릭터 캔버스 강제 리프레시
+                        // 4. UI 및 도감 리프레시
                         if (window.renderCollection) window.renderCollection();
                         
-                        // 4. 부화 성공 연출 (연출 함수가 없으면 알림만)
+                        // 5. 부화 연출 실행 (연출 시스템이 있다면 호출)
                         if (window.triggerHatchSequence) {
                             await window.triggerHatchSequence(egg);
                         } else {
                             window.showToast("새로운 생명이 깨어났습니다!", "success");
-                            // 연출이 없으면 즉시 파트너 업데이트
+                            // 연출이 없을 경우 즉시 파트너 매니저 초기화
                             if (window.CharacterManager) window.CharacterManager.init(); 
                         }
                     }
                 } catch (err) {
-                    console.error("부화 프로세스 중 오류:", err);
+                    console.error("❌ [Alchemy] 부화 처리 중 에러 발생:", err);
                 } finally {
-                    window.isHatching = false; // ✨ 어떤 상황에서든 잠금 해제
+                    window.isHatching = false; // 어떤 상황에서도 잠금 해제
                 }
             }
         }
-    }, 2000); // 2초 간격으로 체크 (부하 최적화)
+    }, 5000); // 5초 간격 체크
 };
 
 // 페이지 로드 시 감시 시작

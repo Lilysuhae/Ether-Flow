@@ -16,6 +16,8 @@ const LogManager        = require(path.join(__dirname, 'src', 'LogManager.js'));
 const CodeManager       = require(path.join(__dirname, 'src', 'CodeManager.js'));
 const MolipMonitor = require(path.join(__dirname, 'src', 'MolipMonitor.js'));
 const AchievementManager = require(path.join(__dirname, 'src', 'AchievementManager.js'));
+const ThemeFontManager = require(path.join(__dirname, 'src', 'ThemeFontManager.js'));
+const UIComponentManager = require(path.join(__dirname, 'src', 'UIComponentManager.js'));
 
 // 통합 모듈 시스템 로드 (신규 분리 파일)
 require(path.join(__dirname, 'src', 'ModuleManager.js'));
@@ -95,6 +97,8 @@ let logManager = null;
 let codeManager = null;
 let molipMonitor = null;
 let achievementManager = null;
+let themeFontManager = null;
+let uiComponentManager = null;
 
 /* ============================================================
    [4] 변수 선언: 핵심 상태 (Core State)
@@ -423,37 +427,6 @@ window.resetAllData = async () => {
     });
 };
 
-/**
- * 5. 공용 컨펌 모달 표시 (이벤트 바인딩 안전 처리)
- */
-window.showConfirm = (title, message, onConfirm) => {
-    const modal = document.getElementById('confirm-modal');
-    if (!modal) return;
-
-    document.getElementById('confirm-title').innerText = title;
-    document.getElementById('confirm-message').innerText = message;
-
-    const yesBtn = document.getElementById('confirm-yes');
-    const noBtn = document.getElementById('confirm-no');
-
-    // 이벤트 리스너 리셋 (cloneNode 사용)
-    const newYesBtn = yesBtn.cloneNode(true);
-    const newNoBtn = noBtn.cloneNode(true);
-    yesBtn.parentNode.replaceChild(newYesBtn, yesBtn);
-    noBtn.parentNode.replaceChild(newNoBtn, noBtn);
-
-    newYesBtn.onclick = () => {
-        modal.style.display = 'none';
-        onConfirm(); 
-    };
-
-    newNoBtn.onclick = () => {
-        modal.style.display = 'none';
-    };
-
-    modal.style.display = 'flex';
-};
-
 // --------------------------------------------------------------------------
 // [누락 복구 2] 창 모드 및 레이아웃 토글 함수
 // --------------------------------------------------------------------------
@@ -652,21 +625,6 @@ window.toggleCylinderToast = () => {
     if (window.playSFX) window.playSFX('click');
 };
 
-// [교정] 수동 호출용 함수도 ID를 'common-tooltip'으로 통일
-window.showTooltip = (e, text) => {
-    const tooltip = document.getElementById('common-tooltip');
-    if (!tooltip) return;
-    tooltip.innerText = text;
-    tooltip.style.display = 'block';
-    tooltip.style.left = `${e.clientX + 15}px`;
-    tooltip.style.top = `${e.clientY + 15}px`;
-};
-
-window.hideTooltip = () => {
-    const tooltip = document.getElementById('common-tooltip');
-    if (tooltip) tooltip.style.display = 'none';
-};
-
 /**
  * [renderer.js] 메인 프로세스로부터 세이브 데이터를 수신하여 메모리 및 UI를 동기화합니다.
  */
@@ -676,40 +634,6 @@ let isEngineStarted = false;
 // 나머지 유틸리티
 window.minimizeApp = () => ipcRenderer.send('minimize-app');
 window.askClose = () => { document.getElementById('exit-confirm-modal').style.display = 'flex'; };
-
-/**
- * 토스트 알림 생성 (타입별 세팅)
- * @param {string} message - 출력할 메시지
- * 토스트 알림 생성 (이벤트 타입 추가 및 시간 연장)
- * @param {string} type - 'info', 'success', 'achievement', 'error', 'event'
- */
-window.showToast = function(message, type = 'info') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
-
-    const toast = document.createElement('div');
-    toast.className = `toast-notification toast-${type}`;
-    
-    let icon = 'fa-info-circle';
-    if (type === 'success') icon = 'fa-check-circle';
-    if (type === 'achievement') icon = 'fa-trophy';
-    if (type === 'error') icon = 'fa-exclamation-triangle';
-    if (type === 'event') icon = 'fa-wand-magic-sparkles';
-
-    toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
-    
-    container.appendChild(toast);
-    
-    setTimeout(() => toast.classList.add('show'), 50);
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-            if (toast.parentNode === container) container.removeChild(toast);
-        }, 400);
-    }, 6000); 
-};
-
 window.dragSrcIndex = null;
 window.handleDragOver = (e) => { e.preventDefault(); return false; };
 
@@ -742,151 +666,11 @@ window.setLayoutMode = (isHorizontal) => {
     saveAllData();
 };
 
-/**
- * 설정 모달 토글 및 내부 데이터 동기화
- */
-/**
- * [renderer.js] 설정 모달 토글 및 모든 설정값 UI 동기화
- */
-window.toggleSettings = (show) => {
-    const modal = document.getElementById('settings-modal');
-    if (!modal) return;
-
-    modal.style.display = show ? 'flex' : 'none';
-    
-    if (show) {
-        const s = masterData.settings || {};
-
-        // 1. 일반 설정 동기화 (언어, 폰트, 테마)
-        if (document.getElementById('language-select')) document.getElementById('language-select').value = s.language || 'ko';
-        if (document.getElementById('font-select')) document.getElementById('font-select').value = s.font || 'paperlogy';
-        
-        const currentTheme = s.currentTheme || 'DEFAULT_DARK'; 
-        const themeRadio = document.querySelector(`input[name="theme-choice"][value="${currentTheme}"]`);
-        if (themeRadio) themeRadio.checked = true;
-
-        // 2. ✨ [핵심 수정] 자동 시작 및 기타 토글 스위치 상태 복구
-        const autoStartToggle = document.getElementById('auto-start-toggle');
-        if (autoStartToggle) {
-            // 저장된 autoStart 값이 true면 'active' 클래스 추가, 아니면 제거
-            autoStartToggle.classList.toggle('active', !!s.autoStart);
-        }
-
-        const cylinderToggle = document.getElementById('cylinder-toast-toggle');
-        if (cylinderToggle) {
-            cylinderToggle.classList.toggle('active', s.showCylinderToast !== false);
-        }
-
-        // 3. 레이아웃 모드 버튼 동기화
-        const currentMode = s.windowMode || 'horizontal';
-        const btnGroup = document.querySelector('.window-mode-btns');
-        if (btnGroup) {
-            btnGroup.querySelectorAll('button').forEach(btn => {
-                const isActive = btn.getAttribute('onclick').includes(`'${currentMode}'`);
-                btn.classList.toggle('active', isActive);
-            });
-        }
-
-        // 4. 할 일 관리 및 사운드 UI 동기화
-        if (document.getElementById('reset-hour-select')) document.getElementById('reset-hour-select').value = window.resetHour || 0;
-        window.updateSoundUI();
-        window.updatePastItemsUI();
-
-        // 기본 탭으로 시작
-        window.switchSettingsTab('general'); 
-    }
-};
-
 // [누락 복구] 첫 호문클루스 선택 모달 (처음 시작 시 필요)
 window.showFirstChoiceModal = () => {
     const modal = document.getElementById('first-choice-modal'); // index.html에 해당 ID가 있어야 함
     if (modal) modal.style.display = 'flex';
 };
-
-// [최종] 모달 닫기 공용 함수
-window.closeAllModals = () => {
-    document.querySelectorAll('.modal-overlay, .alert-overlay').forEach(m => {
-        m.style.display = 'none';
-    });
-};
-
-// [추가] 아코디언 열림/닫힘 제어 함수
-window.toggleAccordion = (id) => {
-    const accordion = document.getElementById(id);
-    if (accordion) {
-        // 1. 시각적 토글
-        const isActive = accordion.classList.toggle('active');
-        
-        // 2. [핵심] 마스터 데이터에 상태 기록
-        if (!masterData.settings.accordionStates) {
-            masterData.settings.accordionStates = {};
-        }
-        masterData.settings.accordionStates[id] = isActive;
-        
-        // 3. 즉시 저장
-        saveAllData(); 
-    }
-};
-
-/**
- * [복구] 저장된 아코디언(접기/펼치기) 상태를 화면에 적용합니다.
- */
-window.applyAccordionStates = () => {
-    const states = masterData.settings?.accordionStates;
-    if (!states) return;
-
-    // 저장된 모든 아코디언 ID에 대해 상태 복구
-    for (const [id, isActive] of Object.entries(states)) {
-        const el = document.getElementById(id);
-        if (el) {
-            // 저장된 값이 true면 펼치고, false면 접습니다.
-            el.classList.toggle('active', !!isActive);
-        }
-    }
-};
-
-/**
- * 폰트 변경 함수
- * @param {string} fontName - 변경할 폰트 이름
- * @param {boolean} needSave - 파일 저장 여부 (초기화 시 false, 사용자 변경 시 true)
- */
-window.changeFont = function(fontName, needSave = true) {
-    const root = document.documentElement;
-    
-    // 폰트별 CSS 변수 매핑
-    const fontMapping = {
-        'Pretendard': "'Pretendard', sans-serif",
-        'Galmuri11': "'Galmuri11', sans-serif",
-        'NanumSquareNeo': "'NanumSquareNeo', sans-serif", // ✨ 추가
-        'paperlogy': "'Paperlogy', sans-serif",
-        'okticon': "'okticon', sans-serif",
-        'MemomentKkukkukk': "'MemomentKkukkukk', sans-serif"
-    };
-
-    const selectedFont = fontMapping[fontName] || fontMapping['paperlogy'];
-    root.style.setProperty('--main-font', selectedFont);
-
-    // 설정 데이터 업데이트 및 저장
-    if (window.masterData && window.masterData.settings) {
-        window.masterData.settings.font = fontName;
-        if (needSave) {
-            saveAllData(); 
-            console.log(`[설정] 폰트 변경: ${fontName}`);
-        }
-    }
-};
-
-/**
- * 저장된 폰트 불러오기 (앱 시작 시 호출)
- */
-window.applySavedFont = function() {
-    if (window.masterData && window.masterData.settings && window.masterData.settings.font) {
-        const savedFont = window.masterData.settings.font;
-        // [핵심] 초기화 단계이므로 저장을 하지 않도록 false를 전달합니다.
-        window.changeFont(savedFont, false); 
-    }
-};
-
 
 
 /* ============================================================
@@ -1369,67 +1153,6 @@ function isNewerVersion(current, latest) {
 
 
 /* ============================================================
-   [🎨 테마 시스템: 스타일 및 폰트]
-   ============================================================ */
-
-// 1. 테마 데이터 로드
-const { THEMES } = require('./themes.js'); 
-
-/**
- * 2. 테마 실시간 적용 함수 (핵심 로직)
- */
-window.applyTheme = function(themeId) {
-    const theme = THEMES[themeId];
-    if (!theme) {
-        console.error(`[테마 에러] ${themeId}를 찾을 수 없어 기본 테마를 적용합니다.`);
-        // 테마를 못 찾으면 기본 다크 모드로 강제 적용하여 멈춤 방지
-        return window.applyTheme('DEFAULT_DARK'); 
-    }
-
-    const root = document.documentElement;
-    const app = document.getElementById('app');
-    
-    // 1. 변수 주입
-    Object.entries(theme.variables).forEach(([key, value]) => {
-        root.style.setProperty(key, value);
-    });
-
-    // 2. 클래스 교체 (기존 theme- 클래스 모두 제거 후 추가)
-    if (app) {
-        const toRemove = Array.from(app.classList).filter(c => c.startsWith('theme-'));
-        app.classList.remove(...toRemove);
-        app.classList.add(`theme-${theme.id}`);
-    }
-    
-    document.body.setAttribute('data-theme', theme.id);
-};
-
-/**
- * 3. 테마 변경 및 저장 함수
- */
-window.changeTheme = function(themeKey) {
-    console.log(`[테마] 사용자가 "${themeKey}" 선택`);
-    window.applyTheme(themeKey);
-    
-    // [중요] masterData와 localStorage에 동시 저장
-    if (window.masterData && window.masterData.settings) {
-        window.masterData.settings.currentTheme = themeKey;
-        saveAllData(); // 파일(JSON) 저장
-    }
-    
-    // 로컬 스토리지 백업 (앱 재시작 시 빠른 로드용)
-    localStorage.setItem('ether-flow-theme', themeKey);
-};
-
-// 4. 초기 테마 및 폰트 로드
-const savedTheme = localStorage.getItem('ether-flow-theme') || 'DEFAULT_DARK';
-window.applyTheme(savedTheme);
-
-const savedFont = localStorage.getItem('ether-flow-font') || 'paperlogy';
-window.changeFont(savedFont);
-
-
-/* ============================================================
    [🌐 데이터 로드: 언어 및 리소스]
    ============================================================ */
 
@@ -1699,78 +1422,6 @@ async function saveAllData() {
 window.saveAllData = saveAllData;
 
 
-/* ============================================================
-   [🖥️ 창(Window) 및 UI 제어 시스템]
-   ============================================================ */
-
-/**
- * 1. 창 모드 변경 (가로/세로/미니)
- */
-window.changeWindowMode = (mode) => {
-    if (!masterData.settings) masterData.settings = {};
-    
-    // 설정 저장
-    masterData.settings.windowMode = mode;
-    
-    // UI 적용 및 메인 프로세스 통신
-    window.applyWindowMode();
-    saveAllData();
-    
-    // 미니 모드는 설정창 즉시 닫기
-    if (mode === 'mini') {
-        window.toggleSettings(false); 
-    } else {
-        // 버튼 상태 갱신
-        const btnGroup = document.querySelector('.window-mode-btns');
-        if (btnGroup) {
-            btnGroup.querySelectorAll('button').forEach(btn => {
-                const isActive = btn.getAttribute('onclick').includes(`'${mode}'`);
-                btn.classList.toggle('active', isActive);
-            });
-        }
-    }
-    
-    const modeName = mode === 'mini' ? '미니 위젯' : (mode === 'horizontal' ? '가로' : '세로');
-    window.showToast(`${modeName} 모드로 전환합니다.`, "info");
-};
-
-/**
- * 2. 창 모드 실제 적용 (CSS & IPC)
- */
-window.applyWindowMode = () => {
-    const mode = masterData.settings.windowMode || 'horizontal';
-    const app = document.getElementById('app');
-
-    if (app) {
-        app.classList.remove('mode-horizontal', 'mode-vertical', 'mode-mini');
-        app.classList.add(`mode-${mode}`);
-        
-        if (mode === 'horizontal') app.classList.add('horizontal-mode');
-        else app.classList.remove('horizontal-mode');
-    }
-
-    // 메인 프로세스에 크기 변경 요청
-    ipcRenderer.send('set-window-mode', mode); 
-};
-
-/**
- * 3. 가로 모드 토글 (레거시 지원)
- */
-window.toggleHorizontalMode = () => {
-    window.isHorizontalMode = !window.isHorizontalMode;
-    window.applyHorizontalMode();
-    saveAllData();
-};
-
-window.applyHorizontalMode = () => { 
-    const app = document.getElementById('app'); 
-    if (app) {
-        if (window.isHorizontalMode) app.classList.add('horizontal-mode');
-        else app.classList.remove('horizontal-mode');
-    }
-};
-
-
 /**
  * [renderer.js] 새로운 알 획득 및 엔진 동기화 (중복 방지 강화)
  */
@@ -1937,12 +1588,12 @@ async function updateLoop() {
 
     /* ------------------------------------------------------------
        [1] 모니터링 분석 및 상태 결정 (판정 단일화)
-       부재중 체크, 집중/딴짓 판정, 시간 집계, 앱 이름 UI 업데이트, 
+       부재중 체크(5분), 집중/딴짓 판정, 시간 집계, 앱 이름 UI 업데이트, 
        그리고 캐릭터 표정/대사 제어까지 MolipMonitor가 모두 수행합니다.
        ------------------------------------------------------------ */
     try {
         if (window.molipMonitor) {
-            // lastActiveWin 정보를 기반으로 현재 상태를 정밀 분석합니다.
+            // lastActiveWin 정보를 기반으로 현재 상태와 캐릭터 외형을 정밀 분석합니다.
             await window.molipMonitor.analyze(lastActiveWin);
         }
     } catch (e) { 
@@ -1954,12 +1605,12 @@ async function updateLoop() {
        설정된 시간이 지나 날짜가 바뀌면 일과 리셋 및 데이터를 정리합니다.
        ------------------------------------------------------------ */
     if (masterData.progress && masterData.progress.lastSaveDate !== nowMolipDate) {
-        await handleMidnightReset(nowMolipDate);
+        await handleMidnightReset(nowMolipDate); //
         return; // 리셋 후 루프 종료
     }
 
     /* ------------------------------------------------------------
-       [3] 서신 발송, 업적 달성 및 캐릭터 성장 체크
+       [3] 서신 발송, 업적 달성 체크
        MolipMonitor가 결정한 window.isActuallyWorking 값을 참조합니다.
        ------------------------------------------------------------ */
     try {
@@ -1969,6 +1620,9 @@ async function updateLoop() {
         console.error("⚠️ [System] 조건 체크 에러:", e); 
     }
 
+    /* ------------------------------------------------------------
+       [4] 캐릭터 성장 체크 (부화 및 진화)
+       ------------------------------------------------------------ */
     try {
         // 호문클루스의 부화 및 진화 조건을 실시간으로 확인합니다.
         if (window.characterManager) {
@@ -1980,7 +1634,7 @@ async function updateLoop() {
     }
 
     /* ------------------------------------------------------------
-       [4] UI 및 시각 연출 최종 업데이트
+       [5] UI 및 시각 연출 최종 업데이트
        집계된 데이터를 화면에 출력하고 상태 배지 및 애니메이션을 제어합니다.
        ------------------------------------------------------------ */
     try {
@@ -2016,12 +1670,16 @@ async function updateLoop() {
     }
 }
 
-
 /**
  * [추출] 자정 및 날짜 변경 시 '소프트 리셋' 처리 (앱 재시작 없음)
  */
 async function handleMidnightReset(nowMolipDate) {
     console.log(`🌅 [System] 새로운 하루 감지: ${nowMolipDate}`);
+
+    // 유저가 현재 앱을 사용 중이므로 부재 일수를 0으로 초기화합니다.
+    if (window.masterData.stats) {
+        window.masterData.stats.inactiveDays = 0;
+    }
     
     if (masterData.progress) masterData.progress.lastSaveDate = nowMolipDate;
     if (progress) {
@@ -2141,44 +1799,6 @@ window.checkMailAndAchievements = function(isFocusing, nowMolipDate, eventContex
 };
 
 /**
- * [renderer.js] 상태 배지 UI 업데이트 (디자인 클래스 보존 버전)
- */
-function updateStatusBadge() {
-    const badgeEl = document.getElementById('status-badge');
-    if (!badgeEl) return;
-
-    let statusClass = "";
-    let icon = "";
-    let text = "";
-
-    // 우선순위: 부재 > 딴짓 > 집중 > 대기
-    if (window.isIdle) { 
-        statusClass = "away";
-        icon = '<i class="fas fa-moon"></i>';
-        text = "부재 중";
-    } else if (window.isDistraction) {
-        statusClass = "distracting";
-        icon = '<i class="fas fa-ghost"></i>';
-        text = "딴짓 중";
-    } else if (window.isActuallyWorking) {
-        statusClass = "working";
-        icon = '<i class="fas fa-fire"></i>';
-        text = "집중 중";
-    } else {
-        statusClass = "waiting";
-        icon = '<i class="fas fa-hourglass-start"></i>';
-        text = "대기 중";
-    }
-
-    // ✨ [핵심 수정] className을 통째로 바꾸지 않고 classList를 사용해 안전하게 교체합니다.
-    const allStates = ["away", "distracting", "working", "waiting"];
-    badgeEl.classList.remove(...allStates);
-    badgeEl.classList.add(statusClass);
-    
-    badgeEl.innerHTML = `${icon} ${text}`;
-}
-
-/**
  * [renderer.js] 인트로 종료: 첫 번째 알과 계약을 체결합니다.
  */
 window.finalizeContract = async (char) => {
@@ -2208,6 +1828,8 @@ window.finalizeContract = async (char) => {
     window.currentPartner = char;
     window.currentStage = 'egg';      // 이름표 동기화 핵심
     window.lastCharacterState = null; // 상태 초기화
+    uiComponentManager = new UIComponentManager();
+    window.uiComponentManager = uiComponentManager;
     
     if (!masterData.character) masterData.character = {};
     masterData.character.selectedPartnerId = char.id;
@@ -2258,64 +1880,55 @@ window.closeIntroConfirm = () => {
 
 /**
  * [🌟 통합 엔진 시작]
- * 데이터 로드, 매니저 초기화, 캐릭터 복구, 그리고 **UI 초기 렌더링**까지 수행합니다.
  */
 async function startEngine() {
     if (isEngineStarted) return;
     console.log("🚀 [System] 연구실 엔진 가동 시퀀스 시작...");
 
     try {
+        // 1. 데이터 로드
         const savedData = await ipcRenderer.invoke('load-game-data');
-        
         masterData = savedData || { 
             progress: { level: 1, exp: 0, totalFocusTime: 0, todayFocusTime: 0, lastSaveDate: window.getMolipDate() }, 
             settings: {}, character: {}, collection: {}, achievements: [], 
             inventory: { items: {}, byproducts: {} }, mailbox: { mailHistory: [] }, todo: [], habit: [] 
         };
+        window.masterData = masterData;
 
-        if (masterData.userId) {
-            window.molipUserId = masterData.userId;
-            localStorage.setItem('molip_user_id', masterData.userId);
+        // 2. 부재중 기간 계산
+        if (!masterData.stats) masterData.stats = {};
+        const lastDate = masterData.progress?.lastSaveDate; 
+        const nowDate = window.getMolipDate();
+        if (lastDate && lastDate !== nowDate) {
+            const d1 = new Date(lastDate);
+            const d2 = new Date(nowDate);
+            masterData.stats.inactiveDays = Math.ceil(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24));
+        } else {
+            masterData.stats.inactiveDays = 0;
         }
 
-        // [핵심] 기존 데이터의 시간 필드 복구 및 동기화
-        if (!masterData.progress) masterData.progress = {};
-        masterData.progress.level = masterData.progress.level || 1;
-        masterData.progress.todayFocusTime = masterData.progress.todayFocusTime || masterData.progress.todayTime || 0;
-        masterData.progress.totalFocusTime = masterData.progress.totalFocusTime || masterData.progress.totalTime || 0;
-        masterData.progress.lastSaveDate = masterData.progress.lastSaveDate || window.getMolipDate();
-
-        if (!masterData.achievements) masterData.achievements = [];
-        window.masterData = masterData; // 전역 마스터 데이터 확정
-
-        // 3. 데이터 구조 보정 (나머지 안전장치)
-        masterData.inventory = masterData.inventory || { items: {}, byproducts: {} };
-        masterData.settings = masterData.settings || {};
-        masterData.mailbox = masterData.mailbox || { mailHistory: [] };
-        if (Array.isArray(masterData.mailbox)) {
-            masterData.mailbox = { mailHistory: masterData.mailbox };
-        }
-        
-        // [필수] 전역 변수 연결
         syncReferences(); 
-
-        // 4. 언어 및 리소스 로드
         await window.loadLanguageData('ko');
         window.shopItems = window.getShopItems();
 
-        // 5. 렌더러 초기화
+        // ------------------------------------------------------------
+        // [3] ✨ 매니저 초기화 (순서가 매우 중요합니다!)
+        // ------------------------------------------------------------
         if (!window.renderer && document.getElementById('main-canvas')) {
             window.renderer = new CharacterRenderer('main-canvas');
             renderer = window.renderer; 
         }
 
-        if (masterData.settings && masterData.settings.autoStart !== undefined) {
-            ipcRenderer.send('set-auto-start', masterData.settings.autoStart);
-        }
+        // 🎨 시각 및 UI 매니저를 가장 먼저 깨웁니다. 
+        // 이 시점에 window.applyAccordionStates 등이 등록됩니다.
+        themeFontManager = new ThemeFontManager();
+        window.themeFontManager = themeFontManager;
 
-        // 6. 매니저 초기화 (misplaced 코드들을 여기서 수행)
-        const mailHistory = masterData.mailbox?.mailHistory || [];
-        mailbox = new MailboxManager(mailHistory, mailPoolData);
+        uiComponentManager = new UIComponentManager(); // ✨ [핵심] 여기서 전역 함수들이 바인딩됨
+        window.uiComponentManager = uiComponentManager;
+
+        // 나머지 시스템 매니저들 초기화
+        mailbox = new MailboxManager(masterData.mailbox?.mailHistory || [], mailPoolData);
         progress = new ProgressManager(masterData.progress);
         collection = new CollectionManager(masterData.collection);
         soundManager = new SoundManager();
@@ -2323,34 +1936,33 @@ async function startEngine() {
         logManager = new LogManager();
         codeManager = new CodeManager();
         molipMonitor = new MolipMonitor();
+        achievementManager = new AchievementManager();
+        characterManager = new CharacterManager({ charData: charData });
+
         window.molipMonitor = molipMonitor;
         window.logManager = logManager;
         window.taskManager = taskManager;
-
-        // 매니저 초기화 구역
-        achievementManager = new AchievementManager();
-        window.achievementManager = achievementManager;
-        window.achievementList = achievementManager.list; // 호환성 유지
-        window.unlockAchievement = (id) => achievementManager.unlock(id); // 호환성 유지
-
-        // ✨ CharacterManager 생성 및 데이터 연결
-        characterManager = new CharacterManager({ charData: charData });
-        window.characterManager = characterManager;
-
-        // 전역 연결 래퍼 (HTML 버튼 호환성 유지)
-        window.refreshCharacterSprite = () => characterManager.refreshSprite();
-        window.petCharacter = (e) => characterManager.pet(e);
-        window.performHatchSequence = (type) => characterManager.performHatch(type);
-
         window.progress = progress;
         window.collection = collection;
         window.mailbox = mailbox;
         window.soundManager = soundManager;
+        window.achievementManager = achievementManager;
+        window.characterManager = characterManager;
 
         logManager.init();
         codeManager.init();
 
-        // 7. 캐릭터 복구
+        // ------------------------------------------------------------
+        // [4] 초기 설정 및 UI 복구 (이제 모든 함수가 안전하게 등록된 상태입니다)
+        // ------------------------------------------------------------
+        const savedTheme = localStorage.getItem('ether-flow-theme') || 'DEFAULT_DARK';
+        window.applyTheme(savedTheme);
+        window.applySavedFont();
+        window.applyHorizontalMode();
+        window.applyWindowMode();
+        window.applyAccordionStates(); // ✅ 이제 에러 없이 실행됩니다.
+
+        // 5. 캐릭터 파트너 복구
         const savedId = masterData.character?.selectedPartnerId;
         const hasOwned = collection.ownedIds && collection.ownedIds.length > 0;
         const hasEgg = !!collection.activeEgg;
@@ -2361,28 +1973,17 @@ async function startEngine() {
         } else {
             const targetId = savedId || (hasOwned ? collection.ownedIds[0] : (hasEgg ? collection.activeEgg.type : null));
             if (targetId) {
-                currentPartner = charData.characters.find(c => c.id === targetId);
-                // ✨ [핵심 수정] 파트너 정보를 전역 객체에 공유 (CharacterManager가 인식하도록 함)
+                currentPartner = charData.characters.find(c => String(c.id) === String(targetId));
                 window.currentPartner = currentPartner; 
-                
-                if (currentPartner) await refreshCharacterSprite(); 
+                if (currentPartner) await characterManager.refreshSprite(); 
             }
         }
 
-        if (window.NoteManager) {
-            window.NoteManager.init();
-        }
-
-        // 8. UI 최종 적용
-        window.applyHorizontalMode();
-        window.applyWindowMode();
-        window.applySavedFont();
+        // 6. UI 최종 렌더링
         ipcRenderer.send('set-always-on-top', window.isAlwaysOnTop);
         window.updatePinUI();
         window.updateUI();
         window.updateMailNotification();
-        
-        window.applyAccordionStates();
         window.renderWorkAppList(); 
         window.renderMonitorSettings(); 
         
@@ -2390,39 +1991,27 @@ async function startEngine() {
         taskManager.renderTodos();
         taskManager.renderHabits();
 
-        checkForUpdateMail();
-
-        const isAutoStart = !!(masterData.settings && masterData.settings.autoStart);
-        ipcRenderer.send('set-auto-start', isAutoStart); 
-        console.log(`📡 [System] 자동 시작 설정 복구: ${isAutoStart}`);
-
-        if (window.initAccountInfo) {
-            window.initAccountInfo();
-            console.log("🆔 유저 아이디 시스템 가동");
+        if (masterData.settings.autoStart !== undefined) {
+            ipcRenderer.send('set-auto-start', !!masterData.settings.autoStart);
         }
 
+        if (window.initAccountInfo) window.initAccountInfo();
         if (window.renderer && typeof window.renderer.startLoop === 'function') {
             window.renderer.startLoop(); 
         }
-        if (typeof window.setupEngine === 'function') {
-            window.setupEngine();
-        }
 
-        // 9. 엔진 가동
+        // 7. 엔진 가동
         isEngineStarted = true;
         window.startMainGameEngine();
         document.body.classList.add('ready');
-        console.log("✅ [System] 엔진 가동 및 UI 렌더링 완료");
+        console.log("✅ [System] 모든 매니저가 정상 로드되었으며 에러 없이 엔진이 가동되었습니다.");
 
-        // 10. 환영 인사
         setTimeout(() => {
-            if (typeof window.showRandomDialogue === 'function') {
-                window.showRandomDialogue('welcome');
-            }
+            if (typeof window.showRandomDialogue === 'function') window.showRandomDialogue('welcome');
         }, 1000);
 
     } catch (err) {
-        console.error("❌ [System] 엔진 시작 중 오류:", err);
+        console.error("❌ [System] 엔진 시작 중 치명적 오류가 발생했습니다:", err);
     }
 }
 

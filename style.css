@@ -7338,11 +7338,17 @@ header .header-right {
     padding-bottom: 20px; /* 최하단 여백 확보 */
 }
 
-/* 3. 아코디언 및 리스트 컨테이너 높이 제한 해제 */
-.mode-vertical .accordion-content,
+/* 3. 아코디언 및 리스트 컨테이너 높이 제한 해제 (수정본) */
+/* 오직 '활성화(active)' 상태일 때만 높이 제한을 해제하도록 변경합니다. */
+.mode-vertical .accordion.active .accordion-content,
 .mode-vertical .todo-list-container {
     max-height: none !important;
     overflow-y: visible !important;
+}
+
+/* 닫혀 있을 때는 세로 모드라도 숨겨야 함 */
+.mode-vertical .accordion:not(.active) .accordion-content {
+    max-height: 0 !important;
 }
 
 /* 5. 가로 모드 전용 드래그 손잡이 보강 */
