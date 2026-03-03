@@ -666,29 +666,53 @@ window.showCharDetail = (id) => {
         selectBtn.style.display = 'block';
         selectBtn.innerText = isActiveEgg ? "다시 알 품기" : "파트너로 선택하기";
         
+        /**
+         * [UIManager.js] 파트너 선택 버튼 로직 수정
+         * 캐릭터 교체 시 성장 단계(Stage)를 즉시 계산하여 화면을 갱신합니다.
+         */
         selectBtn.onclick = async () => {
-            // ✨ [추가] 알 부화 중 파트너 변경 차단 체크
+            // 1. 알 부화 중 파트너 변경 차단 체크
             if (window.collection && window.collection.activeEgg) {
-                // 현재 선택하려는 대상이 플라스크에 있는 바로 그 '알'이 아니라면 차단합니다.
                 if (window.collection.activeEgg.type !== char.id) {
                     window.showToast("알이 부화하기 전에 파트너를 변경할 수 없습니다.", "warning");
-                    return; // 함수 종료
+                    return;
                 }
             }
 
-            // 선택 로직 실행
+            // 2. 전역 파트너 데이터 교체
             currentPartner = char; 
             window.currentPartner = char;
             if (!masterData.character) masterData.character = {};
             masterData.character.selectedPartnerId = char.id;
 
-            if (window.refreshCharacterSprite) await window.refreshCharacterSprite(); 
+            /* -----------------------------------------------------------
+            ✨ [핵심 수정] 새 파트너의 성장 단계(Stage) 즉시 판정
+            이 코드가 없으면 화면에 이전 캐릭터의 흔적이 남거나 이미지가 뜨지 않습니다.
+            ----------------------------------------------------------- */
+            const totalSec = window.charGrowthMap[char.id] || 0;
+            const growthMin = totalSec / 60;
+            const targetMin = char.evolution_level || 1440; // 기본 진화 기준
+            
+            // 알(activeEgg)이 아니라면 보유 데이터를 기반으로 child/adult 결정
+            const isActiveEgg = window.collection.activeEgg && window.collection.activeEgg.type === char.id;
+            window.currentStage = isActiveEgg ? 'egg' : (growthMin >= targetMin ? 'adult' : 'child');
+
+            // 3. 그래픽 엔진 리프레시 (캔버스 다시 그리기)
+            if (window.characterManager && window.characterManager.refreshSprite) {
+                // CharacterManager를 통해 렌더러에 새 스프라이트를 로드합니다.
+                await window.characterManager.refreshSprite(true); 
+            } else if (window.refreshCharacterSprite) {
+                await window.refreshCharacterSprite();
+            }
+
+            // 4. UI 갱신 및 창 닫기
             window.updateUI(); 
             window.closeCharDetail(); 
             window.toggleCollection(false);
 
+            // 5. 데이터 영구 저장 및 알림
             if (window.saveAllData) await window.saveAllData(); 
-            window.showToast(`${char.name}와 다시 몰입을 시작합니다.`, "success");
+            window.showToast(`${char.name}와(과) 다시 몰입을 시작합니다.`, "success");
         };
     }
     modal.style.display = 'flex';
