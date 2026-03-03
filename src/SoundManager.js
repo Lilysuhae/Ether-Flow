@@ -235,7 +235,11 @@ class SoundManager {
                 e.preventDefault(); e.stopPropagation();
                 const isActive = panel.classList.contains('active');
                 document.querySelectorAll('.player-panel').forEach(p => p.classList.remove('active'));
-                if (!isActive) panel.classList.add('active');
+                if (!isActive) {
+                    panel.classList.add('active');
+                    // ✨ [추가] 패널이 열릴 때 목록을 확실히 그립니다.
+                    this.refreshList(type); 
+                }
             };
 
             const loopBtn = document.getElementById(`loop-${prefix}`);

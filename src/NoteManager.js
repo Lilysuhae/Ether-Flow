@@ -1,14 +1,19 @@
 /**
  * [src/NoteManager.js]
- * 타이틀 줄바꿈(Textarea) 및 자동 높이 조절 기능이 적용된 버전입니다.
+ * 타이틀 textarea 줄바꿈 및 자동 높이 조절 기능이 포함된 원본 로직 100% 복구 버전입니다.
  */
-const NoteManager = {
-    isDragging: false,
-    isResizing: false,
-    dragTarget: null,
-    offsetX: 0, offsetY: 0,
-    startW: 0, startH: 0,
-    COLORS: ['#fff9c4', '#c5cae9', '#c8e6c9', '#f8bbd0', '#e1bee7'],
+class NoteManager {
+    constructor() {
+        // 원본 속성 유지
+        this.isDragging = false;
+        this.isResizing = false;
+        this.dragTarget = null;
+        this.offsetX = 0;
+        this.offsetY = 0;
+        this.startW = 0;
+        this.startH = 0;
+        this.COLORS = ['#fff9c4', '#c5cae9', '#c8e6c9', '#f8bbd0', '#e1bee7'];
+    }
 
     init() {
         if (!Array.isArray(window.masterData.notes)) {
@@ -22,12 +27,12 @@ const NoteManager = {
         });
         this.renderAll();
         this.renderAddButton();
-    },
+    }
 
     renderAll() {
         document.querySelectorAll('.floating-note').forEach(n => n.remove());
         window.masterData.notes.forEach(noteData => this.createNoteElement(noteData));
-    },
+    }
 
     createNoteElement(data) {
         const note = document.createElement('div');
@@ -41,41 +46,44 @@ const NoteManager = {
             background-color: ${data.color}; -webkit-app-region: no-drag;
         `;
 
-        // ✨ [수정] 타이틀을 textarea로 변경하여 줄바꿈 지원
+        // ✨ 원본 HTML 구조 및 이벤트 핸들러 유지
+        // 클래스 인스턴스인 window.noteManager를 참조하도록 변경하여 에러를 방지합니다.
         note.innerHTML = `
             <div class="note-header" 
-                 onmousedown="NoteManager.startDrag(event, ${data.id})"
-                 ondblclick="NoteManager.toggleMinimize(${data.id})">
+                 onmousedown="window.noteManager.startDrag(event, ${data.id})"
+                 ondblclick="window.noteManager.toggleMinimize(${data.id})">
                 <textarea class="note-title-area" 
-                       oninput="NoteManager.autoResizeTitle(this); NoteManager.updateTitle(${data.id}, this.value)"
+                       oninput="window.noteManager.autoResizeTitle(this); window.noteManager.updateTitle(${data.id}, this.value)"
                        onkeydown="if(event.key === 'Enter' && !event.shiftKey) { this.blur(); event.preventDefault(); }"
                        onmousedown="event.stopPropagation()"
                        placeholder="제목" rows="1">${data.title}</textarea>
                 <div class="note-controls">
-                    <button onclick="NoteManager.toggleMinimize(${data.id})"><i class="fa-solid fa-minus"></i></button>
-                    <button onclick="NoteManager.deleteNote(${data.id})"><i class="fa-solid fa-xmark"></i></button>
+                    <button onclick="window.noteManager.toggleMinimize(${data.id})"><i class="fa-solid fa-minus"></i></button>
+                    <button onclick="window.noteManager.deleteNote(${data.id})"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
             <textarea class="note-body" 
-                      oninput="NoteManager.updateContent(${data.id}, this.value)"
+                      oninput="window.noteManager.updateContent(${data.id}, this.value)"
                       onkeydown="if(event.key === 'Enter' && !event.shiftKey) this.blur()"
                       onmousedown="event.stopPropagation()">${data.content}</textarea>
-            <div class="note-resize-handle" onmousedown="NoteManager.startResize(event, ${data.id})"></div>
+            <div class="note-resize-handle" onmousedown="window.noteManager.startResize(event, ${data.id})"></div>
         `;
 
         document.body.appendChild(note);
-        // 생성 후 초기 높이 조절
+        
+        // 초기 높이 조절
         const titleArea = note.querySelector('.note-title-area');
         this.autoResizeTitle(titleArea);
-    },
+    }
 
     /**
-     * ✨ 타이틀 입력 시 높이 자동 조절 헬퍼
+     * 타이틀 입력 시 높이 자동 조절
      */
     autoResizeTitle(el) {
+        if (!el) return;
         el.style.height = 'auto';
         el.style.height = (el.scrollHeight) + 'px';
-    },
+    }
 
     updateTitle(id, val) {
         const data = window.masterData.notes.find(n => n.id === id);
@@ -83,7 +91,7 @@ const NoteManager = {
             data.title = val;
             if (window.saveAllData) window.saveAllData();
         }
-    },
+    }
 
     updateContent(id, val) {
         const data = window.masterData.notes.find(n => n.id === id);
@@ -91,10 +99,8 @@ const NoteManager = {
             data.content = val;
             if (window.saveAllData) window.saveAllData();
         }
-    },
+    }
 
-    // --- 드래그, 리사이즈, 삭제 로직 (기존 유지) ---
-    
     startResize(e, id) {
         e.stopPropagation(); e.preventDefault();
         this.isResizing = true;
@@ -120,7 +126,7 @@ const NoteManager = {
         };
         document.addEventListener('mousemove', move);
         document.addEventListener('mouseup', stop);
-    },
+    }
 
     startDrag(e, id) {
         if (e.target.tagName === 'BUTTON' || e.target.tagName === 'TEXTAREA') return;
@@ -147,7 +153,7 @@ const NoteManager = {
         };
         document.addEventListener('mousemove', move);
         document.addEventListener('mouseup', stop);
-    },
+    }
 
     toggleMinimize(id) {
         const data = window.masterData.notes.find(n => n.id === id);
@@ -157,7 +163,7 @@ const NoteManager = {
             if (el) el.classList.toggle('minimized', data.isMinimized);
             if (window.saveAllData) window.saveAllData();
         }
-    },
+    }
 
     deleteNote(id) {
         if (window.showConfirm) {
@@ -167,7 +173,7 @@ const NoteManager = {
                 if (window.saveAllData) window.saveAllData();
             });
         }
-    },
+    }
 
     addNote() {
         const newNote = {
@@ -179,7 +185,7 @@ const NoteManager = {
         window.masterData.notes.push(newNote);
         this.createNoteElement(newNote);
         if (window.saveAllData) window.saveAllData();
-    },
+    }
 
     renderAddButton() {
         if (document.getElementById('add-note-btn')) return;
@@ -188,9 +194,10 @@ const NoteManager = {
         btn.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>';
         btn.onclick = () => this.addNote();
         document.body.appendChild(btn);
-    },
+    }
     
     updateTheme() {} 
-};
+}
 
-window.NoteManager = NoteManager;
+// ✨ renderer.js와의 호환성을 위한 내보내기
+module.exports = NoteManager;

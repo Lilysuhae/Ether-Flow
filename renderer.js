@@ -18,12 +18,12 @@ const MolipMonitor = require(path.join(__dirname, 'src', 'MolipMonitor.js'));
 const AchievementManager = require(path.join(__dirname, 'src', 'AchievementManager.js'));
 const ThemeFontManager = require(path.join(__dirname, 'src', 'ThemeFontManager.js'));
 const UIComponentManager = require(path.join(__dirname, 'src', 'UIComponentManager.js'));
+const NoteManager = require(path.join(__dirname, 'src', 'NoteManager.js'));
 
 // 통합 모듈 시스템 로드 (신규 분리 파일)
 require(path.join(__dirname, 'src', 'ModuleManager.js'));
 require(path.join(__dirname, 'src', 'UIManager.js'));
 require(path.join(__dirname, 'src', 'DialogueManager.js'));
-require(path.join(__dirname, 'src', 'NoteManager.js'));
 require(path.join(__dirname, 'src', 'AlchemyManager.js'));
 
 // UI 컴포넌트 라이브러리 설정
@@ -99,6 +99,7 @@ let molipMonitor = null;
 let achievementManager = null;
 let themeFontManager = null;
 let uiComponentManager = null;
+let noteManager = null;
 
 /* ============================================================
    [4] 변수 선언: 핵심 상태 (Core State)
@@ -461,21 +462,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. 앱 내부의 플레이 리스트 바깥 영역 클릭 감지
+    // [renderer.js - DOMContentLoaded 내부 수정]
     document.addEventListener('mousedown', (e) => {
         const panels = document.querySelectorAll('.player-panel');
         
         panels.forEach(panel => {
-            // 현재 패널이 열려 있는 상태인지 확인합니다.
             if (panel.classList.contains('active')) {
-                // 클릭된 지점이 패널 내부도 아니고, 패널을 여는 버튼(trig-amb, trig-mus)도 아닐 때만 닫습니다.
-                const isTriggerBtn = e.target.closest('#trig-amb') || e.target.closest('#trig-mus');
+                // ✨ [핵심 수정] 아이콘(#trig-...) 뿐만 아니라 부모 노드(#node-...)까지 예외 목록에 추가합니다.
+                const isTriggerBtn = e.target.closest('#trig-amb') || 
+                                    e.target.closest('#trig-mus') || 
+                                    e.target.closest('#node-ambient') || // 👈 추가
+                                    e.target.closest('#node-music');   // 👈 추가
                 
+                // 패널 내부 클릭이 아니고, 트리거 버튼 클릭도 아닐 때만 닫기
                 if (!panel.contains(e.target) && !isTriggerBtn) {
                     panel.classList.remove('active');
-                    
-                    // [선택] 버튼의 활성화 상태 아이콘도 일시정지 모양에서 다시 재생 모양으로 바꿔야 할 수 있습니다.
-                    // (이 부분은 SoundManager의 playTrack 상태와 연동되므로 클래스 제거만으로 충분합니다.)
                 }
             }
         });
@@ -1927,6 +1928,12 @@ async function startEngine() {
         uiComponentManager = new UIComponentManager(); // ✨ [핵심] 여기서 전역 함수들이 바인딩됨
         window.uiComponentManager = uiComponentManager;
 
+        // ✨ [추가] NoteManager 초기화
+        // NoteManager.js가 Class 형태라고 가정할 때:
+        noteManager = new NoteManager(); // ✨ 클래스 생성자로 호출
+        window.noteManager = noteManager;
+        noteManager.init();
+
         // 나머지 시스템 매니저들 초기화
         mailbox = new MailboxManager(masterData.mailbox?.mailHistory || [], mailPoolData);
         progress = new ProgressManager(masterData.progress);
@@ -1948,6 +1955,11 @@ async function startEngine() {
         window.soundManager = soundManager;
         window.achievementManager = achievementManager;
         window.characterManager = characterManager;
+
+        // ✨ [핵심 추가] 사운드 엔진 초기화 (이걸 호출해야 트랙 목록이 생성되고 버튼이 바인딩됩니다)
+        if (window.soundManager.setupAudioEngine) {
+            window.soundManager.setupAudioEngine();
+        }
 
         logManager.init();
         codeManager.init();
