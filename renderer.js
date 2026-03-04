@@ -1427,44 +1427,39 @@ window.saveAllData = saveAllData;
  * [renderer.js] 새로운 알 획득 및 엔진 동기화 (중복 방지 강화)
  */
 window.processNewEggAcquisition = async (charId, targetSec = 1800, source = 'system') => {
-    // 1. ✨ [방어] 이미 실린더에 알이 있다면 'false'를 반환하고 즉시 종료
+    // 1. 방어 로직: 이미 알이 있다면 거부
     if (window.collection && window.collection.activeEgg) {
         window.showToast("이미 알이 실린더 안에 있어 받을 수 없습니다.", "error");
         return false; 
     }
 
-    // 2. 캐릭터 데이터 확인
     const char = window.charData.characters.find(c => String(c.id) === String(charId));
     if (!char) return false;
 
-    // 3. ✨ 파트너 정보 및 엔진 상태 동기화 (이름/배경 변경 해결)
+    // 2. 엔진 상태 동기화
     window.currentPartner = char; 
     window.masterData.character.selectedPartnerId = char.id; 
     window.currentStage = 'egg'; 
 
-    // 4. 알 데이터 등록
+    // 3. ✨ [통합] 알 데이터 등록 (절대 부화 시각 계산 포함)
+    const now = Date.now();
     window.collection.activeEgg = {
         type: char.id,
         progress: 0,
         target: targetSec,
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
+        hatchTime: now + (targetSec * 1000) // ✨ 부화할 시점을 미리 계산하여 저장
     };
 
-    // 5. 그래픽 강제 리프레시
-    if (window.characterManager) {
-        await window.characterManager.refreshSprite(true); 
-    }
-
-    // 6. UI 업데이트 및 저장
+    // 4. 그래픽 및 UI 업데이트
+    if (window.characterManager) await window.characterManager.refreshSprite(true); 
     window.updateUI(); 
     if (window.saveAllData) await window.saveAllData();
     
-    // 7. 연출 실행
-    if (window.triggerSupernovaEffect) {
-        window.triggerSupernovaEffect(char);
-    }
+    // 5. 연출 실행
+    if (window.triggerSupernovaEffect) window.triggerSupernovaEffect(char);
 
-    return true; // ✨ 모든 과정이 성공했을 때만 true 반환
+    return true; 
 };
 
 
@@ -1672,36 +1667,33 @@ async function updateLoop() {
 }
 
 /**
- * [추출] 자정 및 날짜 변경 시 '소프트 리셋' 처리 (앱 재시작 없음)
+ * [renderer.js] 날짜 변경 시 실행되는 소프트 리셋 로직 수정
  */
 async function handleMidnightReset(nowMolipDate) {
     console.log(`🌅 [System] 새로운 하루 감지: ${nowMolipDate}`);
-
-    // 유저가 현재 앱을 사용 중이므로 부재 일수를 0으로 초기화합니다.
-    if (window.masterData.stats) {
-        window.masterData.stats.inactiveDays = 0;
-    }
     
+    // 1. ✨ [순서 변경] 날짜를 갱신하기 전에 습관 리셋을 먼저 수행합니다.
+    // 기존의 '마지막 저장 날짜'를 기준으로 스트릭 파기 여부를 판단해야 하기 때문입니다.
+    if (window.checkHabitReset) { 
+        window.checkHabitReset(); 
+    }
+
+    // 2. 부재 일수 및 진행도 데이터 날짜 동기화
+    if (window.masterData.stats) window.masterData.stats.inactiveDays = 0;
     if (masterData.progress) masterData.progress.lastSaveDate = nowMolipDate;
     if (progress) {
         progress.lastSaveDate = nowMolipDate; 
         progress.todayFocusTime = 0; 
     }
-
-    // ✨ [안전장치 추가] 함수 존재 여부 확인 후 호출
-    if (typeof window.checkHabitReset === 'function') { 
-        window.checkHabitReset(); 
-    }
     
+    // 3. UI 리프레시 및 영구 저장
     if (taskManager) {
-        try {
-            taskManager.renderTodos(); 
-            taskManager.renderHabits();
-        } catch (e) { console.error("Task render error during reset:", e); }
+        taskManager.renderTodos(); 
+        taskManager.renderHabits();
     }
 
     window.updateUI(); 
-    await saveAllData(); 
+    await saveAllData(); //
     window.showToast("새로운 하루가 밝았습니다.", "info");
 }
 

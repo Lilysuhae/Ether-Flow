@@ -832,5 +832,56 @@ window.startHatchMonitor = () => {
     }, 5000); // 5초 간격 체크
 };
 
+/**
+ * [UIManager.js] 알 부화 완료 및 캐릭터 획득 처리
+ * 시간이 다 된 알을 제거하고 보유 목록(ownedIds)에 캐릭터를 등록합니다.
+ */
+window.completeHatching = async (charId) => {
+    console.log(`🐣 [System] ${charId} 부화 시퀀스 시작`);
+
+    if (!window.collection || !window.masterData) return false;
+
+    // 1. 보유 목록(ownedIds)에 추가 (중복 방지)
+    if (!window.collection.ownedIds.includes(charId)) {
+        window.collection.ownedIds.push(charId);
+        if (!window.masterData.collection.ownedIds.includes(charId)) {
+            window.masterData.collection.ownedIds.push(charId);
+        }
+    }
+
+    // 2. 실린더(activeEgg) 비우기
+    window.collection.activeEgg = null;
+    if (window.masterData.collection) window.masterData.collection.activeEgg = null;
+
+    // 3. 성장 단계 전환 (egg -> child)
+    window.currentStage = 'child';
+    
+    // 4. 데이터 초기화 및 영구 저장
+    if (!window.charGrowthMap[charId]) window.charGrowthMap[charId] = 0;
+    if (!window.charIntimacyMap[charId]) window.charIntimacyMap[charId] = 0;
+
+    try {
+        // 5. 그래픽 엔진 리프레시 (알 이미지에서 캐릭터 이미지로)
+        if (window.characterManager) {
+            await window.characterManager.refreshSprite(true);
+        }
+
+        // 6. UI 및 도감 리프레시
+        window.updateUI();
+        if (window.renderCollection) window.renderCollection();
+        
+        // 7. 데이터 보존
+        if (window.saveAllData) await window.saveAllData();
+
+        window.showToast("축하합니다! 새로운 생명이 탄생했습니다.", "success");
+        if (window.playSFX) window.playSFX('evolve'); // 탄생 효과음
+
+        return true;
+    } catch (err) {
+        console.error("❌ [System] 부화 처리 중 오류:", err);
+        return false;
+    }
+};
+
 // 페이지 로드 시 감시 시작
 window.startHatchMonitor();

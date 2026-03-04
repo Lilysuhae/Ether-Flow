@@ -459,37 +459,45 @@ class TaskManager {
     }
 
     
+    /**
+     * [TaskManager.js] 습관 상태 및 스트릭 초기화 로직
+     */
     checkHabitReset() {
-        const molipToday = window.getMolipDate(); // 리셋 시간이 반영된 '오늘' 날짜 (YYYY-MM-DD)
-        const lastDateStr = window.masterData.progress.lastSaveDate; // 마지막으로 기록된 날짜
+        const molipToday = window.getMolipDate(); //
+        const lastDateStr = window.masterData.progress.lastSaveDate; 
         
-        // 1. 날짜가 바뀌지 않았다면 리셋할 필요가 없습니다.
+        // 🛡️ 안전장치: 이미 오늘 리셋이 완료되었다면 중단
         if (molipToday === lastDateStr) return;
 
-        // 2. 마지막 저장 날짜의 요일을 정확히 계산 (타임존 오류 방지)
+        console.log(`📅 [TaskManager] ${lastDateStr} -> ${molipToday} 습관 전환 분석 중...`);
+
+        // 마지막 저장 날짜의 요일을 계산하여 어제 습관을 지켰는지 확인
         const [y, m, d] = lastDateStr.split('-').map(Number);
         const lastDay = new Date(y, m - 1, d).getDay(); 
 
         this.habits.forEach(h => {
+            // ✨ [보강] 요일 데이터가 없으면 매일(0~6)로 취급
             const safeDays = (Array.isArray(h.days) && h.days.length > 0) 
                 ? h.days 
                 : [0, 1, 2, 3, 4, 5, 6];
 
-            // ✨ [리셋 로직 A] 스트릭 파기 체크
-            // 마지막 접속일이 습관 수행일이었는데, 완료(completed)하지 못했다면 스트릭 초기화
+            /* -----------------------------------------------------------
+            🔥 [스트릭 파기 체크]
+            마지막 접속일이 해당 습관의 실천 요일이었는데도 
+            완료(completed)하지 않았다면 스트릭을 0으로 초기화합니다.
+            ----------------------------------------------------------- */
             if (safeDays.includes(lastDay) && !h.completed) {
-                console.log(`[Habit] '${h.text}' 스트릭 초기화 (어제 미완료)`);
+                console.log(`[Habit] '${h.text}' 스트릭 초기화`);
                 h.streak = 0; 
             }
             
-            // ✨ [리셋 로직 B] 당일 상태 초기화
-            // 날짜가 바뀌었으므로 모든 습관의 체크박스와 보상 상태를 해제합니다.
+            // 🔄 [상태 리셋] 새로운 날이 되었으므로 체크박스와 보상 수령 상태를 해제합니다.
             h.completed = false;
             h.rewarded = false;
         });
 
-        console.log(`📅 [System] ${molipToday} 일과 시작 - 습관 상태 리셋 완료`);
-        this.renderHabits(); // UI 갱신
+        // 변경된 상태를 UI에 즉시 반영
+        this.renderHabits(); 
     }
 
     cleanupOldTasks() {
