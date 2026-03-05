@@ -2088,29 +2088,30 @@ window.triggerSupernovaEffect = (char) => {
     const effectLayer = document.getElementById('effect-layer');
     if (!effectLayer) return;
 
-    // 1. 화이트 플래시 효과 시작
+    window.isHatching = true; // ✨ 연출 시작 시 잠금
     effectLayer.classList.add('supernova-active');
     
-    // 2. 강렬한 연성 성공 효과음 재생
-    if (window.playSFX) {
-        window.playSFX('hatch'); // 혹은 'upgrade' 등의 효과음
-    }
+    if (window.playSFX) window.playSFX('hatch');
 
-    // 3. 연출 중 캐릭터 캔버스 흔들림 및 강조
     const mainCanvas = document.getElementById('main-canvas');
     if (mainCanvas) {
         mainCanvas.style.filter = 'brightness(2) contrast(1.2) drop-shadow(0 0 20px gold)';
         mainCanvas.style.transform = 'scale(1.1)';
     }
 
-    // 4. 일정 시간 후 연출 제거 및 복구
     setTimeout(() => {
         effectLayer.classList.remove('supernova-active');
         if (mainCanvas) {
             mainCanvas.style.filter = '';
             mainCanvas.style.transform = '';
         }
-    }, 2000); // 2초간 지속
+        /* -----------------------------------------------------------
+           ✨ [핵심 수정] 연출이 끝났으므로 부화 잠금을 해제합니다.
+           이 코드가 있어야 알이 다시 흔들리고(둠칫), 부화 체크가 가동됩니다.
+           ----------------------------------------------------------- */
+        window.isHatching = false; 
+        console.log("✨ [System] 연성 연출 종료 - 엔진 정상화");
+    }, 2000); 
 };
 
 /**

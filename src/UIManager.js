@@ -1202,3 +1202,59 @@ window.closeLetterView = () => {
     if (window.mailTypeTimer) { clearInterval(window.mailTypeTimer); window.mailTypeTimer = null; }
     document.getElementById('letter-view-modal').style.display = 'none';
 };
+
+/**
+ * [src/UIManager.js] 알 부화 완료 및 캐릭터 획득 처리
+ * 시간이 다 된 알을 제거하고 보유 목록(ownedIds)에 캐릭터를 등록합니다.
+ */
+window.completeHatching = async (charId) => {
+    console.log(`🐣 [System] ${charId} 부화 로직 시작`);
+
+    if (!window.collection || !window.masterData) {
+        console.error("❌ [System] 데이터 매니저가 로드되지 않았습니다.");
+        return false;
+    }
+
+    // 1. 보유 목록(ownedIds)에 캐릭터 추가 (중복 방지)
+    if (!window.collection.ownedIds.includes(charId)) {
+        window.collection.ownedIds.push(charId);
+        if (window.masterData.collection) {
+            window.masterData.collection.ownedIds = [...window.collection.ownedIds];
+        }
+    }
+
+    // 2. 실린더(activeEgg) 비우기
+    window.collection.activeEgg = null;
+    if (window.masterData.collection) {
+        window.masterData.collection.activeEgg = null;
+    }
+
+    // 3. 성장 단계 전환 (egg -> child)
+    window.currentStage = 'child';
+    
+    // 4. 해당 캐릭터의 초기 성장 데이터 생성
+    if (!window.charGrowthMap[charId]) window.charGrowthMap[charId] = 0;
+    if (!window.charIntimacyMap[charId]) window.charIntimacyMap[charId] = 0;
+
+    try {
+        // 5. 그래픽 엔진 리프레시 (알 -> 캐릭터 이미지)
+        if (window.characterManager && window.characterManager.refreshSprite) {
+            await window.characterManager.refreshSprite(true);
+        }
+
+        // 6. UI 및 도감 리프레시
+        if (window.updateUI) window.updateUI();
+        if (window.renderCollection) window.renderCollection();
+        
+        // 7. 변경 사항 영구 저장
+        if (window.saveAllData) await window.saveAllData();
+
+        window.showToast("축하합니다! 새로운 생명이 탄생했습니다.", "success");
+        if (window.playSFX) window.playSFX('evolve'); // 진화/탄생 효과음
+
+        return true;
+    } catch (err) {
+        console.error("❌ [System] 부화 처리 중 오류 발생:", err);
+        return false;
+    }
+};
