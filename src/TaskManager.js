@@ -325,12 +325,14 @@ class TaskManager {
         if (window.showToast) window.showToast("새로운 습관을 새겼습니다.", "success");
     }
 
+    /**
+     * [TaskManager.js] 습관 리스트 렌더링 (드래그 앤 드롭 수리본)
+     */
     renderHabits() {
         const list = document.getElementById('habit-list');
         const badge = document.getElementById('habit-count-badge');
         if (!list) return;
 
-        // 현재 몰입 기준 요일 계산
         const today = new Date(window.getMolipDate()).getDay();
         const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -345,10 +347,10 @@ class TaskManager {
             return;
         }
 
+        // 순서대로 정렬
         this.habits.sort((a, b) => (a.order || 0) - (b.order || 0));
 
         list.innerHTML = this.habits.map((h, index) => {
-            // ✨ [핵심 수정] 렌더링 시에도 요일이 없으면 매일로 처리
             const safeDays = (Array.isArray(h.days) && h.days.length > 0) 
                 ? h.days 
                 : [0, 1, 2, 3, 4, 5, 6];
@@ -360,6 +362,7 @@ class TaskManager {
             <li class="todo-item habit-item ${h.completed ? 'completed' : ''} ${!isToday ? 'not-today' : ''}" 
                 data-id="${h.id}" draggable="true"
                 ondragstart="window.handleHabitDragStart(event, ${index})" 
+                ondragover="window.handleDragOver(event)" 
                 ondrop="window.handleHabitDrop(event, ${index})" 
                 ondragend="window.handleDragEnd(event)">
                 <div class="drag-handle"><i class="fas fa-bars"></i></div>
