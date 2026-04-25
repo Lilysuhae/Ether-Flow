@@ -2195,28 +2195,28 @@
                 "child": {
                     "expressions": {
                         "working": {
-                            "sprite": "assets/sprites/remy_child_work.png",
+                            "sprite": "assets/sprites/Remy_child_work.png",
                             "frameWidth": 158,
                             "frameHeight": 158,
                             "totalFrames": 1,
                             "fps": 4
                         },
                         "good": {
-                            "sprite": "assets/sprites/remy_child_good.png",
+                            "sprite": "assets/sprites/Remy_child_good.png",
                             "frameWidth": 158,
                             "frameHeight": 158,
                             "totalFrames": 1,
                             "fps": 4
                         },
                         "distracting": {
-                            "sprite": "assets/sprites/remy_child_dist.png",
+                            "sprite": "assets/sprites/Remy_child_dist.png",
                             "frameWidth": 158,
                             "frameHeight": 158,
                             "totalFrames": 1,
                             "fps": 4
                         },
                         "away": {
-                            "sprite": "assets/sprites/remy_child_away.png",
+                            "sprite": "assets/sprites/Remy_child_away.png",
                             "frameWidth": 158,
                             "frameHeight": 158,
                             "totalFrames": 1,
@@ -2268,28 +2268,28 @@
                 "adult": {
                     "expressions": {
                         "working": {
-                            "sprite": "assets/sprites/remy_adult_work.png",
+                            "sprite": "assets/sprites/Remy_adult_work.png",
                             "frameWidth": 158,
                             "frameHeight": 158,
                             "totalFrames": 1,
                             "fps": 4
                         },
                         "good": {
-                            "sprite": "assets/sprites/remy_adult_good.png",
+                            "sprite": "assets/sprites/Remy_adult_good.png",
                             "frameWidth": 158,
                             "frameHeight": 158,
                             "totalFrames": 1,
                             "fps": 4
                         },
                         "distracting": {
-                            "sprite": "assets/sprites/remy_adult_dist.png",
+                            "sprite": "assets/sprites/Remy_adult_dist.png",
                             "frameWidth": 158,
                             "frameHeight": 158,
                             "totalFrames": 1,
                             "fps": 4
                         },
                         "away": {
-                            "sprite": "assets/sprites/remy_adult_away.png",
+                            "sprite": "assets/sprites/Remy_adult_away.png",
                             "frameWidth": 158,
                             "frameHeight": 158,
                             "totalFrames": 1,
