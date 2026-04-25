@@ -49,7 +49,8 @@ class SoundManager {
                 { name: 'theme_dende', file: 'theme_dende.mp3' },
                 { name: 'theme_belinda', file: 'theme_belinda.mp3' },
                 { name: 'theme_kota', file: 'theme_kota.mp3' },
-                { name: 'theme_minerva', file: 'theme_minerva.mp3' }
+                { name: 'theme_minerva', file: 'theme_minerva.mp3' },
+                { name: 'theme_remy', file: 'theme_remy.mp3' }
             ]
         };
 

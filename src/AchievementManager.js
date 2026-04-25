@@ -64,6 +64,7 @@ class AchievementManager {
             { id: 'belinda_eternal_steward', name: '벨린다의 영원한 계약자', icon: 'assets/images/achievements/belinda_eternal_steward.png', desc: '당신의 한심함마저 품격 있게 관리하기로 맹세한 집사와 함께, 실패와 성공을 모두 초월한 절대적인 계약 관계에 들어섰습니다.', hint: '독설로 용해된 마음 끝에 남은, 가장 고귀하고 단단한 유대를 마주합니다.' },
             { id: 'Kota_best_friend', name: '코타의 가장 소중한 친구', icon: 'assets/images/achievements/Kota_best_friend.png', desc: '코타는 당신의 가장 소중한 친구가 되었습니다.', hint: '당신의 외로운 여정을 조건 없이 지지해주는 친밀한 벗이 생깁니다.' },
             { id: 'minerva_silent_night', name: '미네르바와 고요한 밤', icon: 'assets/images/achievements/minerva_silent_night.png', desc: '당신의 지성이 밤하늘 별 아래 반짝이게끔 미네르바가 모든 것을 정돈된 흐름으로 만듭니다.', hint: '늦은 밤의 집중은 적막하지만 그 어느때보다도 맑고 또렷합니다.' },
+            { id: 'remi_dinner_partner', name: '레미의 만찬의 파트너', icon: 'assets/images/achievements/remi_dinner_partner.png', desc: '레미가 정성껏 준비한 세상에서 단 하나뿐인 식탁에 마주 앉아, 일상의 온기를 영원히 함께 나누는 만찬의 파트너가 되었습니다.', hint: '고독했던 연구실 한편에 차려진, 당신만을 위한 가장 따뜻한 식탁으로 초대받습니다.' },
             
             // 4. 전문성 및 자산 관련 업적
             { id: 'sage_alchemist_30', name: '대연금술사의 증표', icon: 'assets/images/achievements/sage_alchemist_30.png', desc: '30레벨의 숙련도에 도달하여 연금술의 현자 경지를 증명했습니다.', hint: '현자의 돌에 다가가는 첫 번째 관문을 통과합니다.' },

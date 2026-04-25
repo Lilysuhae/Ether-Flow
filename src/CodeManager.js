@@ -60,8 +60,14 @@ class CodeManager {
                 this._finalizeRedemption(code, inputEl);
             }
             return;
-        }else if (code === "MY_NEW_FRIEND_KKKota") {
+        } else if (code === "MY_NEW_FRIEND_KKKota") {
             const success = await window.processNewEggAcquisition("char_10", 180, 'code');
+            if (success) {
+                this._finalizeRedemption(code, inputEl);
+            }
+            return;
+        } else if (code === "MY_NEW_FRIEND_jwigjwig") {
+            const success = await window.processNewEggAcquisition("char_12", 180, 'code');
             if (success) {
                 this._finalizeRedemption(code, inputEl);
             }
